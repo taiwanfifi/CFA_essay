@@ -1,0 +1,8 @@
+{
+  "repo": "Salesforce/FinEval",
+  "config": "CRA-Bigdata",
+  "split": "test",
+  "num_samples": 1472,
+  "file_size_mb": 2.44,
+  "data_file": "datasets/FinEval/CRA_Bigdata/data.json"
+}

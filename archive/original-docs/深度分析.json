@@ -1,0 +1,380 @@
+{
+  "flare_cfa": {
+    "repo": "TheFinAI/flare-cfa",
+    "config": null,
+    "splits": [
+      "test"
+    ],
+    "samples_analyzed": {
+      "test": {
+        "count": 1032,
+        "checked": 10,
+        "samples": [
+          {
+            "query": "Read the questions and answers carefully, and choose the one you think is appropriate among the three options A, B and C.\nQ:The nominal risk-free rate is best described as the sum of the real risk-fre"
+          },
+          {
+            "query": "Read the questions and answers carefully, and choose the one you think is appropriate among the three options A, B and C.\nQ:Which of the following risk premiums is most relevant in explaining the diff"
+          },
+          {
+            "query": "Read the questions and answers carefully, and choose the one you think is appropriate among the three options A, B and C.\nQ:A bank quotes a stated annual interest rate of 4.00%. If that rate is equal "
+          },
+          {
+            "query": "Read the questions and answers carefully, and choose the one you think is appropriate among the three options A, B and C.\nQ:The value in six years of $75,000 invested today at a stated annual interest"
+          },
+          {
+            "query": "Read the questions and answers carefully, and choose the one you think is appropriate among the three options A, B and C.\nQ:A client requires £100,000 one year from now. If the stated annual rate is 2"
+          },
+          {
+            "query": "Read the questions and answers carefully, and choose the one you think is appropriate among the three options A, B and C.\nQ:For a lump sum investment of ¥250,000 invested at a stated annual rate of 3%"
+          },
+          {
+            "query": "Read the questions and answers carefully, and choose the one you think is appropriate among the three options A, B and C.\nQ:Given a €1,000,000 investment for four years with a stated annual rate of 3%"
+          },
+          {
+            "query": "Read the questions and answers carefully, and choose the one you think is appropriate among the three options A, B and C.\nQ:An investment pays €300 annually for five years, with the first payment occu"
+          },
+          {
+            "query": "Read the questions and answers carefully, and choose the one you think is appropriate among the three options A, B and C.\nQ:A perpetual preferred stock makes its first quarterly dividend payment of $2"
+          },
+          {
+            "query": "Read the questions and answers carefully, and choose the one you think is appropriate among the three options A, B and C.\nQ:An investment of €500,000 today that grows to €800,000 after six years has a"
+          }
+        ]
+      }
+    },
+    "years_found": [],
+    "levels_found": [],
+    "sources_found": [],
+    "sample_queries": []
+  },
+  "FinEval_Challenge": {
+    "repo": "Salesforce/FinEval",
+    "config": "CFA-Challenge",
+    "splits": [
+      "test"
+    ],
+    "samples_analyzed": {
+      "test": {
+        "count": 90,
+        "checked": 10,
+        "samples": [
+          {
+            "query": "Carefully read the scenario provided and the subsequent question. Your task is to analyze the scenario and select the most appropriate answer from the options A, B and C.\nScenario: TOPIC: ETHICAL AND ",
+            "source": "sample_test"
+          },
+          {
+            "query": "Carefully read the scenario provided and the subsequent question. Your task is to analyze the scenario and select the most appropriate answer from the options A, B and C.\nScenario: TOPIC: ETHICAL AND ",
+            "source": "sample_test"
+          },
+          {
+            "query": "Carefully read the scenario provided and the subsequent question. Your task is to analyze the scenario and select the most appropriate answer from the options A, B and C.\nScenario: TOPIC: ETHICAL AND ",
+            "source": "sample_test"
+          },
+          {
+            "query": "Carefully read the scenario provided and the subsequent question. Your task is to analyze the scenario and select the most appropriate answer from the options A, B and C.\nScenario: TOPIC: ETHICAL AND ",
+            "source": "sample_test"
+          },
+          {
+            "query": "Carefully read the scenario provided and the subsequent question. Your task is to analyze the scenario and select the most appropriate answer from the options A, B and C.\nScenario: TOPIC: FIXED INCOME",
+            "source": "sample_test"
+          },
+          {
+            "query": "Carefully read the scenario provided and the subsequent question. Your task is to analyze the scenario and select the most appropriate answer from the options A, B and C.\nScenario: TOPIC: FIXED INCOME",
+            "source": "sample_test"
+          },
+          {
+            "query": "Carefully read the scenario provided and the subsequent question. Your task is to analyze the scenario and select the most appropriate answer from the options A, B and C.\nScenario: TOPIC: FIXED INCOME",
+            "source": "sample_test"
+          },
+          {
+            "query": "Carefully read the scenario provided and the subsequent question. Your task is to analyze the scenario and select the most appropriate answer from the options A, B and C.\nScenario: TOPIC: FIXED INCOME",
+            "source": "sample_test"
+          },
+          {
+            "query": "Carefully read the scenario provided and the subsequent question. Your task is to analyze the scenario and select the most appropriate answer from the options A, B and C.\nScenario: \n    Ruth McDougal,",
+            "source": "2020 Mock PM"
+          },
+          {
+            "query": "Carefully read the scenario provided and the subsequent question. Your task is to analyze the scenario and select the most appropriate answer from the options A, B and C.\nScenario: \n    Ruth McDougal,",
+            "source": "2020 Mock PM"
+          }
+        ]
+      }
+    },
+    "years_found": [
+      "20"
+    ],
+    "levels_found": [],
+    "sources_found": [
+      "CFA_Institute",
+      "sample_test"
+    ],
+    "sample_queries": []
+  },
+  "FinEval_Easy": {
+    "repo": "Salesforce/FinEval",
+    "config": "CFA-Easy",
+    "splits": [
+      "test"
+    ],
+    "samples_analyzed": {
+      "test": {
+        "count": 1032,
+        "checked": 10,
+        "samples": [
+          {
+            "query": "Read the questions and answers carefully, and choose the one you think is appropriate among the three options A, B and C.\nQ:The nominal risk-free rate is best described as the sum of the real risk-fre"
+          },
+          {
+            "query": "Read the questions and answers carefully, and choose the one you think is appropriate among the three options A, B and C.\nQ:Which of the following risk premiums is most relevant in explaining the diff"
+          },
+          {
+            "query": "Read the questions and answers carefully, and choose the one you think is appropriate among the three options A, B and C.\nQ:A bank quotes a stated annual interest rate of 4.00%. If that rate is equal "
+          },
+          {
+            "query": "Read the questions and answers carefully, and choose the one you think is appropriate among the three options A, B and C.\nQ:The value in six years of $75,000 invested today at a stated annual interest"
+          },
+          {
+            "query": "Read the questions and answers carefully, and choose the one you think is appropriate among the three options A, B and C.\nQ:A client requires £100,000 one year from now. If the stated annual rate is 2"
+          },
+          {
+            "query": "Read the questions and answers carefully, and choose the one you think is appropriate among the three options A, B and C.\nQ:For a lump sum investment of ¥250,000 invested at a stated annual rate of 3%"
+          },
+          {
+            "query": "Read the questions and answers carefully, and choose the one you think is appropriate among the three options A, B and C.\nQ:Given a €1,000,000 investment for four years with a stated annual rate of 3%"
+          },
+          {
+            "query": "Read the questions and answers carefully, and choose the one you think is appropriate among the three options A, B and C.\nQ:An investment pays €300 annually for five years, with the first payment occu"
+          },
+          {
+            "query": "Read the questions and answers carefully, and choose the one you think is appropriate among the three options A, B and C.\nQ:A perpetual preferred stock makes its first quarterly dividend payment of $2"
+          },
+          {
+            "query": "Read the questions and answers carefully, and choose the one you think is appropriate among the three options A, B and C.\nQ:An investment of €500,000 today that grows to €800,000 after six years has a"
+          }
+        ]
+      }
+    },
+    "years_found": [],
+    "levels_found": [],
+    "sources_found": [],
+    "sample_queries": []
+  },
+  "CFA_Level_III": {
+    "repo": "alvinming/CFA-Level-III",
+    "config": null,
+    "splits": [
+      "train"
+    ],
+    "samples_analyzed": {
+      "train": {
+        "count": 90,
+        "checked": 10,
+        "samples": [
+          {
+            "query": "Carefully read the scenario provided and the subsequent question. Your task is to analyze the scenario and select the most appropriate answer from the options A, B and C.\nScenario: TOPIC: ETHICAL AND ",
+            "source": "sample_test"
+          },
+          {
+            "query": "Carefully read the scenario provided and the subsequent question. Your task is to analyze the scenario and select the most appropriate answer from the options A, B and C.\nScenario: TOPIC: ETHICAL AND ",
+            "source": "sample_test"
+          },
+          {
+            "query": "Carefully read the scenario provided and the subsequent question. Your task is to analyze the scenario and select the most appropriate answer from the options A, B and C.\nScenario: TOPIC: ETHICAL AND ",
+            "source": "sample_test"
+          },
+          {
+            "query": "Carefully read the scenario provided and the subsequent question. Your task is to analyze the scenario and select the most appropriate answer from the options A, B and C.\nScenario: TOPIC: ETHICAL AND ",
+            "source": "sample_test"
+          },
+          {
+            "query": "Carefully read the scenario provided and the subsequent question. Your task is to analyze the scenario and select the most appropriate answer from the options A, B and C.\nScenario: TOPIC: FIXED INCOME",
+            "source": "sample_test"
+          },
+          {
+            "query": "Carefully read the scenario provided and the subsequent question. Your task is to analyze the scenario and select the most appropriate answer from the options A, B and C.\nScenario: TOPIC: FIXED INCOME",
+            "source": "sample_test"
+          },
+          {
+            "query": "Carefully read the scenario provided and the subsequent question. Your task is to analyze the scenario and select the most appropriate answer from the options A, B and C.\nScenario: TOPIC: FIXED INCOME",
+            "source": "sample_test"
+          },
+          {
+            "query": "Carefully read the scenario provided and the subsequent question. Your task is to analyze the scenario and select the most appropriate answer from the options A, B and C.\nScenario: TOPIC: FIXED INCOME",
+            "source": "sample_test"
+          },
+          {
+            "query": "Carefully read the scenario provided and the subsequent question. Your task is to analyze the scenario and select the most appropriate answer from the options A, B and C.\nScenario: \n    Ruth McDougal,",
+            "source": "2020 Mock PM"
+          },
+          {
+            "query": "Carefully read the scenario provided and the subsequent question. Your task is to analyze the scenario and select the most appropriate answer from the options A, B and C.\nScenario: \n    Ruth McDougal,",
+            "source": "2020 Mock PM"
+          }
+        ]
+      }
+    },
+    "years_found": [
+      "20"
+    ],
+    "levels_found": [],
+    "sources_found": [
+      "CFA_Institute",
+      "sample_test"
+    ],
+    "sample_queries": []
+  },
+  "CFA_Extracted_chunk0": {
+    "repo": "ZixuanKe/cfa_extracted_qa_gpt4_verify_sup_chunk_0",
+    "config": null,
+    "splits": [
+      "train"
+    ],
+    "samples_analyzed": {
+      "train": {
+        "count": 1124,
+        "checked": 10,
+        "samples": [
+          {
+            "questions": "Compute the price and yield to maturity of a three-year, 4% annual-pay, $1,000 face value bond given the following spot rate curve: S1 = 5%, S2 = 6%, and S3 = 7%.",
+            "title": "CFA 2020 Level II - SchweserNotes Book 4.txt",
+            "topic": "cfa"
+          },
+          {
+            "questions": "Calculate the forward price two years from now for a $1 par, zero-coupon, three-year bond given the following spot rates. The two-year spot rate, S2 = 4%. The five-year spot rate, S5 = 6%.",
+            "title": "CFA 2020 Level II - SchweserNotes Book 4.txt",
+            "topic": "cfa"
+          },
+          {
+            "questions": "Calculate the implied three-year forward rate for a loan starting two years from now [i.e., f(2,3)].",
+            "title": "CFA 2020 Level II - SchweserNotes Book 4.txt",
+            "topic": "cfa"
+          },
+          {
+            "questions": "Given the following (annual-pay) par curve, compute the corresponding spot rate curve:",
+            "title": "CFA 2020 Level II - SchweserNotes Book 4.txt",
+            "topic": "cfa"
+          },
+          {
+            "questions": "When the yield curve is downward sloping, the forward curves are most likely to lie:",
+            "title": "CFA 2020 Level II - SchweserNotes Book 4.txt",
+            "topic": "cfa"
+          },
+          {
+            "questions": "The model that equates buying a long-maturity zero-coupon bond to entering into a forward contract to buy a zero-coupon bond that matures at the same time is known as:",
+            "title": "CFA 2020 Level II - SchweserNotes Book 4.txt",
+            "topic": "cfa"
+          },
+          {
+            "questions": "The price of a three-year zero-coupon bond given the three-year spot rate of 5%:",
+            "title": "CFA 2020 Level II - SchweserNotes Book 4.txt",
+            "topic": "cfa"
+          },
+          {
+            "questions": "If the future spot rates are expected to be lower than the current forward rates for the same maturities, bonds are most likely to be:",
+            "title": "CFA 2020 Level II - SchweserNotes Book 4.txt",
+            "topic": "cfa"
+          },
+          {
+            "questions": "The strategy of riding the yield curve is most likely to produce superior returns for a fixed income portfolio manager investing in bonds with maturity higher than the manager's investment horizon whe",
+            "title": "CFA 2020 Level II - SchweserNotes Book 4.txt",
+            "topic": "cfa"
+          },
+          {
+            "questions": "Which of the following statements about the swap rate curve is most accurate?",
+            "title": "CFA 2020 Level II - SchweserNotes Book 4.txt",
+            "topic": "cfa"
+          }
+        ]
+      }
+    },
+    "years_found": [
+      "20"
+    ],
+    "levels_found": [
+      "LEVEL I"
+    ],
+    "sources_found": [
+      "SchweserNotes"
+    ],
+    "sample_queries": []
+  },
+  "FinTrain_cfa": {
+    "repo": "Salesforce/FinTrain",
+    "config": "cfa_exercise_sup",
+    "splits": [
+      "train"
+    ],
+    "samples_analyzed": {
+      "train": {
+        "count": 2946,
+        "checked": 10,
+        "samples": [
+          {
+            "questions": "When the yield curve is downward sloping, the forward curves are most likely to lie:",
+            "title": "CFA 2020 Level II - SchweserNotes Book 4.txt",
+            "topic": "cfa"
+          },
+          {
+            "questions": "The strategy of riding the yield curve is most likely to produce superior returns for a fixed income portfolio manager investing in bonds with maturity higher than the manager's investment horizon whe",
+            "title": "CFA 2020 Level II - SchweserNotes Book 4.txt",
+            "topic": "cfa"
+          },
+          {
+            "questions": "What is the swap spread?",
+            "title": "CFA 2020 Level II - SchweserNotes Book 4.txt",
+            "topic": "cfa"
+          },
+          {
+            "questions": "Compute the I-spread.",
+            "title": "CFA 2020 Level II - SchweserNotes Book 4.txt",
+            "topic": "cfa"
+          },
+          {
+            "questions": "Given the three bonds in Figure 1, it is possible to make an arbitrage gain by:",
+            "title": "CFA 2020 Level II - SchweserNotes Book 4.txt",
+            "topic": "cfa"
+          },
+          {
+            "questions": "Which of the following statements regarding the FFPQ bond in Figure 1 is most likely?",
+            "title": "CFA 2020 Level II - SchweserNotes Book 4.txt",
+            "topic": "cfa"
+          },
+          {
+            "questions": "Which of the following statements regarding the valuation of an option-free bond using an arbitrage-free binomial lattice is most accurate?",
+            "title": "CFA 2020 Level II - SchweserNotes Book 4.txt",
+            "topic": "cfa"
+          },
+          {
+            "questions": "If Osagae had used implied volatility from interest rate options to compute the OAS for Suni Corp bond, the estimated OAS would most likely have been:",
+            "title": "CFA 2020 Level II - SchweserNotes Book 4.txt",
+            "topic": "cfa"
+          },
+          {
+            "questions": "Which bond in Figure 1 is most likely to have the highest effective duration?",
+            "title": "CFA 2020 Level II - SchweserNotes Book 4.txt",
+            "topic": "cfa"
+          },
+          {
+            "questions": "Regarding Alwan's statements about key rate durations:",
+            "title": "CFA 2020 Level II - SchweserNotes Book 4.txt",
+            "topic": "cfa"
+          }
+        ]
+      }
+    },
+    "years_found": [
+      "19",
+      "20"
+    ],
+    "levels_found": [
+      "LEVEL I"
+    ],
+    "sources_found": [
+      "CFA_Institute",
+      "SchweserNotes"
+    ],
+    "sample_queries": []
+  }
+}

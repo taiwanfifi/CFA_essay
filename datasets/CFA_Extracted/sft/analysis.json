@@ -1,0 +1,101 @@
+{
+  "download_status": "success",
+  "num_samples": 2946,
+  "features": [
+    "topic",
+    "title",
+    "justification",
+    "questions",
+    "scenario",
+    "exhibit",
+    "answer_choices",
+    "answer",
+    "material",
+    "gpt4_answerable_with_material",
+    "gpt4_answerable_without_material",
+    "gpt4_answer",
+    "gpt4_answer_justification",
+    "messages"
+  ],
+  "sample_data": {
+    "0": {
+      "topic": "cfa",
+      "title": "CFA 2020 Level II - SchweserNotes Book 4.txt",
+      "justification": "The material provides a set of multiple-choice questions from a module quiz pertaining to financial concepts such as yield curves, forward curves, and bond pricing models. I extracted the exact questions as presented, ensuring all answer choices were included verbatim. This approach ensures the output maintains the integrity and specificity of the quiz content, essential for accurate educational or evaluative purposes.",
+      "questions": "When the yield curve is downward sloping, the forward curves are most likely to lie:",
+      "scenario": "N/A",
+      "exhibit": "N/A",
+      "answer_choices": "A. above the spot curve.\nB. below the spot curve.\nC. either above or below the spot curve.",
+      "answer": "N/A",
+      "material": "MODULE QUIZ 32.1To best evaluate your performance, enter your quiz answers online.1. When the yield curve is downward sloping, the forward curves are most likely to lie:A. above the spot curve.B. below the spot curve.C. either above or below the spot curve.2. The model that equates buying a long-maturity zero-coupon bond to entering into a forwardcontract to buy a zero-coupon bond that matures at the same time is known as:A the forward rate model.B. the forward pricing model.C. the forward arbitrage model\n0Video coveringthis content isavailable online.\nMODULE 32.2: SPOT AND FORWARD RATES, PART 2LOS 32.d: Describe the assumptions concerning the evolution of spot rates iI1 relation toforward rates implicit in active bond portfolio management.CPA ® Program Curriculum, Volume 5, page 20\nRELATIONSHIPS BETWEEN SPOT AND FORWARD RATESFor an upward-sloping spot cmve, the forward rate rises as j increases. (For a downward­sloping yield curve, the forward rate declines asj increases.) For an upward-sloping spotcurve, the forward curve will be above the spot curve as shown in Figure 32.1. Conversely,when the spot curve is downward sloping, the forward curve will be below it.Figure 32.1 shows spot and forward curves as of July 2013. Because the spot yield curve isupward sloping, the forward curves lie above the spot curve.Figure 32.1: Spot Curve and Forward CurvesInterestRate%4.54.03.53.02.52.01.51.00.50\n......... .. ,....... ---－\n/4�--�--;'/\n· =-:_·.- - -\n--.,..... �-,,··/ -<·-\n－－-- ----\n---- ------- -:  �-.:..... - -\n,＇／\n,'/，／I�\n20'4 2016 2013 2020 2022 2024 2026 2028 2030 2032 2034 2036 2038 2040 2042－\nuly 2 017•········July 2016 — July 2015- - --·luly 2014 - - - Spul Curve\nSource: 2019 CFA® Program curriculum, Level II, Vol. 5, page 13From the forward rate model:(1 + S= (1 + S1)[1 + f(l,T - l))<T- l)\nCFA FRM CPA  cfawk1\nwhich can be expanded to:(1 + sTl = (1 + S1) [1 + f(l,l)J [1 + f( 2,l)J [1 + f( 3,l)J…. [1 + f(T - 1 ,1)]In other words, the spot rate for a long-maturity securityll equal the geometric mean of theone period spot rate and a series of one-year forward rates.\nForward Price Evolution\nAfter one year, the bond will have one year rem1ing to maturity, and based on a one-year expectedspot rate of 5.01%, the bond's price will be l / (1.0501) = $0.9523Hence, the holding period return =\n(） -1 =3%\n3. The price of three-year zero-coupon bond given the three-year spot rate of 5%:＝\n(l+S\n＝\n(1.05}3\n= 0.8638\nAfter one year, the bond will have two years remaining to maturity. Based on a two-year expectedspot rate of 6.01%, the bond's price will be 1 / {1.0601)2 = $0.8898Hence, the holding period return =\n(—- l = 3%0.88980.8638)\nHence, regardless of the maturity of the bond, the holg period return will be the one-year spot rate if thespot rates evolve consistent with the forward curve (as it existed when the trade was initiated).If an investor believes that future spot rates will be lower than corresponding forward rates,then she will purchase bonds (at a presumably attractive price) because the market appears tobe discounting future cash flows at \"too high\" of a discount rate.LOS 32.e: Describe the strategy of riding the yield curve.CFA® Program Curriculum, Volume 5, page 22\n\"RIDING THE YIELD CURVE\"The most straightforward strategy for a bond investor is maturity matching—purchasingbonds that have a maturity equal to the investor's investment horizon.However, with an upward-sloping interest rate term structure, investors seeking superiorreturns may pursue a strategy called riding the yield curve (also known as rolling down theyield curve). Under this strategy, an investor will purchase bonds with maturities longer thanhis investment horizon. In an upward-sloping yield curve, shorter maturity bonds have loweryields than longer maturity b onds. As the bond approaches maturity (i.e., rolls down the yieldcurve), it is valued using successively lower yields and, therefore, at successivelygherprices.If the yield curve remains unchanged over the investment horizon, riding the yield curvestrategy will produce higher returns than a simple maturity matching strategy, increasing thetotal return of a bond portfolio. The greater the difference between the forward rate and thespot rate, and the longer the maturity of the bond, the higher the total return.Consider Figure 32.2, which shows a hypothetical upward-sloping yield curve and the priceof a 3% annual-pay coupon bond (as a percentage of par).Figure 32.2: Price of a 3%, Annual Pay BondMaturity\nYield\n51015\n33.54\nPrice10095.8488.88\n9 174860．1 3．87 6\n5．545 5 ．\n053202\nA bond investor with an investment horizon of five years could purchase a bond maturing infive years and earn the 3% coupon but no capital gains (the bond can be currently purchasedat par and will be redeemed at par at maturity). However, assuming no change in the yieldcurve over the investment horizon, the investor could instead purchase a 30-year bond for$63.67, hold it for five years, and sell it for $71.81, earning an additional return beyond the3% coupon over the same period.",
+      "gpt4_answerable_with_material": "cheat",
+      "gpt4_answerable_without_material": "non-contextual",
+      "gpt4_answer": "Explanation: According to the reference, specifically in the section discussing relationships between spot and forward rates, it is explicitly stated that for a downward-sloping spot curve, the forward curve will be positioned below the spot curve. Therefore, the answer is directly drawn from the reference material.\nAnswer: B. below the spot curve.",
+      "gpt4_answer_justification": "Without needing to refer to the provided scenario and exhibit, the question about where the forward curve lies in relation to the spot curve when the yield curve is downward sloping can be answered based on fundamental concepts of financial theory. Thus, a scenario and exhibit are not necessary for answering the question. However, the reference explicitly states that when the spot curve is downward sloping, the forward curve will be below it, directly answering the question and making it unnecessary to infer or deduce from broader principles.",
+      "messages": [
+        {
+          "content": "Given the answer choices, please answer the question bellow.\n\nQuestion: When the yield curve is downward sloping, the forward curves are most likely to lie:\n\nAnswer Choices: A. above the spot curve.\nB. below the spot curve.\nC. either above or below the spot curve..\n\nAnswer:",
+          "role": "user"
+        },
+        {
+          "content": "Explanation: According to the reference, specifically in the section discussing relationships between spot and forward rates, it is explicitly stated that for a downward-sloping spot curve, the forward curve will be positioned below the spot curve. Therefore, the answer is directly drawn from the reference material.\nAnswer: B. below the spot curve.",
+          "role": "assistant"
+        }
+      ]
+    },
+    "1": {
+      "topic": "cfa",
+      "title": "CFA 2020 Level II - SchweserNotes Book 4.txt",
+      "justification": "The extracted questions come from a quiz section specifically marked 'MODULE QUIZ 32.2', directly relating to the evaluation of bond valuation strategies against predicted movements in spot and forward rates, and the impact of yield curve slopes on fixed income investment returns. The module content provides the context and basis for these questions, though no specific scenario or exhibit is connected to these questions.",
+      "questions": "The strategy of riding the yield curve is most likely to produce superior returns for a fixed income portfolio manager investing in bonds with maturity higher than the manager's investment horizon when the spot rate curve:",
+      "scenario": "N/A",
+      "exhibit": "N/A",
+      "answer_choices": "A. is downward sloping. B. in the future matches that projected by today's forward curves. C. is upward sloping.",
+      "answer": "N/A",
+      "material": "In the aftermath of the financial crisis of 2007-08, central banks kept short-term rates low,giving yield curves a steep upward slope. Many active managers took advantage byborrowing at short-term rates and buying long maturity bonds. The risk of such a leveragedstrategy is the possibility of an increase in spot rates.MODULE QUIZ 32.2To best evaluate your performance, enter your quiz answers online1. If the future spot rates are expected to be lower than the current forward rates for the samematurities, bonds are most likely to be:A overvalued.B. undervalued.C. correctly valued.2. The strategy of riding the yield curve is most likely to produce superior returns for a fixedincome portfolio manager investing in bonds with maturity higher than the manager'sinvestment horizon when the spot rate curve:A. is downward sloping.B. in the future matches that projected by today's forward curves.C. is upward sloping.\nMODULE 32.3: THE SWAP RATE CURVELOS 32.f: Explain the swap rate curve and why and how marketparticipants use it in valuation.",
+      "gpt4_answerable_with_material": "cheat",
+      "gpt4_answerable_without_material": "non-contextual",
+      "gpt4_answer": "Explanation: The strategy of riding the yield curve involves buying bonds with maturities longer than the investment horizon, anticipating the yield curve's shape to benefit bond prices over time. According to the reference, this strategy produces superior returns when the yield curve is 'upward sloping', as this condition implies that long-term interest rates are higher than short-term rates, providing an opportunity for capital appreciation as interest rates potentially decline over the investment horizon.\nAnswer: C. is upward sloping.",
+      "gpt4_answer_justification": "The information in the question itself provides enough context to answer without needing a specific scenario or exhibit. The concept of riding the yield curve involves understanding the relation between yield curves and investment horizon. However, reference directly provides the answer to the question by stating the conditions under which riding the yield curve strategy produces superior returns for a fixed income portfolio manager. This makes the scenario and exhibit unnecessary and the reference directly answers the question, categorized as 'cheat'.",
+      "messages": [
+        {
+          "content": "Given the answer choices, please answer the question bellow.\n\nQuestion: The strategy of riding the yield curve is most likely to produce superior returns for a fixed income portfolio manager investing in bonds with maturity higher than the manager's investment horizon when the spot rate curve:\n\nAnswer Choices: A. is downward sloping. B. in the future matches that projected by today's forward curves. C. is upward sloping..\n\nAnswer:",
+          "role": "user"
+        },
+        {
+          "content": "Explanation: The strategy of riding the yield curve involves buying bonds with maturities longer than the investment horizon, anticipating the yield curve's shape to benefit bond prices over time. According to the reference, this strategy produces superior returns when the yield curve is 'upward sloping', as this condition implies that long-term interest rates are higher than short-term rates, providing an opportunity for capital appreciation as interest rates potentially decline over the investment horizon.\nAnswer: C. is upward sloping.",
+          "role": "assistant"
+        }
+      ]
+    },
+    "2": {
+      "topic": "cfa",
+      "title": "CFA 2020 Level II - SchweserNotes Book 4.txt",
+      "justification": "The questions were extracted directly from the material. The first question is from a quiz section, specifically asking about swap rate curves. The other two examples are practical exercises requiring computation of swap spread and I-spread, respectively, based on given scenarios and data. These types of questions are crucial for understanding complexities in financial instruments and their data analysis. All details from the scenarios and exhibits are preserved in the restructured format to ensure clarity without altering the original material's meaning or presentation.",
+      "questions": "What is the swap spread?",
+      "scenario": "Swap spread refers to the amount by which the swap rate exceeds the yield of a government bond with the same maturity. For example, if the fixed rate of a one-year fixed-for-floating LIBOR swap is 0.57% and the one-year Treasury is yielding 0.11%, the 1-year swap spread is 0.57% - 0.11% = 0.46%, or 46 bps. Swap spreads are almost always positive, reflecting the lower credit risk of governments compared to the credit risk of surveyed banks that determines the swap rate.",
+      "exhibit": "N/A",
+      "answer_choices": "N/A",
+      "answer": "Answer: swap spread = (swap rate) - (T-bond yield) = 2.02% -1.61% = 0.41% or 41 bps",
+      "material": "．\nMODULE QUIZ 32.3To best evaluate your performance, enter your quiz answers online.1. Which of the following statements about the swap rate curve is most accurate?A. The swap rate reflects the interest rate for the floating-rate leg of an interest rateswap.B. Retail banks are more likely to use the swap rate curve as a benchmark than thegovernment spot curve.C. Swap rates are comparable across different countries because the swap market isnot controlled by governments.\nMODULE 32.4: SPREAD MEASURESLOS 32.g: Calculate and interpret the swap spread for a givenmaturity.\n0\nVideo coveringthis content isavailable online.\nCPA® Program Curriculum, Volume 5, page 29Swap spread refers to the amount by which the swap rate exceeds the yield of a governmentbond with the same maturity.swap spreadt = swap ratet - Treasury yieldtFor example, if the fixed rate of a one-year fixed-for-floating LIBOR swap is 0.57% and theone-year Treasury is yielding 0.11%, the 1-year swap spread is 0.57% - 0.11% = 0.46%, or46 bps.Swap spreads are almost always positive, reflecting the lower credit risk of governmentscompared to the credit risk of surveyed banks that determines the swap rate.The LIBOR swap curve is arguably the most commonly used interest rate curve. This ratecurve roughly reflects the default risk of a commercial bank.EXAMPLE: Swap spreadThe two-year fixed-for-floating LIBOR swap rate is 2.02% and the two-year U.S. Treasw·y bond isyielding 1.61%. What is the swap spread?Answer:swap spread= (swap rate)- (T-bond yield)= 2.02% -1.61%= 0.41% or 41 bps\nI-SPREADThe I-spread for a credit-risky bond is the an1ount by which the yield on the risky bondexceeds the swap rate for the same maturity. In a case where the swap rate for a specificmaturity is not available, the missing swap rate can be estimated from the swap rate curveusing linear interpolation (hence the \"I\" in I-spread).\nEXAMPLE: I-spread6% Zinni, Inc., bonds are cun-ently yielding 2.35% d mature in 1.6 years. From the provided swap curve,compute the I-spread.Swap cmve:Tenor0.511.52\nSwap rate1.00%1.25%1.35%1.50%\nAnswer:Linear interpolation:First, recognize that 1.6 years falls in the 1.5 to-2-year interval.",
+      "gpt4_answerable_with_material": "no-need",
+      "gpt4_answerable_without_material": "yes",
+      "gpt4_answer": "Explanation: Swap spread is calculated by subtracting the yield of a government bond from the swap rate for a contract of the same maturity. The scenario explains it using a simple formula: swap spread = swap rate - Treasury yield. In the provided example, a one-year swap having a swap rate of 0.57% and a one-year Treasury bond yielding 0.11%, the swap spread is obtained by 0.57% - 0.11% = 0.46%, or 46 basis points (bps). This calculation demonstrates how to determine the swap spread. Answer: 46 bps",
+      "gpt4_answer_justification": "The scenario provided defines swap spread and gives a straightforward example of how to calculate it, which directly answers the question without need for additional context. Thus, the scenario alone suffices to understand what a swap spread is. The reference also contains the same definition and an example of calculating swap spread, indicating that if one didn't have the scenario, the reference would provide enough information to answer the question on what swap spread is and how to calculate it. Both sources unequivocally explain that swap spread is the difference between the swap rate and the yield on a government bond of the same maturity.",
+      "messages": [
+        {
+          "content": "Given the scenatio, exhibit, please answer the question bellow.\n\nScenario: Swap spread refers to the amount by which the swap rate exceeds the yield of a government bond with the same maturity. For example, if the fixed rate of a one-year fixed-for-floating LIBOR swap is 0.57% and the one-year Treasury is yielding 0.11%, the 1-year swap spread is 0.57% - 0.11% = 0.46%, or 46 bps. Swap spreads are almost always positive, reflecting the lower credit risk of governments compared to the credit risk of surveyed banks that determines the swap rate.\n\nExhibit: N/A\n\nQuestion: What is the swap spread?.\n\nAnswer:",
+          "role": "user"
+        },
+        {
+          "content": "Explanation: Swap spread is calculated by subtracting the yield of a government bond from the swap rate for a contract of the same maturity. The scenario explains it using a simple formula: swap spread = swap rate - Treasury yield. In the provided example, a one-year swap having a swap rate of 0.57% and a one-year Treasury bond yielding 0.11%, the swap spread is obtained by 0.57% - 0.11% = 0.46%, or 46 basis points (bps). This calculation demonstrates how to determine the swap spread. Answer: 46 bps",
+          "role": "assistant"
+        }
+      ]
+    }
+  },
+  "verification": {
+    "has_empty_values": false,
+    "issues": []
+  }
+}

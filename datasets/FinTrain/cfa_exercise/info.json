@@ -1,0 +1,23 @@
+{
+  "repo": "Salesforce/FinTrain",
+  "config": "cfa_exercise_sup",
+  "split": "train",
+  "type": "train",
+  "num_samples": 2946,
+  "features": [
+    "topic",
+    "title",
+    "justification",
+    "questions",
+    "scenario",
+    "exhibit",
+    "answer_choices",
+    "answer",
+    "material",
+    "gpt4_answerable_with_material",
+    "gpt4_answerable_without_material",
+    "gpt4_answer",
+    "gpt4_answer_justification",
+    "messages"
+  ]
+}

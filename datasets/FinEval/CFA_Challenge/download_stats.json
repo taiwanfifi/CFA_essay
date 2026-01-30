@@ -1,0 +1,8 @@
+{
+  "repo": "Salesforce/FinEval",
+  "config": "CFA-Challenge",
+  "split": "test",
+  "num_samples": 90,
+  "file_size_mb": 0.3,
+  "data_file": "datasets/FinEval/CFA_Challenge/data.json"
+}

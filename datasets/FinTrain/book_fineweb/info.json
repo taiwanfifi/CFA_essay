@@ -1,0 +1,12 @@
+{
+  "repo": "Salesforce/FinTrain",
+  "config": "book_fineweb_unsup",
+  "split": "train",
+  "type": "train",
+  "num_samples": 4500,
+  "features": [
+    "title",
+    "text",
+    "topic"
+  ]
+}

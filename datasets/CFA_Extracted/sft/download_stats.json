@@ -1,0 +1,8 @@
+{
+  "repo": "ZixuanKe/cfa_extracted_qa_gpt4_verify_sft_without_material_gpt4_answer",
+  "config": null,
+  "split": "train",
+  "num_samples": 2946,
+  "file_size_mb": 89.17,
+  "data_file": "datasets/CFA_Extracted/sft/data.json"
+}

@@ -1,0 +1,14 @@
+{
+  "repo": "Salesforce/FinEval",
+  "config": "CFA-Easy",
+  "split": "test",
+  "type": "eval",
+  "num_samples": 1032,
+  "features": [
+    "query",
+    "answer",
+    "text",
+    "choices",
+    "gold"
+  ]
+}

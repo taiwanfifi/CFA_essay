@@ -1,0 +1,14 @@
+{
+  "repo": "TheFinAI/flare-cfa",
+  "config": null,
+  "split": "test",
+  "type": "eval",
+  "num_samples": 1032,
+  "features": [
+    "query",
+    "answer",
+    "text",
+    "choices",
+    "gold"
+  ]
+}

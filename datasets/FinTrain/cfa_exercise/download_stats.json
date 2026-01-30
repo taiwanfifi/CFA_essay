@@ -1,0 +1,8 @@
+{
+  "repo": "Salesforce/FinTrain",
+  "config": "cfa_exercise_sup",
+  "split": "train",
+  "num_samples": 2946,
+  "file_size_mb": 89.17,
+  "data_file": "datasets/FinTrain/cfa_exercise/data.json"
+}

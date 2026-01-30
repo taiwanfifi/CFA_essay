@@ -1,0 +1,12 @@
+{
+  "repo": "Salesforce/FinEval",
+  "config": "CFA-Challenge",
+  "split": "test",
+  "type": "eval",
+  "num_samples": 90,
+  "features": [
+    "query",
+    "answer",
+    "source"
+  ]
+}

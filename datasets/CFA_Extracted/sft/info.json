@@ -1,0 +1,23 @@
+{
+  "repo": "ZixuanKe/cfa_extracted_qa_gpt4_verify_sft_without_material_gpt4_answer",
+  "config": null,
+  "split": "train",
+  "type": "train",
+  "num_samples": 2946,
+  "features": [
+    "topic",
+    "title",
+    "justification",
+    "questions",
+    "scenario",
+    "exhibit",
+    "answer_choices",
+    "answer",
+    "material",
+    "gpt4_answerable_with_material",
+    "gpt4_answerable_without_material",
+    "gpt4_answer",
+    "gpt4_answer_justification",
+    "messages"
+  ]
+}

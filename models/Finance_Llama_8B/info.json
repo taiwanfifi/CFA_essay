@@ -1,0 +1,34 @@
+{
+  "repo": "tarun7r/Finance-Llama-8B",
+  "sha": "2764e26ce87b67fb294aeeb2264d8933f5dbaaf0",
+  "tags": [
+    "transformers",
+    "safetensors",
+    "llama",
+    "text-generation",
+    "text-generation-inference",
+    "finance",
+    "economics",
+    "en",
+    "dataset:Josephgflowers/Finance-Instruct-500k",
+    "base_model:unsloth/Meta-Llama-3.1-8B",
+    "base_model:finetune:unsloth/Meta-Llama-3.1-8B",
+    "doi:10.57967/hf/5731",
+    "license:apache-2.0",
+    "autotrain_compatible",
+    "endpoints_compatible",
+    "region:us"
+  ],
+  "files": [
+    ".gitattributes",
+    "README.md",
+    "config.json",
+    "generation_config.json",
+    "model.safetensors.index.json",
+    "pytorch_model-00001-of-00004.safetensors",
+    "pytorch_model-00002-of-00004.safetensors",
+    "pytorch_model-00003-of-00004.safetensors",
+    "pytorch_model-00004-of-00004.safetensors",
+    "safe.py"
+  ]
+}

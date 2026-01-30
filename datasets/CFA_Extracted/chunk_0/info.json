@@ -1,0 +1,22 @@
+{
+  "repo": "ZixuanKe/cfa_extracted_qa_gpt4_verify_sup_chunk_0",
+  "config": null,
+  "split": "train",
+  "type": "train",
+  "num_samples": 1124,
+  "features": [
+    "topic",
+    "title",
+    "justification",
+    "questions",
+    "scenario",
+    "exhibit",
+    "answer_choices",
+    "answer",
+    "material",
+    "gpt4_answerable_with_material",
+    "gpt4_answerable_without_material",
+    "gpt4_answer",
+    "gpt4_answer_justification"
+  ]
+}

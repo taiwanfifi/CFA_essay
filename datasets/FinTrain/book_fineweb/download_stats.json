@@ -1,0 +1,8 @@
+{
+  "repo": "Salesforce/FinTrain",
+  "config": "book_fineweb_unsup",
+  "split": "train",
+  "num_samples": 4500,
+  "file_size_mb": 2109.8,
+  "data_file": "datasets/FinTrain/book_fineweb/data.json"
+}

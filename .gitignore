@@ -1,0 +1,14 @@
+# Large dataset files (exceed GitHub 100MB limit)
+datasets/FinTrain/apex_instruct/data.json
+datasets/FinTrain/book_fineweb/data.json
+datasets/FinTrain/cfa_exercise/data.json
+datasets/CFA_Extracted/sft/data.json
+datasets/CFA_Extracted/chunk_0/data.json
+
+# FinDAP training framework (Salesforce nested git repo)
+datasets/FinDap/
+
+# Caches
+__pycache__/
+*.pyc
+.DS_Store

@@ -1,0 +1,15 @@
+{
+  "repo": "Salesforce/FinEval",
+  "config": "CRA-Bigdata",
+  "split": "test",
+  "type": "eval",
+  "num_samples": 1472,
+  "features": [
+    "id",
+    "query",
+    "answer",
+    "text",
+    "choices",
+    "gold"
+  ]
+}

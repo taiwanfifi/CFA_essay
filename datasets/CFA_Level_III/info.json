@@ -1,0 +1,14 @@
+{
+  "repo": "alvinming/CFA-Level-III",
+  "config": null,
+  "split": "train",
+  "type": "eval",
+  "num_samples": 90,
+  "features": [
+    "query",
+    "answer",
+    "source",
+    "gpt-query",
+    "explain_query"
+  ]
+}

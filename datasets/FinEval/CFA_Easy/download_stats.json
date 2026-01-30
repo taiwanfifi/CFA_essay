@@ -1,0 +1,8 @@
+{
+  "repo": "Salesforce/FinEval",
+  "config": "CFA-Easy",
+  "split": "test",
+  "num_samples": 1032,
+  "file_size_mb": 0.78,
+  "data_file": "datasets/FinEval/CFA_Easy/data.json"
+}

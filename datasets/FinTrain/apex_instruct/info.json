@@ -1,0 +1,11 @@
+{
+  "repo": "Salesforce/FinTrain",
+  "config": "apex_instruct_for_annealing_sup",
+  "split": "train",
+  "type": "train",
+  "num_samples": 1472062,
+  "features": [
+    "text",
+    "messages"
+  ]
+}

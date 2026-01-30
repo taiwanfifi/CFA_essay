@@ -1,0 +1,8 @@
+{
+  "repo": "Salesforce/FinTrain",
+  "config": "apex_instruct_for_annealing_sup",
+  "split": "train",
+  "num_samples": 1472062,
+  "file_size_mb": 7025.01,
+  "data_file": "datasets/FinTrain/apex_instruct/data.json"
+}

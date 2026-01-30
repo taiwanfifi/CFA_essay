@@ -1,0 +1,28 @@
+{
+  "repo": "Salesforce/Llama-Fin-8b",
+  "sha": "491d4c7cb49fd173eae47b186809cce9d21038eb",
+  "tags": [
+    "pytorch",
+    "llama",
+    "en",
+    "dataset:Salesforce/FinTrain",
+    "dataset:Salesforce/FinEval",
+    "arxiv:2501.04961",
+    "base_model:meta-llama/Meta-Llama-3-8B-Instruct",
+    "base_model:finetune:meta-llama/Meta-Llama-3-8B-Instruct",
+    "license:cc-by-4.0",
+    "region:us"
+  ],
+  "files": [
+    ".gitattributes",
+    "README.md",
+    "config.json",
+    "generation_config.json",
+    "pytorch_model-00001-of-00007.bin",
+    "pytorch_model-00002-of-00007.bin",
+    "pytorch_model-00003-of-00007.bin",
+    "pytorch_model-00004-of-00007.bin",
+    "pytorch_model-00005-of-00007.bin",
+    "pytorch_model-00006-of-00007.bin"
+  ]
+}
