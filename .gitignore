@@ -8,6 +8,13 @@ datasets/CFA_Extracted/chunk_0/data.json
 # FinDAP training framework (Salesforce nested git repo)
 datasets/FinDap/
 
+# Secrets
+.env
+.claude/
+
+# Nested git repos
+experiments/swe-agent-cfa/
+
 # Caches
 __pycache__/
 *.pyc

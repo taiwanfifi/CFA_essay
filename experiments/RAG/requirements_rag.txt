@@ -1,0 +1,28 @@
+# RAG 测试脚本依赖
+
+# 基础
+python-dotenv>=1.0.0
+tqdm>=4.65.0
+numpy>=1.24.0
+pydantic>=2.0.0
+
+# LangChain
+langchain>=0.1.0
+langchain-core>=0.1.0
+langchain-openai>=0.0.5
+langchain-community>=0.0.20
+langchain-milvus>=0.1.0
+langchain-text-splitters>=0.0.1
+
+# LangGraph
+langgraph>=0.0.20
+
+# LlamaIndex
+llama-index>=0.10.0
+llama-index-core>=0.10.0
+llama-index-embeddings-openai>=0.1.0
+llama-index-llms-openai>=0.1.0
+
+# Milvus (如果需要)
+pymilvus>=2.3.0
+

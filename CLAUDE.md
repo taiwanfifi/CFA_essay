@@ -8,13 +8,16 @@ Financial LLM research repository built on **FinDAP** (Demystifying Domain-adapt
 
 ## Key Directories
 
-- `docs/` — 5 numbered research documents (01–05). Start with `03-研究方向深度設計.md` for the core blueprint (7 research directions, paper split strategy).
+- `docs/` — 5 numbered research documents (01–05). Start with `03-研究方向深度設計.md` for the core blueprint (7 research directions, paper split strategy). Reading order: 01 → 02 → 03 → 04 → 05.
+- `drafts/ideas/` — 36 research idea files, named by category prefix: A (Evaluation), B (Reasoning), C (RAG), D (Confidence), E (Error Analysis), F (Scaling), G (Assessment Theory). Suffixes like `A1a-`, `B2b-` denote sub-ideas. Each file is a self-contained research proposal.
 - `datasets/FinDap/FinDAP/` — The FinDAP training framework (Salesforce repo). This is the main codebase.
 - `datasets/FinEval/` — Evaluation datasets: CFA-Challenge (90 hard), CFA-Easy (1,032), CRA-Bigdata (1,472)
 - `datasets/FinTrain/` — Training datasets: apex_instruct (1.4M), book_fineweb (4,500 CPT), cfa_exercise (2,946)
+- `experiments/RAG/` — Active RAG experiment scripts: 4 implementations (LangGraph agent, LangChain advanced, LlamaIndex standard, LlamaIndex vector-only). Requires `OPENAI_API_KEY` and separate deps in `requirements_rag.txt`.
 - `scripts/` — Dataset download/analysis Python scripts
+- `reference/` — Generated analysis artifacts (JSON, markdown comparison tables)
 - `models/` — Model metadata JSON only (no weights)
-- `archive/` — Backup of pre-restructuring docs (14 old .md files); not actively used
+- `archive/` — Backup of pre-restructuring docs; not actively used
 
 ## Environment Setup
 
@@ -104,6 +107,31 @@ The string is checked for substring `"dpo"` in `posttrain.py:52` to select the t
 - `--downsample` — Balances data distribution via downsampling
 - `--model_name` — HuggingFace model ID (e.g., `meta-llama/Meta-Llama-3-8B-Instruct`)
 
+## RAG Experiments (`experiments/RAG/`)
+
+Separate from the FinDAP training pipeline. Uses OpenAI embeddings (`text-embedding-3-large`) + Milvus Lite vector DB.
+
+```bash
+pip install -r experiments/RAG/requirements_rag.txt
+export OPENAI_API_KEY="your-key"
+
+# Four independent RAG implementations:
+python experiments/RAG/rag_agent_pragmatist.py       # LangGraph multi-turn agent
+python experiments/RAG/rag_langchain_advanced.py     # LangChain: rewrite + subquery + hybrid + rerank
+python experiments/RAG/rag_llama_index.py            # LlamaIndex standard
+python experiments/RAG/rag_llama_index_vector.py     # LlamaIndex vector-only
+
+# Evaluation runners:
+python experiments/RAG/run_agent_v43_pragmatist_evaluation.py
+python experiments/RAG/run_langchain_advanced_eval.py
+python experiments/RAG/run_llama_index_evaluation.py
+python experiments/RAG/run_llama_index_vector_only.py
+```
+
+**Two separate data paths exist in the RAG code:**
+- The 4 base RAG implementations use `data_loader.py` which looks for `thelma2/qa_dataset.json` (relative to working directory). This file is not checked into the repo and must be provided.
+- The 4 evaluation runners load from `./data/ultimate_rag_challenge_questions.json` (also not in repo), which includes `gold_evidence` fields with `doc_id` and `text_snippet` for building the vector store.
+
 ## Dataset Notes
 
 - No datasets contain official CFA Institute exam questions (all sourced from SchweserNotes)
@@ -111,3 +139,8 @@ The string is checked for substring `"dpo"` in `posttrain.py:52` to select the t
 - `CFA_Level_III` contains only MCQs despite its name (missing essay component)
 - FinEval and FinTrain are Salesforce-hosted with EMNLP 2025 paper backing
 - Training datasets are pre-tokenized on HuggingFace under `ZixuanKe/` namespace; `HF_TOKEN` required
+
+## Git & File Notes
+
+- `.gitignore` excludes all large data files (`datasets/FinTrain/*/data.json`, `datasets/CFA_Extracted/*/data.json`) and the entire `datasets/FinDap/` directory (nested git repo). Dataset metadata/READMEs are tracked but raw data is not.
+- Performance baselines from project research: o4-mini achieves 79.1% on CFA Level III; GPT-4o scores 60.9% on financial math reasoning (vs. 92% human). These numbers inform the 20%+ error gap the research aims to address.
