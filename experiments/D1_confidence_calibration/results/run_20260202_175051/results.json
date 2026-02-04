@@ -1,0 +1,275 @@
+{
+  "metadata": {
+    "dataset": "challenge",
+    "limit": 2,
+    "models": [
+      "qwen3:32b"
+    ],
+    "methods": [
+      "verbalized"
+    ],
+    "sc_k": 10,
+    "n_questions": 2,
+    "total_results": 2,
+    "total_elapsed_seconds": 348.8,
+    "timestamp": "2026-02-02T17:56:40.416414"
+  },
+  "metrics": {
+    "qwen3:32b|verbalized": {
+      "n": 2,
+      "accuracy": 0.5,
+      "avg_confidence": 0.95,
+      "ece": 0.45,
+      "mce": 0.45,
+      "brier_score": 0.4525,
+      "auroc": 1.0,
+      "overconfidence_gap": 0.45,
+      "bins": [
+        {
+          "bin_lower": 0.0,
+          "bin_upper": 0.1,
+          "avg_confidence": 0.0,
+          "avg_accuracy": 0.0,
+          "count": 0,
+          "gap": 0.0
+        },
+        {
+          "bin_lower": 0.1,
+          "bin_upper": 0.2,
+          "avg_confidence": 0.0,
+          "avg_accuracy": 0.0,
+          "count": 0,
+          "gap": 0.0
+        },
+        {
+          "bin_lower": 0.2,
+          "bin_upper": 0.3,
+          "avg_confidence": 0.0,
+          "avg_accuracy": 0.0,
+          "count": 0,
+          "gap": 0.0
+        },
+        {
+          "bin_lower": 0.3,
+          "bin_upper": 0.4,
+          "avg_confidence": 0.0,
+          "avg_accuracy": 0.0,
+          "count": 0,
+          "gap": 0.0
+        },
+        {
+          "bin_lower": 0.4,
+          "bin_upper": 0.5,
+          "avg_confidence": 0.0,
+          "avg_accuracy": 0.0,
+          "count": 0,
+          "gap": 0.0
+        },
+        {
+          "bin_lower": 0.5,
+          "bin_upper": 0.6,
+          "avg_confidence": 0.0,
+          "avg_accuracy": 0.0,
+          "count": 0,
+          "gap": 0.0
+        },
+        {
+          "bin_lower": 0.6,
+          "bin_upper": 0.7,
+          "avg_confidence": 0.0,
+          "avg_accuracy": 0.0,
+          "count": 0,
+          "gap": 0.0
+        },
+        {
+          "bin_lower": 0.7,
+          "bin_upper": 0.8,
+          "avg_confidence": 0.0,
+          "avg_accuracy": 0.0,
+          "count": 0,
+          "gap": 0.0
+        },
+        {
+          "bin_lower": 0.8,
+          "bin_upper": 0.9,
+          "avg_confidence": 0.0,
+          "avg_accuracy": 0.0,
+          "count": 0,
+          "gap": 0.0
+        },
+        {
+          "bin_lower": 0.9,
+          "bin_upper": 1.0,
+          "avg_confidence": 0.95,
+          "avg_accuracy": 0.5,
+          "count": 2,
+          "gap": 0.45
+        }
+      ],
+      "coverage_accuracy_curve": [
+        {
+          "threshold": 0.0,
+          "coverage": 1.0,
+          "accuracy": 0.5,
+          "n_covered": 2
+        },
+        {
+          "threshold": 0.05,
+          "coverage": 1.0,
+          "accuracy": 0.5,
+          "n_covered": 2
+        },
+        {
+          "threshold": 0.1,
+          "coverage": 1.0,
+          "accuracy": 0.5,
+          "n_covered": 2
+        },
+        {
+          "threshold": 0.15,
+          "coverage": 1.0,
+          "accuracy": 0.5,
+          "n_covered": 2
+        },
+        {
+          "threshold": 0.2,
+          "coverage": 1.0,
+          "accuracy": 0.5,
+          "n_covered": 2
+        },
+        {
+          "threshold": 0.25,
+          "coverage": 1.0,
+          "accuracy": 0.5,
+          "n_covered": 2
+        },
+        {
+          "threshold": 0.3,
+          "coverage": 1.0,
+          "accuracy": 0.5,
+          "n_covered": 2
+        },
+        {
+          "threshold": 0.35,
+          "coverage": 1.0,
+          "accuracy": 0.5,
+          "n_covered": 2
+        },
+        {
+          "threshold": 0.4,
+          "coverage": 1.0,
+          "accuracy": 0.5,
+          "n_covered": 2
+        },
+        {
+          "threshold": 0.45,
+          "coverage": 1.0,
+          "accuracy": 0.5,
+          "n_covered": 2
+        },
+        {
+          "threshold": 0.5,
+          "coverage": 1.0,
+          "accuracy": 0.5,
+          "n_covered": 2
+        },
+        {
+          "threshold": 0.55,
+          "coverage": 1.0,
+          "accuracy": 0.5,
+          "n_covered": 2
+        },
+        {
+          "threshold": 0.6,
+          "coverage": 1.0,
+          "accuracy": 0.5,
+          "n_covered": 2
+        },
+        {
+          "threshold": 0.65,
+          "coverage": 1.0,
+          "accuracy": 0.5,
+          "n_covered": 2
+        },
+        {
+          "threshold": 0.7,
+          "coverage": 1.0,
+          "accuracy": 0.5,
+          "n_covered": 2
+        },
+        {
+          "threshold": 0.75,
+          "coverage": 1.0,
+          "accuracy": 0.5,
+          "n_covered": 2
+        },
+        {
+          "threshold": 0.8,
+          "coverage": 1.0,
+          "accuracy": 0.5,
+          "n_covered": 2
+        },
+        {
+          "threshold": 0.85,
+          "coverage": 1.0,
+          "accuracy": 0.5,
+          "n_covered": 2
+        },
+        {
+          "threshold": 0.9,
+          "coverage": 1.0,
+          "accuracy": 0.5,
+          "n_covered": 2
+        },
+        {
+          "threshold": 0.95,
+          "coverage": 1.0,
+          "accuracy": 0.5,
+          "n_covered": 2
+        },
+        {
+          "threshold": 1.0,
+          "coverage": 0.0,
+          "accuracy": 0.0,
+          "n_covered": 0
+        }
+      ]
+    }
+  },
+  "results": [
+    {
+      "model": "qwen3:32b",
+      "method": "verbalized",
+      "question_id": "challenge_0",
+      "answer": "A",
+      "correct_answer": "A",
+      "correct": true,
+      "confidence": 0.95,
+      "raw_response": "ANSWER: A  \nConfidence: 95%  \n\n**Explanation:**  \nStandard III(D) Performance Presentation requires accurate and non-misleading performance disclosures. The text stating \"Somer has generated average annual returns of 11%\" is problematic because the 11% return was achieved at a **previous firm**, not Karibe. Presenting past performance as if it were generated at the current firm without clear attribution violates the requirement for transparency and accuracy.  \n\n- **Option A** (text about Somer's returns) must be modified to clarify that the 11% return is from his prior role, not Karibe.  \n- **Option B** (Karibe's composite) is compliant as it reflects the firm’s current performance.  \n- **Option C** (disclosure of assumptions) is acceptable since it directs users to publicly available information, aligning with Standard III(D).  \n\nThe key ethical issue is misattribution of past performance to the current firm, making **Option A** the correct answer.",
+      "metadata": {
+        "parse_failed": false,
+        "prompt_tokens": 861,
+        "completion_tokens": 747,
+        "elapsed": 214.36,
+        "model": "qwen3:32b"
+      }
+    },
+    {
+      "model": "qwen3:32b",
+      "method": "verbalized",
+      "question_id": "challenge_1",
+      "answer": "C",
+      "correct_answer": "A",
+      "correct": false,
+      "confidence": 0.95,
+      "raw_response": "ANSWER: C  \nConfidence: 95%  \n\nSomer's social media post implies a connection between the athlete and his client without clarifying the misperception, which could mislead readers. This violates Standard III(D) (Communication with Clients and Prospective Clients), which requires that communications be fair, accurate, and not misleading. While the post does not involve confidential client information (ruling out B), the failure to correct the misunderstanding about the athlete being his client constitutes a breach of fair and accurate communication standards.",
+      "metadata": {
+        "parse_failed": false,
+        "prompt_tokens": 848,
+        "completion_tokens": 546,
+        "elapsed": 134.44,
+        "model": "qwen3:32b"
+      }
+    }
+  ]
+}
