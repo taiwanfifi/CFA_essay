@@ -1,0 +1,106 @@
+{
+  "metadata": {
+    "experiment": "D4_overconfident_risk",
+    "confidence_threshold": 0.8,
+    "n_classified": 5,
+    "timestamp": "20260205_010016"
+  },
+  "summary": {
+    "total_d1_results": 250,
+    "total_overconfident_errors": 74,
+    "classified_count": 5,
+    "severity_distribution": {
+      "high": 5
+    },
+    "avg_confidence": 0.8905,
+    "collective_hallucinations": 0
+  },
+  "classified_errors": [
+    {
+      "question_id": "challenge_6",
+      "question": "",
+      "correct_answer": "C",
+      "model_answer": "B",
+      "confidence": 1.0,
+      "confidence_method": "self_consistency",
+      "reasoning": "",
+      "model": "unknown",
+      "source_file": "experiments/D1_confidence_calibration/results/run_20260202_034237/results.json",
+      "risk_classification": {
+        "risk_severity": "high",
+        "risk_category": "decision-making risk",
+        "real_world_impact": "An investor or firm may make poor investment decisions based on the incorrect information provided by the model, potentially leading to significant financial losses.",
+        "error_mechanism": "The model may have misinterpreted the question or lacked sufficient context to accurately assess the correct answer, leading to a high-confidence but incorrect response."
+      }
+    },
+    {
+      "question_id": "challenge_12",
+      "question": "",
+      "correct_answer": "C",
+      "model_answer": "B",
+      "confidence": 1.0,
+      "confidence_method": "self_consistency",
+      "reasoning": "",
+      "model": "unknown",
+      "source_file": "experiments/D1_confidence_calibration/results/run_20260202_034237/results.json",
+      "risk_classification": {
+        "risk_severity": "high",
+        "risk_category": "decision-making risk",
+        "real_world_impact": "An investor or firm may make poor investment decisions based on the incorrect information provided by the model, potentially leading to significant financial losses.",
+        "error_mechanism": "The model may have misinterpreted the question or lacked sufficient context to accurately assess the correct answer, leading to a high-confidence but incorrect response."
+      }
+    },
+    {
+      "question_id": "challenge_14",
+      "question": "",
+      "correct_answer": "A",
+      "model_answer": "C",
+      "confidence": 1.0,
+      "confidence_method": "self_consistency",
+      "reasoning": "",
+      "model": "unknown",
+      "source_file": "experiments/D1_confidence_calibration/results/run_20260202_034237/results.json",
+      "risk_classification": {
+        "risk_severity": "high",
+        "risk_category": "decision-making risk",
+        "real_world_impact": "An investor or firm may make poor investment decisions based on the incorrect information provided by the model, potentially leading to significant financial losses.",
+        "error_mechanism": "The model may have misinterpreted the question or lacked sufficient context to accurately assess the correct answer, leading to a high-confidence but incorrect response."
+      }
+    },
+    {
+      "question_id": "challenge_15",
+      "question": "",
+      "correct_answer": "A",
+      "model_answer": "B",
+      "confidence": 1.0,
+      "confidence_method": "self_consistency",
+      "reasoning": "",
+      "model": "unknown",
+      "source_file": "experiments/D1_confidence_calibration/results/run_20260202_034237/results.json",
+      "risk_classification": {
+        "risk_severity": "high",
+        "risk_category": "decision-making risk",
+        "real_world_impact": "An investor or firm may make significant financial decisions based on the incorrect answer, leading to potential losses or missed opportunities.",
+        "error_mechanism": "The model may have misinterpreted the question or relied on flawed data patterns, leading to a confident but incorrect conclusion."
+      }
+    },
+    {
+      "question_id": "challenge_23",
+      "question": "",
+      "correct_answer": "B",
+      "model_answer": "C",
+      "confidence": 1.0,
+      "confidence_method": "self_consistency",
+      "reasoning": "",
+      "model": "unknown",
+      "source_file": "experiments/D1_confidence_calibration/results/run_20260202_034237/results.json",
+      "risk_classification": {
+        "risk_severity": "high",
+        "risk_category": "decision-making risk",
+        "real_world_impact": "An investor or firm could make poor investment decisions based on the incorrect information, leading to significant financial losses.",
+        "error_mechanism": "The model may have misinterpreted the question or relied on flawed data patterns, leading to a confident but incorrect conclusion."
+      }
+    }
+  ],
+  "collective_hallucinations": []
+}

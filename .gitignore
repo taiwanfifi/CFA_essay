@@ -10,6 +10,7 @@ datasets/FinDap/
 
 # Secrets
 .env
+apikey.md
 .claude/
 
 # Nested git repos

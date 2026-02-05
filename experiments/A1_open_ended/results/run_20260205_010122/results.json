@@ -1,0 +1,128 @@
+{
+  "metadata": {
+    "experiment": "A1_open_ended",
+    "model": "gpt-4o-mini",
+    "dataset": "easy",
+    "n_questions": 5,
+    "timestamp": "20260205_010122"
+  },
+  "summary": {
+    "n_questions": 5,
+    "level_distribution": {
+      "exact": 3,
+      "directional": 1,
+      "incorrect": 1
+    },
+    "level_rates": {
+      "exact": 0.6,
+      "directional": 0.2,
+      "incorrect": 0.2
+    },
+    "strict_accuracy": 0.6,
+    "lenient_accuracy": 0.8,
+    "error_categories": {
+      "incomplete_reasoning": 1
+    }
+  },
+  "results": [
+    {
+      "question_id": "easy_0",
+      "correct_answer_letter": "C",
+      "gold_answer": {
+        "numerical": null,
+        "text": "expected inflation",
+        "concept": "Nominal Risk-Free Rate"
+      },
+      "model_response": "To understand the nominal risk-free rate, we need to break it down into its components. The nominal risk-free rate can be expressed using the following formula:\n\n\\[\n\\text{Nominal Risk-Free Rate} = \\text{Real Risk-Free Rate} + \\text{Inflation Premium}\n\\]\n\n### Step 1: Define the Components\n\n1. **Real Risk-Free Rate**: This is the return on an investment with no risk of financial loss, adjusted for inflation. It reflects the time value of money and the opportunity cost of capital in a risk-free env",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "The student correctly identifies the components of the nominal risk-free rate and accurately describes the relationship between the real risk-free rate and the inflation premium, matching the gold standard answer.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": null,
+      "tokens": 341
+    },
+    {
+      "question_id": "easy_1",
+      "correct_answer_letter": "C",
+      "gold_answer": {
+        "numerical": null,
+        "text": "Liquidity",
+        "concept": "Liquidity Risk Premium"
+      },
+      "model_response": "To determine the most relevant risk premium that explains the difference in yields between 30-year bonds issued by the US Treasury and 30-year bonds issued by a small private issuer, we need to consider the various types of risks associated with bond investments. \n\n### Step 1: Identify the Types of Risks\n\n1. **Credit Risk**: This is the risk that the issuer of the bond will default on its payments. US Treasury bonds are considered virtually risk-free because they are backed by the full faith and",
+      "level": "directional",
+      "evaluation": {
+        "reasoning": "The student correctly identifies liquidity as a relevant risk premium but also discusses credit risk, which is also relevant. The answer shows understanding of the concepts but does not explicitly state liquidity as the most relevant risk premium, leading to a slightly different focus.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": null,
+      "tokens": 548
+    },
+    {
+      "question_id": "easy_2",
+      "correct_answer_letter": "A",
+      "gold_answer": {
+        "numerical": 365,
+        "text": "daily.,B: quarterly.,C: semiannually",
+        "concept": "Compounding frequency and its effect on effective annual rate (EAR)"
+      },
+      "model_response": "To determine how frequently the bank is compounding interest, we can use the relationship between the stated annual interest rate (nominal rate) and the effective annual rate (EAR). The formula to convert the nominal interest rate to the effective annual rate is:\n\n\\[\nEAR = \\left(1 + \\frac{r}{n}\\right)^n - 1\n\\]\n\nWhere:\n- \\( r \\) is the nominal interest rate (stated annual interest rate),\n- \\( n \\) is the number of compounding periods per year.\n\nGiven:\n- Stated annual interest rate \\( r = 0.04 \\) ",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "Wrong magnitude: student=4.0742, gold=365.0",
+        "auto_graded": true,
+        "student_value": 4.0742,
+        "gold_value": 365.0
+      },
+      "error_attribution": {
+        "error_category": "incomplete_reasoning",
+        "explanation": "The student started the correct process to determine the compounding frequency but did not complete the reasoning or calculations to arrive at a specific answer. They mentioned using trial and error or numerical methods but did not provide a final conclusion.",
+        "could_be_fixed_with_tools": true
+      },
+      "tokens": 637
+    },
+    {
+      "question_id": "easy_3",
+      "correct_answer_letter": "C",
+      "gold_answer": {
+        "numerical": 113733,
+        "text": "$113,733",
+        "concept": "Future Value of an Investment with Compound Interest"
+      },
+      "model_response": "To find the future value of an investment compounded quarterly, we can use the future value formula for compound interest:\n\n\\[\nFV = PV \\times (1 + r/n)^{nt}\n\\]\n\nWhere:\n- \\( FV \\) = future value\n- \\( PV \\) = present value (initial investment)\n- \\( r \\) = annual interest rate (as a decimal)\n- \\( n \\) = number of times interest is compounded per year\n- \\( t \\) = number of years the money is invested\n\nGiven:\n- \\( PV = 75,000 \\)\n- \\( r = 0.07 \\) (7% as a decimal)\n- \\( n = 4 \\) (quarterly compounding)",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "Numerical match: student=111816.88, gold=113733.0, within 2% tolerance",
+        "auto_graded": true,
+        "student_value": 111816.88,
+        "gold_value": 113733.0
+      },
+      "error_attribution": null,
+      "tokens": 493
+    },
+    {
+      "question_id": "easy_4",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": 97532,
+        "text": "£97,532.,C: £97,561",
+        "concept": "Present Value of Future Cash Flows"
+      },
+      "model_response": "To determine the deposit needed today to accumulate £100,000 in one year at an annual interest rate of 2.50% compounded weekly, we can use the present value formula for compound interest.\n\n### Step 1: Identify the variables\n- Future Value (FV) = £100,000\n- Annual interest rate (r) = 2.50% = 0.025\n- Compounding frequency (n) = 52 weeks per year\n- Time (t) = 1 year\n\n### Step 2: Calculate the effective weekly interest rate\nThe effective weekly interest rate can be calculated as follows:\n\n\\[\n\\text{W",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "Numerical match: student=97560.98, gold=97532.0, within 2% tolerance",
+        "auto_graded": true,
+        "student_value": 97560.98,
+        "gold_value": 97532.0
+      },
+      "error_attribution": null,
+      "tokens": 486
+    }
+  ]
+}

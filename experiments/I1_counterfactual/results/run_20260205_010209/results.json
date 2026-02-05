@@ -1,0 +1,121 @@
+{
+  "metadata": {
+    "experiment": "I1_counterfactual",
+    "model": "gpt-4o-mini",
+    "dataset": "easy",
+    "n_questions": 5,
+    "perturbation_levels": [
+      1
+    ],
+    "timestamp": "20260205_010209"
+  },
+  "summary": {
+    "accuracy_original": 0.6,
+    "perturbation_levels": {
+      "1": {
+        "n_valid": 4,
+        "accuracy": 0.5,
+        "memorization_gap": 0.1
+      }
+    },
+    "robust_accuracy": 0.4,
+    "memorization_suspect": 0.2
+  },
+  "results": [
+    {
+      "question_id": "easy_0",
+      "correct_answer": "C",
+      "original": {
+        "answer": "C",
+        "correct": true
+      },
+      "perturbations": [
+        {
+          "level": 1,
+          "valid": true,
+          "perturbed_answer": "C",
+          "changes_made": [],
+          "model_answer": "C",
+          "correct": true
+        }
+      ]
+    },
+    {
+      "question_id": "easy_1",
+      "correct_answer": "C",
+      "original": {
+        "answer": "C",
+        "correct": true
+      },
+      "perturbations": [
+        {
+          "level": 1,
+          "valid": false,
+          "reason": "generation_failed"
+        }
+      ]
+    },
+    {
+      "question_id": "easy_2",
+      "correct_answer": "A",
+      "original": {
+        "answer": "A",
+        "correct": true
+      },
+      "perturbations": [
+        {
+          "level": 1,
+          "valid": true,
+          "perturbed_answer": "B",
+          "changes_made": [
+            "Changed the stated annual interest rate from 4.00% to 5.00%",
+            "Changed the effective annual rate from 4.08% to 5.12%"
+          ],
+          "model_answer": "A",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "question_id": "easy_3",
+      "correct_answer": "C",
+      "original": {
+        "answer": "A",
+        "correct": false
+      },
+      "perturbations": [
+        {
+          "level": 1,
+          "valid": true,
+          "perturbed_answer": "C",
+          "changes_made": [
+            "Changed the principal amount from $75,000 to $80,000",
+            "Changed the interest rate from 7% to 6%"
+          ],
+          "model_answer": "B",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "question_id": "easy_4",
+      "correct_answer": "B",
+      "original": {
+        "answer": "C",
+        "correct": false
+      },
+      "perturbations": [
+        {
+          "level": 1,
+          "valid": true,
+          "perturbed_answer": "B",
+          "changes_made": [
+            "Interest rate changed from 2.50% to 3.00%"
+          ],
+          "model_answer": "B",
+          "correct": true
+        }
+      ]
+    }
+  ]
+}
