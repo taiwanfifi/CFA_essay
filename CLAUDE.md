@@ -9,11 +9,13 @@ Financial LLM research repository built on **FinDAP** (Demystifying Domain-adapt
 ## Key Directories
 
 - `docs/` — 5 numbered research documents (01–05). Start with `03-研究方向深度設計.md` for the core blueprint (7 research directions, paper split strategy). Reading order: 01 → 02 → 03 → 04 → 05.
-- `drafts/ideas/` — 36 research idea files, named by category prefix: A (Evaluation), B (Reasoning), C (RAG), D (Confidence), E (Error Analysis), F (Scaling), G (Assessment Theory). Suffixes like `A1a-`, `B2b-` denote sub-ideas. Each file is a self-contained research proposal.
+- `drafts/ideas/` — 42 research idea files, named by category prefix: A (Evaluation), B (Reasoning), C (RAG), D (Confidence), E (Error Analysis), F (Scaling), G (Assessment Theory), H (Cross-boundary), I (Adversarial). Suffixes like `A1a-`, `B2b-` denote sub-ideas. Each file is a self-contained research proposal.
+- `drafts/selected/` — 11 curated research proposals ready for implementation
 - `datasets/FinDap/FinDAP/` — The FinDAP training framework (Salesforce repo). This is the main codebase.
 - `datasets/FinEval/` — Evaluation datasets: CFA-Challenge (90 hard), CFA-Easy (1,032), CRA-Bigdata (1,472)
 - `datasets/FinTrain/` — Training datasets: apex_instruct (1.4M), book_fineweb (4,500 CPT), cfa_exercise (2,946)
-- `experiments/RAG/` — Active RAG experiment scripts: 4 implementations (LangGraph agent, LangChain advanced, LlamaIndex standard, LlamaIndex vector-only). Requires `OPENAI_API_KEY` and separate deps in `requirements_rag.txt`.
+- `experiments/` — Active experiment modules, each self-contained with `run_experiment.py` CLI. Key modules: A1 (open-ended), A5 (option bias), B1 (multi-step agent), C1 (RAG), D1 (calibration), D4 (overconfidence risk), E1 (error analysis), I1 (counterfactual), I2 (behavioral biases), I3 (noise sensitivity)
+- `experiments/shared/` — Shared infrastructure: `llm_client.py` (OpenAI/Ollama), `config.py` (model registry), `prompts.py` (answer extraction), `evaluation.py` (metrics), `data_loader.py`
 - `scripts/` — Dataset download/analysis Python scripts
 - `reference/` — Generated analysis artifacts (JSON, markdown comparison tables)
 - `models/` — Model metadata JSON only (no weights)
@@ -47,6 +49,24 @@ python scripts/download_and_analyze.py        # Download and analyze all dataset
 python scripts/analyze_comparison.py          # Generate comparative analysis
 python scripts/download_and_verify_all.py     # Download with verification
 ```
+
+### Running Experiments (Primary workflow)
+```bash
+# Setup
+conda create -n cfa-llm python=3.10 && conda activate cfa-llm
+pip install openai python-dotenv tqdm requests pydantic
+echo "OPENAI_API_KEY=your-key" > .env
+
+# Run individual experiments (all use same CLI pattern)
+python -m experiments.A5_option_bias.run_experiment --dataset easy --limit 5 --model gpt-4o-mini
+python -m experiments.A1_open_ended.run_experiment --dataset easy --limit 5 --model gpt-4o-mini
+python -m experiments.I1_counterfactual.run_experiment --dataset easy --limit 5 --model gpt-4o-mini
+python -m experiments.I2_behavioral_biases.run_experiment --bias-types loss_aversion anchoring --limit 5 --model gpt-4o-mini
+python -m experiments.I3_noise_red_herrings.run_experiment --dataset easy --limit 5 --model gpt-4o-mini --noise-types N1 N2 N3 N4
+python -m experiments.D4_overconfident_risk.run_experiment --input "experiments/D1_confidence_calibration/results/run_*/results.json" --confidence-threshold 0.8 --limit 5
+```
+
+Results are saved to `experiments/XX/results/run_YYYYMMDD_HHMMSS/results.json`.
 
 ### Training (3-stage pipeline via Accelerate + FSDP)
 ```bash
@@ -107,30 +127,42 @@ The string is checked for substring `"dpo"` in `posttrain.py:52` to select the t
 - `--downsample` — Balances data distribution via downsampling
 - `--model_name` — HuggingFace model ID (e.g., `meta-llama/Meta-Llama-3-8B-Instruct`)
 
-## RAG Experiments (`experiments/RAG/`)
+## Experiments Framework (`experiments/`)
 
-Separate from the FinDAP training pipeline. Uses OpenAI embeddings (`text-embedding-3-large`) + Milvus Lite vector DB.
+The primary development workflow. Each experiment module is self-contained with consistent structure:
+
+```
+experiments/XX_name/
+├── __init__.py
+├── config.py           # Experiment-specific constants, prompts
+├── run_experiment.py   # Main CLI (argparse)
+├── analysis.py         # Post-processing
+└── results/            # JSON output
+```
+
+### Shared Infrastructure (`experiments/shared/`)
+- `config.py` — `MODEL_REGISTRY` with pricing for gpt-4o-mini, gpt-4o, gpt-4.1, gpt-4.1-nano, gpt-5-mini, qwen3:32b, llama3.1:8b, deepseek-r1:14b
+- `llm_client.py` — `LLMClient` class: OpenAI/Ollama dual backend with retry logic, logprobs support for local models
+- `prompts.py` — `extract_answer()`: 5-layer regex answer extraction
+- `evaluation.py` — `tolerance_match()`, `semantic_match_judge()`, `mcnemar_test()`
+- `data_loader.py` — Unified dataset loading interface
+
+### RAG Experiments (`experiments/C1_hybrid_retrieval/`)
+
+Separate from the main experiment framework. Uses OpenAI embeddings (`text-embedding-3-large`) + Milvus Lite vector DB.
 
 ```bash
-pip install -r experiments/RAG/requirements_rag.txt
+pip install -r experiments/C1_hybrid_retrieval/requirements_rag.txt
 export OPENAI_API_KEY="your-key"
 
 # Four independent RAG implementations:
-python experiments/RAG/rag_agent_pragmatist.py       # LangGraph multi-turn agent
-python experiments/RAG/rag_langchain_advanced.py     # LangChain: rewrite + subquery + hybrid + rerank
-python experiments/RAG/rag_llama_index.py            # LlamaIndex standard
-python experiments/RAG/rag_llama_index_vector.py     # LlamaIndex vector-only
-
-# Evaluation runners:
-python experiments/RAG/run_agent_v43_pragmatist_evaluation.py
-python experiments/RAG/run_langchain_advanced_eval.py
-python experiments/RAG/run_llama_index_evaluation.py
-python experiments/RAG/run_llama_index_vector_only.py
+python experiments/C1_hybrid_retrieval/rag_agent_pragmatist.py       # LangGraph multi-turn agent
+python experiments/C1_hybrid_retrieval/rag_langchain_advanced.py     # LangChain: rewrite + subquery + hybrid + rerank
+python experiments/C1_hybrid_retrieval/rag_llama_index.py            # LlamaIndex standard
+python experiments/C1_hybrid_retrieval/rag_llama_index_vector.py     # LlamaIndex vector-only
 ```
 
-**Two separate data paths exist in the RAG code:**
-- The 4 base RAG implementations use `data_loader.py` which looks for `thelma2/qa_dataset.json` (relative to working directory). This file is not checked into the repo and must be provided.
-- The 4 evaluation runners load from `./data/ultimate_rag_challenge_questions.json` (also not in repo), which includes `gold_evidence` fields with `doc_id` and `text_snippet` for building the vector store.
+**Data paths (not in repo):** RAG implementations expect `thelma2/qa_dataset.json`; evaluation runners expect `./data/ultimate_rag_challenge_questions.json`.
 
 ## Dataset Notes
 
@@ -144,3 +176,10 @@ python experiments/RAG/run_llama_index_vector_only.py
 
 - `.gitignore` excludes all large data files (`datasets/FinTrain/*/data.json`, `datasets/CFA_Extracted/*/data.json`) and the entire `datasets/FinDap/` directory (nested git repo). Dataset metadata/READMEs are tracked but raw data is not.
 - Performance baselines from project research: o4-mini achieves 79.1% on CFA Level III; GPT-4o scores 60.9% on financial math reasoning (vs. 92% human). These numbers inform the 20%+ error gap the research aims to address.
+
+## Key Files
+
+- `README.md` — Project overview with quick navigation, experiment commands, supported models
+- `NOTE.md` — Comprehensive notes on all 41 research ideas with concrete examples (繁中)
+- `RESULTS.md` — POC experiment results from 6 validated pipelines
+- `MODELS.md` — Model pricing quick reference

@@ -63,6 +63,7 @@ def semantic_match_judge(
     student_answer: str,
     gold_answer: str,
     client: Optional[LLMClient] = None,
+    judge_model: Optional[str] = None,
 ) -> Dict[str, Any]:
     """Use LLM-as-judge to evaluate a free-form answer.
 
@@ -70,13 +71,18 @@ def semantic_match_judge(
         question: The original question text.
         student_answer: The model's response.
         gold_answer: The correct/reference answer.
-        client: LLMClient instance. If None, creates a gpt-4o-mini client.
+        client: LLMClient instance. If None, creates client from judge_model or default.
+        judge_model: Model name for judging (e.g., "gpt-4o", "claude-sonnet-4.5").
+                    If None, uses DEFAULT_JUDGE_MODEL from config.
 
     Returns:
         {"verdict": str, "reasoning": str, "raw_response": str}
     """
+    from .config import DEFAULT_JUDGE_MODEL
+
     if client is None:
-        client = LLMClient(MODEL_REGISTRY["gpt-4o-mini"])
+        model_name = judge_model or DEFAULT_JUDGE_MODEL
+        client = LLMClient(MODEL_REGISTRY[model_name])
 
     messages = [
         {"role": "system", "content": JUDGE_SYSTEM},

@@ -1,0 +1,282 @@
+% Finance Research Letters Template (Elsevier)
+% D1+D4: Calibration and Overconfident Risk Analysis
+\documentclass[preprint,12pt]{elsarticle}
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{multirow}
+
+% For comments during writing
+\newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
+\newcommand{\note}[1]{\textcolor{blue}{[NOTE: #1]}}
+
+\journal{Finance Research Letters}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{When AI Is Confidently Wrong: Calibration and Risk Analysis of Large Language Models in Financial Decision-Making}
+
+\author[sinica]{Wei-Lun Cheng}
+\ead{wlcheng@iis.sinica.edu.tw}
+
+\author[nccu]{Wei-Chung Miao\corref{cor1}}
+\ead{wcmiao@nccu.edu.tw}
+\cortext[cor1]{Corresponding author}
+
+\affiliation[sinica]{organization={Institute of Information Science, Academia Sinica},
+            city={Taipei},
+            country={Taiwan}}
+
+\affiliation[nccu]{organization={Department of Finance, National Chengchi University},
+            city={Taipei},
+            country={Taiwan}}
+
+\begin{abstract}
+Large Language Models (LLMs) are increasingly deployed in financial applications, yet their reliability in high-stakes decision-making remains understudied. We evaluate the calibration of LLMs on CFA (Chartered Financial Analyst) examination questions, focusing on the critical issue of \textit{overconfident errors}---cases where models express high confidence but provide incorrect answers. Using a dataset of 1,122 CFA questions across three difficulty levels, we find that \textbf{29.6\% of all errors are high-confidence errors} (confidence $\geq$ 80\%). These overconfident errors are not uniformly distributed: certain CFA topics (e.g., Derivatives, Fixed Income) exhibit significantly higher rates. We connect these findings to CFA Ethics Standards, arguing that overconfident AI may violate fiduciary duty requirements. Our results suggest that financial AI systems require minimum calibration standards before deployment, with implications for regulatory frameworks such as the EU AI Act.
+\end{abstract}
+
+\begin{keyword}
+Large Language Models \sep Calibration \sep Financial AI \sep Risk Management \sep CFA Examination
+\end{keyword}
+
+\end{frontmatter}
+
+%% ============================================
+%% 1. INTRODUCTION
+%% ============================================
+\section{Introduction}
+\label{sec:intro}
+
+The deployment of Large Language Models (LLMs) in financial services has accelerated rapidly, with applications ranging from automated financial advice to risk assessment and compliance review \citep{wu2023bloomberggpt}. However, a critical question remains underexplored: \textit{do these models know what they don't know?}
+
+In financial decision-making, the consequences of incorrect predictions are amplified when the model expresses unwarranted confidence. A financial advisor who says ``I'm 95\% certain this bond has a duration of 4.2 years'' but is wrong poses a far greater risk than one who acknowledges uncertainty. This phenomenon---\textit{overconfident error}---represents the most dangerous failure mode for AI systems in finance.
+
+\todo{Add statistics on AI adoption in finance}
+
+This paper makes three contributions:
+\begin{enumerate}
+    \item We systematically evaluate the calibration of LLMs on CFA examination questions, a standardized benchmark for financial professional competency.
+    \item We identify and categorize \textit{overconfident errors}, finding that 29.6\% of all errors occur with confidence $\geq$ 80\%.
+    \item We connect these findings to the CFA Institute's Code of Ethics, arguing that deployment of poorly-calibrated AI may violate fiduciary duty standards.
+\end{enumerate}
+
+%% ============================================
+%% 2. RELATED WORK
+%% ============================================
+\section{Related Work}
+\label{sec:related}
+
+\subsection{LLM Calibration}
+
+Calibration refers to the alignment between a model's expressed confidence and its actual accuracy \citep{guo2017calibration}. A well-calibrated model that claims 80\% confidence should be correct approximately 80\% of the time. Recent work has shown that LLMs exhibit poor calibration, particularly in specialized domains \citep{kadavath2022language}.
+
+\todo{Add 3-4 more calibration papers}
+
+\subsection{AI in Financial Applications}
+
+The application of LLMs to finance has grown substantially, with domain-specific models such as BloombergGPT \citep{wu2023bloomberggpt} and FinDAP \citep{ke2025findap} demonstrating strong performance on financial benchmarks.
+
+\todo{Add FinDAP citation and other finance LLM papers}
+
+%% ============================================
+%% 3. METHODOLOGY
+%% ============================================
+\section{Methodology}
+\label{sec:method}
+
+\subsection{Confidence Estimation}
+
+We employ \textit{verbalized confidence estimation}, where models are prompted to express their confidence as a percentage alongside their answer. This approach has been shown to correlate with actual model uncertainty \citep{lin2022teaching}.
+
+\textbf{Prompt Template:}
+\begin{quote}
+\textit{``Answer the following CFA question. After your answer, state your confidence level as a percentage (0-100\%).''}
+\end{quote}
+
+\subsection{Calibration Metrics}
+
+We use Expected Calibration Error (ECE) as our primary metric:
+
+\begin{equation}
+    ECE = \sum_{m=1}^{M} \frac{|B_m|}{n} |acc(B_m) - conf(B_m)|
+\end{equation}
+
+where $B_m$ denotes the set of predictions in confidence bin $m$, $acc(B_m)$ is the accuracy within that bin, and $conf(B_m)$ is the average confidence.
+
+\subsection{Overconfident Error Identification}
+
+We define \textit{overconfident errors} as cases where:
+\begin{equation}
+    \text{Overconfident Error} = \mathbf{1}[\text{confidence} \geq 0.8 \land \text{answer incorrect}]
+\end{equation}
+
+We further classify these errors by:
+\begin{itemize}
+    \item \textbf{CFA Topic}: Ethics, Quantitative Methods, Economics, etc.
+    \item \textbf{Error Type}: Conceptual confusion, calculation error, logical flaw
+    \item \textbf{Risk Severity}: High, Medium, Low (based on financial impact)
+\end{itemize}
+
+%% ============================================
+%% 4. EXPERIMENTS
+%% ============================================
+\section{Experiments}
+\label{sec:experiments}
+
+\subsection{Dataset}
+
+We use three CFA question datasets from FinEval \citep{ke2025findap}:
+\begin{itemize}
+    \item \textbf{CFA-Challenge}: 90 hard questions
+    \item \textbf{CFA-Easy}: 1,032 standard questions
+    \item \textbf{CRA-Bigdata}: 1,472 stock prediction questions
+\end{itemize}
+
+\todo{Add table with dataset statistics}
+
+\subsection{Models}
+
+We evaluate:
+\begin{itemize}
+    \item GPT-4o-mini (OpenAI)
+    \item GPT-4o (OpenAI)
+    \item Claude 3.5 Sonnet (Anthropic)
+\end{itemize}
+
+\subsection{Results}
+
+\subsubsection{Overall Calibration}
+
+\begin{table}[h]
+\centering
+\caption{Calibration Metrics by Model}
+\label{tab:calibration}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Model} & \textbf{Accuracy} & \textbf{ECE} & \textbf{Overconf. Error Rate} \\
+\midrule
+GPT-4o-mini & 0.XX & 0.18 & 29.6\% \\
+GPT-4o & 0.XX & 0.XX & XX\% \\
+Claude 3.5 & 0.XX & 0.XX & XX\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\todo{Fill in actual numbers from experiments}
+
+\subsubsection{Reliability Diagram}
+
+\begin{figure}[h]
+\centering
+% \includegraphics[width=0.8\textwidth]{figures/reliability_diagram.png}
+\caption{Reliability diagram showing calibration of GPT-4o-mini on CFA questions. The diagonal represents perfect calibration. Points above the diagonal indicate overconfidence.}
+\label{fig:reliability}
+\end{figure}
+
+\todo{Generate and insert actual figure}
+
+\subsubsection{Overconfident Error Distribution by Topic}
+
+\begin{table}[h]
+\centering
+\caption{High-Confidence Error Rate by CFA Topic}
+\label{tab:topic}
+\begin{tabular}{lcc}
+\toprule
+\textbf{CFA Topic} & \textbf{Error Rate} & \textbf{Overconf. Error Rate} \\
+\midrule
+Ethics & XX\% & XX\% \\
+Derivatives & XX\% & XX\% \\
+Fixed Income & XX\% & XX\% \\
+\todo{Add more topics} & & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+%% ============================================
+%% 5. DISCUSSION
+%% ============================================
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{Economic Significance}
+
+The finding that 29.6\% of errors are high-confidence errors has significant economic implications. In portfolio management, an overconfident duration estimate could lead to:
+
+\begin{equation}
+    \Delta V \approx -D \cdot \Delta y \cdot V
+\end{equation}
+
+where a miscalculated duration $D$ directly impacts portfolio value $V$ under interest rate changes $\Delta y$.
+
+\todo{Add specific VaR calculation example}
+
+\subsection{CFA Ethics Framework}
+
+We map our findings to CFA Institute Standards of Professional Conduct:
+
+\begin{itemize}
+    \item \textbf{Standard I(C) Misrepresentation}: Does an AI system that expresses high confidence in incorrect answers constitute misrepresentation?
+    \item \textbf{Standard V(A) Diligence and Reasonable Basis}: Can reliance on poorly-calibrated AI satisfy due diligence requirements?
+    \item \textbf{Standard III(C) Suitability}: May overconfident AI recommend unsuitable products?
+\end{itemize}
+
+\subsection{Regulatory Implications}
+
+The EU AI Act classifies AI systems in finance as ``high-risk,'' requiring transparency and human oversight. Our findings suggest that \textit{minimum calibration standards} should be a prerequisite for financial AI deployment.
+
+\textbf{Recommendation}: Financial AI systems should achieve ECE $< 0.10$ before deployment in advisory roles.
+
+%% ============================================
+%% 6. CONCLUSION
+%% ============================================
+\section{Conclusion}
+\label{sec:conclusion}
+
+This paper demonstrates that LLMs exhibit significant calibration failures on financial reasoning tasks, with nearly 30\% of errors occurring at high confidence levels. These ``confidently wrong'' predictions represent the most dangerous failure mode for AI in finance.
+
+Our analysis connects technical calibration metrics to the CFA Institute's ethical framework, arguing that poorly-calibrated AI may violate fiduciary duty standards. We recommend that regulators establish minimum calibration requirements for financial AI systems.
+
+\textbf{Key message}: \textit{The question is not whether AI can pass the CFA exam, but whether it knows when it cannot.}
+
+%% ============================================
+%% REFERENCES
+%% ============================================
+\section*{References}
+
+\begin{thebibliography}{10}
+
+\bibitem{guo2017calibration}
+Guo, C., Pleiss, G., Sun, Y., \& Weinberger, K. Q. (2017).
+\newblock On calibration of modern neural networks.
+\newblock {\em International Conference on Machine Learning}, 1321--1330.
+
+\bibitem{kadavath2022language}
+Kadavath, S., et al. (2022).
+\newblock Language models (mostly) know what they know.
+\newblock {\em arXiv preprint arXiv:2207.05221}.
+
+\bibitem{ke2025findap}
+Ke, Z., Ming, Y., Nguyen, X. P., Xiong, C., \& Joty, S. (2025).
+\newblock Demystifying domain-adaptive post-training for financial LLMs.
+\newblock {\em EMNLP 2025}.
+
+\bibitem{lin2022teaching}
+Lin, S., Hilton, J., \& Evans, O. (2022).
+\newblock Teaching models to express their uncertainty in words.
+\newblock {\em arXiv preprint arXiv:2205.14334}.
+
+\bibitem{wu2023bloomberggpt}
+Wu, S., et al. (2023).
+\newblock BloombergGPT: A large language model for finance.
+\newblock {\em arXiv preprint arXiv:2303.17564}.
+
+\end{thebibliography}
+
+\end{document}

@@ -1,16 +1,14 @@
-"""Unified LLM client for OpenAI and Ollama backends."""
+"""Unified LLM client for OpenAI, Anthropic, Google Gemini, DeepSeek, and Ollama backends."""
 
 import json
 import logging
 import math
+import os
 import time
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
 import requests
-from openai import APITimeoutError, OpenAI
-
-from .config import ModelConfig
 
 logger = logging.getLogger(__name__)
 
@@ -27,22 +25,87 @@ class LLMResponse:
     completion_tokens: int = 0
     elapsed: float = 0.0
     logprobs: Optional[List[Dict[str, Any]]] = None
+    model: str = ""
 
 
 class LLMClient:
-    """Unified client wrapping OpenAI API and Ollama (OpenAI-compatible + native)."""
+    """Unified client wrapping OpenAI, Anthropic, Gemini, DeepSeek, and Ollama APIs."""
 
-    def __init__(self, config: ModelConfig):
+    def __init__(self, config: "ModelConfig"):
+        from .config import ModelConfig  # Avoid circular import
+
         self.config = config
         self._timeout = config.timeout
+        self._client = None
+
+        # Initialize the appropriate client based on backend
         if config.backend == "openai":
-            self._client = OpenAI(timeout=self._timeout)
+            self._init_openai()
+        elif config.backend == "anthropic":
+            self._init_anthropic()
+        elif config.backend == "gemini":
+            self._init_gemini()
+        elif config.backend == "deepseek":
+            self._init_deepseek()
+        elif config.backend == "ollama":
+            self._init_ollama()
         else:
-            self._client = OpenAI(
-                base_url=config.base_url or "http://localhost:11434/v1",
-                api_key="ollama",
-                timeout=self._timeout,
-            )
+            raise ValueError(f"Unknown backend: {config.backend}")
+
+    def _init_openai(self):
+        """Initialize OpenAI client."""
+        from openai import OpenAI
+        api_key = os.getenv("OPENAI_API_KEY")
+        if not api_key:
+            raise ValueError("OPENAI_API_KEY not set")
+        self._client = OpenAI(api_key=api_key, timeout=self._timeout)
+
+    def _init_anthropic(self):
+        """Initialize Anthropic client."""
+        try:
+            import anthropic
+        except ImportError:
+            raise ImportError("Please install anthropic: pip install anthropic")
+
+        api_key = os.getenv("ANTHROPIC_API_KEY")
+        if not api_key:
+            raise ValueError("ANTHROPIC_API_KEY not set")
+        self._client = anthropic.Anthropic(api_key=api_key)
+
+    def _init_gemini(self):
+        """Initialize Google Gemini client."""
+        try:
+            import google.generativeai as genai
+        except ImportError:
+            raise ImportError("Please install google-generativeai: pip install google-generativeai")
+
+        api_key = os.getenv("GEMINI_API_KEY")
+        if not api_key:
+            raise ValueError("GEMINI_API_KEY not set")
+        genai.configure(api_key=api_key)
+        self._client = genai
+
+    def _init_deepseek(self):
+        """Initialize DeepSeek client (OpenAI-compatible API)."""
+        from openai import OpenAI
+        api_key = os.getenv("DEEPSEEK_API_KEY")
+        if not api_key:
+            raise ValueError("DEEPSEEK_API_KEY not set")
+        self._client = OpenAI(
+            api_key=api_key,
+            base_url="https://api.deepseek.com/v1",
+            timeout=self._timeout,
+        )
+
+    def _init_ollama(self):
+        """Initialize Ollama client (OpenAI-compatible API)."""
+        from openai import OpenAI
+        base_url = self.config.base_url or os.getenv("OLLAMA_BASE_URL", "http://localhost:11434/v1")
+        self._client = OpenAI(
+            base_url=base_url,
+            api_key="ollama",  # Ollama doesn't need real API key
+            timeout=self._timeout,
+        )
 
     @property
     def name(self) -> str:
@@ -58,7 +121,24 @@ class LLMClient:
         temperature: float = 0.0,
         max_tokens: int = 2000,
     ) -> LLMResponse:
-        """Standard chat completion (works for both OpenAI and Ollama)."""
+        """Standard chat completion - routes to appropriate backend."""
+        if self.config.backend == "anthropic":
+            return self._chat_anthropic(messages, temperature, max_tokens)
+        elif self.config.backend == "gemini":
+            return self._chat_gemini(messages, temperature, max_tokens)
+        else:
+            # OpenAI, DeepSeek, Ollama all use OpenAI-compatible API
+            return self._chat_openai_compatible(messages, temperature, max_tokens)
+
+    def _chat_openai_compatible(
+        self,
+        messages: List[Dict[str, str]],
+        temperature: float,
+        max_tokens: int,
+    ) -> LLMResponse:
+        """Chat using OpenAI-compatible API (OpenAI, DeepSeek, Ollama)."""
+        from openai import APITimeoutError
+
         last_err = None
         for attempt in range(MAX_RETRIES):
             try:
@@ -79,8 +159,149 @@ class LLMClient:
                     prompt_tokens=usage.prompt_tokens if usage else 0,
                     completion_tokens=usage.completion_tokens if usage else 0,
                     elapsed=round(elapsed, 2),
+                    model=self.config.model_id,
                 )
             except (APITimeoutError, requests.ConnectionError) as e:
+                last_err = e
+                wait = RETRY_BACKOFF[min(attempt, len(RETRY_BACKOFF) - 1)]
+                logger.warning(
+                    "%s chat attempt %d/%d failed (%s), retrying in %ds",
+                    self.config.name, attempt + 1, MAX_RETRIES, e, wait,
+                )
+                time.sleep(wait)
+        raise TimeoutError(
+            f"{self.config.name} chat failed after {MAX_RETRIES} retries: {last_err}"
+        )
+
+    def _chat_anthropic(
+        self,
+        messages: List[Dict[str, str]],
+        temperature: float,
+        max_tokens: int,
+    ) -> LLMResponse:
+        """Chat using Anthropic Claude API."""
+        # Extract system message if present
+        system_content = ""
+        chat_messages = []
+        for msg in messages:
+            if msg["role"] == "system":
+                system_content = msg["content"]
+            else:
+                chat_messages.append(msg)
+
+        last_err = None
+        for attempt in range(MAX_RETRIES):
+            try:
+                t0 = time.time()
+
+                kwargs = {
+                    "model": self.config.model_id,
+                    "max_tokens": max_tokens,
+                    "messages": chat_messages,
+                }
+                if temperature > 0:
+                    kwargs["temperature"] = temperature
+                if system_content:
+                    kwargs["system"] = system_content
+
+                response = self._client.messages.create(**kwargs)
+                elapsed = time.time() - t0
+
+                content = ""
+                if response.content:
+                    content = response.content[0].text
+
+                return LLMResponse(
+                    content=content,
+                    prompt_tokens=response.usage.input_tokens if response.usage else 0,
+                    completion_tokens=response.usage.output_tokens if response.usage else 0,
+                    elapsed=round(elapsed, 2),
+                    model=self.config.model_id,
+                )
+            except Exception as e:
+                last_err = e
+                wait = RETRY_BACKOFF[min(attempt, len(RETRY_BACKOFF) - 1)]
+                logger.warning(
+                    "%s chat attempt %d/%d failed (%s), retrying in %ds",
+                    self.config.name, attempt + 1, MAX_RETRIES, e, wait,
+                )
+                time.sleep(wait)
+        raise TimeoutError(
+            f"{self.config.name} chat failed after {MAX_RETRIES} retries: {last_err}"
+        )
+
+    def _chat_gemini(
+        self,
+        messages: List[Dict[str, str]],
+        temperature: float,
+        max_tokens: int,
+    ) -> LLMResponse:
+        """Chat using Google Gemini API."""
+        # Convert messages to Gemini format
+        system_instruction = ""
+        gemini_messages = []
+
+        for msg in messages:
+            if msg["role"] == "system":
+                system_instruction = msg["content"]
+            elif msg["role"] == "user":
+                gemini_messages.append({"role": "user", "parts": [msg["content"]]})
+            elif msg["role"] == "assistant":
+                gemini_messages.append({"role": "model", "parts": [msg["content"]]})
+
+        last_err = None
+        for attempt in range(MAX_RETRIES):
+            try:
+                t0 = time.time()
+
+                # Create model with optional system instruction
+                model_kwargs = {}
+                if system_instruction:
+                    model_kwargs["system_instruction"] = system_instruction
+
+                model = self._client.GenerativeModel(
+                    self.config.model_id,
+                    **model_kwargs
+                )
+
+                # Configure generation
+                generation_config = self._client.types.GenerationConfig(
+                    max_output_tokens=max_tokens,
+                    temperature=temperature if temperature > 0 else None,
+                )
+
+                # Start chat or generate
+                if len(gemini_messages) == 1:
+                    response = model.generate_content(
+                        gemini_messages[0]["parts"][0],
+                        generation_config=generation_config,
+                    )
+                else:
+                    chat = model.start_chat(history=gemini_messages[:-1])
+                    response = chat.send_message(
+                        gemini_messages[-1]["parts"][0],
+                        generation_config=generation_config,
+                    )
+
+                elapsed = time.time() - t0
+
+                content = response.text if response.text else ""
+
+                # Token counting (approximate if not available)
+                prompt_tokens = 0
+                completion_tokens = 0
+                if hasattr(response, 'usage_metadata'):
+                    prompt_tokens = getattr(response.usage_metadata, 'prompt_token_count', 0)
+                    completion_tokens = getattr(response.usage_metadata, 'candidates_token_count', 0)
+
+                return LLMResponse(
+                    content=content,
+                    prompt_tokens=prompt_tokens,
+                    completion_tokens=completion_tokens,
+                    elapsed=round(elapsed, 2),
+                    model=self.config.model_id,
+                )
+            except Exception as e:
                 last_err = e
                 wait = RETRY_BACKOFF[min(attempt, len(RETRY_BACKOFF) - 1)]
                 logger.warning(
@@ -103,6 +324,10 @@ class LLMClient:
         Falls back to standard chat if logprobs are unavailable.
         """
         if not self.config.supports_logprobs:
+            return self.chat(messages, temperature, max_tokens)
+
+        # Only Ollama supports logprobs in our setup
+        if self.config.backend != "ollama":
             return self.chat(messages, temperature, max_tokens)
 
         base = (self.config.base_url or "http://localhost:11434/v1").replace("/v1", "")
@@ -140,6 +365,7 @@ class LLMClient:
                     completion_tokens=completion_tokens,
                     elapsed=round(elapsed, 2),
                     logprobs=logprobs,
+                    model=self.config.model_id,
                 )
             except (requests.ConnectionError, requests.Timeout) as e:
                 last_err = e
@@ -209,3 +435,24 @@ def _normalize_logprob_list(items: list) -> List[Dict[str, Any]]:
                     "prob": math.exp(float(logprob)),
                 })
     return result
+
+
+# ---------------------------------------------------------------------------
+# Convenience functions
+# ---------------------------------------------------------------------------
+
+def get_client(model_name: str) -> LLMClient:
+    """Get an LLMClient by model name from the registry."""
+    from .config import MODEL_REGISTRY
+
+    if model_name not in MODEL_REGISTRY:
+        available = ", ".join(sorted(MODEL_REGISTRY.keys()))
+        raise ValueError(f"Unknown model: {model_name}. Available: {available}")
+
+    return LLMClient(MODEL_REGISTRY[model_name])
+
+
+def list_available_models() -> List[str]:
+    """List all available model names."""
+    from .config import MODEL_REGISTRY
+    return sorted(MODEL_REGISTRY.keys())
