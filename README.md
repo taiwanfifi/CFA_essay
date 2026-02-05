@@ -192,7 +192,8 @@ python -m experiments.D4_overconfident_risk.run_experiment --input "experiments/
 | OpenAI | gpt-4.1-nano | $0.10 | $0.40 |
 | OpenAI | gpt-5-mini | $0.25 | $2.00 |
 | Anthropic | Claude 3.5 Sonnet | $3.00 | $15.00 |
-| Google | Gemini 2.5 | Free tier | — |
+| Google | Gemini 2.5 Pro | $1.25 | $10.00 |
+| Google | Gemini 2.5 Flash | $0.15 | $0.60 |
 
 ### 本地模型 (Ollama)
 

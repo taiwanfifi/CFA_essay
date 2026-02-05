@@ -23,11 +23,13 @@
 
 ## Google
 
-| Model | 備註 |
-|-------|------|
-| gemini-2.5-pro | Free tier 有額度 |
-| gemini-2.5-flash | Free tier 有額度 |
-| gemini-3-pro-preview | Preview |
+| Model | Input | Output | 備註 |
+|-------|------:|-------:|------|
+| gemini-2.5-pro | $1.25 | $10.00 | ≤200K context |
+| gemini-2.5-flash | $0.15 | $0.60 | 快速推理 |
+| gemini-2.0-flash | $0.10 | $0.40 | 最便宜 |
+
+> 💰 **定價排序**（便宜→貴）：DeepSeek（本地免費）< OpenAI < Google ≈ Anthropic
 
 ## Local (Ollama)
 
