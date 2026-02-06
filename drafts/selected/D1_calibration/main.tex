@@ -37,7 +37,7 @@
 
 \begin{abstract}
 Large Language Models (LLMs) are increasingly deployed in financial applications, yet their reliability in high-stakes decision-making remains understudied.
-We evaluate the confidence calibration of LLMs on 257 CFA (Chartered Financial Analyst) examination questions using two models (GPT-4o-mini, Qwen3-32B) and two confidence estimation methods (verbalized, self-consistency).
+We evaluate the confidence calibration of LLMs on 90 CFA (Chartered Financial Analyst) examination questions, generating 257 model--method observations using two models (GPT-4o-mini, Qwen3-32B) and two confidence estimation methods (verbalized, self-consistency).
 We find pervasive overconfidence: the average expressed confidence exceeds actual accuracy by 22--32 percentage points ($t = 9.70$, $p < 0.0001$).
 Critically, \textbf{30.0\% of all responses are high-confidence errors} (confidence $\geq 80\%$), and among incorrect answers, 66.4\% are delivered with high confidence.
 These overconfident errors are not uniformly distributed: Ethics \& Standards questions exhibit a 43.5\% overconfident error rate, compared to 22.2\% for Derivatives ($\chi^2 = 12.37$, $p = 0.030$).
@@ -223,7 +223,7 @@ Figure~\ref{fig:overconf_gap} visualizes the overconfidence gap across all confi
 
 \subsection{Overconfident Error Analysis}
 
-Table~\ref{tab:overconf} details the overconfident error profile. Across all 257 observations, 77 are overconfident errors (30.0\%), significantly exceeding a 20\% baseline (binomial test, $z = 3.99$, $p < 0.0001$; H3). Among the 116 incorrect answers, 66.4\% are delivered with confidence $\geq 80\%$ ($z = 3.53$, $p = 0.0002$), meaning that \textit{most errors are high-confidence errors}. The average confidence of overconfident errors is 89.0\%.
+Table~\ref{tab:overconf} details the overconfident error profile. Across all 257 observations, 77 are overconfident errors (30.0\%), significantly exceeding a 20\% baseline (binomial test, $z = 3.99$, $p < 0.0001$; H2). Among the 116 incorrect answers, 66.4\% are delivered with confidence $\geq 80\%$ ($z = 3.53$, $p = 0.0002$), meaning that \textit{most errors are high-confidence errors}. The average confidence of overconfident errors is 89.0\%.
 
 \begin{table}[htbp]
 \centering
@@ -244,7 +244,7 @@ Qwen3-32B / Verbalized & 72 & 28 & 14 & 19.4\% \\
 
 \subsection{Topic-Level Miscalibration}
 
-Table~\ref{tab:topic} reveals significant variation in overconfident error rates across CFA knowledge domains ($\chi^2 = 12.37$, $p = 0.030$; H4).
+Table~\ref{tab:topic} reveals significant variation in overconfident error rates across CFA knowledge domains ($\chi^2 = 12.37$, $p = 0.030$; H3).
 
 \begin{table}[htbp]
 \centering
@@ -295,9 +295,9 @@ Table~\ref{tab:hypotheses} summarizes all hypothesis tests:
 \textbf{Hypothesis} & \textbf{Test} & \textbf{Statistic} & \textbf{$p$-value} \\
 \midrule
 H1: Systematic overconfidence & One-sample $t$-test on confidence gap & $t = 9.70$ & $< 0.0001$*** \\
-H3: Overconf.\ error $> 20\%$ & Binomial test, $\hat{p} = 0.300$ & $z = 3.99$ & $< 0.0001$*** \\
-H3b: Majority of errors are overconf. & Binomial test, $\hat{p} = 0.664$ & $z = 3.53$ & 0.0002*** \\
-H4: Topic-dependent miscalib. & Chi-squared independence test & $\chi^2 = 12.37$ & 0.030* \\
+H2: Overconf.\ error $> 20\%$ & Binomial test, $\hat{p} = 0.300$ & $z = 3.99$ & $< 0.0001$*** \\
+H2b: Majority of errors are overconf. & Binomial test, $\hat{p} = 0.664$ & $z = 3.53$ & 0.0002*** \\
+H3: Topic-dependent miscalib. & Chi-squared independence test & $\chi^2 = 12.37$ & 0.030* \\
 \bottomrule
 \multicolumn{4}{l}{\small $^{***}p<0.001$; $^{*}p<0.05$}
 \end{tabular}
@@ -386,9 +386,21 @@ Our analysis connects technical calibration metrics to the CFA Institute's ethic
 The CFA-Challenge dataset is available via HuggingFace under the FinEval benchmark \citep{ke2025findap}. All experiment code, analysis scripts, and raw results are available at \url{https://github.com/[anonymized]}.
 
 %% ============================================
+%% DECLARATIONS
+%% ============================================
+\section*{Declaration of Competing Interest}
+The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
+
+\section*{CRediT Author Contributions}
+\textbf{Wei-Lun Cheng}: Conceptualization, Methodology, Software, Formal Analysis, Data Curation, Writing -- Original Draft, Visualization.
+\textbf{Wei-Chung Miao}: Supervision, Writing -- Review \& Editing.
+
+\section*{Acknowledgments}
+The authors thank the anonymous reviewers for their constructive feedback. Computational resources were provided by Academia Sinica.
+
+%% ============================================
 %% REFERENCES
 %% ============================================
-\section*{References}
 
 \begin{thebibliography}{20}
 

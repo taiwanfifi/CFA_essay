@@ -13,9 +13,6 @@
 \usepackage{multirow}
 \usepackage{enumitem}
 \usepackage{float}
-\usepackage{subcaption}
-\usepackage{algorithm}
-\usepackage{algpseudocode}
 \usepackage{natbib}
 \usepackage{lineno}
 
@@ -32,6 +29,7 @@
 \journal{Finance Research Letters}
 
 \begin{document}
+\linenumbers
 
 \begin{frontmatter}
 
@@ -70,7 +68,7 @@ behavioral finance \sep large language models \sep loss aversion \sep anchoring 
 
 The efficient market hypothesis assumes that market participants are rational agents who process information without systematic error \citep{fama1970efficient}. Decades of research in behavioral finance have dismantled this assumption: investors exhibit persistent cognitive biases---loss aversion, anchoring, the disposition effect, overconfidence, and others---that lead to predictable departures from expected utility maximization \citep{kahneman1979prospect, shefrin1985disposition, thaler1985mental}. These findings have profoundly shaped our understanding of asset pricing, portfolio management, and market microstructure.
 
-A new question now arises with the rapid deployment of large language models (LLMs) in financial services. Models such as GPT-4, BloombergGPT \citep{wu2023bloomberggpt}, and domain-adapted variants like Llama-Fin \citep{ke2025findap} are being used for equity research, risk assessment, client advisory, and automated trading. Industry estimates suggest that over 50\% of investment firms now use some form of AI-assisted analysis \citep{callanan2023gpt}. The implicit assumption behind this adoption is that AI systems, lacking human emotions, should be free from the behavioral biases that plague human decision-makers.
+A new question now arises with the rapid deployment of large language models (LLMs) in financial services. Models such as GPT-4, BloombergGPT \citep{wu2023bloomberggpt}, and domain-adapted variants like Llama-Fin \citep{ke2025findap} are being used for equity research, risk assessment, client advisory, and automated trading. The rapid deployment of LLMs in financial applications \citep{wu2023bloomberggpt, callanan2023gpt} raises fundamental questions about whether these systems, lacking human emotions, are truly free from the behavioral biases that plague human decision-makers.
 
 We challenge this assumption. LLMs are trained on massive corpora of human-authored text---analyst reports, financial news, investment forums, and textbooks---that contain not only factual information but also the reasoning patterns, heuristics, and systematic biases of their human authors. If loss-averse reasoning pervades financial commentary (``protect your downside'', ``avoid losses at all costs''), then a language model trained on such text may internalize loss aversion as a statistical regularity, reproducing it in its own recommendations even though it experiences no emotional discomfort from losses.
 
@@ -183,7 +181,7 @@ We define the \emph{debiasing effect} as the reduction in bias score achieved by
 
 \subsection{Overall Bias Measurement}
 
-Table~\ref{tab:overall} presents the aggregate results across all 20 scenarios tested on GPT-4o-mini. The model exhibits a mean bias score of 0.525 under bias-inducing framing, indicating that, on average, its financial recommendations are partially driven by the same cognitive biases documented in human subjects. Neutral re-framing reduces the mean score to 0.350, yielding an average debiasing effect of $+0.175$.
+Table~\ref{tab:overall} presents the aggregate results across all 20 scenarios tested on GPT-4o-mini. The model exhibits a mean bias score of 0.525 under bias-inducing framing, indicating that, on average, its financial recommendations are partially driven by the same cognitive biases documented in human subjects. Neutral re-framing reduces the mean score to 0.350, yielding an average debiasing effect of $+0.175$. A Wilcoxon signed-rank test on the 20 paired observations confirms that the bias-inducing condition elicits significantly higher scores than the neutral condition ($W = 136.0$, $p = 0.012$, $r = 0.56$).
 
 \begin{table}[H]
 \centering
@@ -204,6 +202,15 @@ Max                 & 1.00  & 0.50  & 0.50  \\
 \end{table}
 
 A notable feature of the expanded results is the emergence of \emph{extreme bias} in two scenarios: anchoring scenario an\_04 and framing scenario fr\_05 both received bias scores of 1.0---fully biased responses where the model's recommendation aligned completely with the bias-predicted choice. This contrasts with the majority of scenarios where the model produces hedged, ambivalent recommendations (bias score $= 0.50$). The presence of fully biased outliers suggests that certain scenario configurations can push the model past its default hedging behavior into unequivocal bias expression. One scenario (fr\_02) received a bias score of 0.0, indicating a fully rational response even under bias-inducing framing.
+
+Figure~\ref{fig:bias_score_comparison} provides a visual comparison of mean bias scores under bias-inducing versus neutral framing across all five bias types, illustrating that while the bias-inducing condition consistently elicits scores at or above 0.50, the effectiveness of neutral re-framing varies substantially by bias category.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig1_bias_score_comparison.pdf}
+\caption{Mean bias scores under bias-inducing versus neutral framing for each of the five behavioral bias types tested on GPT-4o-mini ($n=20$ scenarios). Bias scores range from 0 (fully rational) to 1 (fully biased). Loss aversion shows the largest gap between conditions, indicating high susceptibility to prompt-level debiasing, whereas recency bias and the disposition effect show no measurable difference between framings.}
+\label{fig:bias_score_comparison}
+\end{figure}
 
 \subsection{Results by Bias Type}
 
@@ -231,6 +238,15 @@ Disposition Effect & 2 & 0.500 & 0.500 & +0.000 \\
 The results reveal a striking hierarchy of debiasing effectiveness. Loss aversion exhibits the strongest debiasing response ($\Delta = +0.400$): neutral re-framing reduces the mean score from 0.500 to just 0.100, suggesting that loss-averse behavior is primarily triggered by emotional framing cues that quantitative re-framing can effectively neutralize. Anchoring shows moderate debiasing ($\Delta = +0.200$), while framing shows only weak debiasing ($\Delta = +0.100$). Most notably, recency bias and the disposition effect show \emph{zero} debiasing effect ($\Delta = +0.000$)---neutral framing has no measurable impact on these biases. This suggests that recency bias and the disposition effect are more deeply embedded in the model's learned reasoning patterns and cannot be overridden by prompt-level interventions alone.
 
 Anchoring is the only bias type where the mean bias score exceeds 0.500, driven by scenario an\_04 (GDP growth revision) which received a fully biased score of 1.0. This suggests that anchoring may be the bias most aggressively expressed by LLMs in financial contexts.
+
+The debiasing hierarchy is further illustrated in Figure~\ref{fig:debiasing_effect}, which plots the debiasing effect ($\Delta_{\text{debias}}$) for each bias type in descending order. The sharp drop-off from loss aversion ($+0.400$) to the zero-effect group (recency bias and disposition effect) underscores the qualitative distinction between framing-dependent biases amenable to prompt-level intervention and structurally embedded biases that resist such correction.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig2_debiasing_effect.pdf}
+\caption{Debiasing effect ($\Delta_{\text{debias}} = S_{\text{bias}} - S_{\text{neutral}}$) by bias type, sorted in descending order. Loss aversion exhibits the strongest debiasing response ($+0.400$), followed by anchoring ($+0.200$) and framing ($+0.100$). Recency bias and the disposition effect show zero debiasing effect ($+0.000$), indicating that these biases are resistant to prompt-level neutral re-framing.}
+\label{fig:debiasing_effect}
+\end{figure}
 
 \subsection{Scenario-Level Analysis}
 
@@ -360,7 +376,18 @@ Future work should expand the scenario count per bias type (to 20--30 for statis
 %% -----------------------------------------------------------------------
 %% References
 %% -----------------------------------------------------------------------
-\bibliographystyle{elsarticle-harv}
+\section*{Data Availability}
+The experimental scenarios and analysis code are available at \url{https://github.com/[anonymized]} upon publication.
+
+\section*{Declaration of Competing Interest}
+The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
+
+\section*{CRediT Author Contributions}
+\textbf{Wei-Lun Cheng}: Conceptualization, Methodology, Software, Formal Analysis, Data Curation, Writing -- Original Draft, Visualization.
+\textbf{Wei-Chung Miao}: Supervision, Writing -- Review \& Editing.
+
+\section*{Acknowledgments}
+The authors thank the anonymous reviewers for their constructive feedback. Computational resources were provided by Academia Sinica.
 
 \begin{thebibliography}{99}
 

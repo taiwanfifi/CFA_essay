@@ -221,8 +221,8 @@ Table~\ref{tab:perturbation} presents the core counterfactual perturbation findi
 \textbf{Condition} & \textbf{N Valid} & \textbf{Accuracy} & \textbf{Mem. Gap} & \textbf{$\Delta$} & \textbf{Direction} \\
 \midrule
 Original & 100 & 86.0\% & --- & --- & --- \\
-Level 1 (numerical) & 64 & 62.5\% & +23.5\% & $\downarrow$ & Memorization \\
-Level 2 (conditional) & 85 & 72.9\% & +13.1\% & $\downarrow$ & Memorization \\
+Level 1 (numerical) & 64 & 62.5\% & +23.5 pp & $\downarrow$ & Memorization \\
+Level 2 (conditional) & 85 & 72.9\% & +13.1 pp & $\downarrow$ & Memorization \\
 \midrule
 Robust Accuracy & 100 & 58.0\% & --- & --- & --- \\
 \bottomrule
@@ -234,9 +234,16 @@ Robust Accuracy & 100 & 58.0\% & --- & --- & --- \\
 \end{threeparttable}
 \end{table}
 
-The memorization gap of +23.5\% at Level 1 indicates that approximately one-quarter of the model's standard accuracy is attributable to numerical pattern matching rather than genuine financial reasoning. Notably, Level 2 (conditional perturbation) shows a smaller gap of +13.1\%, though this level had a higher valid perturbation rate (85 vs.\ 64 out of 100), suggesting that questions amenable to valid conditional perturbation may be inherently easier for the model to reason through.
+The memorization gap of +23.5 pp at Level 1 indicates that approximately one-quarter of the model's standard accuracy is attributable to numerical pattern matching rather than genuine financial reasoning. Notably, Level 2 (conditional perturbation) shows a smaller gap of +13.1 pp, though this level had a higher valid perturbation rate (85 vs.\ 64 out of 100), suggesting that questions amenable to valid conditional perturbation may be inherently easier for the model to reason through.
 
-The Robust Accuracy of 58.0\%---compared to 86.0\% standard accuracy---reveals that only about two-thirds of the model's apparent performance is genuinely robust. The remaining 28.0 percentage points represent brittle performance: correct on the memorized version but failing under perturbation. This ``memorization suspect'' rate of 28.0\% suggests that more than a quarter of the model's benchmark success may be attributable to pattern matching.
+The Robust Accuracy of 58.0\%---compared to 86.0\% standard accuracy---reveals that only about two-thirds of the model's apparent performance is genuinely robust. The remaining 28.0 percentage points represent brittle performance: correct on the memorized version but failing under perturbation. This ``memorization suspect'' rate of 28.0\% suggests that more than a quarter of the model's benchmark success may be attributable to pattern matching. Figure~\ref{fig:accuracy_degradation} presents the accuracy degradation cascade across perturbation levels, illustrating how performance progressively deteriorates from the original condition through increasingly demanding stress tests.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig1_accuracy_degradation.pdf}
+\caption{Accuracy degradation cascade across stress test conditions. Standard accuracy on original questions (86.0\%) drops substantially under Level 2 conditional perturbation (72.9\%) and Level 1 numerical perturbation (62.5\%), with Robust Accuracy---requiring correctness on both original and all perturbation variants---falling to 58.0\%. The progressive decline quantifies the memorization premium embedded in standard benchmark scores.}
+\label{fig:accuracy_degradation}
+\end{figure}
 
 \subsection{Noise Sensitivity Results}
 
@@ -267,7 +274,14 @@ N4 (contradictory) & 87.0\% & 3/100 & $-$0.012 & None \\
 
 The results reveal that noise sensitivity at scale is considerably lower than initial small-sample estimates suggested. N1 (irrelevant data injection) produces the highest sensitivity (NSI = 0.046), indicating that even clearly irrelevant data causes some confusion, though the effect is modest. N2 (misleading financial distractors) and N3 (format noise) both show minimal sensitivity (NSI = 0.012), while N4 (contradictory information) actually yields a slightly negative NSI ($-$0.012), suggesting that contradictory hints may occasionally prompt more careful reasoning.
 
-The overall pattern---NSI ranging from $-$0.012 to 0.046---indicates that GPT-4o-mini is substantially more noise-robust than the counterfactual perturbation results would suggest. This asymmetry is itself an important finding: the model's primary vulnerability lies in memorization-dependent reasoning rather than susceptibility to information noise. Real-world noise degrades performance by at most 4.6\%, far less than the 13--24\% degradation from counterfactual perturbation.
+The overall pattern---NSI ranging from $-$0.012 to 0.046---indicates that GPT-4o-mini is substantially more noise-robust than the counterfactual perturbation results would suggest. This asymmetry is itself an important finding: the model's primary vulnerability lies in memorization-dependent reasoning rather than susceptibility to information noise. Real-world noise degrades performance by at most 4.6\%, far less than the 13--24\% degradation from counterfactual perturbation. As shown in Figure~\ref{fig:noise_sensitivity}, the NSI values across all four noise types remain close to zero, with only N1 (irrelevant data injection) producing a notable positive effect.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig2_noise_sensitivity.pdf}
+\caption{Noise Sensitivity Index (NSI) by noise type. N1 (irrelevant data injection) causes the greatest performance degradation (NSI\,=\,0.046), while N2 (misleading distractors) and N3 (format noise) show minimal sensitivity (NSI\,=\,0.012 each). N4 (contradictory information) yields a slightly negative NSI ($-$0.012), suggesting that contradictory cues may occasionally trigger more deliberate reasoning. Overall, noise sensitivity is substantially lower than the memorization gap observed under counterfactual perturbation.}
+\label{fig:noise_sensitivity}
+\end{figure}
 
 \subsection{Combined Stress Test Framework}
 
@@ -287,7 +301,14 @@ Table~\ref{tab:combined} presents the combined 2$\times$2 analysis integrating b
 \end{tabular}
 \end{table}
 
-Standard accuracy (86.0\%) is the metric currently reported by all financial LLM benchmarks. Robust accuracy (58.0\%) accounts for memorization effects. Noise-degraded accuracy (82.0\% for worst-case N1 noise) accounts for real-world information noise. The gap between standard and robust accuracy---28.0 percentage points---represents the ``memorization premium'' in current benchmarks: inflated performance that evaporates when the AI encounters genuinely novel problems.
+Standard accuracy (86.0\%) is the metric currently reported by all financial LLM benchmarks. Robust accuracy (58.0\%) accounts for memorization effects. Noise-degraded accuracy (82.0\% for worst-case N1 noise) accounts for real-world information noise. The gap between standard and robust accuracy---28.0 percentage points---represents the ``memorization premium'' in current benchmarks: inflated performance that evaporates when the AI encounters genuinely novel problems. Figure~\ref{fig:stress_test_framework} visualizes the combined stress test results, presenting all four evaluation conditions side by side to highlight the relative magnitude of each degradation pathway.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig3_stress_test_framework.pdf}
+\caption{Combined stress test framework results. The bar chart compares standard accuracy (86.0\%), worst-case noise-degraded accuracy (82.0\%), robust accuracy under perturbation (58.0\%), and the implied worst-case combined condition. The dominant source of performance loss is memorization-dependent reasoning (28.0 pp gap) rather than noise susceptibility (4.0 pp gap), indicating that counterfactual perturbation is the more discriminating stress test dimension.}
+\label{fig:stress_test_framework}
+\end{figure}
 
 \subsection{Statistical Significance}
 
@@ -364,7 +385,7 @@ Several limitations should be acknowledged. First, while $N = 100$ provides mean
 \section{Conclusion}
 \label{sec:conclusion}
 
-This paper demonstrates that standard benchmark accuracy significantly overstates the financial reasoning ability of Large Language Models. Our two-dimensional stress testing framework---combining counterfactual perturbation with noise injection---reveals a meaningful memorization gap between standard and robust accuracy, and significant sensitivity to information noise that is absent from clean benchmark evaluations.
+This paper demonstrates that standard benchmark accuracy significantly overstates the financial reasoning ability of Large Language Models. Our two-dimensional stress testing framework---combining counterfactual perturbation with noise injection---reveals a meaningful memorization gap between standard and robust accuracy, and measurable sensitivity to information noise that is absent from clean benchmark evaluations.
 
 We introduce Robust Accuracy as a more realistic metric for evaluating AI systems intended for financial deployment. Just as banks must demonstrate capital adequacy under stressed conditions, AI systems should demonstrate reasoning adequacy under cognitive stress tests. \textbf{The question is not whether AI can pass the CFA exam, but whether it can reason through problems it hasn't memorized.}
 
@@ -380,11 +401,19 @@ The CFA-Easy dataset is available via HuggingFace under the FinEval benchmark \c
 %% ============================================
 %% REFERENCES
 %% ============================================
-\section*{References}
+\section*{Declaration of Competing Interest}
+The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
+
+\section*{CRediT Author Contributions}
+\textbf{Wei-Lun Cheng}: Conceptualization, Methodology, Software, Formal Analysis, Data Curation, Writing -- Original Draft, Visualization.
+\textbf{Wei-Chung Miao}: Supervision, Writing -- Review \& Editing.
+
+\section*{Acknowledgments}
+The authors thank the anonymous reviewers for their constructive feedback. Computational resources were provided by Academia Sinica.
 
 \begin{thebibliography}{20}
 
-\bibitem[Apple(2024)]{apple2024gsmsymbolic}
+\bibitem[Mirzadeh et~al.(2024)]{apple2024gsmsymbolic}
 Mirzadeh, I., Alizadeh, K., Shahrokhi, H., et al. (2024).
 \newblock GSM-Symbolic: Understanding the limitations of mathematical reasoning in large language models.
 \newblock \textit{arXiv preprint arXiv:2410.05229}.

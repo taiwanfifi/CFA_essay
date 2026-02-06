@@ -41,8 +41,8 @@
 \ead{wcmiao@nccu.edu.tw}
 
 \cortext[cor1]{Corresponding author.}
-\address[acad]{Institute of Economics, Academia Sinica, Taipei 115, Taiwan}
-\address[nccu]{Department of Finance, National Chengchi University, Taipei 116, Taiwan}
+\affiliation[acad]{organization={Institute of Economics, Academia Sinica}, city={Taipei}, postcode={115}, country={Taiwan}}
+\affiliation[nccu]{organization={Department of Finance, National Chengchi University}, city={Taipei}, postcode={116}, country={Taiwan}}
 
 \begin{abstract}
 Professional certifications such as the Chartered Financial Analyst (CFA) designation have long served as credible signals in financial labor markets, enabling employers to screen for scarce cognitive abilities. We develop a Modified Spence Signaling Model that incorporates an AI replication cost parameter to analyze how large language models (LLMs) erode certification signaling value. Our central theoretical result---the Partial Signaling Collapse Theorem---demonstrates that signaling erosion is \emph{selective}, not total: certification loses its screening power over formalizable abilities (formula recall, rule application, algorithmic computation) where AI replication costs approach zero, but retains signaling value for tacit abilities (ethical judgment, stakeholder reasoning, fiduciary decision-making) that resist low-cost AI replication. Integrating the \citet{autor2003skill} task-based framework with \citet{becker1964human} human capital theory, we map the CFA curriculum onto a six-dimensional ability taxonomy and derive a tipping-point condition: when the fraction of AI-replicable abilities exceeds a critical threshold $\alpha^*$, the separating equilibrium collapses into pooling. We establish that the CFA program, in its current form, is approaching this threshold. Our analysis yields concrete policy implications: certification bodies must rebalance assessment toward AI-resistant competencies---context-dependent judgment, interpersonal reasoning, and responsibility-bearing decision-making---to preserve institutional credibility in the age of artificial intelligence.
@@ -303,7 +303,7 @@ There exists a critical threshold $\alpha^* \in (0,1)$ such that:
 \end{enumerate}
 The critical threshold is determined by:
 \begin{equation}
-    \alpha^* = 1 - \frac{c(\theta_H)}{\sum_{k=1}^K w_k s_k - V_0}
+    \alpha^* = 1 - \frac{c(\theta_H) + V_0}{\sum_{k=1}^K w_k s_k}
     \label{eq:tipping_point}
 \end{equation}
 \end{proposition}
@@ -364,6 +364,15 @@ $s_6$ & Stakeholder Reasoning & III & Non-routine Interactive & $\sim$0.15 & Hig
 \end{tabular}
 \end{table}
 
+Figure~\ref{fig:ability_taxonomy} provides a visual comparison of the six ability dimensions, contrasting the profile of a CFA-certified professional with that of a frontier AI system. The radar chart makes the asymmetry vivid: AI closely matches or exceeds human performance on declarative knowledge ($s_1$) and algorithmic computation ($s_2$), but falls sharply behind on ethical reasoning ($s_5$) and stakeholder reasoning ($s_6$).
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig1_ability_taxonomy.pdf}
+\caption{Radar chart comparing CFA Professional and AI ability profiles across the six-dimensional taxonomy. Each axis represents one ability dimension ($s_1$--$s_6$). AI replicability is near-complete for declarative knowledge and algorithmic computation but drops sharply for ethical and stakeholder reasoning, reflecting the formalizable--tacit partition central to the Partial Signaling Collapse Theorem.}
+\label{fig:ability_taxonomy}
+\end{figure}
+
 Several observations warrant discussion. First, the AI replicability values are informed by the emerging empirical literature on LLM performance in financial examinations. \citet{callanan2023gpt} document that GPT-4 achieves approximately 70\% accuracy on CFA Level I, which consists predominantly of $s_1$ (declarative knowledge) and $s_2$ (algorithmic computation) items. Domain-adapted models such as FinDAP's Llama-Fin further close this gap through targeted post-training on financial corpora \citep{ke2025findap}.
 
 Second, the sharp decline in AI replicability from $s_1$--$s_2$ to $s_5$--$s_6$ mirrors the routine/non-routine boundary identified by \citet{autor2003skill}. LLMs excel at tasks that can be decomposed into pattern-matching over large text corpora but struggle with tasks requiring genuine contextual judgment, ethical deliberation involving competing stakeholder interests, and reasoning under deep uncertainty.
@@ -400,6 +409,15 @@ Using the values in Table~\ref{tab:weight_distribution}, we compute the signalin
 \end{equation}
 
 assuming $s_k = 1$ for all $k$ (i.e., normalized ability levels). This implies that \textbf{the CFA certification retains approximately 28.8\% of its pre-AI signaling value} under current AI capability levels. More than 70\% of the informational content that the certification historically conveyed to employers is now replicable by AI systems at low cost.
+
+Figure~\ref{fig:signal_erosion} illustrates the signal erosion curve---plotting the signaling retention ratio $R$ as a function of the weighted AI replicability across all dimensions. The current CFA position ($R = 0.288$) is marked, showing the certification deep within the erosion zone. The curve highlights the nonlinear nature of erosion: once formalizable dimensions (which carry the largest curriculum weights) become AI-replicable, signaling value drops precipitously before flattening as only tacit abilities remain.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig2_signal_erosion.pdf}
+\caption{Signal erosion curve showing the signaling retention ratio $R$ as a function of increasing AI replicability. The current CFA position is marked at $R = 28.8\%$, indicating that more than 70\% of the certification's pre-AI signaling value has already eroded. The tipping point $\alpha^*$, beyond which the separating equilibrium collapses into pooling, is shown as a vertical threshold.}
+\label{fig:signal_erosion}
+\end{figure}
 
 \subsection{Tipping Point Assessment}
 
@@ -527,6 +545,20 @@ Applied to the CFA certification, our analysis reveals a concerning structural v
 The policy prescription is clear: certification bodies must undertake a fundamental rebalancing of assessment content and format, shifting emphasis from knowledge recall and algorithmic computation toward ethical reasoning, integrative judgment, and stakeholder deliberation---the domains where human professionals retain comparative advantage over AI systems. This is not merely an exercise in curriculum modernization; it is a question of institutional survival. A certification that primarily tests abilities available from a chatbot at negligible cost cannot sustain the signaling equilibrium on which its economic value depends.
 
 More broadly, our framework contributes to the growing literature on how AI reshapes not just production but the \emph{institutions} that organize economic activity. Professional certification is one such institution; others---educational degrees, occupational licensing, performance evaluation systems---face analogous pressures. Understanding the selective nature of AI-driven institutional erosion is essential for designing adaptive responses that preserve the valuable functions these institutions serve while acknowledging that their traditional forms may no longer be fit for purpose.
+
+
+\section*{Data Availability}
+No data was used for the research described in this article. This is a theoretical paper.
+
+\section*{Declaration of Competing Interest}
+The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
+
+\section*{CRediT Author Contributions}
+\textbf{Wei-Lun Cheng}: Conceptualization, Formal Analysis, Writing -- Original Draft, Visualization.
+\textbf{Wei-Chung Miao}: Supervision, Writing -- Review \& Editing.
+
+\section*{Acknowledgments}
+The authors thank the anonymous reviewers for their constructive feedback.
 
 
 %% ============================================================

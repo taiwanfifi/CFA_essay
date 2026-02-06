@@ -1,0 +1,2087 @@
+{
+  "metadata": {
+    "experiment": "A1_open_ended",
+    "model": "gpt-4o-mini",
+    "dataset": "easy",
+    "n_questions": 100,
+    "timestamp": "20260206_112613"
+  },
+  "summary": {
+    "n_questions": 100,
+    "level_distribution": {
+      "exact": 34,
+      "directional": 28,
+      "incorrect": 38
+    },
+    "level_rates": {
+      "exact": 0.34,
+      "directional": 0.28,
+      "incorrect": 0.38
+    },
+    "strict_accuracy": 0.34,
+    "lenient_accuracy": 0.62,
+    "error_categories": {
+      "unknown": 7,
+      "formula_error": 1,
+      "arithmetic_error": 4,
+      "conceptual_error": 21,
+      "incomplete_reasoning": 2,
+      "reading_error": 2,
+      "assumption_error": 1
+    }
+  },
+  "results": [
+    {
+      "question_id": "easy_0",
+      "correct_answer_letter": "C",
+      "gold_answer": {
+        "numerical": null,
+        "text": "expected inflation",
+        "concept": "Nominal Risk-Free Rate"
+      },
+      "model_response": "To understand the nominal risk-free rate, we need to break it down into its components. The nominal risk-free rate can be expressed using the following formula:\n\n\\[\n\\text{Nominal Risk-Free Rate} = \\text{Real Risk-Free Rate} + \\text{Inflation Premium}\n\\]\n\n### Step 1: Define the Components\n\n1. **Real Risk-Free Rate**: This is the return on an investment with no risk of financial loss, adjusted for inflation. It reflects the time value of money and the opportunity cost of capital in a risk-free env",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "The student correctly identifies the components of the nominal risk-free rate and accurately describes the relationship between the real risk-free rate and the inflation premium, matching the gold standard answer.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": null,
+      "tokens": 356
+    },
+    {
+      "question_id": "easy_1",
+      "correct_answer_letter": "C",
+      "gold_answer": {
+        "numerical": null,
+        "text": "Liquidity",
+        "concept": "Liquidity Risk Premium"
+      },
+      "model_response": "To analyze the difference in yields between 30-year bonds issued by the US Treasury and 30-year bonds issued by a small private issuer, we need to consider the various risk premiums that can affect bond yields. The most relevant risk premiums in this context include:\n\n1. **Credit Risk Premium**: This is the additional yield that investors require to compensate for the risk that the issuer may default on its debt obligations. US Treasury bonds are considered virtually risk-free because they are b",
+      "level": "directional",
+      "evaluation": {
+        "reasoning": "The student correctly identifies liquidity as a relevant risk premium but emphasizes credit risk as well, which is also valid. The answer shows understanding of the concepts but does not directly state liquidity as the most relevant risk premium, leading to a slightly different focus.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": null,
+      "tokens": 657
+    },
+    {
+      "question_id": "easy_2",
+      "correct_answer_letter": "A",
+      "gold_answer": {
+        "numerical": 365,
+        "text": "daily.,B: quarterly.,C: semiannually",
+        "concept": "Effective Annual Rate (EAR) and compounding frequency"
+      },
+      "model_response": "To determine how frequently the bank is compounding interest, we can use the relationship between the stated annual interest rate (nominal rate) and the effective annual rate (EAR). The formula to calculate the effective annual rate from the nominal interest rate is:\n\n\\[\nEAR = \\left(1 + \\frac{r}{n}\\right)^n - 1\n\\]\n\nWhere:\n- \\( r \\) is the nominal interest rate (stated annual interest rate),\n- \\( n \\) is the number of compounding periods per year.\n\nGiven:\n- Stated annual interest rate \\( r = 0.04",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "Wrong magnitude: student=4.0, gold=365.0",
+        "auto_graded": true,
+        "student_value": 4.0,
+        "gold_value": 365.0
+      },
+      "error_attribution": {
+        "error_category": "unknown",
+        "explanation": "```json\n{\n    \"error_category\": \"incomplete_reasoning\",\n    \"explanation\": \"The student correctly set up the equation to find the number of compounding periods but did not complete the reasoning or ca",
+        "could_be_fixed_with_tools": false
+      },
+      "tokens": 655
+    },
+    {
+      "question_id": "easy_3",
+      "correct_answer_letter": "C",
+      "gold_answer": {
+        "numerical": 113733,
+        "text": "$113,733",
+        "concept": "Future Value of an Investment with Compound Interest"
+      },
+      "model_response": "To find the future value of an investment compounded quarterly, we can use the future value formula for compound interest:\n\n\\[\nFV = PV \\times (1 + r/n)^{nt}\n\\]\n\nWhere:\n- \\( FV \\) = future value\n- \\( PV \\) = present value (initial investment)\n- \\( r \\) = annual interest rate (as a decimal)\n- \\( n \\) = number of times interest is compounded per year\n- \\( t \\) = number of years the money is invested\n\n### Step 1: Identify the variables\n- \\( PV = 75,000 \\)\n- \\( r = 0.07 \\) (7% as a decimal)\n- \\( n = ",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "Numerical match: student=111816.88, gold=113733.0, within 2% tolerance",
+        "auto_graded": true,
+        "student_value": 111816.88,
+        "gold_value": 113733.0
+      },
+      "error_attribution": null,
+      "tokens": 568
+    },
+    {
+      "question_id": "easy_4",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": 97532,
+        "text": "£97,532.,C: £97,561",
+        "concept": "Present Value of Future Cash Flows"
+      },
+      "model_response": "To determine the deposit needed today to accumulate £100,000 in one year at an annual interest rate of 2.50% compounded weekly, we can use the present value formula for compound interest.\n\n### Step 1: Identify the variables\n- Future Value (FV) = £100,000\n- Annual interest rate (r) = 2.50% = 0.025\n- Compounding frequency (n) = 52 weeks per year\n- Time (t) = 1 year\n\n### Step 2: Calculate the effective weekly interest rate\nThe effective weekly interest rate can be calculated as follows:\n\n\\[\n\\text{W",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "Numerical match: student=97560.98, gold=97532.0, within 2% tolerance",
+        "auto_graded": true,
+        "student_value": 97560.98,
+        "gold_value": 97532.0
+      },
+      "error_attribution": null,
+      "tokens": 522
+    },
+    {
+      "question_id": "easy_5",
+      "correct_answer_letter": "A",
+      "gold_answer": {
+        "numerical": 555,
+        "text": "555,B: 563,C: 576",
+        "concept": "Future Value of a Lump Sum with Compound Interest"
+      },
+      "model_response": "To determine the number of months needed for a lump sum investment of ¥250,000 to grow to ¥1,000,000 at a stated annual interest rate of 3% compounded daily, we can use the formula for compound interest:\n\n\\[\nA = P \\left(1 + \\frac{r}{n}\\right)^{nt}\n\\]\n\nWhere:\n- \\(A\\) is the amount of money accumulated after n years, including interest.\n- \\(P\\) is the principal amount (the initial amount of money).\n- \\(r\\) is the annual interest rate (decimal).\n- \\(n\\) is the number of times that interest is compo",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "Wrong magnitude: student=3.0, gold=555.0",
+        "auto_graded": true,
+        "student_value": 3.0,
+        "gold_value": 555.0
+      },
+      "error_attribution": {
+        "error_category": "unknown",
+        "explanation": "```json\n{\n    \"error_category\": \"incomplete_reasoning\",\n    \"explanation\": \"The student started the calculation process but did not complete it, leaving the final answer undetermined.\",\n    \"could_be_",
+        "could_be_fixed_with_tools": false
+      },
+      "tokens": 845
+    },
+    {
+      "question_id": "easy_6",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": 455,
+        "text": "€6.,C: €455",
+        "concept": "Continuous Compounding vs. Daily Compounding"
+      },
+      "model_response": "To solve this problem, we will calculate the future value of the investment using both continuous compounding and daily compounding, and then find the difference in interest earnings between the two methods.\n\n### Step 1: Calculate Future Value with Continuous Compounding\n\nThe formula for future value with continuous compounding is given by:\n\n\\[\nFV = P \\cdot e^{rt}\n\\]\n\nWhere:\n- \\( FV \\) = future value\n- \\( P \\) = principal amount (initial investment)\n- \\( r \\) = annual interest rate (as a decimal",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "Wrong magnitude: student=2.71828, gold=455.0",
+        "auto_graded": true,
+        "student_value": 2.71828,
+        "gold_value": 455.0
+      },
+      "error_attribution": {
+        "error_category": "unknown",
+        "explanation": "```json\n{\n    \"error_category\": \"arithmetic_error\",\n    \"explanation\": \"The student made an error in calculating the future value with continuous compounding, specifically in the calculation of \\( e^{",
+        "could_be_fixed_with_tools": false
+      },
+      "tokens": 903
+    },
+    {
+      "question_id": "easy_7",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": 1389,
+        "text": "€1,389.,C: €1,625",
+        "concept": "Present Value of an Annuity Due"
+      },
+      "model_response": "To calculate the present value (PV) of an investment that pays €300 annually for five years, with the first payment occurring today, we will use the formula for the present value of an annuity due. An annuity due is an annuity where payments are made at the beginning of each period.\n\n### Step 1: Identify the parameters\n- Annual payment (C) = €300\n- Number of payments (n) = 5 years\n- Discount rate (r) = 4% or 0.04\n\n### Step 2: Present Value of an Annuity Due Formula\nThe present value of an annuit",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "Wrong magnitude: student=1.0, gold=1389.0",
+        "auto_graded": true,
+        "student_value": 1.0,
+        "gold_value": 1389.0
+      },
+      "error_attribution": {
+        "error_category": "formula_error",
+        "explanation": "The student incorrectly applied the formula for the present value of an annuity due. The correct formula for the present value of an annuity due should not include the (1 + r) factor in the way it was applied, leading to an incorrect calculation.",
+        "could_be_fixed_with_tools": true
+      },
+      "tokens": 548
+    },
+    {
+      "question_id": "easy_8",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": 126,
+        "text": "$126.,C: $133",
+        "concept": "Present Value of Perpetual Preferred Stock"
+      },
+      "model_response": "To calculate the present value of a perpetual preferred stock that pays dividends, we can use the formula for the present value of a perpetuity. However, since the first dividend payment occurs in the future (in five quarters), we need to account for the time value of money.\n\n### Step 1: Identify the parameters\n- **Dividend payment (D)**: $2.00 (this is the quarterly dividend)\n- **Required annual rate of return (r)**: 6% compounded quarterly\n- **Quarterly rate of return (r_q)**: \\( \\frac{6\\%}{4}",
+      "level": "directional",
+      "evaluation": {
+        "reasoning": "Same magnitude: student=123.33, gold=126.0, ratio=0.979",
+        "auto_graded": true,
+        "student_value": 123.33,
+        "gold_value": 126.0
+      },
+      "error_attribution": null,
+      "tokens": 677
+    },
+    {
+      "question_id": "easy_9",
+      "correct_answer_letter": "C",
+      "gold_answer": {
+        "numerical": 8.0,
+        "text": "8.0% compounded semiannually",
+        "concept": "Compound Interest"
+      },
+      "model_response": "To find the stated annual interest rate that allows an investment of €500,000 to grow to €800,000 over six years, we can use the formula for compound interest:\n\n\\[\nFV = PV \\times (1 + r)^n\n\\]\n\nWhere:\n- \\( FV \\) = future value (€800,000)\n- \\( PV \\) = present value (€500,000)\n- \\( r \\) = annual interest rate (as a decimal)\n- \\( n \\) = number of years (6)\n\nWe need to solve for \\( r \\). Rearranging the formula gives us:\n\n\\[\n(1 + r)^n = \\frac{FV}{PV}\n\\]\n\nSubstituting the known values:\n\n\\[\n(1 + r)^6 =",
+      "level": "directional",
+      "evaluation": {
+        "reasoning": "Same magnitude: student=8.45, gold=8.0, ratio=1.056",
+        "auto_graded": true,
+        "student_value": 8.45,
+        "gold_value": 8.0
+      },
+      "error_attribution": null,
+      "tokens": 458
+    },
+    {
+      "question_id": "easy_10",
+      "correct_answer_letter": "C",
+      "gold_answer": {
+        "numerical": 400000,
+        "text": "greater than the lump sum",
+        "concept": "Present Value of a Perpetuity"
+      },
+      "model_response": "To calculate the present value of the perpetuity, we will use the formula for the present value of a perpetuity:\n\n\\[\nPV = \\frac{C}{r}\n\\]\n\nWhere:\n- \\(PV\\) = Present Value of the perpetuity\n- \\(C\\) = Cash flow per period\n- \\(r\\) = Discount rate per period\n\n### Step 1: Identify the cash flow and the discount rate\n\n1. **Cash flow per period (C)**: The cash flow is £2,000 per month.\n2. **Annual discount rate**: The annual discount rate is 6%, compounded monthly.\n\n### Step 2: Calculate the monthly dis",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "Wrong magnitude: student=2000.0, gold=400000.0",
+        "auto_graded": true,
+        "student_value": 2000.0,
+        "gold_value": 400000.0
+      },
+      "error_attribution": {
+        "error_category": "arithmetic_error",
+        "explanation": "The student incorrectly calculated the present value of the perpetuity by miscalculating the final arithmetic operation, leading to an incorrect present value of £400,000 instead of the correct value.",
+        "could_be_fixed_with_tools": true
+      },
+      "tokens": 399
+    },
+    {
+      "question_id": "easy_11",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": 16416,
+        "text": "$16,216.,C: $17,443",
+        "concept": "Present Value of Annuity Due"
+      },
+      "model_response": "To find the present value (PV) of a 10-year annuity due with annual payments of $2,000 at a 5% interest rate, we can follow these steps:\n\n### Step 1: Understand the Difference Between Ordinary Annuity and Annuity Due\nAn ordinary annuity pays at the end of each period, while an annuity due pays at the beginning of each period. The present value of an annuity due can be calculated by taking the present value of an ordinary annuity and multiplying it by (1 + r), where r is the interest rate.\n\n### S",
+      "level": "directional",
+      "evaluation": {
+        "reasoning": "Same magnitude: student=15443.47, gold=16416.0, ratio=0.941",
+        "auto_graded": true,
+        "student_value": 15443.47,
+        "gold_value": 16416.0
+      },
+      "error_attribution": null,
+      "tokens": 546
+    },
+    {
+      "question_id": "easy_12",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": 64341,
+        "text": "$64,341.,C: $68,201",
+        "concept": "Present Value of Annuity"
+      },
+      "model_response": "To determine the required deposit today to fund the future university tuition costs, we will follow these steps:\n\n1. **Calculate the Present Value of the Tuition Payments**: We need to find the present value of the tuition payments that will be made in the future.\n\n2. **Discount the Future Payments to Today**: Since the first payment is due in 18 years, we will discount the total present value back to today.\n\n### Step 1: Calculate the Present Value of the Tuition Payments\n\nThe tuition payments a",
+      "level": "directional",
+      "evaluation": {
+        "reasoning": "Same magnitude: student=50749.43, gold=64341.0, ratio=0.789",
+        "auto_graded": true,
+        "student_value": 50749.43,
+        "gold_value": 64341.0
+      },
+      "error_attribution": null,
+      "tokens": 807
+    },
+    {
+      "question_id": "easy_13",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": 3867,
+        "text": "£3,867.,C: £3,957",
+        "concept": "Present Value of Annuity"
+      },
+      "model_response": "To calculate the monthly payment for the sports car financed at an annual interest rate of 6% compounded monthly, we can use the formula for the monthly payment on an amortizing loan. The formula is given by:\n\n\\[\nM = P \\frac{r(1 + r)^n}{(1 + r)^n - 1}\n\\]\n\nWhere:\n- \\( M \\) = monthly payment\n- \\( P \\) = principal amount (loan amount)\n- \\( r \\) = monthly interest rate (annual rate / 12)\n- \\( n \\) = total number of payments (loan term in months)\n\n### Step 1: Identify the variables\n- Principal amount",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "Numerical match: student=3866.0, gold=3867.0, within 2% tolerance",
+        "auto_graded": true,
+        "student_value": 3866.0,
+        "gold_value": 3867.0
+      },
+      "error_attribution": null,
+      "tokens": 688
+    },
+    {
+      "question_id": "easy_14",
+      "correct_answer_letter": "A",
+      "gold_answer": {
+        "numerical": 461,
+        "text": "£461.,B: £474.,C: £836",
+        "concept": "Future Value of an Annuity"
+      },
+      "model_response": "To find the level amount that needs to be deposited quarterly to grow to £25,000 at the end of 10 years with a stated annual interest rate of 6% compounded quarterly, we can use the future value of an ordinary annuity formula.\n\n### Step 1: Identify the parameters\n- Future Value (FV) = £25,000\n- Annual interest rate (r) = 6% = 0.06\n- Compounding frequency (n) = 4 (quarterly)\n- Total number of years (t) = 10\n\n### Step 2: Calculate the interest rate per period\nThe interest rate per quarter (i) can ",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "Numerical match: student=464.06, gold=461.0, within 2% tolerance",
+        "auto_graded": true,
+        "student_value": 464.06,
+        "gold_value": 461.0
+      },
+      "error_attribution": null,
+      "tokens": 782
+    },
+    {
+      "question_id": "easy_15",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": 22890,
+        "text": "€22,890,C: €22,950",
+        "concept": "Future Value of an Investment with Reinvestment of Interest"
+      },
+      "model_response": "To solve this problem, we need to calculate the future value of the certificate of deposit (CD) and the future value of the reinvested interest payments in the separate savings account.\n\n### Step 1: Calculate the future value of the CD\n\nThe formula for the future value (FV) of an investment with compound interest is:\n\n\\[\nFV = P \\times (1 + r)^n\n\\]\n\nWhere:\n- \\( P \\) = principal amount (initial investment)\n- \\( r \\) = annual interest rate (as a decimal)\n- \\( n \\) = number of years\n\nFor the CD:\n- \\",
+      "level": "directional",
+      "evaluation": {
+        "reasoning": "Same magnitude: student=25863.26, gold=22890.0, ratio=1.130",
+        "auto_graded": true,
+        "student_value": 25863.26,
+        "gold_value": 22890.0
+      },
+      "error_attribution": null,
+      "tokens": 1042
+    },
+    {
+      "question_id": "easy_16",
+      "correct_answer_letter": "A",
+      "gold_answer": {
+        "numerical": null,
+        "text": "Ordinal,B: Continuous,C: Nominal",
+        "concept": "Ordinal scale"
+      },
+      "model_response": "To determine the measurement scale used for published ratings on stocks ranging from 1 (strong sell) to 5 (strong buy), we need to analyze the characteristics of the scale.\n\n1. **Nominal Scale**: This scale categorizes data without any order or ranking. For example, types of fruits (apple, banana, orange) are nominal. In this case, stock ratings are not merely categories; they imply a ranking.\n\n2. **Ordinal Scale**: This scale not only categorizes data but also ranks them in a specific order. Th",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "The student correctly identifies the measurement scale as ordinal and provides a clear explanation of why it is not nominal or interval. The reasoning aligns with the gold standard answer.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": null,
+      "tokens": 460
+    },
+    {
+      "question_id": "easy_17",
+      "correct_answer_letter": "C",
+      "gold_answer": {
+        "numerical": null,
+        "text": "nominal data",
+        "concept": "Nominal Data"
+      },
+      "model_response": "Data values that are categorical and not amenable to being organized in a logical order are characterized as **nominal data**. \n\n### Step-by-Step Explanation:\n\n1. **Understanding Data Types**: \n   - Data can be classified into different types based on their characteristics. The two main categories are:\n     - **Quantitative Data**: Numerical data that can be measured (e.g., height, weight, age).\n     - **Qualitative Data**: Categorical data that describes characteristics or qualities.\n\n2. **Qual",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "The student's answer correctly identifies the data type as nominal data, matching the gold standard answer exactly.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": null,
+      "tokens": 405
+    },
+    {
+      "question_id": "easy_18",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": null,
+        "text": "Nominal,C: ontinuous",
+        "concept": "Categorical Data Types"
+      },
+      "model_response": "To classify data types as categorical, we first need to understand what categorical data is. Categorical data represents characteristics or qualities that can be divided into groups or categories. This type of data can be further divided into two subtypes: nominal and ordinal.\n\n1. **Nominal Data**: This type of categorical data represents categories without any intrinsic ordering. Examples include:\n   - Gender (male, female)\n   - Colors (red, blue, green)\n   - Types of cuisine (Italian, Chinese,",
+      "level": "directional",
+      "evaluation": {
+        "reasoning": "The student demonstrates a correct understanding of categorical data and its subtypes (nominal and ordinal), but does not explicitly mention 'continuous' as part of the classification, which is part of the gold standard answer.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": null,
+      "tokens": 450
+    },
+    {
+      "question_id": "easy_19",
+      "correct_answer_letter": "C",
+      "gold_answer": {
+        "numerical": null,
+        "text": "continuous data",
+        "concept": "Continuous data"
+      },
+      "model_response": "To characterize the set of estimated bankruptcy probabilities generated by the analyst's proprietary model, we need to consider the nature of the probabilities produced.\n\n1. **Understanding Probability Values**: \n   - Probabilities are numerical values that represent the likelihood of an event occurring, in this case, bankruptcy. \n   - The values of probabilities range from 0 to 1, where 0 indicates an impossible event and 1 indicates a certain event.\n\n2. **Characteristics of the Estimated Proba",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "The student correctly identifies that the set of estimated bankruptcy probabilities is continuous data, matching the gold standard answer.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": null,
+      "tokens": 450
+    },
+    {
+      "question_id": "easy_20",
+      "correct_answer_letter": "A",
+      "gold_answer": {
+        "numerical": null,
+        "text": "ordinal data.,B: discrete data.,C: nominal data",
+        "concept": "Ordinal Data Classification"
+      },
+      "model_response": "To analyze the sentiment data derived from management's earnings call transcript, we need to consider the nature of the data and how it has been processed. Here’s a step-by-step breakdown:\n\n1. **Understanding the Data Type**: The analyst is using a software program to analyze unstructured data, which in this case is the text from earnings call transcripts. Unstructured data refers to information that does not have a predefined data model or is not organized in a predefined manner.\n\n2. **Sentimen",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "The student does not provide a clear classification of the sentiment data and fails to identify it as ordinal data, which is the correct answer. The explanation is lengthy but does not address the question directly.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": {
+        "error_category": "conceptual_error",
+        "explanation": "The student misunderstood the nature of the sentiment data classifications. While they correctly identified that the data is derived from unstructured text, they failed to recognize that the sentiment categories (negative, neutral, positive) represent an ordinal scale, where the categories have a meaningful order.",
+        "could_be_fixed_with_tools": false
+      },
+      "tokens": 439
+    },
+    {
+      "question_id": "easy_21",
+      "correct_answer_letter": "A",
+      "gold_answer": {
+        "numerical": null,
+        "text": "panel data.,B: time-series  data.,C: cross-sectional  data",
+        "concept": "Panel Data Structure"
+      },
+      "model_response": "To determine the most suitable structure for organizing a collection of raw data in a two-dimensional rectangular array, we need to consider the nature of the data and how it can be effectively represented.\n\n### Step 1: Understanding Two-Dimensional Arrays\nA two-dimensional array is essentially a grid or table that consists of rows and columns. Each element in the array can be accessed using two indices: one for the row and one for the column. This structure is particularly useful for organizing",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "The student did not provide a specific answer regarding the type of raw data suitable for a two-dimensional rectangular array. Instead, they discussed the characteristics of two-dimensional arrays without identifying the correct type of data (panel, time-series, or cross-sectional).",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": {
+        "error_category": "conceptual_error",
+        "explanation": "The student failed to correctly identify the type of data that is best suited for a two-dimensional rectangular array, focusing instead on general characteristics of arrays without linking them to the specific types of data provided in the question.",
+        "could_be_fixed_with_tools": false
+      },
+      "tokens": 511
+    },
+    {
+      "question_id": "easy_22",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": null,
+        "text": "represents the actual number of observations counted for each unique value of the variable.,C: allows for comparisons between datasets with different numbers of total observations",
+        "concept": "Absolute Frequency"
+      },
+      "model_response": "In a frequency distribution, the absolute frequency measure refers to the count of occurrences of each value or category within a dataset. It indicates how many times each value appears in the data. \n\nTo explain this concept step by step, let's break it down:\n\n1. **Understanding Frequency Distribution**: A frequency distribution is a summary of how often each value occurs in a dataset. It can be represented in a table or graphically (e.g., histogram).\n\n2. **Absolute Frequency**: The absolute fre",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "The student's answer accurately describes the concept of absolute frequency in a frequency distribution, matching the gold standard definition closely.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": null,
+      "tokens": 471
+    },
+    {
+      "question_id": "easy_23",
+      "correct_answer_letter": "A",
+      "gold_answer": {
+        "numerical": null,
+        "text": "Pareto Chart.,B: grouped bar chart.,C: frequency polygon",
+        "concept": "Pareto Chart"
+      },
+      "model_response": "A bar chart that orders categories by frequency in descending order and includes a line displaying cumulative relative frequency is referred to as a **Pareto chart**.\n\n### Explanation:\n\n1. **Bar Chart**: A bar chart is a graphical representation of data where individual bars represent different categories. The height of each bar corresponds to the frequency or count of occurrences for that category.\n\n2. **Ordered by Frequency**: In a Pareto chart, the categories are arranged in descending order ",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "The student's answer correctly identifies a Pareto chart and provides a detailed explanation that aligns with the gold standard answer.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": null,
+      "tokens": 323
+    },
+    {
+      "question_id": "easy_24",
+      "correct_answer_letter": "C",
+      "gold_answer": {
+        "numerical": null,
+        "text": "Word cloud",
+        "concept": "Data Visualization for Unstructured Textual Data"
+      },
+      "model_response": "To represent unstructured, textual data effectively, the best visualization tools are typically those that can handle and display the complexity and nuances of text. Here are some common approaches and tools that can be used:\n\n### 1. Word Clouds\n- **Description**: A word cloud visually represents the frequency of words in a text. The size of each word indicates its frequency or importance.\n- **Assumptions**: This method assumes that the frequency of words is a good indicator of their significanc",
+      "level": "directional",
+      "evaluation": {
+        "reasoning": "The student correctly identifies word clouds as a visualization tool for unstructured textual data, but also includes additional methods, which, while relevant, diverges from the specific request for the 'best' tool. The answer shows understanding but introduces defensible alternative approaches.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": null,
+      "tokens": 640
+    },
+    {
+      "question_id": "easy_25",
+      "correct_answer_letter": "C",
+      "gold_answer": {
+        "numerical": null,
+        "text": "value differences of categorical groups",
+        "concept": "Data Visualization"
+      },
+      "model_response": "A tree-map is a visualization tool that is particularly effective for illustrating hierarchical data. It represents data as nested rectangles, where each rectangle corresponds to a branch of the hierarchy and is sized according to a quantitative variable, such as value or size. \n\n### Step-by-Step Explanation:\n\n1. **Understanding Hierarchical Data**: \n   - Hierarchical data is structured in a way that shows relationships between different levels of data. For example, a company’s organizational st",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "The student focuses on hierarchical data rather than the specific value differences of categorical groups, which is the key aspect of a tree-map. Their explanation does not align with the gold standard answer.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": {
+        "error_category": "conceptual_error",
+        "explanation": "The student misunderstood the primary purpose of a tree-map, focusing on its ability to represent hierarchical data rather than its effectiveness in illustrating value differences among categorical groups.",
+        "could_be_fixed_with_tools": false
+      },
+      "tokens": 424
+    },
+    {
+      "question_id": "easy_26",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": null,
+        "text": "underlying trends in the variables over time.,C: the degree of correlation between the variables",
+        "concept": "Data Visualization"
+      },
+      "model_response": "To determine the best use of a line chart with two variables, we need to consider the characteristics of line charts and the types of data they are typically used to visualize.\n\n### Step 1: Understanding Line Charts\nA line chart is a graphical representation of data points connected by straight lines. It is particularly effective for showing trends over time. The x-axis usually represents time (e.g., years, quarters, months), while the y-axis represents the values of the variables being compared",
+      "level": "directional",
+      "evaluation": {
+        "reasoning": "The student demonstrates a correct understanding of the use of line charts for visualizing trends over time, which aligns with the gold standard answer. However, the answer does not explicitly state that the primary purpose is to visualize underlying trends, leading to a slightly different interpretation.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": null,
+      "tokens": 495
+    },
+    {
+      "question_id": "easy_27",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": null,
+        "text": "degree of correlation between different variables.,C: shape, center, and spread of the distribution of numerical data",
+        "concept": "Data Visualization and Correlation Analysis"
+      },
+      "model_response": "A heat map is a data visualization technique that uses color to represent the magnitude of values in a matrix or a two-dimensional space. It is particularly effective for visualizing data where you want to identify patterns, correlations, or variations across different categories or dimensions.\n\n### Step-by-Step Explanation:\n\n1. **Understanding Heat Maps**:\n   - Heat maps display data in a matrix format where individual values are represented by colors. The color intensity indicates the value's ",
+      "level": "directional",
+      "evaluation": {
+        "reasoning": "The student demonstrates a correct understanding of heat maps and their applications, particularly in visualizing correlations. However, the answer does not explicitly state that heat maps are best suited for visualizing the degree of correlation between different variables, which is the gold standard answer.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": null,
+      "tokens": 476
+    },
+    {
+      "question_id": "easy_28",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": null,
+        "text": "ubble line chart,C: Scatter plot matrix",
+        "concept": "Data Visualization Techniques"
+      },
+      "model_response": "To compare three or more variables over time, the recommended valuation tool is a **multivariate time series analysis** or a **multivariate analysis of variance (MANOVA)**, depending on the context of the data and the specific analysis goals. However, for practical purposes in financial analysis and valuation, a **line chart** or **multiple line chart** is often used to visualize and compare the trends of multiple variables over time.\n\n### Step-by-Step Explanation:\n\n1. **Identify the Variables**",
+      "level": "directional",
+      "evaluation": {
+        "reasoning": "The student demonstrates a correct understanding of the need to compare multiple variables over time and suggests appropriate tools like line charts. However, the mention of multivariate time series analysis and MANOVA diverges from the gold standard answer, which specifically recommends a bubble line chart or scatter plot matrix.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": null,
+      "tokens": 528
+    },
+    {
+      "question_id": "easy_29",
+      "correct_answer_letter": "A",
+      "gold_answer": {
+        "numerical": null,
+        "text": "less than 2.85%.,B: equal to 2.85%.,C: greater than 2.85%",
+        "concept": "Geometric Mean Return"
+      },
+      "model_response": "To calculate the geometric mean return for Portfolio B, we can use the relationship between the arithmetic mean, the geometric mean, and the standard deviation. The geometric mean return can be approximated using the following formula:\n\n\\[\n\\text{Geometric Mean} \\approx \\text{Arithmetic Mean} - \\frac{1}{2} \\times \\text{Variance}\n\\]\n\nWhere:\n- The arithmetic mean is the average return.\n- The variance is the square of the standard deviation.\n\n### Step 1: Calculate the Variance for Portfolio B\n\nThe s",
+      "level": "directional",
+      "evaluation": {
+        "reasoning": "The student correctly applies the formula for approximating the geometric mean and shows understanding of the relationship between arithmetic mean, variance, and geometric mean. However, the final calculation is incomplete, and while the direction is correct, the exact value is not provided, leading to a conclusion that the geometric mean is less than 2.85%.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": null,
+      "tokens": 445
+    },
+    {
+      "question_id": "easy_30",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": -0.75,
+        "text": "thin-tailed compared to the normal distribution.,C: fat-tailed compared to the normal distribution",
+        "concept": "Excess Kurtosis Interpretation"
+      },
+      "model_response": "To analyze the excess kurtosis of a stock's returns, we first need to understand what kurtosis and excess kurtosis mean.\n\n1. **Kurtosis**: This is a statistical measure that describes the shape of a distribution's tails in relation to its overall shape. It provides insight into the \"tailedness\" of the distribution. \n\n2. **Excess Kurtosis**: This is calculated as the kurtosis of a distribution minus 3. The reason for subtracting 3 is to make the normal distribution (which has a kurtosis of 3) hav",
+      "level": "directional",
+      "evaluation": {
+        "reasoning": "Same magnitude: student=0.0, gold=-0.75, ratio=-0.000",
+        "auto_graded": true,
+        "student_value": 0.0,
+        "gold_value": -0.75
+      },
+      "error_attribution": null,
+      "tokens": 369
+    },
+    {
+      "question_id": "easy_31",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": null,
+        "text": "The geometric mean measures an investment’s compound rate of growth over multiple periods.,C: The arithmetic mean measures an investment’s terminal value over multiple periods",
+        "concept": "Geometric Mean vs. Arithmetic Mean in Investment Returns"
+      },
+      "model_response": "To analyze investment returns, we need to consider several key concepts and metrics that are commonly used in finance. Here are some important statements regarding investment returns, along with explanations for each:\n\n1. **Total Return**: Total return includes both capital gains and income generated from the investment (such as dividends or interest). It is calculated as:\n   \\[\n   \\text{Total Return} = \\frac{\\text{Ending Value} - \\text{Beginning Value} + \\text{Income}}{\\text{Beginning Value}}\n ",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "The student's answer does not address the specific statements regarding the geometric mean and arithmetic mean as required by the question. Instead, it provides general information about total return and annualized return, which is not relevant to the question asked.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": {
+        "error_category": "conceptual_error",
+        "explanation": "The student failed to correctly identify the specific measures of investment returns being asked about in the question, particularly the distinction between geometric and arithmetic means.",
+        "could_be_fixed_with_tools": false
+      },
+      "tokens": 600
+    },
+    {
+      "question_id": "easy_32",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": null,
+        "text": "a positive association between X and Y.,C: a curvilinear relationship between X and Y",
+        "concept": "Correlation Coefficient Interpretation"
+      },
+      "model_response": "To describe a correlation of 0.34 between two variables, X and Y, we need to understand what correlation means and how to interpret its value.\n\n### Step 1: Understanding Correlation\nCorrelation is a statistical measure that expresses the extent to which two variables are linearly related. The correlation coefficient, denoted as \\( r \\), ranges from -1 to +1:\n- \\( r = 1 \\): Perfect positive correlation\n- \\( r = -1 \\): Perfect negative correlation\n- \\( r = 0 \\): No correlation\n\n### Step 2: Interpr",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "The student correctly identifies the correlation of 0.34 as a positive relationship between X and Y, aligning with the gold standard answer.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": null,
+      "tokens": 410
+    },
+    {
+      "question_id": "easy_33",
+      "correct_answer_letter": "C",
+      "gold_answer": {
+        "numerical": null,
+        "text": "Both outliers and spurious correlation",
+        "concept": "Correlation Coefficient Interpretation Issues"
+      },
+      "model_response": "To address the potential problems with interpreting a correlation coefficient, we need to understand what a correlation coefficient represents and the limitations associated with it. The correlation coefficient, typically denoted as \"r,\" measures the strength and direction of a linear relationship between two variables. It ranges from -1 to +1, where:\n\n- r = 1 indicates a perfect positive linear relationship,\n- r = -1 indicates a perfect negative linear relationship,\n- r = 0 indicates no linear ",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "The student did not mention outliers or spurious correlation, which are the specific problems highlighted in the gold standard answer. Instead, they focused on causation vs. correlation and non-linear relationships, which, while relevant, do not directly address the question.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": {
+        "error_category": "conceptual_error",
+        "explanation": "The student provided a detailed explanation of correlation coefficients and their limitations but failed to directly address the specific problems mentioned in the question, such as outliers and spurious correlation.",
+        "could_be_fixed_with_tools": false
+      },
+      "tokens": 529
+    },
+    {
+      "question_id": "easy_34",
+      "correct_answer_letter": "C",
+      "gold_answer": {
+        "numerical": null,
+        "text": "positive",
+        "concept": "Correlation and Covariance"
+      },
+      "model_response": "To find the correlation between two variables A and B, we can use the formula for correlation, which is defined as:\n\n\\[\n\\rho_{A,B} = \\frac{\\text{Cov}(A, B)}{\\sigma_A \\sigma_B}\n\\]\n\nWhere:\n- \\(\\rho_{A,B}\\) is the correlation coefficient between variables A and B.\n- \\(\\text{Cov}(A, B)\\) is the covariance between A and B.\n- \\(\\sigma_A\\) is the standard deviation of variable A.\n- \\(\\sigma_B\\) is the standard deviation of variable B.\n\n### Step 1: Understand the Given Information\n- Mean of A (\\(\\mu_A\\)",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "The student correctly identifies that the correlation is positive based on the positive covariance, demonstrating a clear understanding of the relationship between covariance and correlation.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": null,
+      "tokens": 464
+    },
+    {
+      "question_id": "easy_35",
+      "correct_answer_letter": "C",
+      "gold_answer": {
+        "numerical": null,
+        "text": "More than 25",
+        "concept": "Joint Probability and Independence"
+      },
+      "model_response": "To determine how many stocks should pass both of Florence Hixon's screens based on the given criteria, we need to analyze the relationship between the two criteria and the stocks that pass each screen.\n\n### Step 1: Understand the Passing Criteria\nFlorence has set the passing level such that 50% of the stocks pass each screen. Since there are 100 stocks in total:\n- The number of stocks passing Criterion 1 = 50% of 100 = 50 stocks\n- The number of stocks passing Criterion 2 = 50% of 100 = 50 stocks",
+      "level": "directional",
+      "evaluation": {
+        "reasoning": "The student correctly identifies that the two criteria are positively related and uses the inclusion-exclusion principle, but does not complete the calculation to determine the exact number of stocks passing both screens. The answer is directional as it suggests that more than 25 stocks should pass, which aligns with the gold standard.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": null,
+      "tokens": 671
+    },
+    {
+      "question_id": "easy_36",
+      "correct_answer_letter": "C",
+      "gold_answer": {
+        "numerical": null,
+        "text": "include all potential outcomes",
+        "concept": "Exhaustive Events in Probability Theory"
+      },
+      "model_response": "In probability theory, exhaustive events refer to a set of events that collectively cover all possible outcomes of a random experiment. This means that at least one of the events in the set must occur when the experiment is conducted. \n\nTo clarify this concept step by step:\n\n1. **Definition of Exhaustive Events**: A collection of events is said to be exhaustive if the union of all the events in the collection equals the sample space of the experiment. The sample space is the set of all possible ",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "The student's answer accurately describes exhaustive events, including the definition, mathematical representation, and an example, aligning perfectly with the gold standard answer.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": null,
+      "tokens": 542
+    },
+    {
+      "question_id": "easy_37",
+      "correct_answer_letter": "C",
+      "gold_answer": {
+        "numerical": null,
+        "text": "A subjective probability",
+        "concept": "Subjective Probability"
+      },
+      "model_response": "To determine which probability estimate most likely varies greatly between people, we need to consider the factors that influence individual perceptions of probability. Probability estimates can be influenced by personal experiences, biases, knowledge, and emotional responses. \n\n1. **Understanding Probability Estimates**: Probability estimates refer to the likelihood of an event occurring, expressed as a number between 0 and 1 (or 0% to 100%). Different individuals may assess the same event's pr",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "The student correctly identifies that subjective probability is the type of probability estimate that varies greatly between people, aligning with the gold standard answer.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": null,
+      "tokens": 564
+    },
+    {
+      "question_id": "easy_38",
+      "correct_answer_letter": "A",
+      "gold_answer": {
+        "numerical": 5,
+        "text": "1 to 5.,B: 1 to 6.,C: 5 to 1",
+        "concept": "Odds calculation from probability"
+      },
+      "model_response": "To calculate the odds of an event occurring based on its probability, we can use the following formula:\n\n\\[\n\\text{Odds} = \\frac{P(\\text{Event})}{1 - P(\\text{Event})}\n\\]\n\nWhere:\n- \\( P(\\text{Event}) \\) is the probability of the event occurring.\n- \\( 1 - P(\\text{Event}) \\) is the probability of the event not occurring.\n\nIn this case, the probability that Zolaf Company sales exceed last year’s sales is given as \\( P(\\text{Exceed}) = 0.167 \\).\n\nNow, we can calculate the probability that sales do not",
+      "level": "directional",
+      "evaluation": {
+        "reasoning": "Same magnitude: student=1.0, gold=5.0, ratio=0.200",
+        "auto_graded": true,
+        "student_value": 1.0,
+        "gold_value": 5.0
+      },
+      "error_attribution": null,
+      "tokens": 454
+    },
+    {
+      "question_id": "easy_39",
+      "correct_answer_letter": "C",
+      "gold_answer": {
+        "numerical": 0.75,
+        "text": "0.75",
+        "concept": "Probability calculation from odds"
+      },
+      "model_response": "To determine the probability that Rayan Khan's portfolio will beat the benchmark for the year based on the odds provided, we can follow these steps:\n\n1. **Understanding Odds**: The odds of 3 to 1 means that for every 3 times Khan's portfolio is expected to beat the benchmark, there is 1 time it is expected to not beat the benchmark. \n\n2. **Calculating Total Outcomes**: The total number of outcomes can be calculated by adding the two parts of the odds together:\n   \\[\n   \\text{Total Outcomes} = \\t",
+      "level": "directional",
+      "evaluation": {
+        "reasoning": "Same magnitude: student=1.0, gold=0.75, ratio=1.333",
+        "auto_graded": true,
+        "student_value": 1.0,
+        "gold_value": 0.75
+      },
+      "error_attribution": null,
+      "tokens": 414
+    },
+    {
+      "question_id": "easy_40",
+      "correct_answer_letter": "C",
+      "gold_answer": {
+        "numerical": null,
+        "text": "conditional probability",
+        "concept": "Conditional Probability"
+      },
+      "model_response": "The probability of an event given that another event has occurred is known as **conditional probability**. \n\nTo express this mathematically, if we have two events, A and B, the conditional probability of event A given that event B has occurred is denoted as \\( P(A|B) \\). \n\n### Step-by-Step Explanation:\n\n1. **Definition of Conditional Probability**:\n   The conditional probability \\( P(A|B) \\) is defined as:\n   \\[\n   P(A|B) = \\frac{P(A \\cap B)}{P(B)}\n   \\]\n   where:\n   - \\( P(A \\cap B) \\) is the p",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "The student's answer correctly identifies conditional probability and provides a clear mathematical definition along with relevant assumptions and an example. It matches the gold standard answer perfectly.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": null,
+      "tokens": 449
+    },
+    {
+      "question_id": "easy_41",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": null,
+        "text": "Multiplication rule,C: Total probability rule",
+        "concept": "Multiplication rule of probability"
+      },
+      "model_response": "To forecast the probability that the investment manager will exceed his benchmark return over the two-quarter period, given that the performance in each quarter is independent, the analyst should use the **Addition Rule of Probability** for independent events.\n\n### Step-by-Step Explanation:\n\n1. **Define Events**:\n   - Let \\( A \\) be the event that the investment manager exceeds the benchmark return in Quarter 1.\n   - Let \\( B \\) be the event that the investment manager exceeds the benchmark retu",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "The student incorrectly identifies the Addition Rule of Probability as the appropriate method for independent events, whereas the correct method is the Multiplication Rule. This indicates a fundamental misunderstanding of probability rules.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": {
+        "error_category": "conceptual_error",
+        "explanation": "The student incorrectly applied the Addition Rule of Probability instead of the Multiplication Rule for independent events. The correct approach requires multiplying the probabilities of exceeding the benchmark in each quarter.",
+        "could_be_fixed_with_tools": false
+      },
+      "tokens": 584
+    },
+    {
+      "question_id": "easy_42",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": null,
+        "text": "The probability of one event influences the probability of the other event.,C: The probability of the two events occurring is the product of each event’s probability",
+        "concept": "Dependent Events in Probability"
+      },
+      "model_response": "To understand the properties of two dependent events, we first need to define what dependent events are. \n\n**Definition of Dependent Events:**\nTwo events are considered dependent if the occurrence of one event affects the probability of the occurrence of the other event. In other words, the outcome of one event influences the outcome of the other.\n\n**Properties of Dependent Events:**\n1. **Conditional Probability:** The probability of one event occurring given that another event has occurred is n",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "The student correctly defines dependent events and explains that the occurrence of one event affects the probability of the other, which aligns with the gold standard answer.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": null,
+      "tokens": 466
+    },
+    {
+      "question_id": "easy_43",
+      "correct_answer_letter": "C",
+      "gold_answer": {
+        "numerical": null,
+        "text": "the total probability rule for expected value",
+        "concept": "Total Probability Rule for Expected Value"
+      },
+      "model_response": "To estimate the expected value of a firm under the scenarios of bankruptcy and survivorship, an analyst would typically use a method that incorporates the probabilities of each scenario occurring and the respective values associated with each outcome. Here’s a step-by-step breakdown of how this can be done:\n\n### Step 1: Define the Scenarios\n1. **Survivorship**: This scenario represents the situation where the firm continues to operate successfully. The analyst needs to estimate the value of the ",
+      "level": "directional",
+      "evaluation": {
+        "reasoning": "The student demonstrates a correct understanding of the concept by outlining the scenarios and the need to incorporate probabilities and values for each outcome. However, they do not explicitly mention the total probability rule for expected value, which is the key aspect of the gold standard answer.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": null,
+      "tokens": 814
+    },
+    {
+      "question_id": "easy_44",
+      "correct_answer_letter": "A",
+      "gold_answer": {
+        "numerical": 0.0864,
+        "text": "0.086.,B: 0.335.,C: 0.390",
+        "concept": "Covariance of Returns"
+      },
+      "model_response": "To calculate the covariance of returns between the US and Spanish bonds, we can use the formula for covariance based on the correlation coefficient and the standard deviations of the two assets. The formula is:\n\n\\[\n\\text{Cov}(X, Y) = \\text{Corr}(X, Y) \\times \\sigma_X \\times \\sigma_Y\n\\]\n\nWhere:\n- \\(\\text{Cov}(X, Y)\\) is the covariance between the returns of the two assets.\n- \\(\\text{Corr}(X, Y)\\) is the correlation coefficient between the returns of the two assets.\n- \\(\\sigma_X\\) is the standard ",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "Numerical match: student=0.0853, gold=0.0864, within 2% tolerance",
+        "auto_graded": true,
+        "student_value": 0.0853,
+        "gold_value": 0.0864
+      },
+      "error_attribution": null,
+      "tokens": 545
+    },
+    {
+      "question_id": "easy_45",
+      "correct_answer_letter": "C",
+      "gold_answer": {
+        "numerical": null,
+        "text": "be on the same side of their expected value at the same time",
+        "concept": "Covariance of returns"
+      },
+      "model_response": "To understand when the covariance of returns between two assets is positive, we need to first define what covariance is and how it relates to the returns of the assets.\n\n### Definition of Covariance\nCovariance is a statistical measure that indicates the extent to which two random variables change together. In the context of asset returns, it measures how the returns on two assets move in relation to each other.\n\nMathematically, the covariance of returns \\( R_A \\) and \\( R_B \\) for assets A and B",
+      "level": "directional",
+      "evaluation": {
+        "reasoning": "The student demonstrates a correct understanding of covariance and its relationship to asset returns, indicating that positive covariance occurs when returns move in the same direction. However, the answer does not explicitly state that this occurs when returns are on the same side of their expected values, which is the precise phrasing of the gold standard answer.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": null,
+      "tokens": 562
+    },
+    {
+      "question_id": "easy_46",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": -0.24,
+        "text": "–0.24,C: 0.33",
+        "concept": "Correlation Coefficient Interpretation"
+      },
+      "model_response": "To determine which correlation coefficient indicates the weakest linear relationship between two variables, we need to understand the range and interpretation of correlation coefficients.\n\n1. **Understanding Correlation Coefficients**:\n   - The correlation coefficient, denoted as \\( r \\), ranges from -1 to +1.\n   - A correlation of \\( r = 1 \\) indicates a perfect positive linear relationship.\n   - A correlation of \\( r = -1 \\) indicates a perfect negative linear relationship.\n   - A correlation ",
+      "level": "directional",
+      "evaluation": {
+        "reasoning": "Same magnitude: student=0.0, gold=-0.24, ratio=-0.000",
+        "auto_graded": true,
+        "student_value": 0.0,
+        "gold_value": -0.24
+      },
+      "error_attribution": null,
+      "tokens": 366
+    },
+    {
+      "question_id": "easy_47",
+      "correct_answer_letter": "A",
+      "gold_answer": {
+        "numerical": null,
+        "text": "decrease.,B: stay the same.,C: increase",
+        "concept": "Correlation and Diversification Benefits"
+      },
+      "model_response": "To analyze the impact of the correlation between two assets on diversification benefits, we need to understand the concept of correlation and how it affects portfolio risk.\n\n### Step 1: Understanding Correlation\nCorrelation is a statistical measure that describes the degree to which two assets move in relation to each other. It ranges from -1 to +1:\n- A correlation of +1 indicates that the two assets move perfectly in the same direction.\n- A correlation of -1 indicates that the two assets move p",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "The student does not provide a clear answer to the question regarding the impact of correlation on diversification benefits. The explanation is incomplete and does not address the specific outcome as correlation approaches +1.0.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": {
+        "error_category": "conceptual_error",
+        "explanation": "The student failed to recognize that as the correlation between two assets approaches +1.0, the diversification benefits decrease, which is a fundamental concept in portfolio theory.",
+        "could_be_fixed_with_tools": false
+      },
+      "tokens": 496
+    },
+    {
+      "question_id": "easy_48",
+      "correct_answer_letter": "A",
+      "gold_answer": {
+        "numerical": 10,
+        "text": "10,B: 20,C: 25",
+        "concept": "Covariance in Portfolio Theory"
+      },
+      "model_response": "To calculate the portfolio return variance for a portfolio of \\( n \\) stocks, we need to consider both the variances of each stock and the covariances between each pair of stocks. \n\n1. **Understanding the Components**:\n   - Each stock has a variance, which is a measure of how much the returns of that stock vary.\n   - The covariance between two stocks measures how the returns of those two stocks move together.\n\n2. **Calculating the Number of Covariance Terms**:\n   - For \\( n \\) stocks, the number",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "Numerical match: student=10.0, gold=10.0, within 2% tolerance",
+        "auto_graded": true,
+        "student_value": 10.0,
+        "gold_value": 10.0
+      },
+      "error_attribution": null,
+      "tokens": 391
+    },
+    {
+      "question_id": "easy_49",
+      "correct_answer_letter": "C",
+      "gold_answer": {
+        "numerical": 0.0023,
+        "text": "the asset returns have a positive relationship",
+        "concept": "Covariance of returns"
+      },
+      "model_response": "To analyze the statement regarding the covariance of returns between two assets, we need to understand what covariance represents in the context of finance and investment.\n\n### Step 1: Understanding Covariance\nCovariance is a statistical measure that indicates the extent to which two assets move together. A positive covariance means that the returns of the two assets tend to move in the same direction, while a negative covariance indicates that they move in opposite directions. A covariance of z",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "Numerical match: student=0.0023, gold=0.0023, within 2% tolerance",
+        "auto_graded": true,
+        "student_value": 0.0023,
+        "gold_value": 0.0023
+      },
+      "error_attribution": null,
+      "tokens": 524
+    },
+    {
+      "question_id": "easy_50",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": 0.143,
+        "text": "14.3%,C: 28.6%",
+        "concept": "Bayes' Theorem"
+      },
+      "model_response": "To solve this problem using Bayes' theorem, we need to define the events and the probabilities involved clearly.\n\nLet:\n- \\( A \\) = event that a bond fails (goes bankrupt)\n- \\( B \\) = event that a bond receives a \"good\" rating\n\nWe are given the following probabilities:\n- \\( P(A) = 0.20 \\) (the probability that a bond fails)\n- \\( P(B) = 0.70 \\) (the probability that a bond receives a \"good\" rating)\n- \\( P(B | A) = 0.50 \\) (the probability that a bond receives a \"good\" rating given that it has fail",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "Wrong magnitude: student=14.29, gold=0.143",
+        "auto_graded": true,
+        "student_value": 14.29,
+        "gold_value": 0.143
+      },
+      "error_attribution": {
+        "error_category": "unknown",
+        "explanation": "```json\n{\n    \"error_category\": \"formula_error\",\n    \"explanation\": \"The student incorrectly applied Bayes' theorem by using the wrong conditional probability in the formula. They should have used P(B",
+        "could_be_fixed_with_tools": false
+      },
+      "tokens": 688
+    },
+    {
+      "question_id": "easy_51",
+      "correct_answer_letter": "C",
+      "gold_answer": {
+        "numerical": 3.0,
+        "text": "3.0%",
+        "concept": "Bayes' Theorem"
+      },
+      "model_response": "To solve this problem, we will use Bayes' theorem, which states:\n\n\\[\nP(A | B) = \\frac{P(B | A) \\cdot P(A)}{P(B)}\n\\]\n\nWhere:\n- \\( P(A) \\) is the probability of a CEO being fired.\n- \\( P(B) \\) is the probability of a CEO having \"good\" performance.\n- \\( P(B | A) \\) is the probability of a CEO having \"good\" performance given that they were fired.\n- \\( P(A | B) \\) is the probability of a CEO being fired given that they have \"good\" performance.\n\n### Step 1: Identify the given probabilities\n\nFrom the p",
+      "level": "directional",
+      "evaluation": {
+        "reasoning": "Same magnitude: student=5.0, gold=3.0, ratio=1.667",
+        "auto_graded": true,
+        "student_value": 5.0,
+        "gold_value": 3.0
+      },
+      "error_attribution": null,
+      "tokens": 906
+    },
+    {
+      "question_id": "easy_52",
+      "correct_answer_letter": "C",
+      "gold_answer": {
+        "numerical": 535983370,
+        "text": "ombination formula",
+        "concept": "Combination formula"
+      },
+      "model_response": "To determine the number of possible portfolios that can be constructed by selecting 20 bonds from a universe of 100 bonds, we can use the concept of combinations. The formula for combinations is given by:\n\n\\[\nC(n, k) = \\frac{n!}{k!(n-k)!}\n\\]\n\nWhere:\n- \\( n \\) is the total number of items to choose from (in this case, 100 bonds),\n- \\( k \\) is the number of items to choose (in this case, 20 bonds),\n- \\( ! \\) denotes factorial, which is the product of all positive integers up to that number.\n\nIn th",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "Wrong magnitude: student=100.0, gold=535983370.0",
+        "auto_graded": true,
+        "student_value": 100.0,
+        "gold_value": 535983370.0
+      },
+      "error_attribution": {
+        "error_category": "unknown",
+        "explanation": "```json\n{\n    \"error_category\": \"arithmetic_error\",\n    \"explanation\": \"The student correctly identified the combination formula but failed to complete the calculation correctly, as indicated by the i",
+        "could_be_fixed_with_tools": false
+      },
+      "tokens": 655
+    },
+    {
+      "question_id": "easy_53",
+      "correct_answer_letter": "A",
+      "gold_answer": {
+        "numerical": 6,
+        "text": "6,B: 12,C: 24",
+        "concept": "Combinations"
+      },
+      "model_response": "To determine how many different groups of two vice presidents can be selected from a total of four vice presidents, we can use the concept of combinations. Combinations are used when the order of selection does not matter.\n\nThe formula for combinations is given by:\n\n\\[\nC(n, r) = \\frac{n!}{r!(n - r)!}\n\\]\n\nWhere:\n- \\( n \\) is the total number of items (in this case, vice presidents),\n- \\( r \\) is the number of items to choose,\n- \\( ! \\) denotes factorial, which is the product of all positive integ",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "Numerical match: student=6.0, gold=6.0, within 2% tolerance",
+        "auto_graded": true,
+        "student_value": 6.0,
+        "gold_value": 6.0
+      },
+      "error_attribution": null,
+      "tokens": 423
+    },
+    {
+      "question_id": "easy_54",
+      "correct_answer_letter": "A",
+      "gold_answer": {
+        "numerical": 12600,
+        "text": "Permutation formula,B: Multinomial formula,C: ombination formula",
+        "concept": "Permutation"
+      },
+      "model_response": "To determine the number of possible ways to rank 4 mutual funds from a list of 25, we need to use the concept of permutations. This is because the order in which the funds are ranked matters.\n\n### Step 1: Understand the Problem\nWe have a total of 25 mutual funds, and we want to select and rank 4 of them. The ranking implies that the order of selection is important.\n\n### Step 2: Use the Permutation Formula\nThe formula for permutations when selecting \\( r \\) items from \\( n \\) items is given by:\n\n",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "Wrong magnitude: student=303600.0, gold=12600.0",
+        "auto_graded": true,
+        "student_value": 303600.0,
+        "gold_value": 12600.0
+      },
+      "error_attribution": {
+        "error_category": "incomplete_reasoning",
+        "explanation": "The student correctly identified the need to use permutations but did not complete the calculation or provide the final answer, which is necessary to fully address the question.",
+        "could_be_fixed_with_tools": false
+      },
+      "tokens": 618
+    },
+    {
+      "question_id": "easy_55",
+      "correct_answer_letter": "A",
+      "gold_answer": {
+        "numerical": 210,
+        "text": "210,B: 720,C: 5,040",
+        "concept": "Combinatorics - Combination"
+      },
+      "model_response": "To determine how many different sets of mutual funds Himari Fukumoto can choose from the 10 available mutual funds when she plans to select 4, we can use the concept of combinations. \n\nCombinations are used when the order of selection does not matter. The formula for combinations is given by:\n\n\\[\nC(n, r) = \\frac{n!}{r!(n - r)!}\n\\]\n\nWhere:\n- \\( n \\) is the total number of items to choose from (in this case, 10 mutual funds),\n- \\( r \\) is the number of items to choose (in this case, 4 mutual funds",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "Numerical match: student=210.0, gold=210.0, within 2% tolerance",
+        "auto_graded": true,
+        "student_value": 210.0,
+        "gold_value": 210.0
+      },
+      "error_attribution": null,
+      "tokens": 589
+    },
+    {
+      "question_id": "easy_56",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": null,
+        "text": "lies between 0 and 1.,C: decreases as x increases",
+        "concept": "Cumulative Distribution Function (CDF) of a Discrete Uniform Distribution"
+      },
+      "model_response": "To understand the cumulative distribution function (CDF) \\( F(x) \\) for a discrete uniform distribution, we first need to define what a discrete uniform distribution is.\n\n### Step 1: Definition of Discrete Uniform Distribution\n\nA discrete uniform distribution is a probability distribution where a finite number of outcomes are equally likely. If we have \\( n \\) possible outcomes, each outcome has a probability of:\n\n\\[\nP(X = x_i) = \\frac{1}{n} \\quad \\text{for } i = 1, 2, \\ldots, n\n\\]\n\nwhere \\( x_i",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "The student did not address the specific characteristics of the cumulative distribution function for a discrete uniform distribution, particularly the incorrect statement that it decreases as x increases. The answer lacks the correct understanding of how the CDF behaves, which should be non-decreasing.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": {
+        "error_category": "incomplete_reasoning",
+        "explanation": "The student did not complete their reasoning or calculation regarding the cumulative distribution function for a discrete uniform distribution, leaving out critical information about how the CDF behaves as x increases.",
+        "could_be_fixed_with_tools": false
+      },
+      "tokens": 789
+    },
+    {
+      "question_id": "easy_57",
+      "correct_answer_letter": "C",
+      "gold_answer": {
+        "numerical": null,
+        "text": "symmetric",
+        "concept": "Symmetry of Binomial Distribution"
+      },
+      "model_response": "To describe the binomial distribution for a random variable with five trials and a probability of success of 0.50, we will follow these steps:\n\n### Step 1: Define the Binomial Distribution\n\nA binomial random variable \\( X \\) can be defined by two parameters:\n- \\( n \\): the number of trials\n- \\( p \\): the probability of success on each trial\n\nIn this case:\n- \\( n = 5 \\) (the number of trials)\n- \\( p = 0.50 \\) (the probability of success)\n\n### Step 2: Probability Mass Function (PMF)\n\nThe probabili",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "The student did not answer the question regarding the symmetry of the binomial distribution and instead provided an explanation of the binomial distribution and its PMF, which is not relevant to the question asked.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": {
+        "error_category": "conceptual_error",
+        "explanation": "The student failed to recognize that the binomial distribution with equal probabilities of success and failure (0.50) is symmetric, which is the key characteristic being asked in the question.",
+        "could_be_fixed_with_tools": false
+      },
+      "tokens": 1053
+    },
+    {
+      "question_id": "easy_58",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": 0.15,
+        "text": "0.15.,C: 0.20",
+        "concept": "Discrete Uniform Distribution"
+      },
+      "model_response": "To solve the problem, we need to determine the probability of the event \\( P(3 \\leq X < 6) \\) in a discrete uniform distribution with outcomes ranging from 1 to 20.\n\n### Step 1: Identify the Range of Outcomes\nIn a discrete uniform distribution with outcomes from 1 to 20, the possible outcomes are:\n\\[ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 \\]\n\n### Step 2: Determine the Favorable Outcomes\nWe need to find the outcomes that satisfy the condition \\( 3 \\leq X < 6 \\). Thi",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "Wrong magnitude: student=20.0, gold=0.15",
+        "auto_graded": true,
+        "student_value": 20.0,
+        "gold_value": 0.15
+      },
+      "error_attribution": {
+        "error_category": "unknown",
+        "explanation": "```json\n{\n    \"error_category\": \"arithmetic_error\",\n    \"explanation\": \"The student correctly identified the favorable outcomes but incorrectly counted them. The correct count of favorable outcomes fo",
+        "could_be_fixed_with_tools": false
+      },
+      "tokens": 546
+    },
+    {
+      "question_id": "easy_59",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": 0.34,
+        "text": "0.34,C: 0.48",
+        "concept": "Binomial Probability Distribution"
+      },
+      "model_response": "To solve this problem, we can model the situation using a binomial distribution. The binomial distribution is appropriate here because we have a fixed number of independent trials (in this case, 5 years), two possible outcomes (outperforming or not outperforming the benchmark), and a constant probability of success (outperforming the benchmark).\n\n### Step 1: Define the parameters\n- Let \\( n = 5 \\) (the number of years).\n- Let \\( p = 0.6 \\) (the probability of outperforming the benchmark in any g",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "Numerical match: student=0.33696, gold=0.34, within 2% tolerance",
+        "auto_graded": true,
+        "student_value": 0.33696,
+        "gold_value": 0.34
+      },
+      "error_attribution": null,
+      "tokens": 967
+    },
+    {
+      "question_id": "easy_60",
+      "correct_answer_letter": "C",
+      "gold_answer": {
+        "numerical": 0.68,
+        "text": "0.68",
+        "concept": "Binomial Probability Distribution"
+      },
+      "model_response": "To solve this problem, we can model the situation using a binomial distribution. The key parameters we need to define are:\n\n- The number of trials (n): In this case, there are 4 quarters in a year, so \\( n = 4 \\).\n- The probability of success (p): The probability that the portfolio outperforms its benchmark in any quarter is given as \\( p = 0.75 \\).\n- The probability of failure (q): This is the probability that the portfolio does not outperform its benchmark, which is \\( q = 1 - p = 1 - 0.75 = 0",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "Numerical match: student=0.6836, gold=0.68, within 2% tolerance",
+        "auto_graded": true,
+        "student_value": 0.6836,
+        "gold_value": 0.68
+      },
+      "error_attribution": null,
+      "tokens": 1073
+    },
+    {
+      "question_id": "easy_61",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": 3,
+        "text": "Kurtosis of 3,C: Definitive limits or boundaries",
+        "concept": "Characteristics of the normal distribution"
+      },
+      "model_response": "To determine the characteristics of a normal distribution, we can outline the key properties that define it. Here are the main characteristics of a normal distribution:\n\n1. **Symmetry**: The normal distribution is symmetric about its mean. This means that the left side of the distribution is a mirror image of the right side.\n\n2. **Bell-Shaped Curve**: The graph of a normal distribution is bell-shaped, with the highest point at the mean. As you move away from the mean in either direction, the pro",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "Wrong magnitude: student=68.0, gold=3.0",
+        "auto_graded": true,
+        "student_value": 68.0,
+        "gold_value": 3.0
+      },
+      "error_attribution": {
+        "error_category": "conceptual_error",
+        "explanation": "The student provided a detailed description of the properties of a normal distribution but failed to identify the specific characteristic of kurtosis being 3, which was the focus of the question.",
+        "could_be_fixed_with_tools": false
+      },
+      "tokens": 470
+    },
+    {
+      "question_id": "easy_62",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": null,
+        "text": "A portfolio of technology stocks,C: A stock in a market index",
+        "concept": "Multivariate distribution in finance"
+      },
+      "model_response": "To determine which asset most likely requires the use of a multivariate distribution for modeling returns, we need to consider the characteristics of different types of assets and how their returns may be correlated with one another.\n\n### Step 1: Understanding Multivariate Distributions\nA multivariate distribution is used to model multiple random variables that may be correlated with each other. In finance, this is particularly useful when dealing with portfolios of assets, where the returns of ",
+      "level": "directional",
+      "evaluation": {
+        "reasoning": "The student demonstrates a correct understanding of when to use a multivariate distribution, particularly in the context of portfolios. However, they did not explicitly identify 'a portfolio of technology stocks' as the most likely asset requiring a multivariate distribution, which is the gold standard answer.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": null,
+      "tokens": 536
+    },
+    {
+      "question_id": "easy_63",
+      "correct_answer_letter": "C",
+      "gold_answer": {
+        "numerical": 5,
+        "text": "5",
+        "concept": "Multivariate Normal Distribution Parameters"
+      },
+      "model_response": "To fully characterize a multivariate normal distribution for the returns on two stocks, we need to consider the following parameters:\n\n1. **Means**: Each stock has a mean return. For two stocks, we have:\n   - Mean return of Stock 1: \\( \\mu_1 \\)\n   - Mean return of Stock 2: \\( \\mu_2 \\)\n\n   This gives us **2 parameters** for the means.\n\n2. **Variances**: Each stock has a variance. For two stocks, we have:\n   - Variance of Stock 1: \\( \\sigma_1^2 \\)\n   - Variance of Stock 2: \\( \\sigma_2^2 \\)\n\n   Thi",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "Numerical match: student=5.0, gold=5.0, within 2% tolerance",
+        "auto_graded": true,
+        "student_value": 5.0,
+        "gold_value": 5.0
+      },
+      "error_attribution": null,
+      "tokens": 416
+    },
+    {
+      "question_id": "easy_64",
+      "correct_answer_letter": "A",
+      "gold_answer": {
+        "numerical": 8.5,
+        "text": "8.5%.,B: 14.8%.,C: 58.3%",
+        "concept": "Normal Distribution and Z-scores"
+      },
+      "model_response": "To find the probability that the return of the portfolio falls between 8% and 11%, we can use the properties of the normal distribution. We will assume that the returns are normally distributed, which is a common assumption in finance.\n\n### Step 1: Define the parameters\n- Mean (μ) = 8%\n- Standard Deviation (σ) = 14%\n\n### Step 2: Standardize the values\nWe need to convert the returns of 8% and 11% into z-scores using the formula:\n\n\\[\nz = \\frac{(X - \\mu)}{\\sigma}\n\\]\n\nwhere:\n- \\(X\\) is the value we ",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "Wrong magnitude: student=0.5, gold=8.5",
+        "auto_graded": true,
+        "student_value": 0.5,
+        "gold_value": 8.5
+      },
+      "error_attribution": {
+        "error_category": "arithmetic_error",
+        "explanation": "The student correctly calculated the z-score for 8% but made an error in calculating the z-score for 11%, which led to incorrect probability calculations.",
+        "could_be_fixed_with_tools": true
+      },
+      "tokens": 635
+    },
+    {
+      "question_id": "easy_65",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": 41,
+        "text": "41%.,C: 59%",
+        "concept": "Normal Distribution and Z-Score Calculation"
+      },
+      "model_response": "To determine the probability that the portfolio return will fail to meet the investor's minimum annual return target of 4%, we can use the properties of the normal distribution. \n\n### Step 1: Define the parameters\n- Expected return of the portfolio (\\( \\mu \\)): 7% or 0.07\n- Standard deviation of the portfolio (\\( \\sigma \\)): 13% or 0.13\n- Minimum return target (\\( R_{target} \\)): 4% or 0.04\n\n### Step 2: Calculate the z-score\nThe z-score is calculated using the formula:\n\n\\[\nz = \\frac{X - \\mu}{\\si",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "Wrong magnitude: student=0.4093, gold=41.0",
+        "auto_graded": true,
+        "student_value": 0.4093,
+        "gold_value": 41.0
+      },
+      "error_attribution": {
+        "error_category": "arithmetic_error",
+        "explanation": "The student calculated the z-score correctly but likely made an error in finding the corresponding probability from the z-score, leading to an incorrect final answer.",
+        "could_be_fixed_with_tools": true
+      },
+      "tokens": 500
+    },
+    {
+      "question_id": "easy_66",
+      "correct_answer_letter": "C",
+      "gold_answer": {
+        "numerical": null,
+        "text": "The rate of return on a diversified portfolio of stocks over a three-month period",
+        "concept": "Continuous Random Variable"
+      },
+      "model_response": "To determine which of the options is a continuous random variable, we first need to understand the definitions of discrete and continuous random variables.\n\n1. **Discrete Random Variable**: A discrete random variable is one that can take on a countable number of distinct values. Examples include the number of students in a classroom, the number of heads when flipping a coin multiple times, or the number of cars in a parking lot.\n\n2. **Continuous Random Variable**: A continuous random variable, o",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "The student did not identify the continuous random variable from the provided options, nor did they mention the specific example given in the gold standard answer. Their response lacks a direct answer to the question.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": {
+        "error_category": "reading_error",
+        "explanation": "The student failed to identify the specific options provided in the question, which led to an inability to select the correct continuous random variable.",
+        "could_be_fixed_with_tools": false
+      },
+      "tokens": 493
+    },
+    {
+      "question_id": "easy_67",
+      "correct_answer_letter": "A",
+      "gold_answer": {
+        "numerical": null,
+        "text": "The flip of a coin,B: The closing price of a stock,C: The picking of a random integer between 1 and 10",
+        "concept": "Bernoulli Trial"
+      },
+      "model_response": "To determine whether an event can be represented as a Bernoulli trial, we need to understand the characteristics of a Bernoulli trial. A Bernoulli trial is a random experiment that has exactly two possible outcomes, typically referred to as \"success\" and \"failure.\" The key characteristics of a Bernoulli trial are:\n\n1. There are only two possible outcomes.\n2. The probability of success (p) is constant for each trial.\n3. The trials are independent of each other.\n\nNow, let's analyze a few examples ",
+      "level": "directional",
+      "evaluation": {
+        "reasoning": "The student correctly identifies the characteristics of a Bernoulli trial and provides a valid example (coin flip). However, they incorrectly analyze rolling a die instead of the provided example of the closing price of a stock, which is not a Bernoulli trial. The answer shows understanding but does not fully address the question as it misses the analysis of the closing price of a stock.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": null,
+      "tokens": 547
+    },
+    {
+      "question_id": "easy_68",
+      "correct_answer_letter": "C",
+      "gold_answer": {
+        "numerical": 0.625,
+        "text": "0.625",
+        "concept": "Binomial Option Pricing Model"
+      },
+      "model_response": "To solve this problem, we will use the binomial model to determine the probability of an up move (p) given the average terminal stock price after conducting 1 million Bernoulli trials.\n\n### Step 1: Define the parameters\n- Current stock price (S₀) = $100.00\n- Up move factor (u) = 1.05\n- Down move factor (d) = 0.97\n- Average terminal stock price (S_avg) = $102.00\n- Number of trials (n) = 1,000,000\n\n### Step 2: Calculate the terminal stock prices\nThe terminal stock price can be expressed as:\n\\[ S_T",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "Wrong magnitude: student=102.0, gold=0.625",
+        "auto_graded": true,
+        "student_value": 102.0,
+        "gold_value": 0.625
+      },
+      "error_attribution": {
+        "error_category": "conceptual_error",
+        "explanation": "The student incorrectly set up the equation for the expected terminal stock price, failing to properly account for the binomial distribution and the relationship between the average stock price and the probabilities of up and down moves.",
+        "could_be_fixed_with_tools": false
+      },
+      "tokens": 684
+    },
+    {
+      "question_id": "easy_69",
+      "correct_answer_letter": "A",
+      "gold_answer": {
+        "numerical": 2,
+        "text": "one,B: two,C: three",
+        "concept": "Binomial Option Pricing Model"
+      },
+      "model_response": "To solve this problem, we will construct a three-step binomial tree for the stock index and determine the terminal nodes where the stock index exceeds the exercise price of $200 at expiration.\n\n### Step 1: Define the parameters\n- Current index level (S₀) = $190\n- Up move factor (u) = 1.05\n- Down move factor (d) = 0.95\n- Exercise price (K) = $200\n- Number of steps (n) = 3\n\n### Step 2: Calculate the possible index levels at expiration\nIn a binomial tree, the stock index can move up or down at each",
+      "level": "directional",
+      "evaluation": {
+        "reasoning": "Same magnitude: student=1.0, gold=2.0, ratio=0.500",
+        "auto_graded": true,
+        "student_value": 1.0,
+        "gold_value": 2.0
+      },
+      "error_attribution": null,
+      "tokens": 890
+    },
+    {
+      "question_id": "easy_70",
+      "correct_answer_letter": "A",
+      "gold_answer": {
+        "numerical": 0,
+        "text": "0%,B: 30%,C: 70%",
+        "concept": "Probability of continuous uniform distribution"
+      },
+      "model_response": "To solve this problem, we need to understand the properties of a continuous uniform distribution.\n\n1. **Definition of Continuous Uniform Distribution**: A continuous uniform distribution is defined over an interval \\([a, b]\\). In this case, the interval is \\([0, 1]\\). The probability density function (PDF) for a continuous uniform distribution is constant over the interval and is given by:\n\n   \\[\n   f(x) = \\frac{1}{b - a} \\quad \\text{for } a \\leq x \\leq b\n   \\]\n\n   For our case, \\(a = 0\\) and \\(",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "Numerical match: student=0.0, gold=0.0, within 2% tolerance",
+        "auto_graded": true,
+        "student_value": 0.0,
+        "gold_value": 0.0
+      },
+      "error_attribution": null,
+      "tokens": 438
+    },
+    {
+      "question_id": "easy_71",
+      "correct_answer_letter": "C",
+      "gold_answer": {
+        "numerical": null,
+        "text": "test the sensitivity of a model to changes in assumptions—for example, on distributions of key variables",
+        "concept": "Monte Carlo Simulation"
+      },
+      "model_response": "A Monte Carlo simulation is a statistical technique that allows for the modeling of complex systems and processes by using random sampling and statistical modeling. It is widely used in finance, engineering, project management, and various fields to assess risk and uncertainty in prediction and forecasting models. Here’s a step-by-step breakdown of how a Monte Carlo simulation can be used:\n\n### Step 1: Define the Problem\nIdentify the specific problem or process you want to analyze. This could be",
+      "level": "directional",
+      "evaluation": {
+        "reasoning": "The student demonstrates a correct understanding of Monte Carlo simulations and their application in assessing risk and uncertainty, but does not explicitly mention the sensitivity of a model to changes in assumptions, which is a key aspect of the gold standard answer.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": null,
+      "tokens": 595
+    },
+    {
+      "question_id": "easy_72",
+      "correct_answer_letter": "C",
+      "gold_answer": {
+        "numerical": null,
+        "text": "its inability to independently specify cause-and-effect relationships",
+        "concept": "Limitations of Monte Carlo Simulation"
+      },
+      "model_response": "Monte Carlo simulation is a powerful statistical technique used to model the probability of different outcomes in processes that are inherently uncertain. However, it does have several limitations. Here, I will outline one significant limitation and explain it step by step.\n\n### Limitation: Dependence on Input Assumptions\n\n**Step 1: Understanding the Basics of Monte Carlo Simulation**\n- Monte Carlo simulation relies on random sampling to obtain numerical results. It uses probability distribution",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "The student identifies a limitation related to input assumptions but does not address the specific limitation mentioned in the gold standard answer, which is about the inability to specify cause-and-effect relationships.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": {
+        "error_category": "assumption_error",
+        "explanation": "The student incorrectly identified a limitation of Monte Carlo simulation by focusing on the dependence on input assumptions rather than the inability to specify cause-and-effect relationships, which is the correct limitation.",
+        "could_be_fixed_with_tools": false
+      },
+      "tokens": 505
+    },
+    {
+      "question_id": "easy_73",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": 0,
+        "text": "Skewness,C: Standard deviation",
+        "concept": "Skewness in a normal distribution"
+      },
+      "model_response": "In a normal distribution, the parameter that equals zero is the skewness. \n\n### Explanation:\n\n1. **Normal Distribution Characteristics**:\n   - A normal distribution is symmetric about its mean.\n   - It has a bell-shaped curve.\n   - The mean, median, and mode of a normal distribution are all equal.\n\n2. **Skewness**:\n   - Skewness measures the asymmetry of the probability distribution of a real-valued random variable.\n   - For a perfectly symmetrical distribution, such as the normal distribution, ",
+      "level": "directional",
+      "evaluation": {
+        "reasoning": "The student correctly identifies skewness as the parameter that equals zero in a normal distribution, demonstrating a good understanding of the concept. However, they did not mention that the standard deviation is also a parameter that can be considered in this context, which is part of the gold standard answer.",
+        "auto_graded": false,
+        "student_value": 0,
+        "gold_value": 0
+      },
+      "error_attribution": null,
+      "tokens": 272
+    },
+    {
+      "question_id": "easy_74",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": null,
+        "text": "have outcomes that cannot be negative.,C: are more suitable for describing asset returns than asset prices",
+        "concept": "Lognormal Distribution Characteristics"
+      },
+      "model_response": "To understand the differences between normal distributions and lognormal distributions, we need to define both types of distributions and highlight their key characteristics.\n\n### Definitions:\n\n1. **Normal Distribution**:\n   - A normal distribution is a continuous probability distribution characterized by its bell-shaped curve, which is symmetric about the mean.\n   - It is defined by two parameters: the mean (μ) and the standard deviation (σ).\n   - The probability density function (PDF) of a nor",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "The student did not address the key characteristics of lognormal distributions as required by the question, particularly the fact that lognormal distributions cannot have negative outcomes. The answer is incomplete and does not provide a correct comparison.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": {
+        "error_category": "conceptual_error",
+        "explanation": "The student failed to correctly identify the key characteristics that differentiate lognormal distributions from normal distributions, particularly regarding the nature of their outcomes. They did not address the fact that lognormal distributions cannot take negative values, which is a fundamental aspect of their definition.",
+        "could_be_fixed_with_tools": false
+      },
+      "tokens": 629
+    },
+    {
+      "question_id": "easy_75",
+      "correct_answer_letter": "C",
+      "gold_answer": {
+        "numerical": null,
+        "text": "non-negative",
+        "concept": "Lognormal Distribution Characteristics"
+      },
+      "model_response": "To understand why the lognormal distribution is a more accurate model for the distribution of stock prices than the normal distribution, we need to delve into the characteristics of both distributions and the nature of stock prices.\n\n### Step 1: Characteristics of Stock Prices\n1. **Non-Negativity**: Stock prices cannot be negative. They can only take on values from 0 to positive infinity. This is a fundamental characteristic of stock prices.\n2. **Multiplicative Processes**: Stock prices are ofte",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "The student correctly identifies that stock prices are non-negative and explains the characteristics of both the lognormal and normal distributions, aligning with the gold standard answer.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": null,
+      "tokens": 532
+    },
+    {
+      "question_id": "easy_76",
+      "correct_answer_letter": "A",
+      "gold_answer": {
+        "numerical": -0.109,
+        "text": "–10.90%.,B: –10.32%.,C: 11.51%",
+        "concept": "Continuously Compounded Rate of Return"
+      },
+      "model_response": "To calculate the continuously compounded rate of return for the stock from time \\( t = 0 \\) to \\( t = 1 \\), we can use the formula for continuously compounded return, which is given by:\n\n\\[\nr = \\ln\\left(\\frac{P_1}{P_0}\\right)\n\\]\n\nwhere:\n- \\( r \\) is the continuously compounded rate of return,\n- \\( P_0 \\) is the price of the stock at time \\( t = 0 \\),\n- \\( P_1 \\) is the price of the stock at time \\( t = 1 \\),\n- \\( \\ln \\) is the natural logarithm.\n\n### Step 1: Identify the values\nFrom the problem:",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "Wrong magnitude: student=-10.9, gold=-0.109",
+        "auto_graded": true,
+        "student_value": -10.9,
+        "gold_value": -0.109
+      },
+      "error_attribution": {
+        "error_category": "arithmetic_error",
+        "explanation": "The student incorrectly calculated the natural logarithm of the ratio, leading to an incorrect final answer.",
+        "could_be_fixed_with_tools": true
+      },
+      "tokens": 461
+    },
+    {
+      "question_id": "easy_77",
+      "correct_answer_letter": "A",
+      "gold_answer": {
+        "numerical": null,
+        "text": "It is symmetrically distributed around its mean value, like the normal distribution.,B: It has shorter (i.e., thinner) tails than the normal distribution.,C: As its degrees of freedom increase, Student’s t-distribution approaches the normal distribution",
+        "concept": "Properties of Student's t-distribution"
+      },
+      "model_response": "To determine which statement about Student's t-distribution is false, we need to review some key properties and characteristics of the t-distribution. Here are some important points to consider:\n\n1. **Shape**: The t-distribution is symmetric and bell-shaped, similar to the normal distribution, but it has heavier tails.\n\n2. **Degrees of Freedom**: The shape of the t-distribution depends on the degrees of freedom (df). As the degrees of freedom increase, the t-distribution approaches the standard ",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "The student incorrectly states that the t-distribution has heavier tails than the normal distribution, which contradicts the gold standard answer that states it has shorter (thinner) tails. This indicates a fundamental misunderstanding of the properties of the t-distribution.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": {
+        "error_category": "conceptual_error",
+        "explanation": "The student incorrectly stated that the t-distribution has shorter tails than the normal distribution, which is false; it actually has heavier tails.",
+        "could_be_fixed_with_tools": false
+      },
+      "tokens": 524
+    },
+    {
+      "question_id": "easy_78",
+      "correct_answer_letter": "C",
+      "gold_answer": {
+        "numerical": null,
+        "text": "The domains of their pdfs are positive and negative numbers",
+        "concept": "Properties of Probability Distributions"
+      },
+      "model_response": "To determine which statement concerning chi-square and F-distributions is false, we need to review the properties and characteristics of both distributions. Here are some key points about each:\n\n### Chi-Square Distribution:\n1. **Definition**: The chi-square distribution is a continuous probability distribution that arises in statistics when estimating the variance of a population from a sample.\n2. **Degrees of Freedom**: The shape of the chi-square distribution depends on the degrees of freedom ",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "The student's answer does not address the question directly and fails to identify the false statement about the chi-square and F-distributions. Instead, it provides a description of the properties of the distributions without concluding which statement is false.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": {
+        "error_category": "conceptual_error",
+        "explanation": "The student incorrectly stated that the domains of the pdfs for chi-square and F-distributions include negative numbers, which is fundamentally incorrect as both distributions are defined only for non-negative values.",
+        "could_be_fixed_with_tools": false
+      },
+      "tokens": 587
+    },
+    {
+      "question_id": "easy_79",
+      "correct_answer_letter": "A",
+      "gold_answer": {
+        "numerical": null,
+        "text": "judgmental sampling.,B: systematic sampling.,C: convenience sampling",
+        "concept": "Judgmental Sampling"
+      },
+      "model_response": "In the context of auditing, when an auditor like Perkiomen Kinzua is faced with a large number of transactions and time constraints, the choice of sampling method is crucial for ensuring that the audit is both efficient and effective. \n\n### Step 1: Understand the Types of Sampling Methods\n\nThere are several sampling methods that auditors can use, including:\n\n1. **Random Sampling**: Every item in the population has an equal chance of being selected. This method is unbiased and can provide a good ",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "The student does not provide a clear answer to the question regarding the most appropriate sampling method for Kinzua to use. Instead, they describe various sampling methods without concluding which one is the best choice, which indicates a lack of understanding of the specific context of the question.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": {
+        "error_category": "conceptual_error",
+        "explanation": "The student did not correctly identify the most appropriate sampling method for the context of the audit, indicating a misunderstanding of the specific advantages and applications of judgmental sampling compared to other methods.",
+        "could_be_fixed_with_tools": false
+      },
+      "tokens": 759
+    },
+    {
+      "question_id": "easy_80",
+      "correct_answer_letter": "A",
+      "gold_answer": {
+        "numerical": null,
+        "text": "There is significant risk that the sample is not representative of the population.,B: Every member of the population has an equal chance of being selected for the sample.,C: Using judgment guarantees that population subdivisions of interest are repesented in the sample",
+        "concept": "Non-probability sampling risks"
+      },
+      "model_response": "To address the question regarding non-probability sampling, let's first define what non-probability sampling is and then evaluate its characteristics to determine which statement about it is true.\n\n### Definition of Non-Probability Sampling\nNon-probability sampling is a sampling technique where the selection of samples is based on subjective judgment rather than random selection. In this method, not all individuals in the population have a chance of being selected, which can lead to biases in th",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "The student did not identify the correct statement about non-probability sampling. They provided a definition and characteristics but did not address the true statement from the options given.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": {
+        "error_category": "conceptual_error",
+        "explanation": "The student misunderstood the nature of non-probability sampling, particularly in relation to the risk of the sample not being representative of the population. They did not correctly identify the true statement about non-probability sampling.",
+        "could_be_fixed_with_tools": false
+      },
+      "tokens": 456
+    },
+    {
+      "question_id": "easy_81",
+      "correct_answer_letter": "C",
+      "gold_answer": {
+        "numerical": null,
+        "text": "drawing simple random samples from each subpopulation in sizes proportional to the relative size of each subpopulation",
+        "concept": "Stratified Random Sampling"
+      },
+      "model_response": "Creating a stratified random sample involves several systematic steps to ensure that the sample accurately reflects the characteristics of the population. Here’s a step-by-step approach to creating a stratified random sample:\n\n### Step 1: Define the Population\n- **Assumption**: Clearly define the population from which you want to draw a sample. This could be a specific group of individuals, organizations, or items that share common characteristics.\n\n### Step 2: Identify Strata\n- **Assumption**: ",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "The student's answer does not address the requirement of drawing simple random samples from each subpopulation in sizes proportional to the relative size of each subpopulation, which is the key aspect of the gold standard answer. Instead, it provides a general overview of the steps to create a stratified sample without focusing on the specific method of sampling from each stratum proportionally.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": {
+        "error_category": "conceptual_error",
+        "explanation": "The student provided a general description of the steps to create a stratified random sample but did not mention the critical aspect of drawing samples from each stratum in sizes proportional to their relative sizes, which is essential for stratified sampling.",
+        "could_be_fixed_with_tools": false
+      },
+      "tokens": 713
+    },
+    {
+      "question_id": "easy_82",
+      "correct_answer_letter": "A",
+      "gold_answer": {
+        "numerical": null,
+        "text": "Sampling error.,B: ias.,C: A lack of consistency",
+        "concept": "Sampling error"
+      },
+      "model_response": "To understand the discrepancy between the sample mean of 23% and the population mean of 26%, we need to consider several factors that can contribute to differences between sample statistics and population parameters. Here’s a step-by-step analysis:\n\n### Step 1: Understanding Sample and Population\n\n- **Population**: The entire set of companies in the industry, which is 200 companies in this case.\n- **Sample**: A subset of the population, which consists of 30 randomly selected companies.\n\n### Step",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "The student correctly identifies sampling error as the explanation for the discrepancy between the sample mean and the population mean, which matches the gold standard answer.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": null,
+      "tokens": 751
+    },
+    {
+      "question_id": "easy_83",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": 0.387,
+        "text": "0.247.,C: 0.387",
+        "concept": "Standard Error of the Mean (SEM)"
+      },
+      "model_response": "To calculate the standard error of the sample mean, we can use the following formula:\n\n\\[\n\\text{Standard Error (SE)} = \\frac{\\sigma}{\\sqrt{n}}\n\\]\n\nWhere:\n- \\(\\sigma\\) is the population standard deviation\n- \\(n\\) is the sample size\n\nGiven:\n- The population variance (\\(\\sigma^2\\)) is 2.45.\n- The sample size (\\(n\\)) is 40.\n\nFirst, we need to find the population standard deviation (\\(\\sigma\\)) by taking the square root of the variance:\n\n\\[\n\\sigma = \\sqrt{\\sigma^2} = \\sqrt{2.45}\n\\]\n\nCalculating \\(\\sq",
+      "level": "directional",
+      "evaluation": {
+        "reasoning": "Same magnitude: student=2.45, gold=0.387, ratio=6.331",
+        "auto_graded": true,
+        "student_value": 2.45,
+        "gold_value": 0.387
+      },
+      "error_attribution": null,
+      "tokens": 406
+    },
+    {
+      "question_id": "easy_84",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": null,
+        "text": "unbiased.,C: consistent",
+        "concept": "Unbiased Estimator"
+      },
+      "model_response": "An estimator with an expected value equal to the parameter that it is intended to estimate is described as being **unbiased**. \n\n### Step-by-Step Explanation:\n\n1. **Definition of an Estimator**: An estimator is a rule or formula that provides an estimate of a population parameter based on sample data. For example, the sample mean is an estimator of the population mean.\n\n2. **Expected Value**: The expected value (or mean) of an estimator is a measure of the central tendency of the estimator's sam",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "The student correctly identifies that an estimator with an expected value equal to the parameter it estimates is described as unbiased, matching the gold standard answer.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": null,
+      "tokens": 396
+    },
+    {
+      "question_id": "easy_85",
+      "correct_answer_letter": "A",
+      "gold_answer": {
+        "numerical": null,
+        "text": "accuracy of estimates.,B: efficiency of the estimator.,C: unbiasedness of the estimator",
+        "concept": "Consistency of an estimator"
+      },
+      "model_response": "To understand the relationship between an estimator being consistent and the effect of an increase in sample size, we need to clarify a few concepts.\n\n### Definitions:\n1. **Estimator**: A statistic used to estimate a parameter of a population.\n2. **Consistent Estimator**: An estimator is said to be consistent if, as the sample size increases, the probability that the estimator converges to the true parameter value approaches 1. In other words, a consistent estimator will yield results that get c",
+      "level": "directional",
+      "evaluation": {
+        "reasoning": "The student demonstrates a correct understanding of consistency and its implications for sample size, but does not explicitly state that an increase in sample size increases the accuracy of estimates, which is the gold standard answer. Instead, they focus on the narrowing of the sampling distribution and variance, which is related but not the exact answer.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": null,
+      "tokens": 538
+    },
+    {
+      "question_id": "easy_86",
+      "correct_answer_letter": "A",
+      "gold_answer": {
+        "numerical": null,
+        "text": "a wider confidence interval.,B: a narrower confidence interval.,C: no change in the width of the confidence interval",
+        "concept": "Confidence Intervals"
+      },
+      "model_response": "To understand the effect of an increase in the degree of confidence on a two-sided confidence interval, we need to consider the components that make up a confidence interval.\n\n### Step 1: Understanding Confidence Intervals\n\nA two-sided confidence interval is typically expressed as:\n\n\\[\n\\text{Confidence Interval} = \\hat{\\mu} \\pm z \\cdot \\frac{\\sigma}{\\sqrt{n}}\n\\]\n\nWhere:\n- \\(\\hat{\\mu}\\) is the sample mean.\n- \\(z\\) is the z-score corresponding to the desired confidence level.\n- \\(\\sigma\\) is the p",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "The student does not provide a complete answer and fails to conclude that an increase in the degree of confidence results in a wider confidence interval. The explanation is incomplete and does not directly address the question.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": {
+        "error_category": "unknown",
+        "explanation": "```json\n{\n    \"error_category\": \"conceptual_error\",\n    \"explanation\": \"The student failed to recognize that increasing the degree of confidence leads to a wider confidence interval due to the increas",
+        "could_be_fixed_with_tools": false
+      },
+      "tokens": 434
+    },
+    {
+      "question_id": "easy_87",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": 13.27,
+        "text": "13.27.,C: 13.68",
+        "concept": "Confidence Interval for the Mean"
+      },
+      "model_response": "To calculate the width of a 90% confidence interval for the mean using the t-distribution, we will follow these steps:\n\n1. **Identify the sample statistics**:\n   - Sample size (\\(n\\)) = 17\n   - Sample mean (\\(\\bar{x}\\)) = 116.23\n   - Sample variance (\\(s^2\\)) = 245.55\n   - Sample standard deviation (\\(s\\)) = \\(\\sqrt{s^2} = \\sqrt{245.55}\\)\n\n2. **Calculate the sample standard deviation**:\n   \\[\n   s = \\sqrt{245.55} \\approx 15.7\n   \\]\n\n3. **Determine the degrees of freedom**:\n   \\[\n   \\text{Degrees",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "Numerical match: student=13.28, gold=13.27, within 2% tolerance",
+        "auto_graded": true,
+        "student_value": 13.28,
+        "gold_value": 13.27
+      },
+      "error_attribution": null,
+      "tokens": 583
+    },
+    {
+      "question_id": "easy_88",
+      "correct_answer_letter": "A",
+      "gold_answer": {
+        "numerical": 23.64,
+        "text": "23.64.,B: 25.41.,C: 30.09",
+        "concept": "Confidence Interval for the Mean"
+      },
+      "model_response": "To calculate the 99% confidence interval for the population mean, we will follow these steps:\n\n1. **Identify the given data:**\n   - Sample size (\\(n\\)) = 65\n   - Sample mean (\\(\\bar{x}\\)) = 31\n   - Population variance (\\(\\sigma^2\\)) = 529\n   - Population standard deviation (\\(\\sigma\\)) = \\(\\sqrt{529} = 23\\)\n\n2. **Determine the critical value for a 99% confidence level:**\n   Since the population is normally distributed and we know the population standard deviation, we will use the Z-distribution.",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "Numerical match: student=23.64, gold=23.64, within 2% tolerance",
+        "auto_graded": true,
+        "student_value": 23.64,
+        "gold_value": 23.64
+      },
+      "error_attribution": null,
+      "tokens": 628
+    },
+    {
+      "question_id": "easy_89",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": null,
+        "text": "decrease in the standard error of the sample mean.,C: lower likelihood of sampling from more than one population",
+        "concept": "Standard Error of the Mean"
+      },
+      "model_response": "To analyze the effect of an increase in sample size, we need to consider the implications of sample size on statistical estimates and their properties. Here’s a step-by-step breakdown:\n\n### Step 1: Understanding Sample Size\nSample size refers to the number of observations or data points collected in a study or experiment. In statistics, increasing the sample size can have several effects on the estimates derived from the sample.\n\n### Step 2: Effects of Increasing Sample Size\n1. **Reduction in St",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "The student correctly identifies that an increase in sample size leads to a decrease in the standard error of the sample mean, which aligns with the gold standard answer.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": null,
+      "tokens": 477
+    },
+    {
+      "question_id": "easy_90",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": 0.0648,
+        "text": "0.0648,C: 0.0883",
+        "concept": "Standard Error of the Mean (SEM)"
+      },
+      "model_response": "To calculate the estimated standard error of the sample mean using the bootstrap resampling method, we can follow these steps:\n\n1. **Understand the Calculation of the Standard Error**:\n   The standard error (SE) of the sample mean can be estimated using the formula:\n   \\[\n   SE = \\sqrt{\\frac{1}{n-1} \\sum_{i=1}^{n} (x_i - \\bar{x})^2}\n   \\]\n   where \\( n \\) is the number of resamples, \\( x_i \\) are the resample means, and \\( \\bar{x} \\) is the mean of the resample means.\n\n2. **Identify the Given Va",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "Numerical match: student=0.0647, gold=0.0648, within 2% tolerance",
+        "auto_graded": true,
+        "student_value": 0.0647,
+        "gold_value": 0.0648
+      },
+      "error_attribution": null,
+      "tokens": 602
+    },
+    {
+      "question_id": "easy_91",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": null,
+        "text": "usually requires that the number of repetitions is equal to the sample size.,C: produces dissimilar results for every run because resamples are randomly drawn",
+        "concept": "Resampling Techniques"
+      },
+      "model_response": "To compare bootstrap resampling and jackknife resampling, we need to understand the fundamental concepts and methodologies behind each technique. Both are resampling methods used in statistics to estimate the sampling distribution of a statistic, but they have different approaches and applications.\n\n### Definitions\n\n1. **Bootstrap Resampling**:\n   - The bootstrap method involves repeatedly sampling with replacement from the original dataset to create \"bootstrap samples.\" Each bootstrap sample is",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "The student's answer does not address the specific comparison requested in the question regarding the number of repetitions required for jackknife resampling compared to bootstrap resampling. Instead, it provides general definitions of both methods without answering the question directly.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": {
+        "error_category": "conceptual_error",
+        "explanation": "The student misunderstood the fundamental differences between bootstrap and jackknife resampling, particularly regarding the number of repetitions and the nature of the samples generated.",
+        "could_be_fixed_with_tools": false
+      },
+      "tokens": 777
+    },
+    {
+      "question_id": "easy_92",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": null,
+        "text": "survivorship bias.,C: intergenerational data mining",
+        "concept": "Survivorship Bias"
+      },
+      "model_response": "To analyze the susceptibility of a report on long-term stock returns focused exclusively on all currently publicly traded firms in an industry, we need to consider several factors that could affect the validity and reliability of the findings. Here’s a step-by-step breakdown:\n\n### Step 1: Define the Scope of the Report\nThe report focuses on long-term stock returns of currently publicly traded firms in a specific industry. This means it is limited to firms that are currently listed on stock excha",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "The student correctly identifies survivorship bias as the primary issue affecting the report's validity, matching the gold standard answer.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": null,
+      "tokens": 534
+    },
+    {
+      "question_id": "easy_93",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": null,
+        "text": "Data-mining  bias,C: Sample selection bias",
+        "concept": "Data-mining bias and Sample selection bias"
+      },
+      "model_response": "To address the question regarding which sampling bias is most likely investigated with an out-of-sample test, we first need to understand the concepts involved.\n\n### Step 1: Define Out-of-Sample Testing\nOut-of-sample testing refers to the evaluation of a model or hypothesis using data that was not used during the model's training phase. This is crucial for assessing the model's predictive power and generalizability to new, unseen data.\n\n### Step 2: Identify Common Types of Sampling Bias\nSampling",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "The student did not identify the correct sampling bias related to out-of-sample testing, which is data-mining bias. The answer is incomplete and does not address the question directly.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": {
+        "error_category": "conceptual_error",
+        "explanation": "The student failed to correctly identify the specific type of sampling bias that is most relevant to out-of-sample testing, focusing instead on general definitions and types of bias without connecting them to the question.",
+        "could_be_fixed_with_tools": false
+      },
+      "tokens": 487
+    },
+    {
+      "question_id": "easy_94",
+      "correct_answer_letter": "A",
+      "gold_answer": {
+        "numerical": null,
+        "text": "The study is based on a short time-series.,B: Information not available on the test date is used.,C: A structural change occurred prior to the start of thestudy’s time series",
+        "concept": "Time-period bias in investment studies"
+      },
+      "model_response": "To identify characteristics of an investment study that most likely indicate time-period bias, we first need to understand what time-period bias is. Time-period bias occurs when the results of an investment study are influenced by the specific time frame chosen for the analysis. This can lead to misleading conclusions about the performance of an investment strategy or asset class.\n\nHere are the steps to identify characteristics that indicate time-period bias:\n\n1. **Selection of Time Frame**: If ",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "The student does not directly address the characteristics listed in the gold standard answer and instead provides a general explanation of time-period bias without identifying specific indicators. The answer lacks the necessary focus on the characteristics that indicate time-period bias as outlined in the question.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": {
+        "error_category": "conceptual_error",
+        "explanation": "The student provided a general explanation of time-period bias but did not correctly identify the specific characteristics from the options given in the question that indicate time-period bias.",
+        "could_be_fixed_with_tools": false
+      },
+      "tokens": 579
+    },
+    {
+      "question_id": "easy_95",
+      "correct_answer_letter": "C",
+      "gold_answer": {
+        "numerical": null,
+        "text": "The alternative hypothesis exhausts all potential parameter values not accounted for by the null hypothesis",
+        "concept": "Hypothesis Testing"
+      },
+      "model_response": "To address the question about hypothesis testing, I will provide a general overview of the key concepts and principles involved in hypothesis testing. Since no specific statements were provided, I will outline the fundamental aspects of hypothesis testing that are commonly discussed in the context of statistical analysis.\n\n### Step 1: Define Hypothesis Testing\n\nHypothesis testing is a statistical method used to make decisions about a population based on sample data. It involves two competing hyp",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "The student's answer does not address the specific statement about the alternative hypothesis and instead provides a general overview of hypothesis testing. This indicates a misunderstanding of the question.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": {
+        "error_category": "reading_error",
+        "explanation": "The student did not directly address the specific statements provided in the question and instead gave a general overview of hypothesis testing, which was not what was asked.",
+        "could_be_fixed_with_tools": false
+      },
+      "tokens": 675
+    },
+    {
+      "question_id": "easy_96",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": null,
+        "text": "Power of a test,C: Value of a test statistic",
+        "concept": "Hypothesis Testing"
+      },
+      "model_response": "In hypothesis testing, the decision rule is a critical component that guides the conclusion of the test based on the data collected. To state a decision rule, the following elements must be specified:\n\n1. **Significance Level (α)**: This is the probability of rejecting the null hypothesis when it is actually true (Type I error). Common significance levels are 0.05, 0.01, or 0.10. The choice of α should be made before conducting the test.\n\n2. **Test Statistic**: This is a standardized value that ",
+      "level": "directional",
+      "evaluation": {
+        "reasoning": "The student demonstrates a good understanding of the elements involved in stating a decision rule, including significance level and test statistic. However, they did not mention 'power of a test' explicitly, which is part of the gold standard answer. The answer is directionally correct but lacks one key element.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": null,
+      "tokens": 574
+    },
+    {
+      "question_id": "easy_97",
+      "correct_answer_letter": "A",
+      "gold_answer": {
+        "numerical": null,
+        "text": "It can be stated as “not equal to” provided the alternative hypothesis is stated as “equal to.”,B: Along with the alternative hypothesis, it considers all possible values of the population parameter.,C: In a two-tailed test, it is rejected when evidence supports equality between the hypothesized value and the population parameter",
+        "concept": "Null Hypothesis Testing"
+      },
+      "model_response": "To address the question regarding the null hypothesis, we first need to clarify what a null hypothesis is and its role in statistical testing.\n\n### Step 1: Define the Null Hypothesis\nThe null hypothesis, denoted as \\( H_0 \\), is a statement that there is no effect or no difference in a given situation. It serves as a default or starting assumption that any observed effect in the data is due to random chance rather than a true effect.\n\n### Step 2: Characteristics of the Null Hypothesis\n1. **Assum",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "The student's answer does not address the specific question about the characteristics of the null hypothesis in relation to the statements provided. It provides a general definition and characteristics but fails to evaluate or confirm any of the statements regarding the null hypothesis, leading to a fundamentally flawed response.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": {
+        "error_category": "conceptual_error",
+        "explanation": "The student misunderstood the nature of the null hypothesis and its relationship with the alternative hypothesis, leading to an incorrect interpretation of the statements provided.",
+        "could_be_fixed_with_tools": false
+      },
+      "tokens": 481
+    },
+    {
+      "question_id": "easy_98",
+      "correct_answer_letter": "A",
+      "gold_answer": {
+        "numerical": null,
+        "text": "One-sided  t-test,B: Two-sided  t-test,C: One-sided  chi-square  test",
+        "concept": "One-sided t-test for hypothesis testing"
+      },
+      "model_response": "To test the hypothesis that the historical average return on an index is less than or equal to 6%, we need to follow a systematic approach. Here are the steps involved in determining the most appropriate test:\n\n### Step 1: Define the Hypotheses\nWe need to set up our null and alternative hypotheses based on the information provided.\n\n- **Null Hypothesis (H0)**: The historical average return on the index is greater than or equal to 6%. Mathematically, this can be expressed as:\n  \\[\n  H_0: \\mu \\geq",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "The student correctly identifies the need for a one-sided t-test given the unknown population variance and the hypothesis being tested. The reasoning and methodology align with the gold standard answer.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": null,
+      "tokens": 635
+    },
+    {
+      "question_id": "easy_99",
+      "correct_answer_letter": "C",
+      "gold_answer": {
+        "numerical": null,
+        "text": "5% critical value rejection region in a tail of the distribution for a one-tailed test",
+        "concept": "Hypothesis Testing and Significance Level"
+      },
+      "model_response": "To conduct a hypothesis test for a normally distributed population at a 0.05 significance level, we need to follow a systematic approach. Here are the steps involved:\n\n### Step 1: Define the Hypotheses\nWe start by defining the null hypothesis (H0) and the alternative hypothesis (H1). The specific hypotheses will depend on the context of the problem, but generally:\n\n- **Null Hypothesis (H0)**: This is a statement of no effect or no difference. It is what we assume to be true until we have evidenc",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "The student's answer does not address the specific requirement of describing the critical value rejection region for a one-tailed test at a 0.05 significance level. Instead, it provides a general overview of hypothesis testing without focusing on the critical aspect of the rejection region.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": {
+        "error_category": "conceptual_error",
+        "explanation": "The student misunderstood the implications of the significance level in the context of a one-tailed test, failing to recognize that a 0.05 significance level specifically indicates a 5% critical value rejection region in one tail of the distribution.",
+        "could_be_fixed_with_tools": false
+      },
+      "tokens": 783
+    }
+  ]
+}

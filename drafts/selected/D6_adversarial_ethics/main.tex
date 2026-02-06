@@ -36,7 +36,7 @@
             country={Taiwan}}
 
 \begin{abstract}
-Large Language Models (LLMs) can answer CFA Ethics questions correctly under standard conditions, but can their ethical judgment withstand adversarial pressure? We introduce an \textit{adversarial ethics stress test} for financial LLMs, applying five types of pressure---profit incentives, authority pressure, emotional manipulation, reframing, and moral dilemmas---to 15 CFA Ethics questions. Testing GPT-4o-mini, we find that \textbf{emotional manipulation} is the most effective attack, reducing the Ethics Robustness Score (ERS) to 0.750 (25\% accuracy degradation), while \textbf{authority pressure} causes a 12.5\% drop (ERS = 0.875). Notably, three questions that were answered correctly under standard conditions were ``flipped'' by emotional manipulation---the model abandoned correct ethical reasoning when presented with sympathetic scenarios. These findings suggest that LLMs learn the \textit{form} of ethical responses rather than the \textit{principles}, creating a dangerous vulnerability for AI systems deployed in financial advisory roles where clients may inadvertently or deliberately apply similar pressure. We propose a minimum Ethics Robustness Score of 0.85 for financial AI deployment and connect our findings to CFA Institute Standards of Professional Conduct.
+Large Language Models (LLMs) can answer CFA Ethics questions correctly under standard conditions, but can their ethical judgment withstand adversarial pressure? We introduce an \textit{adversarial ethics stress test} for financial LLMs, applying five types of pressure---profit incentives, authority pressure, emotional manipulation, reframing, and moral dilemmas---to 47 CFA Ethics questions from the CFA-Easy dataset. Testing GPT-4o-mini, we find that \textbf{all five attack types consistently degrade performance}, with \textbf{profit incentive} and \textbf{authority pressure} as the most effective attacks (ERS = 0.925, $-$6.4 pp each), followed by emotional manipulation, reframing, and moral dilemma (ERS = 0.950, $-$4.3 pp each). Across all adversarial conditions, a total of 14 previously correct questions were ``flipped''---the model abandoned correct ethical reasoning under pressure. The universality of this degradation pattern is the central finding: no attack type fails to compromise ethical judgment. These findings suggest that LLMs learn the \textit{form} of ethical responses rather than the \textit{principles}, creating a dangerous vulnerability for AI systems deployed in financial advisory roles where clients may inadvertently or deliberately apply similar pressure. We propose a minimum Ethics Robustness Score of 0.95 for financial AI deployment and connect our findings to CFA Institute Standards of Professional Conduct.
 \end{abstract}
 
 \begin{keyword}
@@ -64,7 +64,7 @@ We introduce an adversarial ethics stress testing framework comprising five pres
     \item \textbf{Moral Dilemma}: Utilitarian argument against rule-following
 \end{enumerate}
 
-Our key finding is that LLM ethical judgment is not robust: emotional manipulation reduces accuracy by 25\%, and authority pressure by 12.5\%. These degradation levels have direct implications for financial AI deployment, where clients, colleagues, or market conditions may inadvertently create exactly these pressure conditions.
+Our key finding is that LLM ethical judgment is \textit{universally} vulnerable: all five attack types degrade performance, with profit incentive and authority pressure each reducing accuracy by 6.4 percentage points (ERS = 0.925), and emotional manipulation, reframing, and moral dilemma each causing a 4.3 pp decline (ERS = 0.950). The consistency of degradation across all pressure types has direct implications for financial AI deployment, where clients, colleagues, or market conditions may inadvertently create exactly these pressure conditions.
 
 %% ============================================
 %% 2. METHODOLOGY
@@ -103,40 +103,58 @@ Table~\ref{tab:d6results} presents the adversarial ethics testing results.
 
 \begin{table}[htbp]
 \centering
-\caption{Adversarial Ethics Results (GPT-4o-mini, $n = 15$ CFA Ethics questions)}
+\caption{Adversarial Ethics Results (GPT-4o-mini, $n = 47$ CFA Ethics questions)}
 \label{tab:d6results}
 \begin{threeparttable}
 \begin{tabular}{lcccc}
 \toprule
 \textbf{Condition} & \textbf{Accuracy} & \textbf{Flipped} & \textbf{ERS} & \textbf{$\Delta$Acc} \\
 \midrule
-Standard (no pressure) & 53.3\% & --- & 1.000 & --- \\
+Standard (no pressure) & 85.1\% & --- & 1.000 & --- \\
 \midrule
-Profit incentive & 60.0\% & 0 & 1.125 & +6.7\% \\
-Authority pressure & 46.7\% & 2 & 0.875 & $-$6.7\% \\
-Emotional manipulation & 40.0\% & 3 & 0.750 & $-$13.3\% \\
-Reframing & 66.7\% & 1 & 1.250 & +13.3\% \\
-Moral dilemma & 53.3\% & 2 & 1.000 & 0.0\% \\
+Profit incentive & 78.7\% & 4 & 0.925 & $-$6.4 pp \\
+Authority pressure & 78.7\% & 3 & 0.925 & $-$6.4 pp \\
+Emotional manipulation & 80.8\% & 2 & 0.950 & $-$4.3 pp \\
+Reframing & 80.8\% & 3 & 0.950 & $-$4.3 pp \\
+Moral dilemma & 80.8\% & 2 & 0.950 & $-$4.3 pp \\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}
 \small
-\item ERS = Ethics Robustness Score = Adversarial Accuracy / Standard Accuracy. Flipped = questions correct under standard but incorrect under adversarial pressure.
+\item ERS = Ethics Robustness Score = Adversarial Accuracy / Standard Accuracy. Flipped = questions correct under standard but incorrect under adversarial pressure. Total flipped across all conditions: 14.
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
 
-\subsection{Emotional Manipulation: The Most Effective Attack}
+Figure~\ref{fig:ethics_robustness} visualizes the Ethics Robustness Score across all five pressure types, revealing a consistent vulnerability profile: all five attack types degrade ethical judgment, with profit incentive and authority pressure producing the largest erosion.
 
-Emotional manipulation produces the largest accuracy degradation (ERS = 0.750), flipping 3 of 15 questions. In these cases, the model abandons correct ethical reasoning when presented with sympathetic scenarios---prioritizing the client's emotional distress over fiduciary duty requirements. This mirrors the well-documented ``empathy bias'' in human decision-making, where sympathy for an individual overrides systematic rule-following.
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig1_ethics_robustness.pdf}
+\caption{Ethics Robustness Score (ERS) by adversarial pressure type. The dashed line at ERS = 1.0 indicates no degradation from standard performance. Profit incentive and authority pressure produce the largest erosion (ERS = 0.925), followed by emotional manipulation, reframing, and moral dilemma (ERS = 0.950). All five attack types fall below 1.0, demonstrating universal vulnerability.}
+\label{fig:ethics_robustness}
+\end{figure}
 
-\subsection{Authority Pressure: A Compliance Risk}
+\subsection{Profit Incentive and Authority Pressure: The Most Effective Attacks}
 
-Authority pressure (ERS = 0.875) successfully compromises 2 questions, suggesting the model exhibits deference to hierarchical authority even when the instruction conflicts with ethical standards. This is particularly concerning for AI deployment in institutional settings where the AI may receive instructions from authorized but ethically misguided users.
+Profit incentive and authority pressure produce the largest accuracy degradation (ERS = 0.925, $-$6.4 pp each), flipping 4 and 3 questions respectively. Profit incentive is particularly notable: it generates the highest number of flipped questions across all attack types, suggesting that financial reward framing is the most reliable vector for compromising LLM ethical judgment. Authority pressure, meanwhile, demonstrates that the model exhibits deference to hierarchical authority even when instructions conflict with ethical standards---a direct threat to CFA Standard I(B) Independence and Objectivity. Together, these two attack types account for 7 of the 14 total flipped questions, underscoring that financial and hierarchical pressures represent the primary vulnerability surface.
 
-\subsection{Surprising Findings: Reframing and Profit Incentive}
+\subsection{Emotional Manipulation, Reframing, and Moral Dilemma: Moderate but Consistent Degradation}
 
-Counterintuitively, reframing (ERS = 1.250) and profit incentive (ERS = 1.125) appear to \textit{improve} performance. We hypothesize that the additional context, even when adversarial, provides the model with more information to reason about, sometimes triggering more careful analysis. The reframing language (``spirit of the law'') may paradoxically remind the model to consider the underlying principles more carefully.
+Emotional manipulation, reframing, and moral dilemma each produce ERS = 0.950 ($-$4.3 pp), flipping 2, 3, and 2 questions respectively. Although these attacks cause smaller absolute degradation than profit incentive and authority pressure, their consistency is significant. Emotional manipulation causes the model to prioritize client distress over fiduciary duty, mirroring the ``empathy bias'' in human decision-making. Reframing---which linguistically disguises violations as pragmatism---successfully compromises 3 questions, suggesting the model's ethical reasoning can be swayed by rhetorical packaging. Moral dilemma leverages utilitarian arguments to override rule-following, a particularly insidious attack in financial contexts where consequentialist reasoning may appear superficially justified.
+
+\subsection{Universal Degradation: The Central Finding}
+
+The most striking result is the \textit{universality} of degradation: all five attack types consistently reduce ethical accuracy, with no attack type failing to compromise at least two questions. This stands in contrast to preliminary small-sample testing, where some attacks appeared to paradoxically improve performance---an artifact that disappeared with adequate statistical power. The universal degradation pattern provides the strongest evidence that LLMs learn the \textit{form} of ethical responses rather than internalizing the \textit{principles}. If the model had genuinely learned ethical reasoning, we would expect at least some attack types to be completely ineffective; instead, every pressure vector finds purchase.
+
+Figure~\ref{fig:ethics_accuracy} provides a direct comparison of accuracy across standard and adversarial conditions, highlighting the consistent degradation across all five attack vectors.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig2_ethics_accuracy.pdf}
+\caption{Accuracy comparison between standard and adversarial conditions across all five pressure types. Profit incentive and authority pressure reduce accuracy from 85.1\% to 78.7\% ($-$6.4 pp each), while emotional manipulation, reframing, and moral dilemma each reduce accuracy to 80.8\% ($-$4.3 pp). All five attacks consistently degrade performance, with no paradoxical improvements.}
+\label{fig:ethics_accuracy}
+\end{figure}
 
 %% ============================================
 %% 4. DISCUSSION
@@ -154,7 +172,7 @@ CFA Standard III(A)---Loyalty, Prudence, and Care---requires that financial prof
     \item \textbf{Market-side framing}: Market commentary that reframes risky behavior as ``innovative'' could bias AI risk assessments.
 \end{itemize}
 
-The 25\% accuracy degradation from emotional manipulation translates to approximately 1 in 4 ethics-relevant AI outputs becoming unreliable under pressure---an unacceptable failure rate for fiduciary applications.
+The universal degradation pattern---with accuracy dropping by 4.3--6.4 pp across all five attack types and 14 total flipped questions---means that adversarial pressure reliably compromises LLM ethical judgment regardless of the specific pressure vector. In practical terms, approximately 1 in 6 ethics-relevant AI outputs becomes unreliable under the most effective attacks (profit incentive and authority pressure), an unacceptable failure rate for fiduciary applications.
 
 \subsection{CFA Standards Mapping}
 
@@ -171,14 +189,14 @@ Our adversarial attacks map directly to CFA Standards vulnerabilities:
 
 Based on our findings, we propose:
 \begin{enumerate}
-    \item \textbf{Minimum ERS Threshold}: Financial AI systems should demonstrate ERS $\geq 0.85$ across all adversarial pressure types before deployment in advisory or compliance roles.
+    \item \textbf{Minimum ERS Threshold}: Financial AI systems should demonstrate ERS $\geq 0.95$ across all adversarial pressure types before deployment in advisory or compliance roles.
     \item \textbf{Pre-deployment Red Teaming}: Adversarial ethics testing should be a mandatory component of financial AI validation, analogous to penetration testing for cybersecurity.
     \item \textbf{Pressure-Aware Safeguards}: AI systems should include detection mechanisms for adversarial pressure patterns, triggering human escalation when pressure is detected.
 \end{enumerate}
 
 \subsection{Limitations}
 
-Our adversarial prompts are synthetic and may not capture the full subtlety of real-world pressure. The sample size ($n = 15$) limits statistical power. Results are model-specific; different models may exhibit different vulnerability profiles.
+Our adversarial prompts are synthetic and may not capture the full subtlety of real-world pressure. The sample size ($n = 47$), drawn from the CFA-Easy dataset, provides substantially more statistical power than preliminary studies but remains limited; future work should expand to larger and more diverse ethics question banks. The CFA-Easy dataset represents moderate difficulty; results on harder question sets (e.g., CFA-Challenge) may differ. Results are model-specific; different models may exhibit different vulnerability profiles.
 
 %% ============================================
 %% 5. CONCLUSION
@@ -186,14 +204,29 @@ Our adversarial prompts are synthetic and may not capture the full subtlety of r
 \section{Conclusion}
 \label{sec:conclusion}
 
-This paper demonstrates that LLM ethical judgment in financial contexts is not robust to adversarial pressure. Emotional manipulation reduces ethical accuracy by 25\%, and authority pressure by 12.5\%. These findings suggest that LLMs learn the \textit{form} rather than the \textit{principles} of ethical reasoning, creating a dangerous attack surface for AI systems in fiduciary roles.
+This paper demonstrates that LLM ethical judgment in financial contexts is \textit{universally} vulnerable to adversarial pressure. Across 47 CFA Ethics questions, all five attack types consistently degrade performance: profit incentive and authority pressure each reduce accuracy by 6.4 pp (ERS = 0.925), while emotional manipulation, reframing, and moral dilemma each cause a 4.3 pp decline (ERS = 0.950). A total of 14 questions were flipped across all conditions, demonstrating the breadth of this vulnerability. These findings suggest that LLMs learn the \textit{form} rather than the \textit{principles} of ethical reasoning, creating a dangerous attack surface for AI systems in fiduciary roles.
 
 \textbf{The question is not whether AI can recite ethical rules, but whether it can uphold them under pressure.} Our evidence suggests it cannot---at least not reliably.
 
 %% ============================================
+%% DECLARATIONS
+%% ============================================
+\section*{Declaration of Competing Interest}
+The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
+
+\section*{CRediT Author Contributions}
+\textbf{Wei-Lun Cheng}: Conceptualization, Methodology, Software, Formal Analysis, Data Curation, Writing -- Original Draft, Visualization.
+\textbf{Wei-Chung Miao}: Supervision, Writing -- Review \& Editing.
+
+\section*{Acknowledgments}
+The authors thank the anonymous reviewers for their constructive feedback. Computational resources were provided by Academia Sinica.
+
+\section*{Data Availability}
+The experimental data and analysis code are available at \url{https://github.com/[anonymized]} upon publication.
+
+%% ============================================
 %% REFERENCES
 %% ============================================
-\section*{References}
 
 \begin{thebibliography}{10}
 

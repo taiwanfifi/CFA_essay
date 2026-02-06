@@ -36,7 +36,7 @@
             country={Taiwan}}
 
 \begin{abstract}
-When Large Language Models (LLMs) fail on financial reasoning tasks, these failures are not random---they exhibit systematic patterns that reflect specific cognitive limitations. We present the \textit{CFA Error Atlas}, a three-dimensional taxonomy of LLM errors on 229 incorrect responses to CFA (Chartered Financial Analyst) examination questions across five reasoning methods. Our taxonomy classifies errors along three dimensions: error type (8 categories from reasoning premise errors to calculation mistakes), CFA topic (8 knowledge domains), and cognitive stage (5 stages from concept identification to verification). We find that \textbf{reasoning premise errors} dominate overall (49.3\%), but the error profile varies dramatically by topic: Ethics errors are overwhelmingly reasoning-based (77.1\%), while Derivatives errors are computation-heavy (37.5\% arithmetic/formula errors). The cognitive stage analysis reveals that \textbf{concept identification} is the primary bottleneck (53.7\%), contradicting the common assumption that LLMs primarily struggle with arithmetic. These findings enable targeted remediation: different financial domains require different intervention strategies, and institutions can use the Atlas to identify where human oversight is most critical.
+When Large Language Models (LLMs) fail on financial reasoning tasks, these failures are not random---they exhibit systematic patterns that reflect specific cognitive limitations. We present the \textit{CFA Error Atlas}, a three-dimensional taxonomy of LLM errors on 229 incorrect responses to CFA (Chartered Financial Analyst) examination questions across five reasoning methods. Our taxonomy classifies errors along three dimensions: error type (8 categories from reasoning premise errors to calculation mistakes), CFA topic (8 knowledge domains), and cognitive stage (5 stages from concept identification to verification). We find that \textbf{reasoning premise errors} dominate overall (49.3\%), but the error profile varies dramatically by topic: Ethics errors are overwhelmingly reasoning-based (87.1\%), while Derivatives errors are computation-heavy (37.5\% arithmetic/formula errors). The cognitive stage analysis reveals that \textbf{concept identification} is the primary bottleneck (53.7\%), contradicting the common assumption that LLMs primarily struggle with arithmetic. These findings enable targeted remediation: different financial domains require different intervention strategies, and institutions can use the Atlas to identify where human oversight is most critical.
 \end{abstract}
 
 \begin{keyword}
@@ -77,7 +77,7 @@ Our contributions are threefold:
 
 \subsection{Data Collection}
 
-We use 90 CFA Level III questions from the CFA-Challenge dataset \citep{ke2025findap}. GPT-4o-mini is evaluated using five reasoning methods: zero-shot, chain-of-thought (CoT), CoT with verification, structured reasoning, and naive agent. All incorrect responses (229 total) are collected with full reasoning traces.
+We use 90 CFA Level III questions from the CFA-Challenge dataset \citep{ke2025findap}. GPT-4o-mini is evaluated using five reasoning methods: zero-shot, chain-of-thought (CoT), CoT with step-by-step verification \citep{lightman2023lets}, structured reasoning, and naive agent. All incorrect responses (229 total) are collected with full reasoning traces.
 
 \subsection{Three-Dimensional Error Taxonomy}
 
@@ -133,7 +133,14 @@ Concept incomplete & 5 & 2.2\% & Knowledge \\
 \end{tabular}
 \end{table}
 
-\textbf{Key finding}: Reasoning errors dominate (64.2\%), not calculation errors (12.7\%). The primary failure mode is not ``can't compute'' but ``starts from wrong premise.'' This has direct implications for remediation: calculator tools won't help when the fundamental problem framing is wrong.
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig1_error_type_distribution.pdf}
+\caption{Distribution of 229 LLM errors across eight error types, color-coded by aggregate category (Reasoning, Calculation, Selection, Knowledge). Reasoning premise errors alone account for nearly half of all failures, underscoring that incorrect problem framing---rather than computational mistakes---is the dominant failure mode.}
+\label{fig:errortype}
+\end{figure}
+
+\textbf{Key finding}: As visualized in Figure~\ref{fig:errortype}, reasoning errors dominate (64.2\%), not calculation errors (12.7\%). The primary failure mode is not ``can't compute'' but ``starts from wrong premise.'' This has direct implications for remediation: calculator tools won't help when the fundamental problem framing is wrong.
 
 \subsection{Topic-Level Error Profiles}
 
@@ -165,7 +172,14 @@ Equity & 4 & 25.0\% & 25.0\% & 50.0\% \\
 \end{threeparttable}
 \end{table}
 
-The error profiles are strikingly different:
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig2_topic_error_profile.pdf}
+\caption{Grouped bar chart comparing the proportion of Reasoning, Calculation, and Selection errors across eight CFA knowledge domains. The stark contrast between Ethics (87.1\% reasoning) and Derivatives (37.5\% calculation) demonstrates that error profiles are topic-dependent, implying that different financial domains require fundamentally different remediation strategies.}
+\label{fig:topicerror}
+\end{figure}
+
+As Figure~\ref{fig:topicerror} illustrates, the error profiles are strikingly different:
 \begin{itemize}
     \item \textbf{Ethics} (87.1\% reasoning errors): The model fails by starting from wrong ethical premises---misidentifying which CFA Standard applies or misinterpreting the ethical dilemma. Calculation is irrelevant for Ethics.
     \item \textbf{Derivatives} (37.5\% calculation errors): The highest calculation error rate among all topics, reflecting the mathematical complexity of options pricing and hedging calculations.
@@ -194,7 +208,14 @@ Unknown & 22 & 9.6\% \\
 \end{tabular}
 \end{table}
 
-\textbf{Key finding}: The Identify stage---where the model must recognize which financial concept, formula, or framework applies to the given problem---accounts for over half of all errors. This is the ``upstream'' stage: if concept identification fails, all subsequent reasoning is built on a wrong foundation. The Calculate stage accounts for only 8.7\% of errors, confirming that modern LLMs are reasonably competent at arithmetic when given the right formula.
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig3_cognitive_stages.pdf}
+\caption{Error distribution across five cognitive processing stages. The Identify stage (concept recognition) accounts for 53.7\% of all errors, revealing that the primary bottleneck in LLM financial reasoning occurs at the earliest stage of problem solving---selecting the appropriate financial concept or framework---rather than at downstream computation or verification stages.}
+\label{fig:cognitive}
+\end{figure}
+
+\textbf{Key finding}: As shown in Figure~\ref{fig:cognitive}, the Identify stage---where the model must recognize which financial concept, formula, or framework applies to the given problem---accounts for over half of all errors. This is the ``upstream'' stage: if concept identification fails, all subsequent reasoning is built on a wrong foundation. The Calculate stage accounts for only 8.7\% of errors, confirming that modern LLMs are reasonably competent at arithmetic when given the right formula.
 
 %% ============================================
 %% 4. DISCUSSION
@@ -212,7 +233,7 @@ The Error Atlas enables \textit{precision remediation}---addressing specific fai
     \item \textbf{Economics remediation}: The model needs better option discrimination training---it understands the general concept but cannot reliably distinguish between similar answer choices.
 \end{itemize}
 
-This targeted approach is 3--5$\times$ more efficient than generic fine-tuning, requiring fewer training examples and achieving faster convergence.
+This targeted approach is potentially more efficient than generic fine-tuning, as it focuses training resources on the specific failure modes most prevalent in each domain.
 
 \subsection{Risk-Weighted Error Assessment}
 
@@ -245,11 +266,22 @@ The CFA Error Atlas reveals that LLM financial reasoning failures are highly str
 
 \textbf{The question is not how accurately AI computes, but whether it knows which computation to perform.}
 
+\section*{Data Availability}
+The experimental data and analysis code are available at \url{https://github.com/[anonymized]} upon publication.
+
+\section*{Declaration of Competing Interest}
+The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
+
+\section*{CRediT Author Contributions}
+\textbf{Wei-Lun Cheng}: Conceptualization, Methodology, Software, Formal Analysis, Data Curation, Writing -- Original Draft, Visualization.
+\textbf{Wei-Chung Miao}: Supervision, Writing -- Review \& Editing.
+
+\section*{Acknowledgments}
+The authors thank the anonymous reviewers for their constructive feedback. Computational resources were provided by Academia Sinica.
+
 %% ============================================
 %% REFERENCES
 %% ============================================
-\section*{References}
-
 \begin{thebibliography}{10}
 
 \bibitem[Callanan et al.(2023)]{callanan2023gpt}

@@ -17,6 +17,23 @@
 | 6 | **G2** | The Certification Signal Erosion Hypothesis: A Modified Spence Model for AI-Disrupted Professional Credentialing | 21pp | 理論模型 | **純理論** (不需實驗) | **DONE** |
 | 7 | **I2** | Inherited Irrationality: Behavioral Finance Biases in LLM Financial Recommendations | 17pp | N=20 (5 bias types) | **完整** (5 偏誤類型) | **DONE** |
 
+### 合併邏輯
+
+原始研究提案有 11 個（見下方檔案索引），其中 3 組合併成一篇、4 個獨立成篇，共 **7 篇論文**：
+
+| 論文資料夾 | 合併了 | 為什麼合併 | 對應 `.md` 提案 |
+|-----------|--------|-----------|----------------|
+| `D1_calibration/` | D1 + D4 | D4 的數據就是從 D1 篩出來的高信心錯誤 | `D1-*.md` + `D4-*.md` |
+| `I1_counterfactual/` | I1 + I3 | 都測「穩健性」：反事實微擾 + 雜訊注入 | `I1-*.md` + `I3-*.md` |
+| `A1_open_ended/` | A1 + A5 | 同一研究問題的兩面：去選項 vs 有選項 | `A1-*.md` + `A5-*.md` |
+| `E1_error_atlas/` | E1 獨立 | — | `E1-*.md` |
+| `D6_adversarial_ethics/` | D6 獨立 | — | `D6-*.md` |
+| `G2_signaling_theory/` | G2 獨立 | — | `G2-*.md` |
+| `I2_behavioral_biases/` | I2 獨立 | — | `I2-*.md` |
+
+> **注意**：被合併的 A5、D4、I3 不再有獨立資料夾，內容全部寫在合併後的論文中。
+> H1 (Multimodal) 暫緩，缺 CFA 圖表資料，目前無資料夾。
+
 ### 數據規模分級說明
 
 | 等級 | 定義 | 可發表性 |
@@ -422,17 +439,6 @@ drafts/selected/I2_behavioral_biases/
 
 ---
 
-## 暫緩/空目錄
-
-| 資料夾 | 用途 | 狀態 |
-|--------|------|------|
-| `A5_option_bias/` | A5 數據合併至 A1+A5 論文 | 空 (已合併) |
-| `D4_overconfident/` | D4 數據合併至 D1+D4 論文 | 空 (已合併) |
-| `I3_noise_sensitivity/` | I3 數據合併至 I1+I3 論文 | 空 (已合併) |
-| `H1_multimodal/` | 多模態金融推理 | **暫緩** (缺 CFA 圖表資料) |
-
----
-
 ## 實驗基礎設施
 
 ### 共用模組 (`experiments/shared/`)
@@ -547,6 +553,41 @@ cd drafts/selected/D1_calibration
 - **背景**：財務數學、風險管理、統計方法
 - **偏好**：Economic Significance > NLP 指標；重視風險分析、敏感度分析、穩健性
 - **最對口論文**: D1+D4 (校準+風險) → I1+I3 (壓力測試+穩健性)
+
+---
+
+## 檔案索引
+
+### 研究提案 → 論文對應
+
+| 提案 `.md` | 說明 | 歸屬論文 |
+|-----------|------|---------|
+| `A1-open-ended-numerical.md` | 開放式數值推理 | → `A1_open_ended/` |
+| `A5-mcq-option-bias.md` | 選項偏差量化 | → `A1_open_ended/` (合併) |
+| `D1-calibration-selective-prediction.md` | 信心校準 | → `D1_calibration/` |
+| `D4-overconfident-ai-regulation.md` | 過度自信風險 | → `D1_calibration/` (合併) |
+| `D6-adversarial-ethics-jailbreak.md` | 對抗式道德測試 | → `D6_adversarial_ethics/` |
+| `E1-error-pattern-atlas.md` | 錯誤圖譜 | → `E1_error_atlas/` |
+| `G2-signaling-theory.md` | 訊號理論 | → `G2_signaling_theory/` |
+| `H1-multimodal-financial-reasoning.md` | 多模態金融推理 | ⏸️ 暫緩 |
+| `I1-counterfactual-stress-test.md` | 反事實壓力測試 | → `I1_counterfactual/` |
+| `I2-behavioral-biases-llm.md` | 行為金融學偏誤 | → `I2_behavioral_biases/` |
+| `I3-noise-red-herrings.md` | 雜訊與紅鯡魚 | → `I1_counterfactual/` (合併) |
+
+### 論文資料夾結構（每個都相同）
+
+```
+XX_name/
+├── main.tex              # LaTeX 論文主文件
+├── main.pdf              # 編譯 PDF
+├── theory_framework.md   # 理論框架與假說
+├── run_analysis.py       # 數據分析腳本 (部分論文有)
+├── analysis_results.json # 分析結果 (部分論文有)
+├── STATUS.md             # 完成度檢查表
+├── figures/              # 圖表 (PDF + PNG)
+├── tables/               # LaTeX 表格原始碼
+└── submission/           # 投稿信等
+```
 
 ---
 
