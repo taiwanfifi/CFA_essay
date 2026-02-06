@@ -9,14 +9,35 @@
 
 ---
 
+## 專案進度
+
+> **最後更新**：2026-02-06
+
+**7 篇論文初稿全部完成**，含編譯 PDF + 實驗數據。其中 5 篇數據規模足夠可直接投稿，2 篇需 scale up。
+
+| 論文 | 標題 | 頁數 | 樣本量 | 規模 | 狀態 |
+|------|------|------|--------|------|------|
+| **D1+D4** | When AI Is Confidently Wrong | 14pp | N=257 | 完整 | 可投稿 |
+| **I1+I3** | Stress Testing Financial LLMs | 13pp | N=100 | 完整 | 可投稿 |
+| **E1** | The CFA Error Atlas | 8pp | N=229 | 完整 | 可投稿 |
+| **G2** | Certification Signal Erosion | 21pp | 理論 | 純理論 | 可投稿 |
+| **I2** | Inherited Irrationality | 17pp | N=20 | 完整 | 可投稿 |
+| **A1+A5** | Beyond Multiple Choice | 10pp | N=20 | POC | 需 scale up |
+| **D6** | Under Pressure | 7pp | N=15 | POC | 需 scale up |
+
+詳細的論文狀態、核心數據、檔案結構、數據路徑見 [`drafts/selected/README.md`](drafts/selected/README.md)。
+
+---
+
 ## 快速導覽
 
 | 想做什麼 | 去哪裡 |
 |---------|--------|
+| 看 7 篇論文完整狀態 | [`drafts/selected/README.md`](drafts/selected/README.md) |
 | 了解研究方向 | `docs/03-研究方向深度設計.md` |
-| 看 10 篇論文提案 | `drafts/selected/README.md` |
+| 看論文 PDF | `drafts/selected/*/main.pdf` |
 | 看實驗程式碼 | `experiments/` |
-| 看 POC 實驗結果 | `RESULTS.md` |
+| 看實驗結果 | `experiments/*/results/run_*/results.json` |
 | 看模型定價 | `MODELS.md` |
 | 跑實驗 | 見下方「快速開始」 |
 
@@ -29,13 +50,21 @@ CFA_essay/
 ├── docs/                          # 研究文書（5 篇，繁中）
 │   ├── 01-數據集完整手冊.md       # 12 個資料集的權威參考
 │   ├── 02-文獻綜述與研究定位.md   # 5 篇核心論文 + 6 個研究空白
-│   ├── 03-研究方向深度設計.md     # 7 個研究方向 + 論文拆分策略 ★
+│   ├── 03-研究方向深度設計.md     # 7 個研究方向 + 論文拆分策略
 │   ├── 04-FinDAP框架解析.md       # 程式碼架構 + 局限與改進空間
 │   └── 05-審稿人挑戰與應對策略.md # 6 大挑戰 + 量化防禦
 │
-├── drafts/                        # 論文提案
+├── drafts/                        # 論文提案與初稿
 │   ├── ideas/                     # 41 個研究點子（每個一個 .md）
-│   └── selected/                  # 精選 10 篇 + README 路線圖 ★
+│   └── selected/                  # 7 篇完成初稿 + 詳細 README
+│       ├── README.md              # 論文總覽、數據路徑、投稿策略
+│       ├── D1_calibration/        # D1+D4: 信心校準 (14pp, N=257)
+│       ├── I1_counterfactual/     # I1+I3: 壓力測試 (13pp, N=100)
+│       ├── A1_open_ended/         # A1+A5: 開放式作答 (10pp, N=20)
+│       ├── E1_error_atlas/        # E1: 錯誤圖譜 (8pp, N=229)
+│       ├── D6_adversarial_ethics/ # D6: 道德壓力測試 (7pp, N=15)
+│       ├── G2_signaling_theory/   # G2: 訊號理論 (21pp, 理論)
+│       └── I2_behavioral_biases/  # I2: 行為偏誤 (17pp, N=20)
 │
 ├── experiments/                   # 實驗程式碼 + 結果
 │   ├── shared/                    # 共用模組（LLM client, prompts, evaluation）
@@ -45,6 +74,7 @@ CFA_essay/
 │   ├── C1_hybrid_retrieval/       # RAG 實驗（4 種實作）
 │   ├── D1_confidence_calibration/ # 信心校準
 │   ├── D4_overconfident_risk/     # 過度自信風險分析
+│   ├── D6_adversarial_ethics/     # 對抗式道德測試
 │   ├── E1_error_analysis/         # 錯誤圖譜
 │   ├── I1_counterfactual/         # 反事實壓力測試
 │   ├── I2_behavioral_biases/      # 行為金融偏誤
@@ -67,71 +97,65 @@ CFA_essay/
 
 ---
 
-## 10 個研究題目
+## 7 篇論文核心結果摘要
 
-分成五條戰線，構成完整攻擊鏈：
+### D1+D4: 信心校準與過度自信風險 (N=257)
 
-### 戰線一：拆穿 Benchmark 假象
-
-| 題目 | 測什麼 | 新穎點 |
-|------|--------|--------|
-| **A1** Open-Ended | 移除選項後的真實推理能力 | 三層判定機制 + 結構化錯誤歸因 |
-| **A5** Option Bias | 選項提供了多少不公平優勢 | 精確量化 option bias 的三維分解 |
-
-### 戰線二：揭露過度自信
-
-| 題目 | 測什麼 | 新穎點 |
-|------|--------|--------|
-| **D1** Calibration | 模型的信心值是否可靠 | 四種 confidence 方法的金融場景比較 |
-| **D4** Risk Analysis | 高信心錯誤答案的系統性風險 | CFA Ethics 框架 + 監管啟示 |
-
-### 戰線三：繪製錯誤地圖
-
-| 題目 | 測什麼 | 新穎點 |
-|------|--------|--------|
-| **E1** Error Atlas | 錯誤的精確分類 | 三維 Taxonomy（類型×主題×階段） |
-
-### 戰線四：開闢新戰場
-
-| 題目 | 測什麼 | 新穎點 |
-|------|--------|--------|
-| **H1** Multimodal | 圖表理解是否為獨立瓶頸 | 首個多模態 CFA 基準（暫緩，缺圖片） |
-| **G2** Signaling | AI 如何瓦解專業認證的訊號價值 | Modified Spence Model（純理論） |
-
-### 戰線五：對抗性壓力測試
-
-| 題目 | 測什麼 | 新穎點 |
-|------|--------|--------|
-| **I1** Counterfactual | 背題 vs 真懂金融邏輯 | Robust Accuracy + Memorization Gap |
-| **I2** Biases | LLM 是否繼承人類非理性偏誤 | 六維偏誤框架 + Debiasing 實驗 |
-| **I3** Noise | 模型能否過濾無關資訊 | Noise Sensitivity Index |
-
----
-
-## 已完成的實驗
-
-### POC 驗證（2026-02-04 ~ 05）
-
-6 個新實驗管道全部跑通：
-
-| 實驗 | N | 核心指標 | 數值 | 狀態 |
-|------|---|----------|------|------|
-| A5 Option Bias | 5 題 | Option Bias | **-40.0%** | OK |
-| I3 Noise | 5×4 | NSI | **0.000** | OK |
-| D4 Risk | 250→74→5 | High-risk | **5/5** | OK |
-| A1 Open-Ended | 5 題 | Strict/Lenient | **60%/80%** | OK |
-| I1 Counterfactual | 5 題 | Mem. Gap | **+10.0%** | OK |
-| I2 Biases | 10 情境 | Bias Score | **0.500** | OK |
-
-詳細結果見 `RESULTS.md`。
-
-### 先前完成
-
-| 實驗 | 規模 | 關鍵結果 |
+| 指標 | 數值 | p-value |
 |------|------|---------|
-| B1 Multi-step Agent | 90 題 | CoT+tool 驗證提升準確率 |
-| D1 Calibration | 90×2 模型 | gpt-4o-mini ECE=0.18（過度自信） |
-| E1 Error Analysis | 90 題 | 概念誤解和公式錯誤最多 |
+| Overconfidence Gap | +22–32% | <0.0001 |
+| OC Error Rate | 30.0% | <0.0001 |
+| Best ECE | qwen3:32b = 0.247 | — |
+| Worst ECE | gpt-4o-mini = 0.315 | — |
+
+### I1+I3: 壓力測試 (N=100)
+
+| 指標 | 數值 |
+|------|------|
+| Memorization Gap (L1) | +23.5% |
+| Robust Accuracy | 58.0% (vs 86.0% standard) |
+| Max NSI (noise sensitivity) | 0.046 |
+| Memorization Suspect Rate | 28.0% |
+
+### A1+A5: 開放式作答 (N=20, POC)
+
+| 指標 | 數值 |
+|------|------|
+| Option Bias | +10.0% |
+| Strict Accuracy (open-ended) | 40.0% |
+| Lenient Accuracy | 70.0% |
+
+### E1: 錯誤圖譜 (N=229 errors)
+
+| 指標 | 數值 |
+|------|------|
+| Dominant Error Type | Reasoning Premise (49.3%) |
+| Calculation Errors | 12.7% |
+| Concept Identification Bottleneck | 53.7% |
+
+### D6: 道德壓力測試 (N=15, POC)
+
+| 壓力類型 | ERS |
+|----------|-----|
+| Emotional manipulation (最弱) | 0.750 |
+| Authority pressure | 0.875 |
+| Reframing (反而提升) | 1.250 |
+
+### G2: 訊號理論 (理論)
+
+| 指標 | 數值 |
+|------|------|
+| CFA Signaling Retention | R = 0.288 (~29%) |
+| AI-replicable abilities | 50% tipping point |
+
+### I2: 行為偏誤 (N=20, 5 bias types)
+
+| 偏誤類型 | Debiasing Effect |
+|----------|-----------------|
+| Loss Aversion | +0.400 (最易去偏) |
+| Anchoring | +0.200 |
+| Framing | +0.100 |
+| Recency / Disposition | 0.000 (完全抵抗) |
 
 ---
 
@@ -150,31 +174,77 @@ pip install openai python-dotenv tqdm requests pydantic
 echo "OPENAI_API_KEY=your-key-here" > .env
 ```
 
-### 跑 POC 實驗
+### 跑實驗
 
 ```bash
-# A5: 選項偏差
-python -m experiments.A5_option_bias.run_experiment --dataset easy --limit 5 --model gpt-4o-mini
+# D1: 信心校準
+python -m experiments.D1_confidence_calibration.run_experiment --dataset easy --limit 100 --model gpt-4o-mini
+
+# I1: 反事實壓力測試
+python -m experiments.I1_counterfactual.run_experiment --dataset easy --limit 100 --model gpt-4o-mini --perturbation-levels 1 2
 
 # I3: 雜訊敏感度
-python -m experiments.I3_noise_red_herrings.run_experiment --dataset easy --limit 5 --model gpt-4o-mini --noise-types N1 N2 N3 N4
+python -m experiments.I3_noise_red_herrings.run_experiment --dataset easy --limit 100 --model gpt-4o-mini --noise-types N1 N2 N3 N4
 
 # A1: 開放式作答
-python -m experiments.A1_open_ended.run_experiment --dataset easy --limit 5 --model gpt-4o-mini
+python -m experiments.A1_open_ended.run_experiment --dataset easy --limit 100 --model gpt-4o-mini
 
-# I1: 反事實測試
-python -m experiments.I1_counterfactual.run_experiment --dataset easy --limit 5 --model gpt-4o-mini --perturbation-levels 1
+# A5: 選項偏差
+python -m experiments.A5_option_bias.run_experiment --dataset easy --limit 100 --model gpt-4o-mini
 
 # I2: 行為偏誤
-python -m experiments.I2_behavioral_biases.run_experiment --bias-types loss_aversion anchoring --limit 5 --model gpt-4o-mini
+python -m experiments.I2_behavioral_biases.run_experiment --bias-types loss_aversion anchoring framing recency disposition_effect --limit 5 --model gpt-4o-mini
 
-# D4: 過度自信風險（需要 D1 結果）
+# D6: 對抗式道德測試
+python -m experiments.D6_adversarial_ethics.run_experiment --dataset easy --limit 15 --model gpt-4o-mini
+
+# D4: 過度自信風險分析（需要 D1 結果）
 python -m experiments.D4_overconfident_risk.run_experiment --input "experiments/D1_confidence_calibration/results/run_*/results.json" --confidence-threshold 0.8 --limit 5
 ```
 
 ### 輸出位置
 
 每個實驗的結果存在 `experiments/XX/results/run_YYYYMMDD_HHMMSS/results.json`。
+
+---
+
+## 實驗架構
+
+### 每個實驗的結構
+
+```
+experiments/XX_name/
+├── __init__.py
+├── config.py           # 實驗專屬常數、prompt 模板
+├── run_experiment.py   # 主 CLI（argparse）
+├── analysis.py         # 後處理分析
+└── results/            # JSON 輸出
+```
+
+### 共用模組 (`experiments/shared/`)
+
+| 模組 | 功能 |
+|------|------|
+| `config.py` | `MODEL_REGISTRY`：所有支援模型的配置 |
+| `llm_client.py` | `LLMClient`：OpenAI / Anthropic / Gemini / DeepSeek / Ollama 多後端 |
+| `prompts.py` | `extract_answer()`：5 層 regex 答案提取 |
+| `evaluation.py` | `tolerance_match()`、`semantic_match_judge()`、`mcnemar_test()` |
+| `data_loader.py` | `load_dataset()`：統一資料載入介面 |
+
+### 典型流程
+
+```
+輸入：CFA 題目（JSON）
+  ↓
+處理：
+  1. 載入題目 → data_loader.py
+  2. 建構 prompt → config.py / prompts.py
+  3. 呼叫 LLM → llm_client.py
+  4. 提取答案 → prompts.py
+  5. 評判正確性 → evaluation.py
+  ↓
+輸出：results.json（含 metadata, summary, 逐題結果）
+```
 
 ---
 
@@ -205,65 +275,39 @@ python -m experiments.D4_overconfident_risk.run_experiment --input "experiments/
 
 ---
 
-## 實驗流程說明
-
-### 每個實驗的架構
-
-```
-experiments/XX_name/
-├── __init__.py
-├── config.py           # 實驗專屬常數、prompt 模板
-├── run_experiment.py   # 主 CLI（argparse）
-├── analysis.py         # 後處理分析
-├── README.md           # 可讀指南 + 範例
-└── results/            # JSON 輸出
-```
-
-### 共用模組 (`experiments/shared/`)
-
-| 模組 | 功能 |
-|------|------|
-| `config.py` | `MODEL_REGISTRY`：所有支援模型的配置 |
-| `llm_client.py` | `LLMClient`：OpenAI/Ollama 雙後端，含 retry |
-| `prompts.py` | `extract_answer()`：5 層 regex 答案提取 |
-| `evaluation.py` | `tolerance_match()`、`semantic_match_judge()`、`mcnemar_test()` |
-| `data_loader.py` | `load_dataset()`：統一資料載入介面 |
-
-### 典型流程
-
-```
-輸入：CFA 題目（JSON）
-  ↓
-處理：
-  1. 載入題目 → data_loader.py
-  2. 建構 prompt → config.py / prompts.py
-  3. 呼叫 LLM → llm_client.py
-  4. 提取答案 → prompts.py
-  5. 評判正確性 → evaluation.py
-  ↓
-輸出：results.json（含 metadata, summary, 逐題結果）
-```
-
----
-
 ## 關鍵發現
 
 - 所有 CFA 資料集均非官方真題（SchweserNotes 來源，有 EMNLP 2025 論文背書）
 - 最佳模型 (o4-mini) 在 CFA Level III 上準確率 79.1%，仍有 20%+ 錯誤率
 - GPT-4o 在金融數學推理上僅 60.9%（vs 人類 92%），差距 31%
-- gpt-4o-mini 在開放式作答時反而比 MCQ 表現更好（選項可能干擾）
-- 近 30% 的錯誤是「高信心錯誤」——模型完全確信但答案錯誤
+- **30% 的錯誤是高信心錯誤** — 模型完全確信但答案錯誤 (D1+D4)
+- **23.5% Memorization Gap** — 約 28% 的正確答案可能來自記憶而非推理 (I1+I3)
+- **49.3% 推理前提錯誤** — 不是計算錯，是理解就錯了 (E1)
+- **CFA 認證僅保留 29% 訊號價值** — AI 已能複製 50% 的 CFA 能力 (G2)
+- **Loss aversion 最易去偏，recency/disposition 完全抵抗** (I2)
 
 ---
 
 ## 下一步
 
-1. **放大樣本**：全部 CFA-Easy (1,032 題) + CFA-Challenge (90 題)
-2. **多模型比較**：gpt-4o, gpt-4.1, claude-3.5-sonnet, qwen3:32b
-3. **I2 補齊**：跑剩餘 4 種偏誤（framing, recency, disposition, overconfidence）
-4. **D4 完整分類**：分類全部 74 筆高信心錯誤
-5. **擴充 LLMClient**：支援 Anthropic/Google backend
-6. **跨實驗整合**：將 A5 + A1 結合分析 MCQ vs Open-Ended 完整圖景
+### 立即可投稿 (5 篇)
+
+1. **D1+D4** → Finance Research Letters (首選)
+2. **I1+I3** → Finance Research Letters
+3. **E1** → FRL / J. Financial Data Science
+4. **G2** → FRL / J. Financial Economics
+5. **I2** → FRL / J. Behavioral and Experimental Finance
+
+### 需 Scale Up (2 篇)
+
+6. **A1+A5** → 放大到 n≥100
+7. **D6** → 放大到 n≥50
+
+### 強化方向
+
+- 多模型驗證：加入 gpt-4o, claude-3.5-sonnet, qwen3:32b
+- Publication-quality 圖表生成
+- 各論文交叉引用形成研究群
 
 ---
 
@@ -271,8 +315,8 @@ experiments/XX_name/
 
 1. **快速了解數據**：`docs/01-數據集完整手冊.md`
 2. **了解研究現狀**：`docs/02-文獻綜述與研究定位.md`
-3. **核心——研究方向**：`docs/03-研究方向深度設計.md` ★
-4. **看精選論文提案**：`drafts/selected/README.md` ★
+3. **核心——研究方向**：`docs/03-研究方向深度設計.md`
+4. **看論文初稿狀態**：`drafts/selected/README.md`
 5. **技術參考**：`docs/04-FinDAP框架解析.md`
 6. **論文防禦**：`docs/05-審稿人挑戰與應對策略.md`
 

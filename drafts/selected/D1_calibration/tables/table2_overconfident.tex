@@ -1,0 +1,16 @@
+\begin{table}[htbp]
+\centering
+\caption{Overconfident Error Analysis (Confidence $\geq$ 80\%)}
+\label{tab:overconf}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Model | Method} & \textbf{Total} & \textbf{Errors} & \textbf{OC Errors} & \textbf{OC Rate} \\
+\midrule
+gpt-4o-mini|self_consistency & 90 & 43 & 25 & 27.8% \\
+gpt-4o-mini|verbalized & 95 & 45 & 38 & 40.0% \\
+qwen3:32b|verbalized & 72 & 28 & 14 & 19.4% \\
+\midrule
+\textbf{Overall} & 257 & 116 & 77 & 30.0% \\
+\bottomrule
+\end{tabular}
+\end{table}

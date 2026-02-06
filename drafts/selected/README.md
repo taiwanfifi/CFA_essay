@@ -1,305 +1,552 @@
-# 精選研究清單：11 篇論文的攻擊路線圖
+# 精選論文研究組合：7 篇完成初稿
 
-> **緊急狀況**：資格考口試申請，開學日 2/23，需在 2/10 前遞交申請 + 投稿證明
-
----
-
-## 當前情況總覽
-
-### 時程
-| 日期 | 里程碑 |
-|------|--------|
-| **2/5 (今天)** | 整理 GitHub 代碼、生成圖表 |
-| **2/6 - 2/8** | 撰寫論文初稿（重點：Intro + Conclusion） |
-| **2/9 (週一)** | 寄給繆教授 + 線上投稿（取得投稿證明） |
-| **2/10** | 當面遞交資格考口試申請書 |
-| **2/23** | 開學日 |
-
-### 指導教授：繆維中老師
-- **背景**：財務數學、風險管理、統計方法
-- **偏好**：
-  - 想看 **Economic Significance**，不只是 NLP 指標（BLEU, Accuracy）
-  - 重視 **風險分析**：「AI 不知道自己錯」是金融界最怕的
-  - 喜歡 **敏感度分析 (Sensitivity Analysis)**、**穩健性 (Robustness)**
-
-### 跟老師溝通的話術
-
-```
-「繆老師您好，我是學生程煒倫。關於我的資格考試進度，我想跟老師誠實報告並尋求您的指導。
-
-我目前已經針對『LLM 在 CFA 考試與金融決策』的研究完成了論文雛形，包含：
-
-1. 信心校準分析 (Calibration)：證明 AI 有 29.6% 的高信心錯誤率，這對金融決策有重大風險
-2. 反事實壓力測試 (Counterfactual Stress Test)：驗證 LLM 是真的理解金融公式，還是僅僅背誦考古題
-   我運用了類似敏感度分析 (Sensitivity Analysis) 的方法來擾動數值
-
-我計畫這兩天將初稿投往《Finance Research Letters》(SSCI Q1)。
-這本期刊審稿快，我只要拿到投稿確認信，就能立刻向所上遞交資格考口試申請。
-懇請老師支持這個方案。」
-```
+> **最後更新**：2026-02-06
+> **狀態**：7 篇論文初稿全部完成，含編譯 PDF + 實驗數據
 
 ---
 
-## 投稿策略
+## 總覽
 
-### 目標期刊（按優先順序）
+| # | 論文代號 | 論文標題 | 頁數 | 樣本量 | 數據規模 | 初稿 |
+|---|---------|---------|------|--------|---------|------|
+| 1 | **D1+D4** | When AI Is Confidently Wrong: Calibration and Risk Analysis of LLMs in Financial Decision-Making | 14pp | N=257 | **完整** (90Q × 3 configs) | **DONE** |
+| 2 | **I1+I3** | Stress Testing Financial LLMs: Counterfactual Perturbation and Noise Sensitivity Analysis on CFA Examinations | 13pp | N=100 | **完整** (100Q × 5 conditions) | **DONE** |
+| 3 | **A1+A5** | Beyond Multiple Choice: How Answer Options Inflate LLM Financial Reasoning Scores | 10pp | N=20 | **POC** (需放大) | **DONE** |
+| 4 | **E1** | The CFA Error Atlas: Mapping Failure Modes of LLMs in Financial Reasoning | 8pp | N=229 errors | **完整** (全部錯誤分析) | **DONE** |
+| 5 | **D6** | Under Pressure: Adversarial Stress Testing of LLM Ethical Judgment in Financial Decision-Making | 7pp | N=15 | **POC** (需放大) | **DONE** |
+| 6 | **G2** | The Certification Signal Erosion Hypothesis: A Modified Spence Model for AI-Disrupted Professional Credentialing | 21pp | 理論模型 | **純理論** (不需實驗) | **DONE** |
+| 7 | **I2** | Inherited Irrationality: Behavioral Finance Biases in LLM Financial Recommendations | 17pp | N=20 (5 bias types) | **完整** (5 偏誤類型) | **DONE** |
 
-| 期刊 | 等級 | 適合論文 | 速度 | 備註 |
-|------|------|----------|------|------|
-| **Finance Research Letters (FRL)** | SSCI Q1 | D1+D4 | 極快 | **首選**：短篇論文，審稿 2 週內 |
-| **Financial Innovation (FI)** | SSCI | D1+D4, I1+I3 | 快 | 對 FinTech + AI Agent 最開放 |
-| **Journal of Financial Studies (財務金融學刊)** | TSSCI | 全部 | 中 | 台灣本土頂尖，老師認可度高 |
-| **證券市場發展季刊** | TSSCI | D1+D4 | 中 | 台灣證券界權威 |
+### 數據規模分級說明
 
-### 推薦投稿組合
-
-| 優先級 | 組合 | 綜合評分 | 通關速度 | 老師喜好度 | 理由 |
-|--------|------|----------|----------|------------|------|
-| **首選** | D1+D4 (校準與風險) | **95** | 極快 | 很高 | 純統計 + 風險管理，繆老師專長 |
-| **次選** | I1+I3 (壓力測試) | **90** | 快 | 高 | 穩健性分析，敏感度測試 |
-| 備選 | E1 (錯誤地圖) | 70 | 慢 | 中 | 偏 NLP 實證 |
-
-### 專業術語轉換（財金所版本）
-
-| 不要說 | 改說 |
-|--------|------|
-| Prompt Engineering | 不同隨機種子 (Seed) 下 AI 回答的穩健性分析 |
-| AI Agent 考 CFA | 模擬自主代理人在金融倫理約束下的決策路徑優化 |
-| Calibration | 信心分佈的校準誤差 (Expected Calibration Error) |
-| Jailbreak | 對抗式情境下的決策偏誤 |
+| 等級 | 定義 | 可發表性 |
+|------|------|---------|
+| **完整** | 樣本量足夠支撐統計檢定，結果穩健 | 可直接投稿 |
+| **POC** | 概念驗證通過，管道跑通，但樣本量不足 | 需 scale up 後投稿 |
+| **純理論** | 數學模型推導，無需實驗數據 | 可直接投稿 |
 
 ---
 
-## POC 實驗狀態
+## 投稿優先序與策略
 
-### 已完成 POC（可直接寫論文）
-
-| 實驗 | N | 核心指標 | 數值 | 管道 | 可用於論文 |
-|------|---|----------|------|------|-----------|
-| **D1 Calibration** | 250 | ECE | 0.18 | ✅ | D1+D4 組合 |
-| **D4 Overconfident** | 74 篩選 | High-risk rate | 29.6% | ✅ | D1+D4 組合 |
-| **A1 Open-Ended** | 5 | Strict/Lenient | 60%/80% | ✅ | A1+A5 組合 |
-| **A5 Option Bias** | 5 | Option Bias | -40% | ✅ | A1+A5 組合 |
-| **I1 Counterfactual** | 5 | Mem. Gap | +10% | ✅ | I1+I3 組合 |
-| **I3 Noise** | 5×4 | NSI | 0.000 | ✅ | I1+I3 組合 |
-| **I2 Biases** | 10 | Bias Score | 0.500 | ✅ | 獨立論文 |
-| **E1 Error Atlas** | 90 | Taxonomy | 完成 | ✅ | 獨立論文 |
-| **B1 Agent** | 90 | Accuracy | 有結果 | ✅ | 補充材料 |
-
-### 待執行
-
-| 實驗 | 狀態 | 需要什麼 | 預估時間 |
-|------|------|----------|----------|
-| **D6 Adversarial Ethics** | ❌ 未開始 | 設計 30 題對抗 prompt | 1-2 天 |
-| **G2 Signaling Theory** | 📝 純理論 | 撰寫理論模型 | 2 週 |
-| **H1 Multimodal** | ⏸️ 暫緩 | 需要 CFA 圖表資料 | TBD |
-
-### 放大實驗（完整論文需要）
-
-- [ ] D1: 擴大到 CFA-Easy 1,032 題 + CFA-Challenge 90 題
-- [ ] I1: 加入 Level 2 (雙參數) 和 Level 3 (結構性) 微擾
-- [ ] I2: 補齊 framing, recency, disposition, overconfidence 四種偏誤
-- [ ] D4: 分類全部 74 筆高信心錯誤
+| 優先級 | 組合 | 目標期刊 | 理由 | 是否可直接投稿 |
+|--------|------|---------|------|---------------|
+| **首選** | D1+D4 | Finance Research Letters (FRL) | 數據最完整、統計顯著、老師專長對口 | **可以** |
+| **次選** | I1+I3 | Finance Research Letters (FRL) | 數據完整(n=100)、敏感度分析 | **可以** |
+| 第三 | E1 | FRL / J. Financial Data Science | 229 筆錯誤、完整 taxonomy | **可以** |
+| 第四 | G2 | FRL / J. Financial Economics | 純理論、Modified Spence Model | **可以** |
+| 第五 | I2 | FRL / J. Behavioral and Experimental Finance | 5 種偏誤完整測試 | **可以** |
+| 第六 | A1+A5 | FRL | 需放大到 n≥100 | 需 scale up |
+| 第七 | D6 | FRL / J. Financial Regulation | 需放大到 n≥50 | 需 scale up |
 
 ---
 
-## 論文資料夾結構
-
-每個資料夾內應包含：
-```
-D1_calibration/
-├── main.tex              # LaTeX 主文件
-├── figures/              # 圖表
-├── tables/               # 表格
-├── bibliography.bib      # 參考文獻
-└── submission/           # 投稿相關文件
-    ├── cover_letter.tex
-    └── response_to_reviewers.tex (如需)
-```
-
-### 各資料夾內容規劃
-
-| 資料夾 | 論文標題（暫定） | 狀態 |
-|--------|------------------|------|
-| `D1_calibration/` | Confidence Calibration of LLMs on CFA Examinations | 🔴 待建立 |
-| `D4_overconfident/` | 與 D1 合併 | — |
-| `I1_counterfactual/` | Robustness of Financial LLMs: A Counterfactual Stress Test | 🔴 待建立 |
-| `I3_noise_sensitivity/` | 與 I1 合併 | — |
-| `A1_open_ended/` | Open-Ended Evaluation of Financial Reasoning | 🔴 待建立 |
-| `A5_option_bias/` | 與 A1 合併 | — |
-| `D6_adversarial_ethics/` | Can LLMs Uphold Fiduciary Duty Under Pressure? | 🔴 待建立 |
-| `E1_error_atlas/` | CFA Error Pattern Atlas | 🔴 待建立 |
-| `G2_signaling_theory/` | Professional Certification Signaling Under AI Disruption | 🔴 待建立 |
-| `H1_multimodal/` | Multimodal Financial Reasoning Benchmark | ⏸️ 暫緩 |
-| `I2_behavioral_biases/` | Behavioral Biases in Financial LLMs | 🔴 待建立 |
+## 各論文詳細狀態
 
 ---
 
-## 首選論文：D1+D4 (校準與風險)
+### Paper 1: D1+D4 — 信心校準與過度自信風險
 
-### 為什麼選這個？
+**Title**: *When AI Is Confidently Wrong: Calibration and Risk Analysis of Large Language Models in Financial Decision-Making*
 
-1. **老師專長對口**：繆老師是統計/風險管理背景
-2. **數據已就緒**：D1 有 250 筆，D4 篩出 74 筆高風險
-3. **經濟意義明確**：「29.6% 高信心錯誤」= 實際金融決策風險
-4. **跑起來最快**：純統計分析 + 繪圖，不需額外 inference
+**Target Journal**: Finance Research Letters (FRL), SSCI Q1
 
-### 論文結構
+**Status**: DRAFT COMPLETE — 可直接投稿
 
-```
-Title: When AI Is Confidently Wrong: Calibration and Risk Analysis
-       of Large Language Models in Financial Decision-Making
+#### 核心結果
 
-1. Introduction
-   - LLM 在金融的潛力與風險
-   - 過度自信比答錯更危險
+| 指標 | 數值 | 統計顯著性 |
+|------|------|-----------|
+| Overconfidence Gap | +22–32% | t=9.70, p<0.0001 |
+| OC Error Rate | 30.0% (77/257) | z=3.99, p<0.0001 |
+| OC Among Errors | 66.4% | z=3.53, p=0.0002 |
+| Topic Variation | χ²=12.37 | p=0.030 |
+| Best ECE | qwen3:32b = 0.247 | |
+| Worst ECE | gpt-4o-mini verbalized = 0.315 | |
+| Coverage-at-Risk (5%) | Undefined for all models | |
 
-2. Related Work
-   - LLM Calibration 文獻
-   - AI in Finance 文獻
+#### 四大假說全部顯著
 
-3. Methodology
-   - Verbalized Confidence Estimation
-   - Expected Calibration Error (ECE)
-   - High-Confidence Error Identification
+| 假說 | 內容 | 結果 |
+|------|------|------|
+| H1 | LLM 系統性高估自身信心 | Supported (p<0.0001) |
+| H2 | 過度自信錯誤佔比超過 25% | Supported (30.0%, p<0.0001) |
+| H3 | 錯誤答案中過度自信佔主導 | Supported (66.4%, p=0.0002) |
+| H4 | 校準品質因 CFA 主題而異 | Supported (p=0.030) |
 
-4. Experiments
-   - Dataset: CFA-Challenge (90) + CFA-Easy (1,032)
-   - Models: gpt-4o-mini, gpt-4o, claude-3.5-sonnet
-   - Metrics: ECE, Brier Score, Coverage-Accuracy Tradeoff
+#### 實驗數據
 
-5. Results
-   - Table 1: Calibration metrics by model
-   - Figure 1: Reliability Diagram
-   - Figure 2: High-confidence error distribution by CFA topic
-   - Table 2: Risk classification of overconfident errors
+- **來源**: D1 calibration experiment (90 CFA-Challenge questions × 3 model-method configurations)
+- **觀測數**: 257 (部分 question × config 組合無效回應被排除)
+- **模型**: gpt-4o-mini (verbalized + logprob), qwen3:32b (logprob)
 
-6. Discussion
-   - Economic Significance: VaR implications
-   - CFA Ethics Framework: Does overconfident AI violate fiduciary duty?
-   - Regulatory Implications: Minimum calibration standards for financial AI
+#### 實驗數據路徑
 
-7. Conclusion
-   - AI 不是考幾分的問題，是它知不知道自己考錯的問題
-```
+| 資料 | 路徑 |
+|------|------|
+| 主要結果 (N=250) | `experiments/D1_confidence_calibration/results/run_20260202_034237/results.json` |
+| 補充結果 | `experiments/D1_confidence_calibration/results/run_20260202_031947/results.json` |
+| 補充結果 | `experiments/D1_confidence_calibration/results/run_20260202_175051/results.json` |
+| D4 風險分析 | `experiments/D4_overconfident_risk/results/run_20260205_010016/results.json` |
+| 分析腳本輸出 | `drafts/selected/D1_calibration/analysis_results.json` |
 
-### 核心圖表（需生成）
-
-1. **Reliability Diagram**：信心 vs 實際準確率
-2. **ECE Bar Chart**：各模型的 ECE 比較
-3. **Heatmap**：High-confidence error rate by CFA topic
-4. **Risk Matrix**：Likelihood × Impact
-
----
-
-## 次選論文：I1+I3 (壓力測試)
-
-### 為什麼選這個？
-
-1. **敏感度分析**：繆老師熟悉的方法論
-2. **穩健性測試**：金融界重視的概念
-3. **數據已就緒**：I1 有 5 題 POC，I3 有 4 種雜訊測試
-
-### 論文結構
+#### 論文檔案結構
 
 ```
-Title: Stress Testing Financial LLMs: Counterfactual Perturbation
-       and Noise Sensitivity Analysis
-
-1. Introduction
-   - AI 是背題還是真懂？
-   - 穩健性對金融決策的重要性
-
-2. Methodology
-   - Counterfactual Perturbation (I1)
-   - Noise Injection (I3)
-   - Robust Accuracy vs Traditional Accuracy
-
-3. Results
-   - Memorization Gap: +10%
-   - Noise Sensitivity Index by noise type
-   - Dose-Response Curve
-
-4. Discussion
-   - 約 1/3 的「正確」可能是記憶而非推理
-   - 對 AI-assisted financial analysis 的啟示
+drafts/selected/D1_calibration/
+├── main.tex                    # 完整論文 (14 pages, ~30K chars)
+├── main.pdf                    # 編譯 PDF
+├── run_analysis.py             # 數據分析腳本
+├── analysis_results.json       # 分析結果 JSON
+├── theory_framework.md         # 理論框架與假說發展
+├── STATUS.md                   # 詳細完成度檢查表
+├── figures/                    # 6 張出版品質圖表 (PDF)
+│   ├── reliability_diagrams.pdf
+│   ├── ece_comparison.pdf
+│   ├── coverage_accuracy.pdf
+│   ├── overconfidence_gap.pdf
+│   ├── topic_analysis.pdf
+│   └── confidence_distribution.pdf
+├── tables/                     # LaTeX 表格原始碼
+│   ├── calibration_metrics.tex
+│   ├── overconfident_errors.tex
+│   ├── topic_calibration.tex
+│   └── hypothesis_tests.tex
+└── submission/
+    └── cover_letter.tex        # FRL 投稿信
 ```
 
 ---
 
-## 快速導覽表
+### Paper 2: I1+I3 — 反事實壓力測試與雜訊敏感度
 
-| 編號 | 題目 | 測什麼 | 新穎點 | POC | 依賴 |
-|------|------|--------|--------|-----|------|
-| **D1** | Calibration | 信心值是否可靠 | ECE 金融場景 | ✅ 250筆 | 無 |
-| **D4** | Overconfident Risk | 高信心錯誤風險 | CFA Ethics 框架 | ✅ 74筆 | D1 |
-| **D6** | Adversarial Ethics | 道德防線韌性 | Jailbreak 金融版 | ❌ | 無 |
-| **A1** | Open-Ended | 去選項後真實能力 | 三層判定機制 | ✅ 5題 | 無 |
-| **A5** | Option Bias | 選項優勢量化 | 三維分解 | ✅ 5題 | A1 |
-| **E1** | Error Atlas | 錯誤分類地圖 | 三維 Taxonomy | ✅ 90題 | 無 |
-| **G2** | Signaling Theory | AI 瓦解認證價值 | Modified Spence | 📝 | G1 |
-| **H1** | Multimodal | 圖表理解瓶頸 | 首個多模態 CFA | ⏸️ | 無 |
-| **I1** | Counterfactual | 背題 vs 真懂 | Robust Accuracy | ✅ 5題 | 無 |
-| **I2** | Behavioral Biases | 繼承人類偏誤 | 六維偏誤框架 | ✅ 10情境 | 無 |
-| **I3** | Noise Sensitivity | 雜訊過濾能力 | NSI 指標 | ✅ 5×4 | 無 |
+**Title**: *Stress Testing Financial LLMs: Counterfactual Perturbation and Noise Sensitivity Analysis on CFA Examinations*
+
+**Target Journal**: Finance Research Letters (FRL), SSCI Q1
+
+**Status**: DRAFT COMPLETE — 數據已升級至 n=100
+
+#### 核心結果
+
+**I1 Counterfactual Perturbation (N=100)**
+
+| 指標 | 數值 |
+|------|------|
+| Original Accuracy | 86.0% |
+| Level 1 (numerical) Accuracy | 62.5% (n_valid=64) |
+| Level 2 (conditional) Accuracy | 72.9% (n_valid=85) |
+| Memorization Gap (L1) | **+23.5%** |
+| Memorization Gap (L2) | +13.1% |
+| Robust Accuracy | 58.0% |
+| Memorization Suspect Rate | 28.0% |
+
+**I3 Noise Sensitivity (N=100)**
+
+| 雜訊類型 | Accuracy | NSI | Flipped |
+|----------|----------|-----|---------|
+| Clean | 86.0% | — | — |
+| N1 (irrelevant data) | 82.0% | 0.046 | 7/100 |
+| N2 (plausible distractor) | 85.0% | 0.012 | 5/100 |
+| N3 (verbose context) | 85.0% | 0.012 | 3/100 |
+| N4 (contradictory hint) | 87.0% | -0.012 | 3/100 |
+
+**關鍵發現**:
+- 主要漏洞是記憶化（23.5% gap at L1），而非雜訊易感性
+- 雜訊敏感度遠低於初步測試（max NSI=0.046 vs smoke test 0.222）
+- Robust Accuracy (58.0%) 顯著低於 Standard (86.0%)
+- 約 28% 的正確答案可能來自記憶而非推理
+
+#### 實驗數據路徑
+
+| 資料 | 路徑 |
+|------|------|
+| I1 完整結果 (N=100) | `experiments/I1_counterfactual/results/run_20260206_053445/results.json` |
+| I3 完整結果 (N=100) | `experiments/I3_noise_red_herrings/results/run_20260206_054039/results.json` |
+| I1 初步結果 (N=20) | `experiments/I1_counterfactual/results/run_20260206_044809/results.json` |
+| I3 初步結果 (N=20) | `experiments/I3_noise_red_herrings/results/run_20260206_045209/results.json` |
+| I1 POC (N=5) | `experiments/I1_counterfactual/results/run_20260205_010209/results.json` |
+
+#### 論文檔案結構
+
+```
+drafts/selected/I1_counterfactual/
+├── main.tex                    # 完整論文 (13 pages)
+├── main.pdf                    # 編譯 PDF
+├── theory_framework.md         # 理論框架
+├── STATUS.md                   # 狀態追蹤
+├── figures/                    # 圖表
+├── tables/                     # 表格
+└── submission/
+    └── cover_letter.tex        # FRL 投稿信
+```
 
 ---
 
-## 檔案索引
+### Paper 3: A1+A5 — 開放式作答與選項偏差
 
-| 研究提案文件 | 說明 |
-|--------------|------|
-| `A1-open-ended-numerical.md` | 開放式數值推理基準 |
-| `A5-mcq-option-bias.md` | 選項偏差量化 |
-| `D1-calibration-selective-prediction.md` | 信心校準與選擇性預測 |
-| `D4-overconfident-ai-regulation.md` | 過度自信 AI 風險分析 |
-| `D6-adversarial-ethics-jailbreak.md` | 對抗式金融道德測試 |
-| `E1-error-pattern-atlas.md` | 錯誤圖譜 |
-| `G2-signaling-theory.md` | 訊號理論 |
-| `H1-multimodal-financial-reasoning.md` | 多模態金融推理 |
-| `I1-counterfactual-stress-test.md` | 反事實壓力測試 |
-| `I2-behavioral-biases-llm.md` | 行為金融學偏誤 |
-| `I3-noise-red-herrings.md` | 雜訊與紅鯡魚 |
+**Title**: *Beyond Multiple Choice: How Answer Options Inflate LLM Financial Reasoning Scores*
 
-| 論文資料夾 | 用途 |
-|------------|------|
-| `D1_calibration/` | D1+D4 合併論文（首選） |
-| `I1_counterfactual/` | I1+I3 合併論文（次選） |
-| `A1_open_ended/` | A1+A5 合併論文 |
-| `D6_adversarial_ethics/` | D6 獨立論文 |
-| `E1_error_atlas/` | E1 獨立論文 |
-| `G2_signaling_theory/` | G2 理論論文 |
-| `H1_multimodal/` | H1 暫緩 |
-| `I2_behavioral_biases/` | I2 獨立論文 |
+**Target Journal**: Finance Research Letters (FRL), SSCI Q1
+
+**Status**: DRAFT COMPLETE — POC 數據 (n=20)，需 scale up
+
+#### 核心結果 (n=20)
+
+**A5 Option Bias**
+
+| 指標 | 數值 |
+|------|------|
+| Accuracy WITH options | 75.0% |
+| Accuracy WITHOUT options | 65.0% |
+| Option Bias | **+10.0%** |
+| Biased Questions | 5/20 (25%) |
+| McNemar p-value | 0.724 (不顯著 — 需更大樣本) |
+
+**A1 Three-Tier Evaluation**
+
+| 等級 | 數量 | 百分比 |
+|------|------|--------|
+| Level A (Exact Match) | 8 | 40.0% |
+| Level B (Directional) | 6 | 30.0% |
+| Level C (Incorrect) | 6 | 30.0% |
+| Strict Accuracy | — | 40.0% |
+| Lenient Accuracy | — | 70.0% |
+
+**Scale-up 需求**: McNemar p=0.724 不顯著，需放大至 n≥100 以獲得統計 power
+
+#### 實驗數據路徑
+
+| 資料 | 路徑 |
+|------|------|
+| A1 結果 (N=20) | `experiments/A1_open_ended/results/run_20260206_044146/results.json` |
+| A5 結果 (N=20) | `experiments/A5_option_bias/results/run_20260206_044311/results.json` |
+| A1 POC (N=5) | `experiments/A1_open_ended/results/run_20260205_010122/results.json` |
+| A5 POC (N=5) | `experiments/A5_option_bias/results/run_20260204_045830/results.json` |
+
+#### 論文檔案結構
+
+```
+drafts/selected/A1_open_ended/
+├── main.tex                    # 完整論文 (10 pages)
+├── main.pdf                    # 編譯 PDF
+├── theory_framework.md         # 理論框架
+├── STATUS.md                   # 狀態追蹤
+├── figures/                    # 圖表
+├── tables/                     # 表格
+└── submission/                 # 投稿資料
+```
 
 ---
 
-## 立即行動 (2/5 Today)
+### Paper 4: E1 — 錯誤圖譜
 
-### 第一優先：生成 D1+D4 圖表
+**Title**: *The CFA Error Atlas: Mapping Failure Modes of Large Language Models in Financial Reasoning*
+
+**Target Journal**: Finance Research Letters / J. Financial Data Science
+
+**Status**: DRAFT COMPLETE — 完整數據
+
+#### 核心結果 (N=229 errors)
+
+| 指標 | 數值 |
+|------|------|
+| Total Errors Analyzed | 229 |
+| Error Types | 8 categories |
+| CFA Topics | 8 topics |
+| Cognitive Stages | 5 stages |
+| Dominant Error | Reasoning Premise (49.3%) |
+| Calculation Errors | 12.7% |
+| Ethics Reasoning Errors | 87.1% |
+| Derivatives Calculation Errors | 37.5% |
+| Concept Identification Bottleneck | 53.7% |
+
+**三維 Taxonomy**: Error Type (8) × CFA Topic (8) × Cognitive Stage (5)
+
+- 數據來源：D1 calibration 實驗中所有錯誤答案的 GPT-4o-mini 分類
+- 不需額外 scale up — 229 筆錯誤已覆蓋所有 8 個 CFA 主題
+
+#### 實驗數據路徑
+
+| 資料 | 路徑 |
+|------|------|
+| 錯誤分析 (全部方法) | `experiments/E1_error_analysis/results/error_analysis_all_methods_20260203_230751.json` |
+| 錯誤分析 (CoT) | `experiments/E1_error_analysis/results/error_analysis_cot_20260203_211957.json` |
+| 原始 D1 數據 | `experiments/D1_confidence_calibration/results/run_20260202_034237/results.json` |
+
+#### 論文檔案結構
+
+```
+drafts/selected/E1_error_atlas/
+├── main.tex                    # 完整論文 (8 pages)
+├── main.pdf                    # 編譯 PDF
+├── theory_framework.md         # 理論框架
+├── STATUS.md                   # 狀態追蹤
+├── figures/                    # 圖表
+├── tables/                     # 表格
+└── submission/                 # 投稿資料
+```
+
+---
+
+### Paper 5: D6 — 對抗式金融道德測試
+
+**Title**: *Under Pressure: Adversarial Stress Testing of LLM Ethical Judgment in Financial Decision-Making*
+
+**Target Journal**: Finance Research Letters / J. Financial Regulation
+
+**Status**: DRAFT COMPLETE — POC 數據 (n=15)，需 scale up
+
+#### 核心結果 (n=15 CFA Ethics questions)
+
+| 壓力類型 | Accuracy | ERS | Flipped |
+|----------|----------|-----|---------|
+| Standard (baseline) | 53.3% | 1.000 | — |
+| Profit incentive | 60.0% | 1.125 | 0 |
+| Authority pressure | 46.7% | 0.875 | 2 |
+| Emotional manipulation | 40.0% | **0.750** | **3** |
+| Reframing | 66.7% | 1.250 | 1 |
+| Moral dilemma | 53.3% | 1.000 | 2 |
+
+**關鍵發現**:
+- Emotional manipulation 是最有效的攻擊方式 (ERS=0.750)
+- 模型在 reframing 下反而表現更好 (ERS=1.250)
+- 整體 Ethics Robustness Score 範圍: 0.750–1.250
+
+**Scale-up 需求**: n=15 太小，需放大到 n≥50 才有統計 power
+
+#### 實驗數據路徑
+
+| 資料 | 路徑 |
+|------|------|
+| D6 結果 (N=15) | `experiments/D6_adversarial_ethics/results/run_20260206_051053/results.json` |
+
+#### 論文檔案結構
+
+```
+drafts/selected/D6_adversarial_ethics/
+├── main.tex                    # 完整論文 (7 pages)
+├── main.pdf                    # 編譯 PDF
+├── theory_framework.md         # 理論框架
+├── STATUS.md                   # 狀態追蹤
+├── figures/                    # 圖表
+├── tables/                     # 表格
+└── submission/                 # 投稿資料
+```
+
+---
+
+### Paper 6: G2 — 訊號理論
+
+**Title**: *The Certification Signal Erosion Hypothesis: A Modified Spence Model for AI-Disrupted Professional Credentialing*
+
+**Target Journal**: Finance Research Letters / J. Financial Economics
+
+**Status**: DRAFT COMPLETE — 純理論論文
+
+#### 核心結果 (理論推導)
+
+| 指標 | 數值 |
+|------|------|
+| CFA Signaling Retention Ratio (R) | **0.288** (保留 ~29% 訊號價值) |
+| AI-replicable abilities (tipping point) | 50% already replicable |
+| Ability Taxonomy Dimensions | 6 dimensions |
+| Framework | Modified Spence (1973) + Autor Task Framework |
+
+**三大命題**:
+1. **Partial Signaling Collapse Theorem** (Proposition 1): 當 AI 能複製部分能力時，認證的訊號均衡部分瓦解
+2. **Tipping Point Analysis** (Proposition 2): 超過 50% 的 CFA 能力已可被 AI 複製
+3. **Six-Dimensional Ability Taxonomy**: 量化分析、概念理解、倫理判斷、溝通、策略思考、經驗直覺
+
+**不需實驗數據** — 純數學模型與理論推導
+
+#### 論文檔案結構
+
+```
+drafts/selected/G2_signaling_theory/
+├── main.tex                    # 完整論文 (21 pages, 666 lines)
+├── main.pdf                    # 編譯 PDF
+├── theory_framework.md         # 理論框架
+├── STATUS.md                   # 狀態追蹤
+├── figures/                    # 圖表
+├── tables/                     # 表格
+└── submission/                 # 投稿資料
+```
+
+---
+
+### Paper 7: I2 — 行為金融學偏誤
+
+**Title**: *Inherited Irrationality: Behavioral Finance Biases in Large Language Model Financial Recommendations*
+
+**Target Journal**: Finance Research Letters / J. Behavioral and Experimental Finance
+
+**Status**: DRAFT COMPLETE — 5 種偏誤類型完整測試
+
+#### 核心結果 (n=20 scenarios, 5 bias types, GPT-4o-mini)
+
+| 偏誤類型 | N | Bias Score (inducing) | Neutral Score | Debiasing Effect |
+|----------|---|----------------------|---------------|-----------------|
+| Loss Aversion | 5 | 0.500 | 0.100 | **+0.400** |
+| Anchoring | 5 | 0.600 | 0.400 | +0.200 |
+| Framing | 5 | 0.500 | 0.400 | +0.100 |
+| Recency | 3 | 0.500 | 0.500 | 0.000 |
+| Disposition Effect | 2 | 0.500 | 0.500 | 0.000 |
+| **Overall** | **20** | **0.525** | **0.350** | **+0.175** |
+
+**關鍵發現**:
+- **Debiasing hierarchy**: Loss aversion >> Anchoring > Framing >> Recency = Disposition
+- Loss aversion: 4/5 scenarios 完全去偏
+- Recency + Disposition: 0/5 scenarios 有去偏效果 (完全抵抗去偏)
+- 極端偏誤案例: an_04, fr_05 (bias=1.0)
+- 完全理性案例: fr_02 (bias=0.0)
+
+#### 實驗數據路徑
+
+| 資料 | 路徑 |
+|------|------|
+| I2 完整結果 (N=20, 5 types) | `experiments/I2_behavioral_biases/results/run_20260206_052135/results.json` |
+| I2 POC (N=10, 2 types) | `experiments/I2_behavioral_biases/results/run_20260205_010409/results.json` |
+
+#### 論文檔案結構
+
+```
+drafts/selected/I2_behavioral_biases/
+├── main.tex                    # 完整論文 (17 pages)
+├── main.pdf                    # 編譯 PDF
+├── theory_framework.md         # 理論框架
+├── STATUS.md                   # 狀態追蹤
+├── figures/                    # 圖表
+├── tables/                     # 表格
+└── submission/                 # 投稿資料
+```
+
+---
+
+## 暫緩/空目錄
+
+| 資料夾 | 用途 | 狀態 |
+|--------|------|------|
+| `A5_option_bias/` | A5 數據合併至 A1+A5 論文 | 空 (已合併) |
+| `D4_overconfident/` | D4 數據合併至 D1+D4 論文 | 空 (已合併) |
+| `I3_noise_sensitivity/` | I3 數據合併至 I1+I3 論文 | 空 (已合併) |
+| `H1_multimodal/` | 多模態金融推理 | **暫緩** (缺 CFA 圖表資料) |
+
+---
+
+## 實驗基礎設施
+
+### 共用模組 (`experiments/shared/`)
+
+| 模組 | 功能 |
+|------|------|
+| `config.py` | `MODEL_REGISTRY` — 20+ 模型的配置與定價 |
+| `llm_client.py` | `LLMClient` — OpenAI / Anthropic / Gemini / DeepSeek / Ollama 多後端 |
+| `prompts.py` | `extract_answer()` — 5 層 regex 答案提取 |
+| `evaluation.py` | `tolerance_match()`, `semantic_match_judge()`, `mcnemar_test()` |
+| `data_loader.py` | `load_dataset()` — 統一資料載入介面 |
+
+### 跑實驗指令
 
 ```bash
-# 跑完整 D1 實驗（放大樣本）
-python -m experiments.D1_confidence_calibration.run_calibration \
-  --dataset challenge --model gpt-4o-mini
+# 環境設定
+conda create -n cfa-llm python=3.10 && conda activate cfa-llm
+pip install openai python-dotenv tqdm requests pydantic
+echo "OPENAI_API_KEY=your-key" > .env
 
-# 生成 Reliability Diagram
-python -m experiments.D1_confidence_calibration.visualize \
-  --input experiments/D1_confidence_calibration/results/run_*/results.json
+# D1: 信心校準
+python -m experiments.D1_confidence_calibration.run_experiment --dataset easy --limit 100 --model gpt-4o-mini
+
+# I1: 反事實壓力測試
+python -m experiments.I1_counterfactual.run_experiment --dataset easy --limit 100 --model gpt-4o-mini --perturbation-levels 1 2
+
+# I3: 雜訊敏感度
+python -m experiments.I3_noise_red_herrings.run_experiment --dataset easy --limit 100 --model gpt-4o-mini --noise-types N1 N2 N3 N4
+
+# A1: 開放式作答
+python -m experiments.A1_open_ended.run_experiment --dataset easy --limit 100 --model gpt-4o-mini
+
+# A5: 選項偏差
+python -m experiments.A5_option_bias.run_experiment --dataset easy --limit 100 --model gpt-4o-mini
+
+# I2: 行為偏誤 (5 種)
+python -m experiments.I2_behavioral_biases.run_experiment --bias-types loss_aversion anchoring framing recency disposition_effect --limit 5 --model gpt-4o-mini
+
+# D6: 對抗式道德測試
+python -m experiments.D6_adversarial_ethics.run_experiment --dataset easy --limit 15 --model gpt-4o-mini
+
+# D4: 過度自信風險分析 (依賴 D1 結果)
+python -m experiments.D4_overconfident_risk.run_experiment --input "experiments/D1_confidence_calibration/results/run_*/results.json" --confidence-threshold 0.8 --limit 5
+
+# E1: 錯誤分析 (依賴 D1 結果中的錯誤)
+python -m experiments.E1_error_analysis.run_experiment --input "experiments/D1_confidence_calibration/results/run_*/results.json"
 ```
 
-### 第二優先：整理現有 POC 結果
+### 結果存放
 
-所有 POC 結果已在 `RESULTS.md`，需要：
-1. 轉換成論文圖表格式
-2. 加入統計顯著性檢定
-3. 撰寫 figure captions
+所有結果自動存在 `experiments/XX/results/run_YYYYMMDD_HHMMSS/results.json`。
 
-### 第三優先：準備投稿材料
+---
 
-1. 下載 FRL 的 LaTeX 模板
-2. 準備 cover letter
-3. 確認共同作者資訊
+## 全部實驗結果路徑索引
+
+| 實驗 | 日期 | N | 路徑 | 用於論文 |
+|------|------|---|------|---------|
+| D1 Calibration | 2026-02-02 | 250 | `experiments/D1_confidence_calibration/results/run_20260202_034237/` | D1+D4 |
+| D4 Risk | 2026-02-05 | 74 篩選 | `experiments/D4_overconfident_risk/results/run_20260205_010016/` | D1+D4 |
+| E1 Error Analysis | 2026-02-03 | 229 errors | `experiments/E1_error_analysis/results/error_analysis_all_methods_20260203_230751.json` | E1 |
+| A1 Open-Ended | 2026-02-06 | 20 | `experiments/A1_open_ended/results/run_20260206_044146/` | A1+A5 |
+| A5 Option Bias | 2026-02-06 | 20 | `experiments/A5_option_bias/results/run_20260206_044311/` | A1+A5 |
+| I1 Counterfactual | 2026-02-06 | 100 | `experiments/I1_counterfactual/results/run_20260206_053445/` | I1+I3 |
+| I3 Noise | 2026-02-06 | 100 | `experiments/I3_noise_red_herrings/results/run_20260206_054039/` | I1+I3 |
+| I2 Biases | 2026-02-06 | 20 | `experiments/I2_behavioral_biases/results/run_20260206_052135/` | I2 |
+| D6 Ethics | 2026-02-06 | 15 | `experiments/D6_adversarial_ethics/results/run_20260206_051053/` | D6 |
+
+---
+
+## LaTeX 編譯
+
+所有論文使用 `elsarticle` 文件類別（Elsevier 官方模板），preprint 格式：
+
+```bash
+# 編譯單篇論文
+cd drafts/selected/D1_calibration
+/Library/TeX/texbin/pdflatex main.tex && /Library/TeX/texbin/pdflatex main.tex
+
+# 需要跑兩次以解決交叉引用
+```
+
+**Overleaf 相容性**: 所有論文可直接上傳 Overleaf 編譯。`elsarticle` 是 Overleaf 內建支援的標準模板類別。上傳 `main.tex` 即可，不需額外安裝任何套件。
+
+---
+
+## 下一步行動
+
+### 立即可投稿 (5 篇)
+
+1. **D1+D4**: 數據完整、統計顯著 → 直接投 FRL
+2. **I1+I3**: 已升級至 n=100 → 直接投 FRL
+3. **E1**: 229 筆錯誤完整分析 → 直接投 FRL / JFDS
+4. **G2**: 純理論 → 直接投 FRL / JFE
+5. **I2**: 5 種偏誤完整 → 直接投 FRL / JBEF
+
+### 需 Scale Up (2 篇)
+
+6. **A1+A5**: 放大到 n≥100 (McNemar test 需更大樣本)
+7. **D6**: 放大到 n≥50 (目前 n=15 太小)
+
+### 跨論文強化
+
+- [ ] 多模型驗證：加入 gpt-4o, claude-3.5-sonnet, qwen3:32b 比較
+- [ ] 圖表強化：為所有論文生成 publication-quality figures
+- [ ] 交叉引用：各論文互相引用，形成研究群 (research cluster)
+
+---
+
+## 指導教授：繆維中老師
+
+- **背景**：財務數學、風險管理、統計方法
+- **偏好**：Economic Significance > NLP 指標；重視風險分析、敏感度分析、穩健性
+- **最對口論文**: D1+D4 (校準+風險) → I1+I3 (壓力測試+穩健性)
 
 ---
 
@@ -307,4 +554,3 @@ python -m experiments.D1_confidence_calibration.visualize \
 
 **程煒倫 William**
 Research Assistant, Institute of Information Science, Academia Sinica
-+886 908-070-602

@@ -1,0 +1,19 @@
+\begin{table}[htbp]
+\centering
+\caption{Calibration Metrics by Model and Confidence Estimation Method}
+\label{tab:calibration}
+\begin{tabular}{llccccccc}
+\toprule
+\textbf{Model} & \textbf{Method} & \textbf{N} & \textbf{Acc.} & \textbf{Avg Conf.} & \textbf{ECE} & \textbf{Brier} & \textbf{AUROC} & \textbf{OC Gap} \\
+\midrule
+gpt-4o-mini & self_consistency & 90 & 0.522 & 0.829 & 0.307 & 0.334 & 0.639 & +0.307 \\
+gpt-4o-mini & verbalized & 95 & 0.526 & 0.841 & 0.315 & 0.340 & 0.586 & +0.315 \\
+qwen3:32b & verbalized & 72 & 0.611 & 0.836 & 0.247 & 0.226 & 0.787 & +0.225 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item ECE = Expected Calibration Error; Brier = Brier Score; AUROC = Area Under ROC Curve;
+\item OC Gap = Overconfidence Gap (Avg Confidence $-$ Accuracy). Positive values indicate overconfidence.
+\end{tablenotes}
+\end{table}
