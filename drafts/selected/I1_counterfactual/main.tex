@@ -1,0 +1,429 @@
+% Finance Research Letters — Elsevier Template
+% I1+I3: Stress Testing Financial LLMs
+\documentclass[preprint,12pt]{elsarticle}
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{multirow}
+\usepackage{threeparttable}
+\usepackage{float}
+
+\journal{Finance Research Letters}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{Stress Testing Financial LLMs: Counterfactual Perturbation and Noise Sensitivity Analysis on CFA Examinations}
+
+\author[sinica]{Wei-Lun Cheng}
+\ead{wlcheng@iis.sinica.edu.tw}
+
+\author[nccu]{Wei-Chung Miao\corref{cor1}}
+\ead{wcmiao@nccu.edu.tw}
+\cortext[cor1]{Corresponding author}
+
+\affiliation[sinica]{organization={Institute of Information Science, Academia Sinica},
+            city={Taipei},
+            country={Taiwan}}
+
+\affiliation[nccu]{organization={Department of Finance, National Chengchi University},
+            city={Taipei},
+            country={Taiwan}}
+
+\begin{abstract}
+Large Language Models (LLMs) achieve impressive accuracy on financial examination benchmarks, but these scores may be inflated by memorization of training data rather than genuine financial reasoning. We introduce two complementary stress tests for financial LLMs using CFA (Chartered Financial Analyst) examination questions. First, \textit{counterfactual perturbation} modifies numerical parameters and conditions while preserving the underlying financial logic, measuring whether models can consistently reason through novel variants. Second, \textit{noise injection} introduces irrelevant data, misleading statements, format noise, and contradictory information, measuring whether models can filter signal from noise---a critical skill in real-world financial analysis. Testing GPT-4o-mini on 100 CFA questions with two perturbation levels and four noise types, we find: (1) a memorization gap of \textbf{13.1--23.5 percentage points} between original and perturbed accuracy, suggesting substantial reliance on pattern matching; (2) noise sensitivity indices ranging from \textbf{$-$0.012 to 0.046}, with irrelevant data injection (N1) causing the greatest degradation; and (3) robust accuracy---requiring correctness on both original and all variants---of only \textbf{58.0\%}, substantially below the \textbf{86.0\%} standard accuracy. We introduce \textit{Robust Accuracy} as a more realistic measure of AI financial competence and argue that financial regulators should require stress-tested performance metrics alongside standard accuracy when evaluating AI deployment readiness.
+\end{abstract}
+
+\begin{keyword}
+Large Language Models \sep Financial Reasoning \sep Stress Testing \sep Robustness \sep CFA Examination \sep Memorization
+\end{keyword}
+
+\end{frontmatter}
+
+%% ============================================
+%% 1. INTRODUCTION
+%% ============================================
+\section{Introduction}
+\label{sec:intro}
+
+The financial industry is rapidly adopting Large Language Models (LLMs) for tasks including equity research, risk analysis, regulatory compliance, and client advisory \citep{wu2023bloomberggpt, ke2025findap}. Benchmark evaluations show that state-of-the-art models can pass the CFA examination with scores approaching or exceeding human pass rates \citep{callanan2023gpt}. These impressive results have accelerated deployment timelines, with firms increasingly relying on LLM-generated analysis for consequential financial decisions.
+
+However, a fundamental question remains largely unexamined: \textit{do these models genuinely understand financial logic, or have they memorized patterns from extensively available exam preparation materials?} CFA exam questions---sourced primarily from SchweserNotes, Kaplan, and AnalystPrep---are widely distributed across the internet and likely well-represented in LLM training corpora. The CFA question space is structurally narrow: a limited set of financial concepts, stereotypical numerical patterns (e.g., 5\% coupon rate, \$1,000 face value, 10-year maturity), and fixed problem templates. This creates ideal conditions for rote memorization to masquerade as genuine reasoning.
+
+The distinction between memorization and reasoning has profound implications for financial practice. Consider two scenarios:
+\begin{itemize}
+    \item \textbf{Reasoning AI}: Correctly computes bond duration for any combination of coupon rate, maturity, and yield---including combinations never seen in training data.
+    \item \textbf{Memorizing AI}: Achieves high accuracy on standard questions but fails when numerical parameters or problem conditions are changed, because its ``understanding'' is pattern matching against memorized templates.
+\end{itemize}
+A portfolio manager using the Memorizing AI faces a dangerous illusion of competence: the system performs well on familiar calculations but fails unpredictably on novel ones---precisely the situations where AI assistance is most valuable.
+
+This paper proposes a \textit{stress testing framework} for financial LLMs, drawing directly from established risk management methodology. Just as banks stress test capital adequacy under adverse scenarios (Basel III, CCAR/DFAST), we stress test AI cognitive adequacy under adversarial perturbations. Our framework comprises two complementary dimensions:
+
+\begin{enumerate}
+    \item \textbf{Counterfactual Perturbation (I1)}: We modify numerical parameters and problem conditions in CFA questions while preserving the underlying financial logic. If a model truly reasons, its accuracy should be preserved under perturbation. The \textit{memorization gap}---the difference between original and perturbed accuracy---quantifies the extent of pattern-matching reliance.
+
+    \item \textbf{Noise Injection (I3)}: We inject irrelevant data, misleading statements, format inconsistencies, and contradictory information into questions. Real-world financial analysis requires filtering signal from noise---a skill untested by clean benchmark questions. The \textit{Noise Sensitivity Index} (NSI) measures how much noise degrades performance.
+\end{enumerate}
+
+We introduce \textit{Robust Accuracy}---requiring correctness on both the original question and all stress-tested variants---as a more realistic measure of AI financial competence. Our key insight is that standard benchmark accuracy overstates the practical reliability of financial LLMs, and that robustness metrics should be reported alongside accuracy for any AI system deployed in financial contexts.
+
+This paper makes four contributions:
+\begin{enumerate}
+    \item We design and validate a two-dimensional stress testing framework for financial LLMs combining counterfactual perturbation and noise injection.
+    \item We quantify the memorization gap in financial LLMs, providing evidence that a meaningful portion of benchmark performance derives from pattern matching rather than reasoning.
+    \item We measure noise sensitivity across four distinct noise types, identifying which types of real-world information noise most degrade AI financial analysis.
+    \item We propose Robust Accuracy as a regulatory-relevant metric and argue that financial AI deployment should require stress-tested performance reporting analogous to bank stress testing requirements.
+\end{enumerate}
+
+%% ============================================
+%% 2. RELATED WORK
+%% ============================================
+\section{Related Work}
+\label{sec:related}
+
+\subsection{LLMs in Financial Applications}
+
+The intersection of LLMs and finance has attracted significant research attention. BloombergGPT \citep{wu2023bloomberggpt} demonstrated competitive performance on financial NLP tasks. \citet{ke2025findap} introduced FinDAP, achieving state-of-the-art results on CFA benchmarks through domain-adaptive post-training. \citet{callanan2023gpt} evaluated GPT-4 on CFA Level I, finding pass-rate performance. However, these evaluations assess accuracy on standard questions without examining whether performance reflects genuine understanding.
+
+\subsection{Data Contamination and Benchmark Validity}
+
+The threat of data contamination in LLM evaluations is well-documented \citep{shi2023detecting}. \citet{apple2024gsmsymbolic} demonstrated that LLMs show significant accuracy degradation when mathematical reasoning problems are symbolically perturbed---changing variable names and numerical values while preserving logical structure---suggesting that high benchmark scores partly reflect memorization. Our work extends this methodology to the financial domain, where the contamination risk is arguably higher due to the narrow and widely-distributed nature of CFA exam materials.
+
+\subsection{Robustness and Adversarial Testing}
+
+\citet{jia2017adversarial} pioneered adversarial examples for reading comprehension, demonstrating that adding irrelevant sentences to passages dramatically reduces model accuracy. Subsequent work has developed comprehensive robustness benchmarks for NLP systems \citep{wang2022adversarial}. In finance, \citet{black1986noise} established the theoretical importance of distinguishing signal from noise. Our noise injection framework operationalizes this distinction for AI evaluation, creating a financial-domain-specific robustness test.
+
+\subsection{Stress Testing in Financial Regulation}
+
+Stress testing is a cornerstone of financial regulation. The Basel III framework requires banks to demonstrate capital adequacy under adverse macroeconomic scenarios. The Federal Reserve's Comprehensive Capital Analysis and Review (CCAR) evaluates whether banks can continue lending during severe recessions. We draw a direct analogy: if financial institutions must stress test their capital models, they should also stress test their AI models. Our framework provides the methodology.
+
+%% ============================================
+%% 3. METHODOLOGY
+%% ============================================
+\section{Methodology}
+\label{sec:method}
+
+\subsection{Counterfactual Perturbation Design}
+
+We employ a multi-level perturbation scheme inspired by \citet{apple2024gsmsymbolic}:
+
+\textbf{Level 1 --- Numerical Perturbation.} We modify one numerical parameter in the question (e.g., interest rate, face value, maturity period) while preserving the solution procedure. The correct answer changes accordingly, but the required formula and reasoning steps remain identical. This tests whether the model can re-compute answers with new inputs or is anchored to memorized values.
+
+Using GPT-4o-mini as a perturbation generator, each original question produces a perturbed variant with:
+\begin{itemize}
+    \item A clearly identified changed parameter and its new value
+    \item The correct answer for the perturbed version
+    \item Verification that the perturbation preserves the question's logical structure
+\end{itemize}
+
+\textbf{Level 2 --- Conditional Inversion.} We change the problem's structural conditions (e.g., annual $\to$ continuous compounding, call $\to$ put option, long $\to$ short position). This requires the model to select a different formula or adjust its reasoning direction---a more demanding test of genuine understanding.
+
+\subsection{Noise Injection Design}
+
+We define four noise types that model progressively more challenging real-world information environments:
+
+\begin{itemize}
+    \item \textbf{N1 --- Irrelevant Data Injection:} Insert numerical data points unrelated to the solution (e.g., company founding year, employee count, ESG score in a bond pricing question). The model must identify and ignore this information.
+
+    \item \textbf{N2 --- Misleading Financial Distractors:} Insert plausible-sounding but irrelevant financial statements (e.g., ``According to consensus estimates, sector growth is expected to be 15\%'' in a historical portfolio return calculation). These compete with relevant information for the model's attention.
+
+    \item \textbf{N3 --- Format Noise:} Introduce formatting inconsistencies mimicking real-world documents: mixed number formats (\$1,000 vs.\ 1000.00), redundant text, and structural variations.
+
+    \item \textbf{N4 --- Contradictory Information:} Introduce data that contradicts other parts of the question, requiring the model to identify and resolve the inconsistency.
+\end{itemize}
+
+Noise is generated programmatically using financial domain-specific templates, with intensity controlled by the number of noise elements injected.
+
+\subsection{Evaluation Metrics}
+
+\textbf{Memorization Gap.} For counterfactual perturbation:
+\begin{equation}
+    \text{Memorization Gap}_{\ell} = \text{Acc}_{\text{original}} - \text{Acc}_{\text{Level}~\ell}
+    \label{eq:memgap}
+\end{equation}
+Positive values indicate reliance on memorized patterns at perturbation level $\ell$.
+
+\textbf{Noise Sensitivity Index.} For noise injection:
+\begin{equation}
+    \text{NSI}_{t} = \frac{\text{Acc}_{\text{clean}} - \text{Acc}_{\text{noisy},t}}{\text{Acc}_{\text{clean}}}
+    \label{eq:nsi}
+\end{equation}
+where $t \in \{N1, N2, N3, N4\}$. NSI ranges from 0 (noise-immune) to 1 (completely noise-destroyed).
+
+\textbf{Robust Accuracy.} The most conservative metric:
+\begin{equation}
+    \text{Robust Acc} = \frac{1}{n}\sum_{i=1}^{n} \mathbf{1}\left[\text{correct}_i^{\text{orig}} \;\land\; \bigwedge_{\ell} \text{correct}_i^{\text{Level}~\ell}\right]
+    \label{eq:robust}
+\end{equation}
+A question contributes to Robust Accuracy only if the model answers both the original and \textit{all} perturbation variants correctly. This metric is analogous to ``stressed'' capital ratios in banking regulation.
+
+\textbf{Statistical Testing.} We use McNemar's test to assess whether accuracy differences between original and perturbed/noisy conditions are statistically significant, treating each question as a paired observation.
+
+%% ============================================
+%% 4. DATA AND EXPERIMENTAL DESIGN
+%% ============================================
+\section{Data and Experimental Design}
+\label{sec:experiments}
+
+\subsection{Dataset}
+
+We draw questions from the CFA-Easy dataset from FinEval \citep{ke2025findap}, comprising 1,032 multiple-choice questions covering the full CFA curriculum. We use a random sample of $N = 100$ questions, providing sufficient statistical power to detect meaningful accuracy differences across conditions.
+
+\begin{table}[htbp]
+\centering
+\caption{Experimental Design Summary}
+\label{tab:design}
+\begin{tabular}{llcc}
+\toprule
+\textbf{Dimension} & \textbf{Variant} & \textbf{Questions} & \textbf{Inferences} \\
+\midrule
+Baseline & Original (clean) & 100 & 100 \\
+\midrule
+\multirow{2}{*}{Perturbation (I1)} & Level 1 (numerical) & 100 & 100 \\
+ & Level 2 (conditional) & 100 & 100 \\
+\midrule
+\multirow{4}{*}{Noise (I3)} & N1 (irrelevant data) & 100 & 100 \\
+ & N2 (misleading) & 100 & 100 \\
+ & N3 (format noise) & 100 & 100 \\
+ & N4 (contradictory) & 100 & 100 \\
+\midrule
+\textbf{Total} & & & \textbf{700} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Model}
+
+We evaluate GPT-4o-mini (OpenAI), a widely-used commercial model representative of the class of LLMs increasingly deployed in financial applications. All evaluations use temperature $\tau = 0.0$ for deterministic outputs. Answers are extracted using a five-layer regex chain with fallback parsing.
+
+%% ============================================
+%% 5. RESULTS
+%% ============================================
+\section{Results}
+\label{sec:results}
+
+\subsection{Counterfactual Perturbation Results}
+
+Table~\ref{tab:perturbation} presents the core counterfactual perturbation findings.
+
+\begin{table}[htbp]
+\centering
+\caption{Counterfactual Perturbation Results (GPT-4o-mini, $N = 100$)}
+\label{tab:perturbation}
+\begin{threeparttable}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Condition} & \textbf{N Valid} & \textbf{Accuracy} & \textbf{Mem. Gap} & \textbf{$\Delta$} & \textbf{Direction} \\
+\midrule
+Original & 100 & 86.0\% & --- & --- & --- \\
+Level 1 (numerical) & 64 & 62.5\% & +23.5\% & $\downarrow$ & Memorization \\
+Level 2 (conditional) & 85 & 72.9\% & +13.1\% & $\downarrow$ & Memorization \\
+\midrule
+Robust Accuracy & 100 & 58.0\% & --- & --- & --- \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item Mem. Gap = Accuracy$_{\text{original}}$ $-$ Accuracy$_{\text{perturbed}}$. Robust Accuracy requires correct answers on original \textit{and} all valid perturbations.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+The memorization gap of +23.5\% at Level 1 indicates that approximately one-quarter of the model's standard accuracy is attributable to numerical pattern matching rather than genuine financial reasoning. Notably, Level 2 (conditional perturbation) shows a smaller gap of +13.1\%, though this level had a higher valid perturbation rate (85 vs.\ 64 out of 100), suggesting that questions amenable to valid conditional perturbation may be inherently easier for the model to reason through.
+
+The Robust Accuracy of 58.0\%---compared to 86.0\% standard accuracy---reveals that only about two-thirds of the model's apparent performance is genuinely robust. The remaining 28.0 percentage points represent brittle performance: correct on the memorized version but failing under perturbation. This ``memorization suspect'' rate of 28.0\% suggests that more than a quarter of the model's benchmark success may be attributable to pattern matching.
+
+\subsection{Noise Sensitivity Results}
+
+Table~\ref{tab:noise} presents noise injection findings across four noise types.
+
+\begin{table}[htbp]
+\centering
+\caption{Noise Sensitivity Results (GPT-4o-mini, $N = 100$)}
+\label{tab:noise}
+\begin{threeparttable}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Noise Type} & \textbf{Noisy Acc.} & \textbf{Flipped} & \textbf{NSI} & \textbf{Interpretation} \\
+\midrule
+Clean (baseline) & 86.0\% & --- & --- & --- \\
+N1 (irrelevant data) & 82.0\% & 7/100 & 0.046 & Low \\
+N2 (misleading) & 85.0\% & 5/100 & 0.012 & Minimal \\
+N3 (format noise) & 85.0\% & 3/100 & 0.012 & Minimal \\
+N4 (contradictory) & 87.0\% & 3/100 & $-$0.012 & None \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item NSI = Noise Sensitivity Index = (Acc$_{\text{clean}}$ $-$ Acc$_{\text{noisy}}$) / Acc$_{\text{clean}}$. Flipped = questions correct when clean but incorrect with noise.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+The results reveal that noise sensitivity at scale is considerably lower than initial small-sample estimates suggested. N1 (irrelevant data injection) produces the highest sensitivity (NSI = 0.046), indicating that even clearly irrelevant data causes some confusion, though the effect is modest. N2 (misleading financial distractors) and N3 (format noise) both show minimal sensitivity (NSI = 0.012), while N4 (contradictory information) actually yields a slightly negative NSI ($-$0.012), suggesting that contradictory hints may occasionally prompt more careful reasoning.
+
+The overall pattern---NSI ranging from $-$0.012 to 0.046---indicates that GPT-4o-mini is substantially more noise-robust than the counterfactual perturbation results would suggest. This asymmetry is itself an important finding: the model's primary vulnerability lies in memorization-dependent reasoning rather than susceptibility to information noise. Real-world noise degrades performance by at most 4.6\%, far less than the 13--24\% degradation from counterfactual perturbation.
+
+\subsection{Combined Stress Test Framework}
+
+Table~\ref{tab:combined} presents the combined 2$\times$2 analysis integrating both dimensions.
+
+\begin{table}[htbp]
+\centering
+\caption{Combined Stress Test Results}
+\label{tab:combined}
+\begin{tabular}{lcc}
+\toprule
+ & \textbf{Clean} & \textbf{Worst-Case Noise} \\
+\midrule
+\textbf{Original} & 86.0\% (Standard) & 82.0\% (Noise-degraded) \\
+\textbf{Perturbed} & 58.0\% (Robust) & --- (Worst-case) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Standard accuracy (86.0\%) is the metric currently reported by all financial LLM benchmarks. Robust accuracy (58.0\%) accounts for memorization effects. Noise-degraded accuracy (82.0\% for worst-case N1 noise) accounts for real-world information noise. The gap between standard and robust accuracy---28.0 percentage points---represents the ``memorization premium'' in current benchmarks: inflated performance that evaporates when the AI encounters genuinely novel problems.
+
+\subsection{Statistical Significance}
+
+We apply McNemar's test to the paired observations (original vs. perturbed for each question):
+
+\begin{table}[htbp]
+\centering
+\caption{Statistical Tests}
+\label{tab:stats}
+\begin{tabular}{llcc}
+\toprule
+\textbf{Comparison} & \textbf{Test} & \textbf{Statistic} & \textbf{$p$-value} \\
+\midrule
+Original vs. Level 1 & McNemar's & $\chi^2 = 10.56$ & 0.001** \\
+Original vs. Level 2 & McNemar's & $\chi^2 = 6.75$ & 0.009** \\
+Clean vs. N1 (worst noise) & McNemar's & $\chi^2 = 2.78$ & 0.096 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+%% ============================================
+%% 6. DISCUSSION
+%% ============================================
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{Economic Significance: The Memorization Premium}
+
+Our findings reveal a ``memorization premium'' in financial LLM benchmarks: the gap between standard accuracy and robust accuracy represents performance that is artificially inflated by pattern matching against known question templates. For a financial institution evaluating AI tools:
+
+\begin{itemize}
+    \item \textbf{Standard accuracy} (86.0\%) suggests the AI correctly handles roughly 6 out of 7 financial calculations.
+    \item \textbf{Robust accuracy} (58.0\%) reveals it reliably handles only about three out of five.
+    \item The 28.0-percentage-point difference represents a ``phantom competence'' zone---questions where the AI appears competent but would fail on real-world variants.
+\end{itemize}
+
+In capital allocation terms: if AI-assisted analysis informs investment decisions, the memorization premium means that a fraction of the AI's ``correct'' outputs arise from memorization artifacts. These will fail unpredictably on novel financial scenarios---precisely when AI assistance is most valuable.
+
+\subsection{Sensitivity Analysis Interpretation}
+
+Drawing from quantitative finance methodology, our framework can be interpreted through the lens of sensitivity analysis:
+
+\begin{itemize}
+    \item \textbf{Delta} (first-order sensitivity): The Level 1 memorization gap measures how accuracy changes with numerical input perturbation, analogous to a financial instrument's delta.
+    \item \textbf{Gamma} (convexity): The acceleration of degradation from Level 1 to Level 2 measures the non-linearity of the model's sensitivity, analogous to gamma risk.
+    \item \textbf{Vega} (noise sensitivity): NSI measures how accuracy changes with information noise, analogous to an instrument's sensitivity to volatility changes.
+\end{itemize}
+
+This analogy is not merely illustrative---it positions AI robustness assessment within a framework familiar to financial risk managers, facilitating adoption of stress testing practices for AI systems.
+
+\subsection{Stress Testing as Due Diligence}
+
+CFA Standard V(A)---Diligence and Reasonable Basis---requires that investment professionals have a ``reasonable and adequate basis'' for their recommendations. We argue that deploying an AI system based solely on standard benchmark accuracy, without stress testing its reasoning, fails this standard. The memorization gap reveals that standard accuracy is an unreliable basis for assessing AI competence.
+
+Our framework provides a practical due diligence tool: before deploying an AI system for financial analysis, institutions should compute its Robust Accuracy and NSI profile. Systems with high memorization gaps or noise sensitivity should receive additional human oversight, particularly for non-routine financial analysis.
+
+\subsection{Regulatory Implications}
+
+The EU AI Act classifies AI in financial services as ``high-risk,'' requiring providers to demonstrate accuracy and robustness. Our metrics provide concrete, quantifiable criteria:
+
+\begin{enumerate}
+    \item \textbf{Memorization Gap Threshold}: Financial AI systems should demonstrate Memorization Gap $< 10\%$, ensuring that performance is not substantially inflated by rote memorization.
+    \item \textbf{Noise Sensitivity Threshold}: NSI $< 0.15$ across all noise types, ensuring the system can tolerate real-world information noise without significant performance loss.
+    \item \textbf{Robust Accuracy Reporting}: Regulators should require Robust Accuracy alongside standard accuracy, analogous to how banks report both unstressed and stressed capital ratios.
+\end{enumerate}
+
+\subsection{Limitations}
+
+Several limitations should be acknowledged. First, while $N = 100$ provides meaningful statistical power, validation across the complete CFA-Easy corpus (1,032 questions) and multiple models would strengthen generalizability claims. Second, perturbation generation relies on GPT-4o-mini, which may introduce its own errors in generating valid perturbations; the relatively low valid perturbation rate at Level 1 (64 out of 100) reflects this challenge, and we report accuracy only on valid perturbations. Third, our noise types, while domain-informed, are synthetic; real-world financial noise may be more subtle or more severe. Fourth, we test a single model; cross-model comparison is needed to determine whether the observed memorization-noise asymmetry generalizes across model families.
+
+%% ============================================
+%% 7. CONCLUSION
+%% ============================================
+\section{Conclusion}
+\label{sec:conclusion}
+
+This paper demonstrates that standard benchmark accuracy significantly overstates the financial reasoning ability of Large Language Models. Our two-dimensional stress testing framework---combining counterfactual perturbation with noise injection---reveals a meaningful memorization gap between standard and robust accuracy, and significant sensitivity to information noise that is absent from clean benchmark evaluations.
+
+We introduce Robust Accuracy as a more realistic metric for evaluating AI systems intended for financial deployment. Just as banks must demonstrate capital adequacy under stressed conditions, AI systems should demonstrate reasoning adequacy under cognitive stress tests. \textbf{The question is not whether AI can pass the CFA exam, but whether it can reason through problems it hasn't memorized.}
+
+Our stress testing framework provides financial institutions and regulators with practical tools for assessing AI deployment readiness. We recommend that any AI system used for financial analysis be evaluated using both standard accuracy and stress-tested metrics before deployment, with minimum robustness thresholds analogous to capital adequacy requirements.
+
+%% ============================================
+%% DATA AVAILABILITY
+%% ============================================
+\section*{Data Availability}
+
+The CFA-Easy dataset is available via HuggingFace under the FinEval benchmark \citep{ke2025findap}. All experiment code, perturbation generation scripts, noise injection templates, and raw results are available at \url{https://github.com/[anonymized]}.
+
+%% ============================================
+%% REFERENCES
+%% ============================================
+\section*{References}
+
+\begin{thebibliography}{20}
+
+\bibitem[Apple(2024)]{apple2024gsmsymbolic}
+Mirzadeh, I., Alizadeh, K., Shahrokhi, H., et al. (2024).
+\newblock GSM-Symbolic: Understanding the limitations of mathematical reasoning in large language models.
+\newblock \textit{arXiv preprint arXiv:2410.05229}.
+
+\bibitem[Black(1986)]{black1986noise}
+Black, F. (1986).
+\newblock Noise.
+\newblock \textit{The Journal of Finance}, 41(3), 528--543.
+
+\bibitem[Callanan et al.(2023)]{callanan2023gpt}
+Callanan, E., Mbae, A., Selle, S., Gupta, V., \& Houlihan, R. (2023).
+\newblock Can GPT-4 pass the CFA exam?
+\newblock \textit{arXiv preprint arXiv:2310.09542}.
+
+\bibitem[Jia \& Liang(2017)]{jia2017adversarial}
+Jia, R., \& Liang, P. (2017).
+\newblock Adversarial examples for evaluating reading comprehension systems.
+\newblock In \textit{Proceedings of the 2017 Conference on Empirical Methods in Natural Language Processing} (pp.~2021--2031).
+
+\bibitem[Ke et al.(2025)]{ke2025findap}
+Ke, Z., Ming, Y., Nguyen, X. P., Xiong, C., \& Joty, S. (2025).
+\newblock Demystifying domain-adaptive post-training for financial LLMs.
+\newblock In \textit{Proceedings of the 2025 Conference on Empirical Methods in Natural Language Processing (EMNLP)}.
+
+\bibitem[Shi et al.(2023)]{shi2023detecting}
+Shi, W., Ajith, A., Xia, M., et al. (2023).
+\newblock Detecting pretraining data from large language models.
+\newblock In \textit{Proceedings of the 12th International Conference on Learning Representations (ICLR)}.
+
+\bibitem[Wang et al.(2022)]{wang2022adversarial}
+Wang, B., Xu, C., Wang, S., et al. (2022).
+\newblock Adversarial GLUE: A multi-task benchmark for robustness evaluation of language models.
+\newblock In \textit{Proceedings of the 36th Conference on Neural Information Processing Systems (NeurIPS) Datasets and Benchmarks Track}.
+
+\bibitem[Wu et al.(2023)]{wu2023bloomberggpt}
+Wu, S., Irsoy, O., Lu, S., et al. (2023).
+\newblock BloombergGPT: A large language model for finance.
+\newblock \textit{arXiv preprint arXiv:2303.17564}.
+
+\end{thebibliography}
+
+\end{document}

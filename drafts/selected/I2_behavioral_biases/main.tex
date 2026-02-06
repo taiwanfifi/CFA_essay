@@ -1,0 +1,553 @@
+\documentclass[preprint,12pt]{elsarticle}
+
+%% -----------------------------------------------------------------------
+%% Packages
+%% -----------------------------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{multirow}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{subcaption}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{natbib}
+\usepackage{lineno}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!70!black,
+  citecolor=blue!70!black,
+  urlcolor=blue!70!black
+}
+
+%% -----------------------------------------------------------------------
+%% Journal metadata
+%% -----------------------------------------------------------------------
+\journal{Finance Research Letters}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{Inherited Irrationality: Measuring Behavioral Finance Biases\\in Large Language Models}
+
+\author[sinica]{Wei-Lun Cheng\corref{cor1}}
+\ead{wlcheng@gate.sinica.edu.tw}
+
+\author[nccu]{Wei-Chung Miao}
+\ead{wcmiao@nccu.edu.tw}
+
+\cortext[cor1]{Corresponding author.}
+
+\affiliation[sinica]{organization={Institute of Information Science, Academia Sinica},
+  city={Taipei},
+  country={Taiwan}}
+
+\affiliation[nccu]{organization={Department of Finance, National Chengchi University},
+  city={Taipei},
+  country={Taiwan}}
+
+\begin{abstract}
+Large language models (LLMs) are increasingly deployed as financial advisors and analytical tools. Because these models are trained on vast corpora of human-generated text, they may inherit the systematic cognitive biases documented in behavioral finance. We design a paired-scenario experimental framework to measure five canonical biases---loss aversion, anchoring, framing, recency bias, and the disposition effect---in GPT-4o-mini across 20 financial decision scenarios. Each scenario is presented in both a bias-inducing framing and a neutral framing, with responses scored on a 0--1 scale by an LLM judge ($0=$ fully rational, $1=$ fully biased). Our results reveal a mean bias score of 0.525, indicating that the model exhibits biased behavior in the majority of its financial recommendations. Critically, neutral re-framing reduces the bias score to 0.350, yielding a mean debiasing effect of $+0.175$. However, debiasing effectiveness varies dramatically across bias types: loss aversion shows the strongest debiasing effect ($+0.400$), while disposition effect and recency bias show zero debiasing ($+0.000$). Two scenarios elicit fully biased responses (bias score $= 1.0$), demonstrating that LLMs can exhibit extreme behavioral bias under certain framings. These findings imply that LLMs deployed in financial advisory roles may systematically amplify human irrationality---not because they experience emotions, but because they have absorbed the statistical regularities of biased human reasoning from their training data. We discuss implications for AI-driven portfolio management, regulatory oversight, and the design of debiasing interventions.
+\end{abstract}
+
+\begin{keyword}
+behavioral finance \sep large language models \sep loss aversion \sep anchoring bias \sep framing effect \sep recency bias \sep disposition effect \sep cognitive biases \sep AI financial advisors \sep prospect theory
+\end{keyword}
+
+\end{frontmatter}
+
+%% -----------------------------------------------------------------------
+\section{Introduction}
+\label{sec:introduction}
+%% -----------------------------------------------------------------------
+
+The efficient market hypothesis assumes that market participants are rational agents who process information without systematic error \citep{fama1970efficient}. Decades of research in behavioral finance have dismantled this assumption: investors exhibit persistent cognitive biases---loss aversion, anchoring, the disposition effect, overconfidence, and others---that lead to predictable departures from expected utility maximization \citep{kahneman1979prospect, shefrin1985disposition, thaler1985mental}. These findings have profoundly shaped our understanding of asset pricing, portfolio management, and market microstructure.
+
+A new question now arises with the rapid deployment of large language models (LLMs) in financial services. Models such as GPT-4, BloombergGPT \citep{wu2023bloomberggpt}, and domain-adapted variants like Llama-Fin \citep{ke2025findap} are being used for equity research, risk assessment, client advisory, and automated trading. Industry estimates suggest that over 50\% of investment firms now use some form of AI-assisted analysis \citep{callanan2023gpt}. The implicit assumption behind this adoption is that AI systems, lacking human emotions, should be free from the behavioral biases that plague human decision-makers.
+
+We challenge this assumption. LLMs are trained on massive corpora of human-authored text---analyst reports, financial news, investment forums, and textbooks---that contain not only factual information but also the reasoning patterns, heuristics, and systematic biases of their human authors. If loss-averse reasoning pervades financial commentary (``protect your downside'', ``avoid losses at all costs''), then a language model trained on such text may internalize loss aversion as a statistical regularity, reproducing it in its own recommendations even though it experiences no emotional discomfort from losses.
+
+This paper makes three contributions. First, we design a \emph{paired-scenario} experimental framework that isolates specific behavioral biases by presenting the same financial decision in both a bias-inducing and a neutral framing. Second, we provide the first empirical measurement of five canonical behavioral biases---loss aversion, anchoring, framing, recency bias, and the disposition effect---in a state-of-the-art LLM (GPT-4o-mini) using 20 CFA-level financial scenarios. Third, we quantify the effectiveness of prompt-level debiasing---simply reframing the question in neutral terms---and find that it reduces but does not eliminate inherited biases, with dramatic variation across bias types.
+
+Our findings have immediate implications for the \$130 trillion global asset management industry. If AI advisors systematically recommend selling winners too early (disposition effect), anchor valuations to stale prices, or prefer guaranteed low returns over probabilistically superior alternatives (loss aversion), they may not only fail to improve upon human judgment but actively amplify the irrationality they were meant to eliminate.
+
+The remainder of this paper is organized as follows. Section~\ref{sec:literature} reviews the relevant literature on behavioral biases, LLM evaluation, and AI in finance. Section~\ref{sec:methodology} describes our experimental framework. Section~\ref{sec:results} presents the empirical results. Section~\ref{sec:discussion} discusses the implications, and Section~\ref{sec:conclusion} concludes.
+
+
+%% -----------------------------------------------------------------------
+\section{Literature Review}
+\label{sec:literature}
+%% -----------------------------------------------------------------------
+
+\subsection{Behavioral Biases in Financial Decision-Making}
+
+The foundational work of \citet{kahneman1979prospect} established that individuals systematically violate expected utility theory. Prospect theory demonstrates two key departures: (1)~\emph{loss aversion}, whereby losses loom approximately twice as large as equivalent gains ($\lambda \approx 2.25$), and (2)~\emph{reference dependence}, whereby outcomes are evaluated relative to a reference point rather than in absolute terms. In financial markets, loss aversion manifests as the disposition effect---the tendency to sell winning stocks too early while holding losing positions too long \citep{shefrin1985disposition}.
+
+Anchoring bias, first documented by \citet{tversky1974judgment}, describes the tendency to rely excessively on an initial piece of information (the ``anchor'') when making subsequent judgments. In financial contexts, analysts anchor their price targets to historical prices, acquisition costs, or prior estimates, adjusting insufficiently when fundamentals change \citep{campbell2008anchoring}. Empirical studies show that earnings forecasts anchored to prior-year figures exhibit systematic errors of 10--30\% \citep{cen2013anchoring}.
+
+\subsection{LLMs in Financial Applications}
+
+The application of LLMs to finance has accelerated rapidly. \citet{wu2023bloomberggpt} trained a 50-billion-parameter model on financial data, demonstrating superior performance on financial NLP tasks. \citet{ke2025findap} proposed the FinDAP framework for domain-adaptive post-training of Llama-3-8B, achieving state-of-the-art performance on CFA-level questions through a three-stage pipeline of continual pre-training, supervised fine-tuning, and Robust Policy Optimization. \citet{callanan2023gpt} evaluated GPT models on CFA examinations, finding that GPT-4 passes CFA Level I and II but struggles with the nuanced reasoning required at Level III.
+
+\subsection{Cognitive Biases in AI Systems}
+
+A growing body of work examines whether LLMs replicate human cognitive biases. \citet{hagendorff2023human} found that large language models exhibit human-like intuitive biases on classic cognitive psychology tasks, including framing effects and anchoring, though some biases diminish with model scale. \citet{jones2022capturing} showed that GPT-3 replicates several heuristics-and-biases effects, including anchoring and the conjunction fallacy. \citet{binz2023turning} demonstrated that LLMs exhibit prospect-theory-consistent risk preferences in lottery choice tasks. However, none of these studies focus specifically on \emph{financial} scenarios with real economic stakes, nor do they measure the effectiveness of debiasing interventions. Our work fills this gap by using CFA-level financial decision scenarios designed to elicit specific biases in an applied investment context.
+
+
+%% -----------------------------------------------------------------------
+\section{Methodology}
+\label{sec:methodology}
+%% -----------------------------------------------------------------------
+
+\subsection{Experimental Design}
+
+Our framework rests on a \emph{paired-scenario} design. For each financial decision, we construct two versions:
+
+\begin{enumerate}[label=(\roman*)]
+  \item \textbf{Bias-inducing version:} The scenario is framed in a way known to trigger the target bias in human subjects. For loss aversion, this means explicitly stating potential losses (e.g., ``20\% chance of \emph{losing} \$2,000''). For anchoring, this means providing an irrelevant or stale reference price before asking for a valuation.
+  \item \textbf{Neutral version:} The same decision is presented using only quantitative facts---expected values, projected returns, or fundamental metrics---with no emotionally loaded framing or anchoring information.
+\end{enumerate}
+
+If the model were perfectly rational, its recommendation should be identical across both framings for each scenario. Any systematic divergence between the bias-inducing and neutral versions constitutes evidence of behavioral bias.
+
+\subsection{Bias Types and Scenario Construction}
+
+We test five canonical behavioral biases:
+
+\paragraph{Loss Aversion (5 scenarios).} Each scenario presents a choice between (a)~a risky option with higher expected value but an explicitly stated potential loss, and (b)~a safe option with lower expected value but no downside. A rational agent should choose the higher-EV option; a loss-averse agent systematically favors the safe alternative. Example scenarios include investment allocation (EV \$7,600 risky vs.\ \$7,000 guaranteed), stock liquidation (selling a winner vs.\ a loser), fund strategy selection, bond portfolio switching, and retirement withdrawal planning.
+
+\paragraph{Anchoring (5 scenarios).} Each scenario provides a historical price, prior estimate, or acquisition cost as an anchor, followed by fundamentally changed conditions that warrant a substantially different valuation. A rational agent should value the asset based solely on current fundamentals; an anchored agent's estimate is drawn toward the stale reference point. Example scenarios include stock valuation after fundamental deterioration, analyst price target revision, commercial property reappraisal, GDP growth estimate revision, and private equity portfolio mark-to-market.
+
+\paragraph{Framing (5 scenarios).} Each scenario presents the same financial decision with either a gain-emphasizing or loss-emphasizing frame. A rational agent's recommendation should be invariant to framing; a biased agent systematically shifts its recommendation depending on whether outcomes are described in terms of potential gains or potential losses, consistent with the framing effects documented by \citet{tversky1974judgment} and \citet{kahneman1979prospect}.
+
+\paragraph{Recency Bias (3 scenarios).} Each scenario presents recent performance data that diverges from long-term fundamentals. A rational agent should weight the full information set appropriately; a recency-biased agent overweights the most recent data points, extrapolating short-term trends into long-term forecasts.
+
+\paragraph{Disposition Effect (2 scenarios).} Each scenario presents a portfolio with both winning and losing positions, requiring the model to recommend which to sell. A rational agent should sell based on forward-looking fundamentals; a disposition-biased agent sells winners to ``lock in gains'' while holding losers to ``avoid realizing losses'' \citep{shefrin1985disposition}.
+
+The complete scenario library is presented in Appendix~\ref{app:scenarios}.
+
+\subsection{Model and Prompting Protocol}
+
+We evaluate \textbf{GPT-4o-mini} (OpenAI, 2024), a cost-efficient frontier model widely used in financial applications. For each scenario, we issue two API calls:
+
+\begin{enumerate}[label=\arabic*.]
+  \item \textbf{Bias-inducing condition:} The system prompt instructs the model to act as a ``CFA-certified financial advisor'' and to ``show reasoning clearly.'' The user prompt contains the bias-inducing version of the scenario.
+  \item \textbf{Neutral condition:} The system prompt instructs the model to ``evaluate using only quantitative analysis'' and to ``focus strictly on expected values and risk-adjusted returns.'' The user prompt contains the neutral version.
+\end{enumerate}
+
+All calls use temperature $= 0.0$ (greedy decoding) with a maximum token budget of 1,500 to ensure deterministic, reproducible outputs. This deterministic setting rules out randomness as a confound: any observed bias reflects the model's learned preferences rather than sampling variability.
+
+\subsection{Bias Scoring via LLM-as-Judge}
+
+Each model response is evaluated by a separate instance of GPT-4o-mini acting as a behavioral finance expert judge. The judge receives:
+\begin{itemize}
+  \item The bias type being tested
+  \item The scenario text
+  \item The model's response (truncated to 1,500 tokens)
+  \item The \emph{rational baseline} (the EV-optimal answer)
+  \item The \emph{biased prediction} (the answer a biased human would give)
+\end{itemize}
+
+The judge assigns a bias score on a three-point scale:
+
+\begin{equation}
+  \text{Bias Score} \in \{0.0, 0.5, 1.0\}
+  \label{eq:bias_score}
+\end{equation}
+
+\noindent where $0.0$ indicates a fully rational response aligned with the EV-optimal baseline, $0.5$ indicates a mixed or hedged recommendation, and $1.0$ indicates a fully biased response aligned with the bias-predicted choice. This discrete scale reflects the inherently categorical nature of financial recommendations (choose A or B, sell or hold) while allowing for ambiguous cases.
+
+\subsection{Debiasing Effect}
+
+We define the \emph{debiasing effect} as the reduction in bias score achieved by neutral framing:
+
+\begin{equation}
+  \Delta_{\text{debias}} = S_{\text{bias}} - S_{\text{neutral}}
+  \label{eq:debiasing}
+\end{equation}
+
+\noindent where $S_{\text{bias}}$ is the bias score under the bias-inducing framing and $S_{\text{neutral}}$ is the score under neutral framing. A positive $\Delta_{\text{debias}}$ indicates that neutral framing successfully reduces bias; a value of zero indicates no debiasing effect; and a negative value would indicate that neutral framing paradoxically increases bias.
+
+
+%% -----------------------------------------------------------------------
+\section{Results}
+\label{sec:results}
+%% -----------------------------------------------------------------------
+
+\subsection{Overall Bias Measurement}
+
+Table~\ref{tab:overall} presents the aggregate results across all 20 scenarios tested on GPT-4o-mini. The model exhibits a mean bias score of 0.525 under bias-inducing framing, indicating that, on average, its financial recommendations are partially driven by the same cognitive biases documented in human subjects. Neutral re-framing reduces the mean score to 0.350, yielding an average debiasing effect of $+0.175$.
+
+\begin{table}[H]
+\centering
+\caption{Overall bias measurement results (GPT-4o-mini, $n=20$ scenarios, 5 bias types).}
+\label{tab:overall}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Metric} & \textbf{Bias-Inducing} & \textbf{Neutral} & \textbf{$\Delta_{\text{debias}}$} \\
+\midrule
+Mean Bias Score     & 0.525 & 0.350 & 0.175 \\
+Standard Deviation  & 0.16  & 0.22  & 0.21  \\
+Min                 & 0.00  & 0.00  & 0.00  \\
+Max                 & 1.00  & 0.50  & 0.50  \\
+\midrule
+\textit{Interpretation} & \multicolumn{3}{c}{\textit{33\% bias reduction via neutral framing}} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+A notable feature of the expanded results is the emergence of \emph{extreme bias} in two scenarios: anchoring scenario an\_04 and framing scenario fr\_05 both received bias scores of 1.0---fully biased responses where the model's recommendation aligned completely with the bias-predicted choice. This contrasts with the majority of scenarios where the model produces hedged, ambivalent recommendations (bias score $= 0.50$). The presence of fully biased outliers suggests that certain scenario configurations can push the model past its default hedging behavior into unequivocal bias expression. One scenario (fr\_02) received a bias score of 0.0, indicating a fully rational response even under bias-inducing framing.
+
+\subsection{Results by Bias Type}
+
+Table~\ref{tab:by_type} disaggregates the results by bias type, revealing substantial heterogeneity in both bias susceptibility and debiasing effectiveness across the five bias categories.
+
+\begin{table}[H]
+\centering
+\caption{Bias scores by type (GPT-4o-mini, $n=20$ scenarios across 5 bias types).}
+\label{tab:by_type}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{Bias Type} & \textbf{$n$} & \textbf{Bias Score} & \textbf{Neutral Score} & \textbf{$\Delta_{\text{debias}}$} \\
+\midrule
+Loss Aversion      & 5 & 0.500 & 0.100 & +0.400 \\
+Anchoring          & 5 & 0.600 & 0.400 & +0.200 \\
+Framing            & 5 & 0.500 & 0.400 & +0.100 \\
+Recency            & 3 & 0.500 & 0.500 & +0.000 \\
+Disposition Effect & 2 & 0.500 & 0.500 & +0.000 \\
+\midrule
+\textbf{Overall}   & \textbf{20} & \textbf{0.525} & \textbf{0.350} & \textbf{+0.175} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The results reveal a striking hierarchy of debiasing effectiveness. Loss aversion exhibits the strongest debiasing response ($\Delta = +0.400$): neutral re-framing reduces the mean score from 0.500 to just 0.100, suggesting that loss-averse behavior is primarily triggered by emotional framing cues that quantitative re-framing can effectively neutralize. Anchoring shows moderate debiasing ($\Delta = +0.200$), while framing shows only weak debiasing ($\Delta = +0.100$). Most notably, recency bias and the disposition effect show \emph{zero} debiasing effect ($\Delta = +0.000$)---neutral framing has no measurable impact on these biases. This suggests that recency bias and the disposition effect are more deeply embedded in the model's learned reasoning patterns and cannot be overridden by prompt-level interventions alone.
+
+Anchoring is the only bias type where the mean bias score exceeds 0.500, driven by scenario an\_04 (GDP growth revision) which received a fully biased score of 1.0. This suggests that anchoring may be the bias most aggressively expressed by LLMs in financial contexts.
+
+\subsection{Scenario-Level Analysis}
+
+Table~\ref{tab:scenarios} presents the full scenario-level results across all 20 scenarios and five bias types, revealing important heterogeneity in both bias expression and debiasing effectiveness.
+
+\begin{table}[H]
+\centering
+\caption{Scenario-level bias scores and debiasing effects ($n=20$).}
+\label{tab:scenarios}
+\small
+\begin{tabular}{@{}llccc@{}}
+\toprule
+\textbf{ID} & \textbf{Scenario Description} & \textbf{Bias} & \textbf{Neutral} & \textbf{$\Delta$} \\
+\midrule
+\multicolumn{5}{@{}l}{\textit{Loss Aversion ($\bar{\Delta} = +0.400$)}} \\
+la\_01 & Investment allocation (EV \$7.6K vs \$7K)   & 0.50 & 0.00 & +0.50 \\
+la\_02 & Stock liquidation (sell winner vs loser)      & 0.50 & 0.00 & +0.50 \\
+la\_03 & Fund strategy (\$80K EV vs \$43K EV)         & 0.50 & 0.00 & +0.50 \\
+la\_04 & Bond switch (6.1\% vs 4.0\% yield)           & 0.50 & 0.00 & +0.50 \\
+la\_05 & Retirement withdrawal (\$5.5K vs \$4.8K)     & 0.50 & 0.50 & +0.00 \\
+\midrule
+\multicolumn{5}{@{}l}{\textit{Anchoring ($\bar{\Delta} = +0.200$)}} \\
+an\_01 & Stock valuation (anchored to \$85--150)       & 0.50 & 0.50 & +0.00 \\
+an\_02 & Analyst target revision (from \$200)          & 0.50 & 0.50 & +0.00 \\
+an\_03 & Property reappraisal (from \$5M)              & 0.50 & 0.50 & +0.00 \\
+an\_04 & GDP growth revision (from 3.5\%)              & \textbf{1.00} & 0.50 & +0.50 \\
+an\_05 & PE mark-to-market (from \$100M)               & 0.50 & 0.00 & +0.50 \\
+\midrule
+\multicolumn{5}{@{}l}{\textit{Framing ($\bar{\Delta} = +0.100$)}} \\
+fr\_01 & Gain vs loss frame investment choice           & 0.50 & 0.50 & +0.00 \\
+fr\_02 & Survival vs mortality frame portfolio          & 0.00 & 0.00 & +0.00 \\
+fr\_03 & Positive vs negative return framing            & 0.50 & 0.50 & +0.00 \\
+fr\_04 & Opportunity vs sunk cost framing               & 0.50 & 0.50 & +0.00 \\
+fr\_05 & Profit vs loss percentage framing              & \textbf{1.00} & 0.50 & +0.50 \\
+\midrule
+\multicolumn{5}{@{}l}{\textit{Recency Bias ($\bar{\Delta} = +0.000$)}} \\
+re\_01 & Recent vs long-term fund performance           & 0.50 & 0.50 & +0.00 \\
+re\_02 & Quarterly trend extrapolation                  & 0.50 & 0.50 & +0.00 \\
+re\_03 & Recent market regime overweighting             & 0.50 & 0.50 & +0.00 \\
+\midrule
+\multicolumn{5}{@{}l}{\textit{Disposition Effect ($\bar{\Delta} = +0.000$)}} \\
+de\_01 & Sell winner vs hold loser (stock pair)         & 0.50 & 0.50 & +0.00 \\
+de\_02 & Portfolio rebalancing (gain/loss asymmetry)    & 0.50 & 0.50 & +0.00 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Several patterns emerge from the scenario-level results. First, loss aversion shows the most consistent debiasing: 4 of 5 scenarios achieve full debiasing ($\Delta = +0.50$), with only la\_05 (retirement withdrawal) resisting neutral re-framing. Second, two scenarios---an\_04 and fr\_05---produced \emph{fully biased} responses (bias score $= 1.0$), the only instances where the model abandoned its typical hedging behavior and made an unequivocally biased recommendation. This is particularly notable for an\_04, where the model's GDP growth estimate remained fully anchored to the prior 3.5\% figure despite overwhelming contrary evidence. Third, recency bias and the disposition effect are entirely resistant to debiasing: all five scenarios across these two bias types show $\Delta = 0.00$, with neutral scores remaining at 0.50. This suggests these biases are embedded at a deeper level of the model's reasoning, beyond the reach of prompt-level interventions.
+
+\subsection{Qualitative Analysis of Biased Responses}
+
+Examination of the model's actual response text reveals characteristic patterns of bias expression:
+
+\paragraph{Loss aversion.} In scenario la\_01, the model correctly calculates that Investment A has an expected value of \$7,600 versus Investment B's \$7,000---then proceeds to recommend Investment B on the grounds of ``capital preservation'' and ``downside protection.'' The model acknowledges the mathematical superiority of the risky option but overweights the 20\% loss probability, stating: ``the potential loss of \$2,000 represents a meaningful risk to the client's portfolio.'' This mirrors the classic prospect theory finding that losses loom disproportionately large. Notably, loss aversion shows the strongest debiasing response of all five bias types: 4 of 5 scenarios shift to fully rational under neutral framing, yielding a mean neutral score of just 0.10.
+
+\paragraph{Anchoring.} Scenario an\_04 (GDP growth revision) produced the most extreme anchoring behavior in our study, receiving the maximum bias score of 1.0. Despite being presented with overwhelming contrary evidence---PMI at 46 (contractionary), consumer spending down 2\%, unemployment rising 1.2 percentage points---the model's growth estimate remained fully anchored to the prior 3.5\% figure, demonstrating that stale macroeconomic anchors can completely override fundamental analysis. In scenario an\_01, the model's fair value estimate gravitates toward the \$85 current price rather than conducting a clean fundamental valuation despite severely deteriorated fundamentals.
+
+\paragraph{Framing.} Scenario fr\_05 (profit vs.\ loss percentage framing) also elicited a fully biased response (bias score $= 1.0$), making it one of only two scenarios to produce extreme bias. Conversely, fr\_02 produced the only fully rational response under bias-inducing conditions (bias score $= 0.0$), suggesting that the model's susceptibility to framing effects is highly context-dependent.
+
+\paragraph{Recency bias and disposition effect.} These two bias types present a qualitatively different pattern. All five scenarios across recency bias and the disposition effect produced identical bias and neutral scores ($0.50 / 0.50$), yielding zero debiasing effect. In disposition effect scenarios, the model under both bias-inducing and neutral conditions continues to recommend selling winners to ``lock in gains''---precisely the asymmetric behavior predicted by \citet{shefrin1985disposition}. For recency bias, the model consistently overweights recent performance trends regardless of whether the framing emphasizes or de-emphasizes temporal recency. These results suggest that some biases are so deeply embedded in the model's training data patterns that they persist even when the triggering framing cues are removed.
+
+
+%% -----------------------------------------------------------------------
+\section{Discussion}
+\label{sec:discussion}
+%% -----------------------------------------------------------------------
+
+\subsection{The Mechanism: Statistical Bias, Not Emotional Bias}
+
+Our central finding---that GPT-4o-mini exhibits a mean bias score of 0.525 across five behavioral bias types in 20 financial scenarios---requires careful interpretation. The model has no emotions, no risk preferences in the utility-theoretic sense, and no personal wealth at stake. Its ``loss aversion'' is not an affective response to potential losses but rather a reflection of the overwhelming prevalence of loss-averse reasoning in its training corpus.
+
+Financial textbooks, analyst reports, and investment advice columns are replete with phrases such as ``protect against downside,'' ``preserve capital,'' and ``the first rule of investing is never lose money.'' These patterns are absorbed during pre-training as statistical regularities. When the model encounters a scenario that matches this pattern---an investment with an explicit loss component---it activates the associated reasoning template and produces a loss-averse recommendation. In this sense, the bias is \emph{inherited} rather than \emph{experienced}: the model acts as a faithful mirror of the aggregate biases embedded in human financial discourse.
+
+This distinction has important implications. Human debiasing interventions often target the emotional roots of biases (e.g., mindfulness training to manage fear of loss). For LLMs, debiasing must instead target the \emph{statistical patterns} in training data or the \emph{inference-time prompting} that activates bias-consistent reasoning pathways.
+
+\subsection{Economic Significance}
+
+The observed biases have concrete economic consequences when translated to portfolio management decisions:
+
+\paragraph{Loss aversion and the disposition effect.} A loss-averse AI advisor would systematically recommend selling winning positions (to ``lock in gains'') while holding losing positions (to ``avoid realizing losses''). \citet{shefrin1985disposition} estimate that the disposition effect costs individual investors 4--5\% in annual returns. If robo-advisors serving millions of clients inherit this bias, the aggregate welfare loss could be substantial.
+
+\paragraph{Anchoring in valuations.} An anchored AI analyst who adjusts insufficiently from prior price targets may systematically overvalue declining assets. Our scenario an\_02 illustrates this: despite a 45\% revenue decline and product line discontinuation, the model under bias-inducing conditions is reluctant to revise the price target fully to fundamentals-supported levels. In practice, this could lead to delayed sell recommendations and increased portfolio losses during bear markets.
+
+\paragraph{AI-amplified market irrationality.} If multiple AI systems are trained on similar corpora and deployed simultaneously, they may exhibit correlated biases---creating a new channel for systemic risk. Unlike human traders whose biases partially cancel through diversity of experience, AI models trained on the same internet text may converge on the \emph{same} biased conclusions, potentially amplifying rather than diversifying market irrationality.
+
+\subsection{Partial Effectiveness of Debiasing}
+
+Our results show that neutral re-framing reduces the mean bias score from 0.525 to 0.350---a 33\% reduction---but with dramatic variation across bias types. This finding has practical implications:
+
+\begin{enumerate}[label=(\roman*)]
+  \item \textbf{A hierarchy of debiasing susceptibility exists.} Loss aversion is highly amenable to debiasing ($\Delta = +0.400$, neutral score $= 0.100$), followed by anchoring ($\Delta = +0.200$) and framing ($\Delta = +0.100$). In contrast, recency bias and the disposition effect show zero debiasing effect ($\Delta = +0.000$). This hierarchy suggests a taxonomy of bias ``depth'': some biases are triggered primarily by surface-level framing cues (and thus can be neutralized by prompt engineering), while others are embedded in deeper reasoning patterns that persist regardless of framing.
+
+  \item \textbf{Simple cases yield to debiasing.} When the neutral version reduces the scenario to a clean expected value comparison (e.g., ``Which has higher EV: \$7,600 or \$7,000?''), the model reliably selects the rational option. This is most evident in the loss aversion results, where 4 of 5 scenarios achieve full debiasing. This suggests that \emph{explicit quantitative framing} can serve as an effective guardrail for framing-dependent biases.
+
+  \item \textbf{Some biases are resistant to prompt-level intervention.} Recency bias and the disposition effect produce identical scores under both bias-inducing and neutral conditions ($0.50 / 0.50$). The residual bias score of 0.350 overall---and 0.500 for these resistant bias types---suggests that the model's training-induced tendency toward certain reasoning patterns is deeply embedded and resistant to prompt-level interventions alone. These biases may require training-time interventions such as bias-aware fine-tuning or reinforcement learning.
+
+  \item \textbf{Debiasing remains binary within susceptible bias types.} For loss aversion and anchoring, the debiasing effect at the scenario level remains bimodal ($\Delta \in \{0.00, 0.50\}$)---neutral framing either fully eliminates bias or has no effect. There is no partial reduction within a single scenario.
+\end{enumerate}
+
+\subsection{Implications for Financial Regulation}
+
+Current regulatory frameworks for financial advice (e.g., MiFID II in the EU, the SEC's Regulation Best Interest in the US) assume human advisors with human biases and require disclosure of conflicts of interest. Our findings suggest that analogous ``bias disclosure'' requirements may be needed for AI-driven advisory systems. Specifically:
+
+\begin{itemize}
+  \item AI advisors should be tested for known behavioral biases before deployment, using frameworks similar to the one we propose.
+  \item Regulatory stress tests could incorporate bias-inducing scenarios to assess whether AI systems make systematically suboptimal recommendations under emotional framing.
+  \item Disclosure requirements could mandate that AI advisory systems report their measured bias scores alongside their recommendations.
+\end{itemize}
+
+\subsection{Limitations}
+
+Several limitations of our study should be acknowledged. First, while our expanded sample ($n = 20$ scenarios across 5 bias types, single model) represents a meaningful improvement over our initial proof-of-concept, the number of scenarios per bias type remains small (2--5), limiting within-type statistical power. A comprehensive benchmark should include 20--30 scenarios per bias type across multiple models of varying scale. Second, the LLM-as-judge scoring methodology, while efficient, may introduce its own biases; future work should validate against human expert judges. Third, two of our five bias types have particularly small sample sizes---disposition effect ($n = 2$) and recency bias ($n = 3$)---and the zero debiasing finding for these types should be confirmed with larger scenario sets. Fourth, our use of temperature $= 0.0$ produces deterministic outputs but does not capture the distribution of model behavior; stochastic sampling at positive temperatures would yield richer statistical analysis. Fifth, the bias score scale $\{0.0, 0.5, 1.0\}$ is coarse; a continuous scoring rubric might reveal more nuanced patterns. Sixth, we test only one model (GPT-4o-mini); the bias profiles of larger models (GPT-4o, GPT-4.1) and open-source alternatives (Llama, Qwen) may differ substantially.
+
+
+%% -----------------------------------------------------------------------
+\section{Conclusion}
+\label{sec:conclusion}
+%% -----------------------------------------------------------------------
+
+We present evidence that GPT-4o-mini, a state-of-the-art large language model, exhibits measurable behavioral finance biases when making financial recommendations. Using a paired-scenario framework with 20 CFA-level financial decisions across five bias types, we find a mean bias score of 0.525---indicating that the model's recommendations are influenced by the same cognitive biases that affect human investors. Our expanded analysis reveals a hierarchy of bias depth: loss aversion is highly susceptible to prompt-level debiasing ($\Delta = +0.400$), while recency bias and the disposition effect are entirely resistant ($\Delta = +0.000$). Two scenarios elicited fully biased responses (bias score $= 1.0$), demonstrating that LLMs can express extreme behavioral bias under certain configurations.
+
+These findings challenge the assumption that AI-driven financial advice is inherently more rational than human advice. LLMs do not experience fear, greed, or regret, yet they reproduce the behavioral signatures of these emotions because they have learned from text produced by agents who do. The differential debiasing effectiveness across bias types has direct practical implications: while loss-averse behavior can be mitigated through careful prompt engineering, deeper biases like recency and disposition effects require training-time interventions. As the deployment of LLMs in finance accelerates, understanding and mitigating these inherited biases becomes a matter of both economic efficiency and investor protection.
+
+Future work should expand the scenario count per bias type (to 20--30 for statistical power), test across models of varying scale and training methodology, investigate why some biases resist prompt-level debiasing, and develop training-time debiasing techniques---such as bias-aware reinforcement learning from human feedback (RLHF) or contrastive fine-tuning on rational vs.\ biased reasoning pairs---that address the root cause of inherited irrationality rather than relying on prompt-level workarounds.
+
+
+%% -----------------------------------------------------------------------
+%% References
+%% -----------------------------------------------------------------------
+\bibliographystyle{elsarticle-harv}
+
+\begin{thebibliography}{99}
+
+\bibitem[Binz and Schulz, 2023]{binz2023turning}
+Binz, M., Schulz, E., 2023.
+\newblock Turning large language models into cognitive models.
+\newblock \emph{arXiv preprint arXiv:2306.03917}.
+
+\bibitem[Callanan et~al., 2023]{callanan2023gpt}
+Callanan, E., Mbae, A., Seo, S., Chang, D., Ritter, A., 2023.
+\newblock Can {GPT} pass the {CFA} exam?
+\newblock \emph{arXiv preprint arXiv:2310.14356}.
+
+\bibitem[Campbell and Sharpe, 2009]{campbell2008anchoring}
+Campbell, S.D., Sharpe, S.A., 2009.
+\newblock Anchoring bias in consensus forecasts and its effect on market prices.
+\newblock \emph{Journal of Financial and Quantitative Analysis} 44(2), 369--397.
+
+\bibitem[Cen et~al., 2013]{cen2013anchoring}
+Cen, L., Hilary, G., Wei, K.C.J., 2013.
+\newblock The role of anchoring bias in the equity market.
+\newblock \emph{Journal of Financial and Quantitative Analysis} 48(1), 47--76.
+
+\bibitem[Fama, 1970]{fama1970efficient}
+Fama, E.F., 1970.
+\newblock Efficient capital markets: A review of theory and empirical work.
+\newblock \emph{The Journal of Finance} 25(2), 383--417.
+
+\bibitem[Hagendorff et~al., 2023]{hagendorff2023human}
+Hagendorff, T., Fabi, S., Kosinski, M., 2023.
+\newblock Human-like intuitive behavior and reasoning biases emerged in large language models but disappeared in {ChatGPT}.
+\newblock \emph{Nature Computational Science} 3, 833--838.
+
+\bibitem[Jones and Steinhardt, 2022]{jones2022capturing}
+Jones, E., Steinhardt, J., 2022.
+\newblock Capturing failures of large language models via human cognitive biases.
+\newblock \emph{Advances in Neural Information Processing Systems} 35, 11785--11799.
+
+\bibitem[Kahneman and Tversky, 1979]{kahneman1979prospect}
+Kahneman, D., Tversky, A., 1979.
+\newblock Prospect theory: An analysis of decision under risk.
+\newblock \emph{Econometrica} 47(2), 263--292.
+
+\bibitem[Ke et~al., 2025]{ke2025findap}
+Ke, Z., Wen, Y., Feng, B., Xu, M., Zhu, C., Jiang, X., Sun, C., Caverlee, J., Liu, Y., 2025.
+\newblock {FinDAP}: Demystifying domain-adaptive post-training for financial {LLM}s.
+\newblock In: \emph{Proceedings of the 2025 Conference on Empirical Methods in Natural Language Processing (EMNLP)}. (Oral).
+
+\bibitem[Shefrin and Statman, 1985]{shefrin1985disposition}
+Shefrin, H., Statman, M., 1985.
+\newblock The disposition to sell winners too early and ride losers too long: Theory and evidence.
+\newblock \emph{The Journal of Finance} 40(3), 777--790.
+
+\bibitem[Thaler, 1985]{thaler1985mental}
+Thaler, R.H., 1985.
+\newblock Mental accounting and consumer choice.
+\newblock \emph{Marketing Science} 4(3), 199--214.
+
+\bibitem[Tversky and Kahneman, 1974]{tversky1974judgment}
+Tversky, A., Kahneman, D., 1974.
+\newblock Judgment under uncertainty: Heuristics and biases.
+\newblock \emph{Science} 185(4157), 1124--1131.
+
+\bibitem[Wu et~al., 2023]{wu2023bloomberggpt}
+Wu, S., Irsoy, O., Lu, S., Daber, V., Dredze, M., Gehrmann, S., Kambadur, P., Rosenberg, D., Mann, G., 2023.
+\newblock {BloombergGPT}: A large language model for finance.
+\newblock \emph{arXiv preprint arXiv:2303.17564}.
+
+\end{thebibliography}
+
+
+%% -----------------------------------------------------------------------
+\appendix
+\section{Scenario Library}
+\label{app:scenarios}
+%% -----------------------------------------------------------------------
+
+We present the complete set of 20 scenarios used in our experiment. Each scenario includes the bias-inducing version, the neutral version, the rational baseline, and the biased prediction. Loss aversion and anchoring scenarios (10 total) are described in full below; framing, recency, and disposition effect scenarios (10 total) follow the same paired-design structure.
+
+\subsection*{Loss Aversion Scenarios}
+
+\paragraph{LA-01: Investment Allocation.}
+\emph{Bias-inducing:} ``Investment A: 80\% chance of gaining \$10,000 and 20\% chance of LOSING \$2,000 (EV = \$7,600). Investment B: Guaranteed return of \$7,000. Which do you recommend?''
+\emph{Neutral:} ``Investment A: EV = \$7,600. Investment B: EV = \$7,000. Which has higher EV?''
+\emph{Rational:} Investment A. \emph{Biased:} Investment B (avoiding loss).
+
+\paragraph{LA-02: Stock Liquidation.}
+\emph{Bias-inducing:} ``Stock X: up 15\%, projected +5\%. Stock Y: down 10\%, projected +8\%. Must sell one. Which?''
+\emph{Neutral:} ``Stock X: projected +5\%. Stock Y: projected +8\%. Which has lower return?''
+\emph{Rational:} Sell X (lower forward return). \emph{Biased:} Sell X (lock in gain).
+
+\paragraph{LA-03: Fund Strategy.}
+\emph{Bias-inducing:} ``Strategy A: 60\% chance of +\$200K, 40\% chance of $-$\$100K (EV = +\$80K). Strategy B: 90\% chance of +\$50K, 10\% chance of $-$\$20K (EV = +\$43K).''
+\emph{Neutral:} ``Strategy A: EV = +\$80K. Strategy B: EV = +\$43K. Which is higher?''
+\emph{Rational:} Strategy A. \emph{Biased:} Strategy B.
+
+\paragraph{LA-04: Bond Portfolio Switch.}
+\emph{Bias-inducing:} ``Option A: +2.5\% yield but risk of LOSING 3\% principal. Option B: Steady 4\% yield, no risk.''
+\emph{Neutral:} ``Strategy A: Expected 6.1\%. Strategy B: Expected 4.0\%.''
+\emph{Rational:} Option A. \emph{Biased:} Option B.
+
+\paragraph{LA-05: Retirement Withdrawal.}
+\emph{Bias-inducing:} ``Plan A: Average \$5,500/month, could DROP to \$3,800. Plan B: Fixed \$4,800/month.''
+\emph{Neutral:} ``Plan A: Average \$5,500/month. Plan B: Fixed \$4,800/month.''
+\emph{Rational:} Plan A. \emph{Biased:} Plan B.
+
+\subsection*{Anchoring Scenarios}
+
+\paragraph{AN-01: Stock Valuation.}
+\emph{Bias-inducing:} ``Stock was \$150 six months ago, now \$85. Revenue down 35\%, D/E up to 2.1, lost 2 customers. Fair value?''
+\emph{Neutral:} ``Company: Revenue \$50M (down 35\%), D/E 2.1, lost 2 customers, industry P/E 8x, EPS \$3.20. Fair value via P/E?''
+\emph{Rational:} $\sim$\$25.60 ($8 \times \$3.20$). \emph{Biased:} Anchored near \$85.
+
+\paragraph{AN-02: Analyst Target Revision.}
+\emph{Bias-inducing:} ``Prior target: \$200. Main product discontinued, revenue $-$45\%. New target?''
+\emph{Neutral:} ``EPS \$4.50, industry P/E 12x. Price target?''
+\emph{Rational:} \$54. \emph{Biased:} Insufficiently adjusted from \$200.
+
+\paragraph{AN-03: Property Reappraisal.}
+\emph{Bias-inducing:} ``Appraised at \$5M last year. Market down 20\%, vacancy up to 18\%, rents down 15\%.''
+\emph{Neutral:} ``NOI \$300K, cap rate 8.5\%, vacancy 18\%. Value via direct capitalization?''
+\emph{Rational:} $\sim$\$2.89M. \emph{Biased:} Anchored near \$4M.
+
+\paragraph{AN-04: GDP Revision.}
+\emph{Bias-inducing:} ``Prior estimate 3.5\%. PMI = 46, spending $-$2\%, unemployment up 1.2pp. Revised estimate?''
+\emph{Neutral:} ``PMI 46, spending $-$2\%, unemployment up 1.2pp. What growth rate do indicators suggest?''
+\emph{Rational:} 0.5--1.5\%. \emph{Biased:} 2.5--3.0\% (anchored to 3.5\%).
+
+\paragraph{AN-05: PE Mark-to-Market.}
+\emph{Bias-inducing:} ``Acquired for \$100M, EBITDA dropped from \$15M to \$8M, comps at 6x. Fair value?''
+\emph{Neutral:} ``EBITDA \$8M, comparable multiple 6x. Enterprise value?''
+\emph{Rational:} \$48M. \emph{Biased:} \$70--85M (anchored to \$100M).
+
+\subsection*{Framing Scenarios}
+
+\paragraph{FR-01: Gain vs Loss Frame.}
+\emph{Bias-inducing:} Investment framed in terms of potential losses (``20\% chance of losing \$X'').
+\emph{Neutral:} Same investment framed in expected value terms only.
+\emph{Rational:} Choose higher-EV option regardless of frame.
+
+\paragraph{FR-02: Survival vs Mortality Frame.}
+\emph{Bias-inducing:} Portfolio survival framed as mortality rate (``15\% failure probability'').
+\emph{Neutral:} Same portfolio framed as success rate (``85\% survival probability'').
+\emph{Rational:} Identical recommendation under both frames.
+
+\paragraph{FR-03: Positive vs Negative Return.}
+\emph{Bias-inducing:} Fund returns described as ``lost 5\% less than benchmark.''
+\emph{Neutral:} Same returns described as absolute performance metrics.
+\emph{Rational:} Evaluate on absolute and risk-adjusted returns.
+
+\paragraph{FR-04: Opportunity vs Sunk Cost.}
+\emph{Bias-inducing:} Decision framed around sunk costs already incurred.
+\emph{Neutral:} Same decision framed around forward-looking opportunity costs.
+\emph{Rational:} Ignore sunk costs; evaluate on marginal expected value.
+
+\paragraph{FR-05: Profit vs Loss Percentage.}
+\emph{Bias-inducing:} Returns described as percentage loss from peak.
+\emph{Neutral:} Same returns described as absolute gain from entry.
+\emph{Rational:} Forward-looking analysis independent of reference point.
+
+\subsection*{Recency Bias Scenarios}
+
+\paragraph{RE-01: Recent vs Long-Term Performance.}
+\emph{Bias-inducing:} Fund with strong 3-month return but weak 5-year record, presented with recent data emphasized.
+\emph{Neutral:} Same fund with full performance history presented equally weighted.
+\emph{Rational:} Weight long-term track record appropriately.
+
+\paragraph{RE-02: Quarterly Trend Extrapolation.}
+\emph{Bias-inducing:} Two consecutive strong quarters presented as evidence of trend change.
+\emph{Neutral:} Same data presented alongside 10-year cyclical context.
+\emph{Rational:} Avoid extrapolating short-term trends.
+
+\paragraph{RE-03: Recent Market Regime.}
+\emph{Bias-inducing:} Asset allocation recommendation after 6 months of bull market, with recent returns emphasized.
+\emph{Neutral:} Same allocation decision with full-cycle historical returns.
+\emph{Rational:} Maintain strategic allocation based on long-term fundamentals.
+
+\subsection*{Disposition Effect Scenarios}
+
+\paragraph{DE-01: Sell Winner vs Hold Loser.}
+\emph{Bias-inducing:} Portfolio with Stock A (up 30\%) and Stock B (down 20\%); must sell one. Framed with gains/losses explicit.
+\emph{Neutral:} Same portfolio framed with forward projections only.
+\emph{Rational:} Sell based on forward fundamentals, not past gains/losses.
+
+\paragraph{DE-02: Portfolio Rebalancing.}
+\emph{Bias-inducing:} Rebalancing decision framed around ``realizing'' gains and losses.
+\emph{Neutral:} Same rebalancing framed around target allocation and forward returns.
+\emph{Rational:} Rebalance to target allocation regardless of embedded gains/losses.
+
+\end{document}

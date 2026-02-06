@@ -12,6 +12,9 @@ import time
 from datetime import datetime
 from pathlib import Path
 
+from dotenv import load_dotenv
+load_dotenv(Path(__file__).resolve().parent.parent.parent / ".env")
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 
 from experiments.shared.config import MODEL_REGISTRY

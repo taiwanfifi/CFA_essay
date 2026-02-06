@@ -1,5 +1,5 @@
-% Finance Research Letters Template (Elsevier)
-% D1+D4: Calibration and Overconfident Risk Analysis
+% Finance Research Letters — Elsevier Template
+% D1+D4: When AI Is Confidently Wrong
 \documentclass[preprint,12pt]{elsarticle}
 
 \usepackage{amssymb}
@@ -9,10 +9,8 @@
 \usepackage{hyperref}
 \usepackage{xcolor}
 \usepackage{multirow}
-
-% For comments during writing
-\newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
-\newcommand{\note}[1]{\textcolor{blue}{[NOTE: #1]}}
+\usepackage{threeparttable}
+\usepackage{float}
 
 \journal{Finance Research Letters}
 
@@ -38,11 +36,17 @@
             country={Taiwan}}
 
 \begin{abstract}
-Large Language Models (LLMs) are increasingly deployed in financial applications, yet their reliability in high-stakes decision-making remains understudied. We evaluate the calibration of LLMs on CFA (Chartered Financial Analyst) examination questions, focusing on the critical issue of \textit{overconfident errors}---cases where models express high confidence but provide incorrect answers. Using a dataset of 1,122 CFA questions across three difficulty levels, we find that \textbf{29.6\% of all errors are high-confidence errors} (confidence $\geq$ 80\%). These overconfident errors are not uniformly distributed: certain CFA topics (e.g., Derivatives, Fixed Income) exhibit significantly higher rates. We connect these findings to CFA Ethics Standards, arguing that overconfident AI may violate fiduciary duty requirements. Our results suggest that financial AI systems require minimum calibration standards before deployment, with implications for regulatory frameworks such as the EU AI Act.
+Large Language Models (LLMs) are increasingly deployed in financial applications, yet their reliability in high-stakes decision-making remains understudied.
+We evaluate the confidence calibration of LLMs on 257 CFA (Chartered Financial Analyst) examination questions using two models (GPT-4o-mini, Qwen3-32B) and two confidence estimation methods (verbalized, self-consistency).
+We find pervasive overconfidence: the average expressed confidence exceeds actual accuracy by 22--32 percentage points ($t = 9.70$, $p < 0.0001$).
+Critically, \textbf{30.0\% of all responses are high-confidence errors} (confidence $\geq 80\%$), and among incorrect answers, 66.4\% are delivered with high confidence.
+These overconfident errors are not uniformly distributed: Ethics \& Standards questions exhibit a 43.5\% overconfident error rate, compared to 22.2\% for Derivatives ($\chi^2 = 12.37$, $p = 0.030$).
+We introduce Confidence-at-Risk (CaR), adapting Value-at-Risk methodology to AI confidence assessment, and connect our findings to CFA Institute Ethics Standards, arguing that deployment of miscalibrated AI may violate fiduciary duty requirements.
+Our results suggest that financial regulators should establish minimum calibration standards---specifically, Expected Calibration Error (ECE) below 0.15---before permitting AI deployment in advisory roles.
 \end{abstract}
 
 \begin{keyword}
-Large Language Models \sep Calibration \sep Financial AI \sep Risk Management \sep CFA Examination
+Large Language Models \sep Calibration \sep Financial AI \sep Risk Management \sep CFA Examination \sep Overconfidence
 \end{keyword}
 
 \end{frontmatter}
@@ -53,17 +57,18 @@ Large Language Models \sep Calibration \sep Financial AI \sep Risk Management \s
 \section{Introduction}
 \label{sec:intro}
 
-The deployment of Large Language Models (LLMs) in financial services has accelerated rapidly, with applications ranging from automated financial advice to risk assessment and compliance review \citep{wu2023bloomberggpt}. However, a critical question remains underexplored: \textit{do these models know what they don't know?}
+The deployment of Large Language Models (LLMs) in financial services has accelerated rapidly, with applications spanning automated financial advice, risk assessment, equity research, and regulatory compliance \citep{wu2023bloomberggpt, ke2025findap}. A growing body of work evaluates LLM \textit{accuracy} on financial benchmarks---whether models can pass the CFA exam, correctly price derivatives, or interpret financial statements. However, accuracy alone is a poor guide to deployment safety.
 
-In financial decision-making, the consequences of incorrect predictions are amplified when the model expresses unwarranted confidence. A financial advisor who says ``I'm 95\% certain this bond has a duration of 4.2 years'' but is wrong poses a far greater risk than one who acknowledges uncertainty. This phenomenon---\textit{overconfident error}---represents the most dangerous failure mode for AI systems in finance.
+Consider two AI systems: Model A achieves 70\% accuracy with well-calibrated confidence (it says ``85\% confident'' when it is correct 85\% of the time), while Model B achieves 75\% accuracy but systematically overstates confidence. Model B is more dangerous despite being more accurate, because its confidence signal cannot be trusted to identify errors. A financial advisor who says ``I'm 95\% certain this bond has a duration of 4.2 years'' but is wrong poses a far greater risk than one who acknowledges uncertainty. This phenomenon---\textit{overconfident error}---represents the most dangerous failure mode for AI systems in finance.
 
-\todo{Add statistics on AI adoption in finance}
+Yet confidence calibration of LLMs in financial contexts remains largely unexplored. Prior calibration studies focus on general knowledge \citep{kadavath2022language}, medical diagnosis \citep{nori2023capabilities}, or scientific reasoning \citep{lin2022teaching}, leaving a critical gap in understanding how LLMs behave in domains where miscalibrated confidence carries direct monetary consequences.
 
-This paper makes three contributions:
+This paper makes four contributions:
 \begin{enumerate}
-    \item We systematically evaluate the calibration of LLMs on CFA examination questions, a standardized benchmark for financial professional competency.
-    \item We identify and categorize \textit{overconfident errors}, finding that 29.6\% of all errors occur with confidence $\geq$ 80\%.
-    \item We connect these findings to the CFA Institute's Code of Ethics, arguing that deployment of poorly-calibrated AI may violate fiduciary duty standards.
+    \item We systematically evaluate LLM calibration on CFA examination questions---a standardized benchmark for financial professional competency---using 257 observations across two models and two confidence estimation methods.
+    \item We identify and quantify \textit{overconfident errors}, finding that 30.0\% of all responses are high-confidence errors (confidence $\geq 80\%$), significantly exceeding a 20\% baseline ($z = 3.99$, $p < 0.0001$).
+    \item We introduce \textit{Confidence-at-Risk} (CaR), adapting Value-at-Risk methodology to quantify the reliability of AI confidence signals for risk management.
+    \item We connect calibration findings to the CFA Institute's Code of Ethics, arguing that poorly-calibrated AI deployment may violate fiduciary duty standards, and propose minimum calibration thresholds for financial AI regulation.
 \end{enumerate}
 
 %% ============================================
@@ -74,15 +79,15 @@ This paper makes three contributions:
 
 \subsection{LLM Calibration}
 
-Calibration refers to the alignment between a model's expressed confidence and its actual accuracy \citep{guo2017calibration}. A well-calibrated model that claims 80\% confidence should be correct approximately 80\% of the time. Recent work has shown that LLMs exhibit poor calibration, particularly in specialized domains \citep{kadavath2022language}.
-
-\todo{Add 3-4 more calibration papers}
+Calibration refers to the alignment between a model's expressed confidence and its actual accuracy \citep{guo2017calibration}. A well-calibrated model expressing 80\% confidence should be correct approximately 80\% of the time. \citet{kadavath2022language} demonstrate that large language models ``mostly know what they know,'' but this self-knowledge degrades on out-of-distribution tasks. \citet{lin2022teaching} show that models can be prompted to verbalize uncertainty, though the resulting confidence estimates often exhibit systematic biases. \citet{xiong2024llms} survey confidence estimation methods for LLMs, identifying verbalized confidence, consistency-based, and logit-based approaches as the three primary paradigms.
 
 \subsection{AI in Financial Applications}
 
-The application of LLMs to finance has grown substantially, with domain-specific models such as BloombergGPT \citep{wu2023bloomberggpt} and FinDAP \citep{ke2025findap} demonstrating strong performance on financial benchmarks.
+Domain-specific financial LLMs have emerged rapidly. BloombergGPT \citep{wu2023bloomberggpt} demonstrated competitive performance on financial NLP tasks. \citet{ke2025findap} introduced FinDAP, a three-stage training pipeline that adapts Llama-3 to finance via continual pre-training, supervised fine-tuning, and preference alignment, achieving state-of-the-art results on CFA examination benchmarks. \citet{callanan2023gpt} evaluated GPT-4 on CFA Level I, finding pass-rate performance but without examining confidence calibration.
 
-\todo{Add FinDAP citation and other finance LLM papers}
+\subsection{Risk and Trust in AI-Assisted Financial Decision-Making}
+
+The literature on trust in algorithmic advice reveals a paradox: users both over-rely on and under-rely on algorithmic recommendations depending on context \citep{dietvorst2015algorithm}. \citet{green2019principles} argue that AI transparency alone is insufficient---what matters is whether users can accurately assess when AI is reliable. Our work contributes to this debate by showing that LLM confidence signals, which serve as the primary transparency mechanism, are themselves unreliable in financial domains.
 
 %% ============================================
 %% 3. METHODOLOGY
@@ -90,192 +95,357 @@ The application of LLMs to finance has grown substantially, with domain-specific
 \section{Methodology}
 \label{sec:method}
 
-\subsection{Confidence Estimation}
+\subsection{Confidence Estimation Methods}
 
-We employ \textit{verbalized confidence estimation}, where models are prompted to express their confidence as a percentage alongside their answer. This approach has been shown to correlate with actual model uncertainty \citep{lin2022teaching}.
+We employ two complementary confidence estimation approaches:
 
-\textbf{Prompt Template:}
+\textbf{Verbalized Confidence.} Following \citet{lin2022teaching}, we prompt models to express confidence as a percentage alongside their answer:
 \begin{quote}
-\textit{``Answer the following CFA question. After your answer, state your confidence level as a percentage (0-100\%).''}
+\textit{``Answer the following CFA question. After your answer, state your confidence level as a percentage (0--100\%). Be honest about your confidence---if you are uncertain, say so with a lower percentage.''}
 \end{quote}
+
+\textbf{Self-Consistency.} Following \citet{wang2023selfconsistency}, we sample $k = 10$ responses at temperature $\tau = 0.7$ for each question. Confidence is defined as the agreement ratio: $c = n_{\text{majority}} / k$, where $n_{\text{majority}}$ is the count of the most frequent answer.
 
 \subsection{Calibration Metrics}
 
-We use Expected Calibration Error (ECE) as our primary metric:
-
+Our primary metric is the \textit{Expected Calibration Error} (ECE) \citep{guo2017calibration}:
 \begin{equation}
-    ECE = \sum_{m=1}^{M} \frac{|B_m|}{n} |acc(B_m) - conf(B_m)|
+    \text{ECE} = \sum_{m=1}^{M} \frac{|B_m|}{n} \left| \text{acc}(B_m) - \text{conf}(B_m) \right|
+    \label{eq:ece}
 \end{equation}
+where $B_m$ denotes the set of predictions in confidence bin $m$, $\text{acc}(B_m)$ is the accuracy within that bin, and $\text{conf}(B_m)$ is the average confidence. We use $M = 10$ equal-width bins.
 
-where $B_m$ denotes the set of predictions in confidence bin $m$, $acc(B_m)$ is the accuracy within that bin, and $conf(B_m)$ is the average confidence.
+We also report the \textit{Brier Score} $= \frac{1}{n}\sum_{i=1}^{n}(c_i - y_i)^2$, where $c_i$ is the expressed confidence and $y_i \in \{0, 1\}$ is the correctness indicator; AUROC measuring whether confidence scores can discriminate correct from incorrect answers; and the \textit{Overconfidence Gap} $= \overline{c} - \overline{y}$, which is positive when the model is systematically overconfident.
 
 \subsection{Overconfident Error Identification}
 
-We define \textit{overconfident errors} as cases where:
+We define \textit{overconfident errors} as cases satisfying:
 \begin{equation}
-    \text{Overconfident Error} = \mathbf{1}[\text{confidence} \geq 0.8 \land \text{answer incorrect}]
+    \text{Overconfident Error} = \mathbf{1}\left[\text{confidence} \geq \theta \;\land\; \text{answer incorrect}\right]
+    \label{eq:overconf}
 \end{equation}
+with threshold $\theta = 0.80$. This threshold is motivated by the decision-making context: a financial professional receiving a signal with $\geq 80\%$ confidence would typically act on it without extensive verification.
 
-We further classify these errors by:
-\begin{itemize}
-    \item \textbf{CFA Topic}: Ethics, Quantitative Methods, Economics, etc.
-    \item \textbf{Error Type}: Conceptual confusion, calculation error, logical flaw
-    \item \textbf{Risk Severity}: High, Medium, Low (based on financial impact)
-\end{itemize}
+\subsection{Confidence-at-Risk (CaR)}
+
+Drawing from Value-at-Risk (VaR) methodology, we introduce \textit{Confidence-at-Risk}:
+\begin{equation}
+    \text{CaR}(\alpha) = \inf\{c^* : P(\text{incorrect} \mid \text{confidence} \geq c^*) \leq \alpha\}
+    \label{eq:car}
+\end{equation}
+CaR answers the question: ``What is the minimum confidence level at which the error rate falls below $\alpha$?'' If CaR is undefined (no threshold achieves the target error rate), the model's confidence signal is fundamentally unreliable for risk-budgeting purposes.
 
 %% ============================================
-%% 4. EXPERIMENTS
+%% 4. DATA AND EXPERIMENTAL DESIGN
 %% ============================================
-\section{Experiments}
+\section{Data and Experimental Design}
 \label{sec:experiments}
 
 \subsection{Dataset}
 
-We use three CFA question datasets from FinEval \citep{ke2025findap}:
-\begin{itemize}
-    \item \textbf{CFA-Challenge}: 90 hard questions
-    \item \textbf{CFA-Easy}: 1,032 standard questions
-    \item \textbf{CRA-Bigdata}: 1,472 stock prediction questions
-\end{itemize}
+We use the CFA-Challenge dataset from FinEval \citep{ke2025findap}, comprising 90 questions drawn from CFA Level III curriculum materials (SchweserNotes). All questions are multiple-choice with three options (A, B, C), spanning the full CFA curriculum: Ethics \& Standards, Quantitative Methods, Economics, Financial Reporting, Corporate Finance, Equity, Fixed Income, Derivatives, Alternative Investments, and Portfolio Management. CFA Level III questions emphasize application and analysis, representing the most cognitively demanding tier of the CFA Program.
 
-\todo{Add table with dataset statistics}
-
-\subsection{Models}
-
-We evaluate:
-\begin{itemize}
-    \item GPT-4o-mini (OpenAI)
-    \item GPT-4o (OpenAI)
-    \item Claude 3.5 Sonnet (Anthropic)
-\end{itemize}
-
-\subsection{Results}
-
-\subsubsection{Overall Calibration}
-
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
-\caption{Calibration Metrics by Model}
-\label{tab:calibration}
+\caption{Dataset Summary}
+\label{tab:dataset}
 \begin{tabular}{lccc}
 \toprule
-\textbf{Model} & \textbf{Accuracy} & \textbf{ECE} & \textbf{Overconf. Error Rate} \\
+\textbf{Dataset} & \textbf{Questions} & \textbf{Options} & \textbf{Source} \\
 \midrule
-GPT-4o-mini & 0.XX & 0.18 & 29.6\% \\
-GPT-4o & 0.XX & 0.XX & XX\% \\
-Claude 3.5 & 0.XX & 0.XX & XX\% \\
+CFA-Challenge & 90 & 3 (A/B/C) & SchweserNotes Level III \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\todo{Fill in actual numbers from experiments}
+\subsection{Models}
 
-\subsubsection{Reliability Diagram}
+We evaluate two LLMs representing different architectures and scales:
+\begin{itemize}
+    \item \textbf{GPT-4o-mini} (OpenAI): A proprietary, cloud-hosted model optimized for efficient inference. Evaluated using both verbalized confidence ($n = 95$) and self-consistency with $k = 10$ samples ($n = 90$).
+    \item \textbf{Qwen3-32B} (Alibaba): An open-weight, 32-billion parameter model run locally via Ollama. Evaluated using verbalized confidence ($n = 72$).
+\end{itemize}
 
-\begin{figure}[h]
+The total dataset comprises 257 model--question--method observations. Both models are evaluated at temperature $\tau = 0.0$ for single-shot methods and $\tau = 0.7$ for self-consistency sampling. Answers and confidence values are extracted using a five-layer regex chain with fallback parsing.
+
+%% ============================================
+%% 5. RESULTS
+%% ============================================
+\section{Results}
+\label{sec:results}
+
+\subsection{Overall Calibration}
+
+Table~\ref{tab:calibration} presents calibration metrics across all model--method combinations. All configurations exhibit substantial overconfidence, with the overconfidence gap ranging from +22.5\% (Qwen3-32B) to +31.5\% (GPT-4o-mini verbalized).
+
+\begin{table}[htbp]
 \centering
-% \includegraphics[width=0.8\textwidth]{figures/reliability_diagram.png}
-\caption{Reliability diagram showing calibration of GPT-4o-mini on CFA questions. The diagonal represents perfect calibration. Points above the diagonal indicate overconfidence.}
+\caption{Calibration Metrics by Model and Confidence Estimation Method}
+\label{tab:calibration}
+\begin{threeparttable}
+\begin{tabular}{llccccccc}
+\toprule
+\textbf{Model} & \textbf{Method} & \textbf{N} & \textbf{Acc.} & \textbf{Avg Conf.} & \textbf{ECE} & \textbf{Brier} & \textbf{AUROC} & \textbf{OC Gap} \\
+\midrule
+GPT-4o-mini & Self-consistency & 90 & .522 & .829 & .307 & .334 & .639 & +.307 \\
+GPT-4o-mini & Verbalized & 95 & .526 & .841 & .315 & .340 & .586 & +.315 \\
+Qwen3-32B & Verbalized & 72 & .611 & .836 & .247 & .226 & .787 & +.225 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item ECE = Expected Calibration Error; Brier = Brier Score; AUROC = Area Under ROC Curve; OC Gap = Overconfidence Gap (Avg Confidence $-$ Accuracy).
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+A one-sample $t$-test on the per-observation overconfidence gap (confidence minus correctness indicator) yields $t = 9.70$ ($p < 0.0001$), confirming that LLM overconfidence on CFA questions is highly statistically significant (H1).
+
+Figure~\ref{fig:reliability} presents reliability diagrams. All models exhibit a consistent pattern: the calibration curve lies well below the diagonal (perfect calibration), indicating that models are more confident than they are accurate across virtually all confidence levels.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{figures/fig1_reliability_diagrams.pdf}
+\caption{Reliability diagrams for three model--method configurations on CFA-Challenge questions. The dashed diagonal represents perfect calibration. Red-shaded regions indicate overconfidence: the gap between expressed confidence and actual accuracy. All configurations exhibit systematic overconfidence, particularly in the 0.8--1.0 confidence range where most predictions concentrate.}
 \label{fig:reliability}
 \end{figure}
 
-\todo{Generate and insert actual figure}
+Qwen3-32B achieves the best calibration (ECE = 0.247) and highest discriminative ability (AUROC = 0.787), while GPT-4o-mini shows the worst calibration regardless of estimation method. Self-consistency marginally improves ECE over verbalized confidence for GPT-4o-mini (0.307 vs.\ 0.315), but substantially improves AUROC (0.639 vs.\ 0.586), suggesting it provides more discriminative confidence estimates.
 
-\subsubsection{Overconfident Error Distribution by Topic}
+Figure~\ref{fig:overconf_gap} visualizes the overconfidence gap across all configurations. In every case, expressed confidence substantially exceeds actual accuracy, confirming that overconfidence is a pervasive, not idiosyncratic, phenomenon.
 
-\begin{table}[h]
+\begin{figure}[htbp]
 \centering
-\caption{High-Confidence Error Rate by CFA Topic}
-\label{tab:topic}
-\begin{tabular}{lcc}
+\includegraphics[width=0.85\textwidth]{figures/fig4_overconfidence_gap.pdf}
+\caption{Overconfidence gap across models and methods. Blue bars represent actual accuracy; red bars represent average expressed confidence. The gap between them---ranging from +22.5\% to +31.5\%---quantifies the degree of systematic overconfidence.}
+\label{fig:overconf_gap}
+\end{figure}
+
+\subsection{Overconfident Error Analysis}
+
+Table~\ref{tab:overconf} details the overconfident error profile. Across all 257 observations, 77 are overconfident errors (30.0\%), significantly exceeding a 20\% baseline (binomial test, $z = 3.99$, $p < 0.0001$; H3). Among the 116 incorrect answers, 66.4\% are delivered with confidence $\geq 80\%$ ($z = 3.53$, $p = 0.0002$), meaning that \textit{most errors are high-confidence errors}. The average confidence of overconfident errors is 89.0\%.
+
+\begin{table}[htbp]
+\centering
+\caption{Overconfident Error Analysis (Confidence $\geq$ 80\%)}
+\label{tab:overconf}
+\begin{tabular}{lcccc}
 \toprule
-\textbf{CFA Topic} & \textbf{Error Rate} & \textbf{Overconf. Error Rate} \\
+\textbf{Model / Method} & \textbf{Total} & \textbf{Errors} & \textbf{OC Errors} & \textbf{OC Rate} \\
 \midrule
-Ethics & XX\% & XX\% \\
-Derivatives & XX\% & XX\% \\
-Fixed Income & XX\% & XX\% \\
-\todo{Add more topics} & & \\
+GPT-4o-mini / Self-consistency & 90 & 43 & 25 & 27.8\% \\
+GPT-4o-mini / Verbalized & 95 & 45 & 38 & 40.0\% \\
+Qwen3-32B / Verbalized & 72 & 28 & 14 & 19.4\% \\
+\midrule
+\textbf{Overall} & \textbf{257} & \textbf{116} & \textbf{77} & \textbf{30.0\%} \\
 \bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Topic-Level Miscalibration}
+
+Table~\ref{tab:topic} reveals significant variation in overconfident error rates across CFA knowledge domains ($\chi^2 = 12.37$, $p = 0.030$; H4).
+
+\begin{table}[htbp]
+\centering
+\caption{Calibration Metrics by CFA Topic (Topics with $N \geq 10$)}
+\label{tab:topic}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{CFA Topic} & \textbf{N} & \textbf{Acc.} & \textbf{ECE} & \textbf{OC Errors} & \textbf{OC Rate} \\
+\midrule
+Ethics \& Standards & 46 & .478 & .360 & 20 & 43.5\% \\
+Portfolio Management & 14 & .500 & .357 & 6 & 42.9\% \\
+Economics & 10 & .600 & .340 & 4 & 40.0\% \\
+Fixed Income & 20 & .650 & .223 & 6 & 30.0\% \\
+Derivatives & 27 & .593 & .291 & 6 & 22.2\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Ethics \& Standards---the CFA curriculum's foundational domain---exhibits the highest overconfident error rate (43.5\%) and lowest accuracy (47.8\%). This is particularly concerning: ethics questions require nuanced professional judgment, exactly the domain where overconfident AI poses the greatest fiduciary risk. Derivatives, despite involving complex quantitative reasoning, shows a lower overconfident error rate (22.2\%), suggesting that models may be better calibrated on computation-heavy topics where confidence can be partially grounded in mathematical consistency.
+
+\subsection{Coverage-Accuracy Tradeoff}
+
+Figure~\ref{fig:coverage} presents the selective prediction analysis. If a financial institution restricts AI to answer only questions where confidence exceeds a threshold, what accuracy can be achieved?
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig3_coverage_accuracy.pdf}
+\caption{Coverage-accuracy tradeoff under selective prediction. As the confidence threshold increases (moving right to left), fewer questions are answered (lower coverage) but with higher accuracy. The horizontal dashed line marks the CFA passing threshold (70\%). Qwen3-32B reaches 81.3\% accuracy at 69\% coverage, while GPT-4o-mini cannot reach 70\% accuracy at any coverage level.}
+\label{fig:coverage}
+\end{figure}
+
+For Qwen3-32B, restricting to predictions with confidence $\geq 90\%$ yields 81.3\% accuracy at 69\% coverage---exceeding the CFA passing threshold. However, GPT-4o-mini cannot achieve 70\% accuracy at \textit{any} confidence threshold, reaching only 67.6\% even when restricted to its highest-confidence predictions (41\% coverage). This demonstrates that selective prediction viability is highly model-dependent.
+
+\subsection{Confidence-at-Risk}
+
+Applying our CaR framework to the data: for GPT-4o-mini, CaR(5\%) is \textit{undefined}---no confidence threshold achieves a 5\% error rate. Even at maximum confidence (self-consistency = 1.0), the error rate remains 41.7\%. For Qwen3-32B, the error rate at confidence $\geq 95\%$ is 19.6\%, still far exceeding a 5\% risk tolerance. These results demonstrate that current LLM confidence signals are fundamentally inadequate for financial risk management purposes.
+
+\subsection{Statistical Summary}
+
+Table~\ref{tab:hypotheses} summarizes all hypothesis tests:
+
+\begin{table}[htbp]
+\centering
+\caption{Statistical Tests for Research Hypotheses}
+\label{tab:hypotheses}
+\begin{tabular}{p{3cm}p{5.5cm}lc}
+\toprule
+\textbf{Hypothesis} & \textbf{Test} & \textbf{Statistic} & \textbf{$p$-value} \\
+\midrule
+H1: Systematic overconfidence & One-sample $t$-test on confidence gap & $t = 9.70$ & $< 0.0001$*** \\
+H3: Overconf.\ error $> 20\%$ & Binomial test, $\hat{p} = 0.300$ & $z = 3.99$ & $< 0.0001$*** \\
+H3b: Majority of errors are overconf. & Binomial test, $\hat{p} = 0.664$ & $z = 3.53$ & 0.0002*** \\
+H4: Topic-dependent miscalib. & Chi-squared independence test & $\chi^2 = 12.37$ & 0.030* \\
+\bottomrule
+\multicolumn{4}{l}{\small $^{***}p<0.001$; $^{*}p<0.05$}
 \end{tabular}
 \end{table}
 
 %% ============================================
-%% 5. DISCUSSION
+%% 6. DISCUSSION
 %% ============================================
 \section{Discussion}
 \label{sec:discussion}
 
 \subsection{Economic Significance}
 
-The finding that 29.6\% of errors are high-confidence errors has significant economic implications. In portfolio management, an overconfident duration estimate could lead to:
-
+The finding that 30\% of AI responses are high-confidence errors has concrete economic implications. In portfolio management, an overconfident duration estimate can directly impact portfolio value:
 \begin{equation}
-    \Delta V \approx -D \cdot \Delta y \cdot V
+    \Delta V \approx -D_{\text{error}} \times \Delta y \times V
 \end{equation}
+If an AI system reports ``duration = 4.2 years, confidence = 95\%'' but the true duration is 6.8 years, a 100-basis-point rate shock on a \$10 million portfolio position creates an unexpected loss of approximately \$260,000---a 2.6\% portfolio-level loss that was ``invisible'' to the risk model.
 
-where a miscalculated duration $D$ directly impacts portfolio value $V$ under interest rate changes $\Delta y$.
+More broadly, our Confidence-at-Risk analysis reveals that no confidence threshold can reduce the error rate below 19.6\% for the best model (Qwen3-32B) and 41.7\% for GPT-4o-mini. In traditional risk management, a VaR model with 41.7\% exceedance rate would be immediately rejected. Our CaR metric formalizes this analogy, providing risk managers with a framework to evaluate AI confidence signals using the same rigor applied to financial risk models.
 
-\todo{Add specific VaR calculation example}
+The overconfidence gap of 22--32 percentage points has implications for information economics. In rational expectations models, information value is proportional to signal precision $\tau = 1/\sigma^2$. A well-calibrated model with ECE = 0.05 provides signal precision $\tau \approx 400$, while our observed ECE values of 0.25--0.32 yield $\tau \approx 10$--16---\textit{40 times less informative} than what users implicitly assume when acting on ``85\% confident'' recommendations.
 
 \subsection{CFA Ethics Framework}
 
-We map our findings to CFA Institute Standards of Professional Conduct:
+We map overconfident errors to three CFA Institute Standards of Professional Conduct:
 
+\textbf{Standard I(C) --- Misrepresentation.} The CFA Standards prohibit misstatement of performance or analysis. An AI system that expresses 89\% average confidence on answers that are wrong 30\% of the time systematically misrepresents its analytical reliability. Whether this constitutes misrepresentation depends on whether the firm presents the AI's confidence as a calibrated probability---if so, our evidence suggests such presentation is materially misleading.
+
+\textbf{Standard V(A) --- Diligence and Reasonable Basis.} CFA charterholders must have a ``reasonable and adequate basis'' for investment recommendations. When an AI system expresses high confidence, the natural human response is reduced verification effort. Our finding that 66.4\% of errors are high-confidence errors means that relying on AI confidence signals as a proxy for verification fails the ``reasonable basis'' standard---the very cases where verification is most needed are the ones where the AI most discourages it.
+
+\textbf{Standard III(C) --- Suitability.} Our topic-level analysis reveals that Ethics \& Standards questions---which directly test professional judgment---exhibit the highest overconfident error rate (43.5\%). An AI system confidently recommending actions that violate fiduciary standards undermines the suitability requirement.
+
+\subsection{Regulatory Implications and Policy Recommendations}
+
+Our findings have direct implications for emerging AI financial regulation:
+
+\begin{table}[htbp]
+\centering
+\caption{Mapping Findings to Regulatory Frameworks}
+\label{tab:regulatory}
+\begin{tabular}{p{3cm}p{4.5cm}p{4.5cm}}
+\toprule
+\textbf{Framework} & \textbf{Relevant Provision} & \textbf{Our Finding} \\
+\midrule
+EU AI Act (2024) & High-risk AI in financial services requires accuracy assessment & ECE $>$ 0.30 fails accuracy transparency \\
+SEC AI Guidance & AI-driven recommendations need ``reasonable basis'' & 30\% OC error rate undermines this standard \\
+MAS FEAT Principles & AI must be fair, ethical, accountable, transparent & Miscalibrated confidence violates transparency \\
+CFA Institute & AI should augment, not replace, judgment & Overconfident AI suppresses professional skepticism \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+We propose a tiered minimum calibration standard for financial AI deployment:
 \begin{itemize}
-    \item \textbf{Standard I(C) Misrepresentation}: Does an AI system that expresses high confidence in incorrect answers constitute misrepresentation?
-    \item \textbf{Standard V(A) Diligence and Reasonable Basis}: Can reliance on poorly-calibrated AI satisfy due diligence requirements?
-    \item \textbf{Standard III(C) Suitability}: May overconfident AI recommend unsuitable products?
+    \item \textbf{Tier 1 (Advisory/Execution)}: ECE $< 0.15$, overconfident error rate $< 15\%$
+    \item \textbf{Tier 2 (Screening/Research)}: ECE $< 0.25$, overconfident error rate $< 25\%$
+    \item \textbf{Tier 3 (Internal tool)}: ECE $< 0.35$ with mandatory confidence disclaimers
 \end{itemize}
 
-\subsection{Regulatory Implications}
+Under this framework, none of the models tested would qualify for Tier 1 or Tier 2 deployment. Qwen3-32B (ECE = 0.247) would marginally qualify for Tier 2, while GPT-4o-mini (ECE $> 0.30$) would be restricted to Tier 3.
 
-The EU AI Act classifies AI systems in finance as ``high-risk,'' requiring transparency and human oversight. Our findings suggest that \textit{minimum calibration standards} should be a prerequisite for financial AI deployment.
+\subsection{Limitations}
 
-\textbf{Recommendation}: Financial AI systems should achieve ECE $< 0.10$ before deployment in advisory roles.
+Several limitations should be acknowledged. First, our dataset comprises 90 unique CFA questions, yielding 257 observations across model--method combinations. While sufficient for the statistical tests presented, larger-scale validation across the full CFA-Easy corpus (1,032 questions) and multiple additional models would strengthen generalizability. Second, topic classification is based on keyword matching from question text, which may introduce noise. Third, our CFA question benchmark, while standardized, may not fully represent the range of financial reasoning tasks encountered in practice. Fourth, verbalized confidence may be susceptible to prompt sensitivity; we use a single prompt template and acknowledge that alternative prompts could yield different calibration profiles.
 
 %% ============================================
-%% 6. CONCLUSION
+%% 7. CONCLUSION
 %% ============================================
 \section{Conclusion}
 \label{sec:conclusion}
 
-This paper demonstrates that LLMs exhibit significant calibration failures on financial reasoning tasks, with nearly 30\% of errors occurring at high confidence levels. These ``confidently wrong'' predictions represent the most dangerous failure mode for AI in finance.
+This paper demonstrates that Large Language Models exhibit significant calibration failures on financial reasoning tasks. Our key finding is stark: 30\% of all AI responses to CFA questions are high-confidence errors---cases where the model is confident but wrong. Among all incorrect answers, two-thirds are delivered with high confidence, meaning that \textit{the error signal is largely invisible} to users who rely on expressed confidence.
 
-Our analysis connects technical calibration metrics to the CFA Institute's ethical framework, arguing that poorly-calibrated AI may violate fiduciary duty standards. We recommend that regulators establish minimum calibration requirements for financial AI systems.
+We introduce Confidence-at-Risk (CaR), adapting Value-at-Risk methodology to evaluate the reliability of AI confidence signals. Applying CaR reveals that no confidence threshold can reduce the error rate to acceptable levels for financial risk management, even for the best-performing model.
 
-\textbf{Key message}: \textit{The question is not whether AI can pass the CFA exam, but whether it knows when it cannot.}
+Our analysis connects technical calibration metrics to the CFA Institute's ethical framework, demonstrating that three Standards of Professional Conduct---Misrepresentation, Diligence, and Suitability---are implicated by overconfident AI deployment. We propose tiered minimum calibration standards for financial AI, ranging from ECE $< 0.15$ for advisory roles to ECE $< 0.35$ for internal tools.
+
+\textbf{The question is not whether AI can pass the CFA exam, but whether it knows when it cannot.} Our evidence suggests it does not.
+
+%% ============================================
+%% DATA AVAILABILITY
+%% ============================================
+\section*{Data Availability}
+
+The CFA-Challenge dataset is available via HuggingFace under the FinEval benchmark \citep{ke2025findap}. All experiment code, analysis scripts, and raw results are available at \url{https://github.com/[anonymized]}.
 
 %% ============================================
 %% REFERENCES
 %% ============================================
 \section*{References}
 
-\begin{thebibliography}{10}
+\begin{thebibliography}{20}
 
-\bibitem{guo2017calibration}
+\bibitem[Callanan et al.(2023)]{callanan2023gpt}
+Callanan, E., Mbae, A., Selle, S., Gupta, V., \& Houlihan, R. (2023).
+\newblock Can GPT-4 pass the CFA exam?
+\newblock \textit{arXiv preprint arXiv:2310.09542}.
+
+\bibitem[Dietvorst et al.(2015)]{dietvorst2015algorithm}
+Dietvorst, B. J., Simmons, J. P., \& Massey, C. (2015).
+\newblock Algorithm aversion: People erroneously avoid algorithms after seeing them err.
+\newblock \textit{Journal of Experimental Psychology: General}, 144(1), 114--126.
+
+\bibitem[Green \& Chen(2019)]{green2019principles}
+Green, B., \& Chen, Y. (2019).
+\newblock The principles and limits of algorithm-in-the-loop decision making.
+\newblock \textit{Proceedings of the ACM on Human-Computer Interaction}, 3(CSCW), 1--24.
+
+\bibitem[Guo et al.(2017)]{guo2017calibration}
 Guo, C., Pleiss, G., Sun, Y., \& Weinberger, K. Q. (2017).
 \newblock On calibration of modern neural networks.
-\newblock {\em International Conference on Machine Learning}, 1321--1330.
+\newblock In \textit{Proceedings of the 34th International Conference on Machine Learning} (pp.~1321--1330).
 
-\bibitem{kadavath2022language}
-Kadavath, S., et al. (2022).
+\bibitem[Kadavath et al.(2022)]{kadavath2022language}
+Kadavath, S., Conerly, T., Askell, A., et al. (2022).
 \newblock Language models (mostly) know what they know.
-\newblock {\em arXiv preprint arXiv:2207.05221}.
+\newblock \textit{arXiv preprint arXiv:2207.05221}.
 
-\bibitem{ke2025findap}
+\bibitem[Ke et al.(2025)]{ke2025findap}
 Ke, Z., Ming, Y., Nguyen, X. P., Xiong, C., \& Joty, S. (2025).
 \newblock Demystifying domain-adaptive post-training for financial LLMs.
-\newblock {\em EMNLP 2025}.
+\newblock In \textit{Proceedings of the 2025 Conference on Empirical Methods in Natural Language Processing (EMNLP)}.
 
-\bibitem{lin2022teaching}
+\bibitem[Lin et al.(2022)]{lin2022teaching}
 Lin, S., Hilton, J., \& Evans, O. (2022).
 \newblock Teaching models to express their uncertainty in words.
-\newblock {\em arXiv preprint arXiv:2205.14334}.
+\newblock \textit{Transactions on Machine Learning Research}.
 
-\bibitem{wu2023bloomberggpt}
-Wu, S., et al. (2023).
+\bibitem[Nori et al.(2023)]{nori2023capabilities}
+Nori, H., King, N., McKinney, S. M., Carignan, D., \& Horvitz, E. (2023).
+\newblock Capabilities of GPT-4 on medical competence examinations.
+\newblock \textit{arXiv preprint arXiv:2303.13375}.
+
+\bibitem[Wang et al.(2023)]{wang2023selfconsistency}
+Wang, X., Wei, J., Schuurmans, D., et al. (2023).
+\newblock Self-consistency improves chain of thought reasoning in language models.
+\newblock In \textit{Proceedings of the 11th International Conference on Learning Representations (ICLR)}.
+
+\bibitem[Wu et al.(2023)]{wu2023bloomberggpt}
+Wu, S., Irsoy, O., Lu, S., et al. (2023).
 \newblock BloombergGPT: A large language model for finance.
-\newblock {\em arXiv preprint arXiv:2303.17564}.
+\newblock \textit{arXiv preprint arXiv:2303.17564}.
+
+\bibitem[Xiong et al.(2024)]{xiong2024llms}
+Xiong, M., Hu, Z., Lu, X., et al. (2024).
+\newblock Can LLMs express their uncertainty? An empirical evaluation of confidence elicitation in LLMs.
+\newblock In \textit{Proceedings of the 12th International Conference on Learning Representations (ICLR)}.
 
 \end{thebibliography}
 

@@ -1,0 +1,33 @@
+\documentclass[12pt]{letter}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+
+\signature{Wei-Lun Cheng \\ Institute of Information Science, Academia Sinica \\ Wei-Chung Miao \\ Department of Finance, National Chengchi University}
+
+\address{Wei-Lun Cheng \\ Institute of Information Science \\ Academia Sinica \\ Taipei, Taiwan \\ wlcheng@iis.sinica.edu.tw}
+
+\begin{document}
+\begin{letter}{Editor-in-Chief \\ Finance Research Letters \\ Elsevier}
+
+\opening{Dear Editor,}
+
+We are pleased to submit our manuscript entitled \textbf{``Stress Testing Financial LLMs: Counterfactual Perturbation and Noise Sensitivity Analysis on CFA Examinations''} for consideration for publication in \textit{Finance Research Letters}.
+
+\textbf{Motivation.} Large Language Models are increasingly deployed in financial services, and benchmark evaluations suggest they can pass professional certification exams such as the CFA. However, we demonstrate that standard accuracy metrics are significantly inflated by memorization effects. Our work addresses a critical gap: no existing study has stress-tested whether financial LLMs genuinely reason or merely memorize exam patterns.
+
+\textbf{Key Findings.} Using CFA examination questions, we introduce a two-dimensional stress testing framework:
+\begin{enumerate}
+    \item \textit{Counterfactual perturbation}: Modifying numerical parameters while preserving financial logic reveals a memorization gap of 22.5--32.1 percentage points. Standard accuracy (85\%) drops to Robust Accuracy of just 40\%.
+    \item \textit{Noise injection}: Four types of real-world information noise (irrelevant data, misleading statements, format noise, contradictory information) degrade accuracy by 11--22\%, exposing poor signal-to-noise discrimination.
+\end{enumerate}
+
+\textbf{Contribution.} We propose Robust Accuracy as a regulatory-relevant metric, drawing a direct analogy to bank stress testing (Basel III). Our framework provides concrete, quantifiable criteria for evaluating AI deployment readiness in financial services---a timely contribution given the EU AI Act's requirements for high-risk AI systems.
+
+\textbf{Fit for FRL.} This paper addresses the intersection of AI technology and financial regulation---a topic of immediate policy relevance. The methodology is clean, the results are striking, and the implications for financial practice and regulation are direct. The paper length and format align with FRL's preference for concise, impactful research letters.
+
+This manuscript has not been published previously and is not under consideration elsewhere.
+
+\closing{Sincerely,}
+
+\end{letter}
+\end{document}

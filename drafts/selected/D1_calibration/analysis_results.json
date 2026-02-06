@@ -1,0 +1,243 @@
+{
+  "metadata": {
+    "total_results": 257,
+    "models_methods": [
+      "gpt-4o-mini|verbalized",
+      "gpt-4o-mini|self_consistency",
+      "qwen3:32b|verbalized"
+    ],
+    "n_topics": 10
+  },
+  "metrics_by_model_method": {
+    "gpt-4o-mini|verbalized": {
+      "n": 95,
+      "accuracy": 0.5263,
+      "avg_confidence": 0.8411,
+      "ece": 0.314737,
+      "mce": 0.6,
+      "brier_score": 0.340368,
+      "auroc": 0.586,
+      "overconfidence_gap": 0.3148
+    },
+    "gpt-4o-mini|self_consistency": {
+      "n": 90,
+      "accuracy": 0.5222,
+      "avg_confidence": 0.8289,
+      "ece": 0.306667,
+      "mce": 0.3938,
+      "brier_score": 0.333556,
+      "auroc": 0.638545,
+      "overconfidence_gap": 0.3067
+    },
+    "qwen3:32b|verbalized": {
+      "n": 72,
+      "accuracy": 0.6111,
+      "avg_confidence": 0.836,
+      "ece": 0.247083,
+      "mce": 0.8,
+      "brier_score": 0.225579,
+      "auroc": 0.787338,
+      "overconfidence_gap": 0.2249
+    }
+  },
+  "overconfident_error_analysis": {
+    "total_results": 257,
+    "total_errors": 116,
+    "overconf_errors": 77,
+    "overconf_error_rate": 0.2996,
+    "overconf_among_errors": 0.6638,
+    "avg_overconf_confidence": 0.8903,
+    "by_method": {
+      "gpt-4o-mini|verbalized": {
+        "errors": 45,
+        "overconf": 38,
+        "total": 95
+      },
+      "gpt-4o-mini|self_consistency": {
+        "errors": 43,
+        "overconf": 25,
+        "total": 90
+      },
+      "qwen3:32b|verbalized": {
+        "errors": 28,
+        "overconf": 14,
+        "total": 72
+      }
+    }
+  },
+  "topic_metrics": {
+    "Ethics & Standards": {
+      "n": 46,
+      "accuracy": 0.4783,
+      "avg_confidence": 0.8387,
+      "ece": 0.360435,
+      "mce": 0.75,
+      "brier_score": 0.364965,
+      "auroc": 0.596591,
+      "overconfidence_gap": 0.3604,
+      "n_errors": 24,
+      "n_overconf_errors": 20,
+      "overconf_error_rate": 0.4348
+    },
+    "Fixed Income": {
+      "n": 20,
+      "accuracy": 0.65,
+      "avg_confidence": 0.8725,
+      "ece": 0.2225,
+      "mce": 0.75,
+      "brier_score": 0.258625,
+      "auroc": 0.71978,
+      "overconfidence_gap": 0.2225,
+      "n_errors": 7,
+      "n_overconf_errors": 6,
+      "overconf_error_rate": 0.3
+    },
+    "Economics": {
+      "n": 10,
+      "accuracy": 0.6,
+      "avg_confidence": 0.84,
+      "ece": 0.34,
+      "mce": 0.4,
+      "brier_score": 0.318,
+      "auroc": 0.333333,
+      "overconfidence_gap": 0.24,
+      "n_errors": 4,
+      "n_overconf_errors": 4,
+      "overconf_error_rate": 0.4
+    },
+    "Quantitative Methods": {
+      "n": 3,
+      "accuracy": 1.0,
+      "avg_confidence": 0.6167,
+      "ece": 0.383333,
+      "mce": 0.8,
+      "brier_score": 0.244167,
+      "auroc": null,
+      "overconfidence_gap": -0.3833,
+      "n_errors": 0,
+      "n_overconf_errors": 0,
+      "overconf_error_rate": 0.0
+    },
+    "Alternative Investments": {
+      "n": 4,
+      "accuracy": 0.75,
+      "avg_confidence": 0.85,
+      "ece": 0.1,
+      "mce": 0.1,
+      "brier_score": 0.1975,
+      "auroc": 0.5,
+      "overconfidence_gap": 0.1,
+      "n_errors": 1,
+      "n_overconf_errors": 1,
+      "overconf_error_rate": 0.25
+    },
+    "Financial Reporting": {
+      "n": 3,
+      "accuracy": 0.3333,
+      "avg_confidence": 0.85,
+      "ece": 0.516667,
+      "mce": 0.5167,
+      "brier_score": 0.489167,
+      "auroc": 0.5,
+      "overconfidence_gap": 0.5167,
+      "n_errors": 2,
+      "n_overconf_errors": 2,
+      "overconf_error_rate": 0.6667
+    },
+    "Portfolio Management": {
+      "n": 14,
+      "accuracy": 0.5,
+      "avg_confidence": 0.8571,
+      "ece": 0.357143,
+      "mce": 0.65,
+      "brier_score": 0.360357,
+      "auroc": 0.704082,
+      "overconfidence_gap": 0.3571,
+      "n_errors": 7,
+      "n_overconf_errors": 6,
+      "overconf_error_rate": 0.4286
+    },
+    "Derivatives": {
+      "n": 27,
+      "accuracy": 0.5926,
+      "avg_confidence": 0.8463,
+      "ece": 0.290741,
+      "mce": 0.7125,
+      "brier_score": 0.25713,
+      "auroc": 0.863636,
+      "overconfidence_gap": 0.2537,
+      "n_errors": 11,
+      "n_overconf_errors": 6,
+      "overconf_error_rate": 0.2222
+    },
+    "Corporate Finance": {
+      "n": 3,
+      "accuracy": 0.6667,
+      "avg_confidence": 0.8833,
+      "ece": 0.25,
+      "mce": 0.35,
+      "brier_score": 0.249167,
+      "auroc": 0.75,
+      "overconfidence_gap": 0.2166,
+      "n_errors": 1,
+      "n_overconf_errors": 1,
+      "overconf_error_rate": 0.3333
+    },
+    "Other": {
+      "n": 125,
+      "accuracy": 0.536,
+      "avg_confidence": 0.8273,
+      "ece": 0.29128,
+      "mce": 0.4333,
+      "brier_score": 0.297746,
+      "auroc": 0.706253,
+      "overconfidence_gap": 0.2913,
+      "n_errors": 58,
+      "n_overconf_errors": 31,
+      "overconf_error_rate": 0.248
+    }
+  },
+  "hypothesis_tests": {
+    "H1_overconfidence": {
+      "mean": 0.2867,
+      "std": 0.4738,
+      "t_stat": 9.7018,
+      "p_value": 0.0,
+      "n": 257,
+      "significant_005": true,
+      "significant_001": true,
+      "description": "One-sample t-test: mean(confidence - correctness) > 0"
+    },
+    "H3_overconf_rate": {
+      "p_hat": 0.2996,
+      "z": 3.9922,
+      "p_value": 3.3e-05,
+      "significant_005": true,
+      "significant_001": true,
+      "description": "Binomial test: P(overconf error) > 0.20, observed 77/257"
+    },
+    "H3_among_errors": {
+      "p_hat": 0.6638,
+      "z": 3.5282,
+      "p_value": 0.000209,
+      "significant_005": true,
+      "significant_001": true,
+      "description": "Among errors: P(overconf | error) > 0.50, observed 77/116"
+    },
+    "H4_topic_independence": {
+      "chi2": 12.3701,
+      "p_value": 0.029861,
+      "df": 5,
+      "topics": [
+        "Ethics & Standards",
+        "Fixed Income",
+        "Economics",
+        "Portfolio Management",
+        "Derivatives",
+        "Other"
+      ],
+      "significant_005": true,
+      "description": "Chi-squared test: overconf error rate independent of topic"
+    }
+  }
+}

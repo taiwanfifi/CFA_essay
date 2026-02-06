@@ -1,0 +1,615 @@
+{
+  "metadata": {
+    "experiment": "I1_counterfactual",
+    "model": "gpt-4o-mini",
+    "dataset": "easy",
+    "n_questions": 20,
+    "perturbation_levels": [
+      1,
+      2
+    ],
+    "timestamp": "20260206_044809"
+  },
+  "summary": {
+    "accuracy_original": 0.85,
+    "perturbation_levels": {
+      "1": {
+        "n_valid": 16,
+        "accuracy": 0.625,
+        "memorization_gap": 0.225
+      },
+      "2": {
+        "n_valid": 17,
+        "accuracy": 0.5294,
+        "memorization_gap": 0.3206
+      }
+    },
+    "robust_accuracy": 0.4,
+    "memorization_suspect": 0.45
+  },
+  "results": [
+    {
+      "question_id": "easy_0",
+      "correct_answer": "C",
+      "original": {
+        "answer": "C",
+        "correct": true
+      },
+      "perturbations": [
+        {
+          "level": 1,
+          "valid": true,
+          "perturbed_answer": "C",
+          "changes_made": [],
+          "model_answer": "C",
+          "correct": true
+        },
+        {
+          "level": 2,
+          "valid": true,
+          "perturbed_answer": "C",
+          "changes_made": [],
+          "model_answer": "C",
+          "correct": true
+        }
+      ]
+    },
+    {
+      "question_id": "easy_1",
+      "correct_answer": "C",
+      "original": {
+        "answer": "C",
+        "correct": true
+      },
+      "perturbations": [
+        {
+          "level": 1,
+          "valid": true,
+          "perturbed_answer": "C",
+          "changes_made": [
+            "Changed the bond duration from 30-year to 10-year"
+          ],
+          "model_answer": "C",
+          "correct": true
+        },
+        {
+          "level": 2,
+          "valid": true,
+          "perturbed_answer": "B",
+          "changes_made": [
+            "Changed the bond duration from 30-year to 20-year",
+            "Changed the issuer type from US Treasury to a small private issuer"
+          ],
+          "model_answer": "C",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "question_id": "easy_2",
+      "correct_answer": "A",
+      "original": {
+        "answer": "A",
+        "correct": true
+      },
+      "perturbations": [
+        {
+          "level": 1,
+          "valid": true,
+          "perturbed_answer": "B",
+          "changes_made": [
+            "Changed the stated annual interest rate from 4.00% to 5.00%",
+            "Changed the effective annual rate from 4.08% to 5.12%"
+          ],
+          "model_answer": "A",
+          "correct": false
+        },
+        {
+          "level": 2,
+          "valid": true,
+          "perturbed_answer": "B",
+          "changes_made": [
+            "stated annual interest rate changed from 4.00% to 5.00%",
+            "effective annual rate changed from 4.08% to 5.12%"
+          ],
+          "model_answer": "A",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "question_id": "easy_3",
+      "correct_answer": "C",
+      "original": {
+        "answer": "A",
+        "correct": false
+      },
+      "perturbations": [
+        {
+          "level": 1,
+          "valid": true,
+          "perturbed_answer": "C",
+          "changes_made": [
+            "Changed the principal amount from $75,000 to $80,000",
+            "Changed the interest rate from 7% to 6%"
+          ],
+          "model_answer": "B",
+          "correct": false
+        },
+        {
+          "level": 2,
+          "valid": true,
+          "perturbed_answer": "C",
+          "changes_made": [
+            "Investment amount changed from $75,000 to $80,000",
+            "Time period changed from 6 years to 8 years",
+            "Interest rate changed from 7% to 6%"
+          ],
+          "model_answer": "B",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "question_id": "easy_4",
+      "correct_answer": "B",
+      "original": {
+        "answer": "C",
+        "correct": false
+      },
+      "perturbations": [
+        {
+          "level": 1,
+          "valid": true,
+          "perturbed_answer": "B",
+          "changes_made": [
+            "Interest rate changed from 2.50% to 3.00%"
+          ],
+          "model_answer": "B",
+          "correct": true
+        },
+        {
+          "level": 2,
+          "valid": true,
+          "perturbed_answer": "B",
+          "changes_made": [
+            "Payment amount changed from £100,000 to £120,000",
+            "Interest rate changed from 2.50% to 3.00%"
+          ],
+          "model_answer": "A",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "question_id": "easy_5",
+      "correct_answer": "A",
+      "original": {
+        "answer": "A",
+        "correct": true
+      },
+      "perturbations": [
+        {
+          "level": 1,
+          "valid": true,
+          "perturbed_answer": "A",
+          "changes_made": [
+            "Initial investment changed from ¥250,000 to ¥300,000",
+            "Interest rate changed from 3% to 4%"
+          ],
+          "model_answer": "A",
+          "correct": true
+        },
+        {
+          "level": 2,
+          "valid": true,
+          "perturbed_answer": "A",
+          "changes_made": [
+            "Investment amount changed from ¥250,000 to ¥300,000",
+            "Interest rate changed from 3% to 4%"
+          ],
+          "model_answer": "B",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "question_id": "easy_6",
+      "correct_answer": "B",
+      "original": {
+        "answer": "B",
+        "correct": true
+      },
+      "perturbations": [
+        {
+          "level": 1,
+          "valid": true,
+          "perturbed_answer": "B",
+          "changes_made": [
+            "Changed the interest rate from 3% to 4%"
+          ],
+          "model_answer": "B",
+          "correct": true
+        },
+        {
+          "level": 2,
+          "valid": true,
+          "perturbed_answer": "B",
+          "changes_made": [
+            "Investment amount changed from €1,000,000 to €1,500,000",
+            "Time period changed from 4 years to 5 years",
+            "Interest rate changed from 3% to 4%"
+          ],
+          "model_answer": "B",
+          "correct": true
+        }
+      ]
+    },
+    {
+      "question_id": "easy_7",
+      "correct_answer": "B",
+      "original": {
+        "answer": "B",
+        "correct": true
+      },
+      "perturbations": [
+        {
+          "level": 1,
+          "valid": true,
+          "perturbed_answer": "A",
+          "changes_made": [
+            "Changed the discount rate from 4% to 5%"
+          ],
+          "model_answer": "B",
+          "correct": false
+        },
+        {
+          "level": 2,
+          "valid": false,
+          "reason": "generation_failed"
+        }
+      ]
+    },
+    {
+      "question_id": "easy_8",
+      "correct_answer": "B",
+      "original": {
+        "answer": "B",
+        "correct": true
+      },
+      "perturbations": [
+        {
+          "level": 1,
+          "valid": true,
+          "perturbed_answer": "A",
+          "changes_made": [
+            "Changed the required annual rate of return from 6% to 8%."
+          ],
+          "model_answer": "A",
+          "correct": true
+        },
+        {
+          "level": 2,
+          "valid": true,
+          "perturbed_answer": "C",
+          "changes_made": [
+            "Dividend payment changed from $2.00 to $2.50",
+            "Time period changed from 5 quarters to 6 quarters",
+            "Required annual rate of return changed from 6% to 8%"
+          ],
+          "model_answer": "B",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "question_id": "easy_9",
+      "correct_answer": "C",
+      "original": {
+        "answer": "C",
+        "correct": true
+      },
+      "perturbations": [
+        {
+          "level": 1,
+          "valid": false,
+          "reason": "generation_failed"
+        },
+        {
+          "level": 2,
+          "valid": true,
+          "perturbed_answer": "B",
+          "changes_made": [
+            "Initial investment changed from €500,000 to €600,000",
+            "Final amount changed from €800,000 to €900,000",
+            "Time period changed from 6 years to 7 years"
+          ],
+          "model_answer": "B",
+          "correct": true
+        }
+      ]
+    },
+    {
+      "question_id": "easy_10",
+      "correct_answer": "C",
+      "original": {
+        "answer": "C",
+        "correct": true
+      },
+      "perturbations": [
+        {
+          "level": 1,
+          "valid": true,
+          "perturbed_answer": "A",
+          "changes_made": [
+            "Lump sum changed from £350,000 to £400,000",
+            "Discount rate changed from 6% to 5%"
+          ],
+          "model_answer": "C",
+          "correct": false
+        },
+        {
+          "level": 2,
+          "valid": true,
+          "perturbed_answer": "A",
+          "changes_made": [
+            "Payment amount changed from £2,000 to £2,500",
+            "Lump sum payment changed from £350,000 to £400,000",
+            "Annual discount rate changed from 6% to 5%"
+          ],
+          "model_answer": "A",
+          "correct": true
+        }
+      ]
+    },
+    {
+      "question_id": "easy_11",
+      "correct_answer": "B",
+      "original": {
+        "answer": "B",
+        "correct": true
+      },
+      "perturbations": [
+        {
+          "level": 1,
+          "valid": true,
+          "perturbed_answer": "B",
+          "changes_made": [
+            "Interest rate changed from 5% to 6%"
+          ],
+          "model_answer": "A",
+          "correct": false
+        },
+        {
+          "level": 2,
+          "valid": true,
+          "perturbed_answer": "B",
+          "changes_made": [
+            "Interest rate changed from 5% to 6%",
+            "Time period changed from 10 years to 12 years",
+            "Payment amount changed from $2,000 to $2,500"
+          ],
+          "model_answer": "A",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "question_id": "easy_12",
+      "correct_answer": "B",
+      "original": {
+        "answer": "B",
+        "correct": true
+      },
+      "perturbations": [
+        {
+          "level": 1,
+          "valid": true,
+          "perturbed_answer": "B",
+          "changes_made": [
+            "Tuition cost changed from $50,000 to $55,000",
+            "Interest rate changed from 6% to 5%"
+          ],
+          "model_answer": "B",
+          "correct": true
+        },
+        {
+          "level": 2,
+          "valid": true,
+          "perturbed_answer": "B",
+          "changes_made": [
+            "Payment amount changed from $50,000 to $55,000",
+            "Time period changed from 18 years to 20 years",
+            "Interest rate changed from 6% to 5%"
+          ],
+          "model_answer": "C",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "question_id": "easy_13",
+      "correct_answer": "B",
+      "original": {
+        "answer": "B",
+        "correct": true
+      },
+      "perturbations": [
+        {
+          "level": 1,
+          "valid": true,
+          "perturbed_answer": "B",
+          "changes_made": [
+            "Purchase price changed from £200,000 to £220,000",
+            "Interest rate changed from 6% to 5%"
+          ],
+          "model_answer": "A",
+          "correct": false
+        },
+        {
+          "level": 2,
+          "valid": true,
+          "perturbed_answer": "B",
+          "changes_made": [
+            "Purchase price changed from £200,000 to £250,000",
+            "Financing period changed from 5 years to 7 years",
+            "Interest rate changed from 6% to 5%"
+          ],
+          "model_answer": "B",
+          "correct": true
+        }
+      ]
+    },
+    {
+      "question_id": "easy_14",
+      "correct_answer": "A",
+      "original": {
+        "answer": "A",
+        "correct": true
+      },
+      "perturbations": [
+        {
+          "level": 1,
+          "valid": false,
+          "reason": "generation_failed"
+        },
+        {
+          "level": 2,
+          "valid": true,
+          "perturbed_answer": "B",
+          "changes_made": [
+            "Interest rate changed from 6% to 5%",
+            "Time period changed from 10 years to 12 years"
+          ],
+          "model_answer": "B",
+          "correct": true
+        }
+      ]
+    },
+    {
+      "question_id": "easy_15",
+      "correct_answer": "B",
+      "original": {
+        "answer": "C",
+        "correct": false
+      },
+      "perturbations": [
+        {
+          "level": 1,
+          "valid": false,
+          "reason": "generation_failed"
+        },
+        {
+          "level": 2,
+          "valid": false,
+          "reason": "generation_failed"
+        }
+      ]
+    },
+    {
+      "question_id": "easy_16",
+      "correct_answer": "A",
+      "original": {
+        "answer": "A",
+        "correct": true
+      },
+      "perturbations": [
+        {
+          "level": 1,
+          "valid": true,
+          "perturbed_answer": "A",
+          "changes_made": [
+            "Changed the scale from 1-5 to 2-6"
+          ],
+          "model_answer": "A",
+          "correct": true
+        },
+        {
+          "level": 2,
+          "valid": false,
+          "reason": "generation_failed"
+        }
+      ]
+    },
+    {
+      "question_id": "easy_17",
+      "correct_answer": "C",
+      "original": {
+        "answer": "C",
+        "correct": true
+      },
+      "perturbations": [
+        {
+          "level": 1,
+          "valid": true,
+          "perturbed_answer": "C",
+          "changes_made": [],
+          "model_answer": "C",
+          "correct": true
+        },
+        {
+          "level": 2,
+          "valid": true,
+          "perturbed_answer": "C",
+          "changes_made": [
+            "Changed 'nominal data' to 'categorical data'."
+          ],
+          "model_answer": "C",
+          "correct": true
+        }
+      ]
+    },
+    {
+      "question_id": "easy_18",
+      "correct_answer": "B",
+      "original": {
+        "answer": "B",
+        "correct": true
+      },
+      "perturbations": [
+        {
+          "level": 1,
+          "valid": false,
+          "reason": "generation_failed"
+        },
+        {
+          "level": 2,
+          "valid": true,
+          "perturbed_answer": "B",
+          "changes_made": [
+            "Changed 'Nominal' to 'Ordinal'",
+            "Changed 'C: Continuous' to 'C: Continuous'"
+          ],
+          "model_answer": "B",
+          "correct": true
+        }
+      ]
+    },
+    {
+      "question_id": "easy_19",
+      "correct_answer": "C",
+      "original": {
+        "answer": "C",
+        "correct": true
+      },
+      "perturbations": [
+        {
+          "level": 1,
+          "valid": true,
+          "perturbed_answer": "C",
+          "changes_made": [],
+          "model_answer": "C",
+          "correct": true
+        },
+        {
+          "level": 2,
+          "valid": true,
+          "perturbed_answer": "C",
+          "changes_made": [],
+          "model_answer": "C",
+          "correct": true
+        }
+      ]
+    }
+  ]
+}

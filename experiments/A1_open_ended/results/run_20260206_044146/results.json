@@ -1,0 +1,436 @@
+{
+  "metadata": {
+    "experiment": "A1_open_ended",
+    "model": "gpt-4o-mini",
+    "dataset": "easy",
+    "n_questions": 20,
+    "timestamp": "20260206_044146"
+  },
+  "summary": {
+    "n_questions": 20,
+    "level_distribution": {
+      "exact": 8,
+      "directional": 6,
+      "incorrect": 6
+    },
+    "level_rates": {
+      "exact": 0.4,
+      "directional": 0.3,
+      "incorrect": 0.3
+    },
+    "strict_accuracy": 0.4,
+    "lenient_accuracy": 0.7,
+    "error_categories": {
+      "incomplete_reasoning": 1,
+      "unknown": 2,
+      "formula_error": 2,
+      "arithmetic_error": 1
+    }
+  },
+  "results": [
+    {
+      "question_id": "easy_0",
+      "correct_answer_letter": "C",
+      "gold_answer": {
+        "numerical": null,
+        "text": "expected inflation",
+        "concept": "Nominal Risk-Free Rate"
+      },
+      "model_response": "To understand the nominal risk-free rate, we need to break it down into its components. The nominal risk-free rate can be expressed using the following formula:\n\n\\[\n\\text{Nominal Risk-Free Rate} = \\text{Real Risk-Free Rate} + \\text{Inflation Premium}\n\\]\n\n### Step 1: Define the Components\n\n1. **Real Risk-Free Rate**: This is the return on an investment with no risk of financial loss, adjusted for inflation. It reflects the time value of money and the opportunity cost of capital in a risk-free env",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "The student correctly identifies the components of the nominal risk-free rate and accurately describes the relationship between the real risk-free rate and the inflation premium, matching the gold standard answer.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": null,
+      "tokens": 343
+    },
+    {
+      "question_id": "easy_1",
+      "correct_answer_letter": "C",
+      "gold_answer": {
+        "numerical": null,
+        "text": "Liquidity",
+        "concept": "Liquidity Risk Premium"
+      },
+      "model_response": "To analyze the difference in yields between 30-year bonds issued by the US Treasury and 30-year bonds issued by a small private issuer, we need to consider the various risk premiums that can affect bond yields. The most relevant risk premiums in this context are:\n\n1. **Credit Risk Premium**: This is the additional yield that investors require to compensate for the risk that the issuer may default on its debt obligations. US Treasury bonds are considered virtually risk-free because they are backe",
+      "level": "directional",
+      "evaluation": {
+        "reasoning": "The student correctly identifies liquidity as a relevant risk premium but emphasizes credit risk premium as well, which is also valid. The answer shows understanding of the concepts but does not directly state liquidity as the most relevant, leading to a slightly different focus.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": null,
+      "tokens": 667
+    },
+    {
+      "question_id": "easy_2",
+      "correct_answer_letter": "A",
+      "gold_answer": {
+        "numerical": 365,
+        "text": "daily.,B: quarterly.,C: semiannually",
+        "concept": "Compounding frequency and its effect on effective annual rate (EAR)"
+      },
+      "model_response": "To determine how frequently the bank is compounding interest, we can use the relationship between the stated annual interest rate (nominal rate) and the effective annual rate (EAR). The formula to convert the nominal interest rate to the effective annual rate is:\n\n\\[\nEAR = \\left(1 + \\frac{r}{n}\\right)^n - 1\n\\]\n\nWhere:\n- \\( r \\) is the nominal interest rate (stated annual interest rate),\n- \\( n \\) is the number of compounding periods per year.\n\nGiven:\n- Stated annual interest rate \\( r = 0.04 \\) ",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "Wrong magnitude: student=4.0, gold=365.0",
+        "auto_graded": true,
+        "student_value": 4.0,
+        "gold_value": 365.0
+      },
+      "error_attribution": {
+        "error_category": "incomplete_reasoning",
+        "explanation": "The student correctly identified the need to use the formula to find the compounding frequency but did not complete the reasoning or provide a final answer based on their calculations.",
+        "could_be_fixed_with_tools": true
+      },
+      "tokens": 859
+    },
+    {
+      "question_id": "easy_3",
+      "correct_answer_letter": "C",
+      "gold_answer": {
+        "numerical": 113733,
+        "text": "$113,733",
+        "concept": "Future Value of an Investment"
+      },
+      "model_response": "To find the future value of an investment compounded quarterly, we can use the future value formula for compound interest:\n\n\\[\nFV = PV \\times (1 + r/n)^{nt}\n\\]\n\nWhere:\n- \\( FV \\) = future value\n- \\( PV \\) = present value (initial investment)\n- \\( r \\) = annual interest rate (as a decimal)\n- \\( n \\) = number of times interest is compounded per year\n- \\( t \\) = number of years the money is invested\n\n### Step 1: Identify the variables\n- \\( PV = 75,000 \\)\n- \\( r = 0.07 \\) (7% as a decimal)\n- \\( n = ",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "Numerical match: student=111816.88, gold=113733.0, within 2% tolerance",
+        "auto_graded": true,
+        "student_value": 111816.88,
+        "gold_value": 113733.0
+      },
+      "error_attribution": null,
+      "tokens": 570
+    },
+    {
+      "question_id": "easy_4",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": 97532,
+        "text": "£97,532.,C: £97,561",
+        "concept": "Present Value of Future Cash Flows"
+      },
+      "model_response": "To determine the deposit needed today to meet a future requirement of £100,000 one year from now, we will use the formula for present value (PV) when interest is compounded more frequently than annually. The formula for present value is:\n\n\\[\nPV = \\frac{FV}{(1 + r/n)^{nt}}\n\\]\n\nWhere:\n- \\(PV\\) = Present Value\n- \\(FV\\) = Future Value (£100,000)\n- \\(r\\) = annual interest rate (2.50% or 0.025)\n- \\(n\\) = number of compounding periods per year (weekly compounding means \\(n = 52\\))\n- \\(t\\) = number of y",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "Numerical match: student=97560.98, gold=97532.0, within 2% tolerance",
+        "auto_graded": true,
+        "student_value": 97560.98,
+        "gold_value": 97532.0
+      },
+      "error_attribution": null,
+      "tokens": 581
+    },
+    {
+      "question_id": "easy_5",
+      "correct_answer_letter": "A",
+      "gold_answer": {
+        "numerical": 555,
+        "text": "555,B: 563,C: 576",
+        "concept": "Future Value of a Lump Sum with Compound Interest"
+      },
+      "model_response": "To determine the number of months needed for a lump sum investment of ¥250,000 to grow to ¥1,000,000 at a stated annual interest rate of 3% compounded daily, we can use the formula for compound interest:\n\n\\[\nA = P \\left(1 + \\frac{r}{n}\\right)^{nt}\n\\]\n\nWhere:\n- \\(A\\) is the amount of money accumulated after n years, including interest.\n- \\(P\\) is the principal amount (the initial amount of money).\n- \\(r\\) is the annual interest rate (decimal).\n- \\(n\\) is the number of times that interest is compo",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "Wrong magnitude: student=10.5, gold=555.0",
+        "auto_graded": true,
+        "student_value": 10.5,
+        "gold_value": 555.0
+      },
+      "error_attribution": {
+        "error_category": "unknown",
+        "explanation": "```json\n{\n    \"error_category\": \"incomplete_reasoning\",\n    \"explanation\": \"The student started the calculation process but did not complete it, leaving the solution unfinished and unable to arrive at",
+        "could_be_fixed_with_tools": false
+      },
+      "tokens": 939
+    },
+    {
+      "question_id": "easy_6",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": 455,
+        "text": "€6.,C: €455",
+        "concept": "Continuous Compounding vs. Daily Compounding"
+      },
+      "model_response": "To solve this problem, we will calculate the future value of the investment using both continuous compounding and daily compounding, and then find the difference in interest earnings between the two methods.\n\n### Step 1: Calculate Future Value with Continuous Compounding\n\nThe formula for future value with continuous compounding is given by:\n\n\\[\nFV = P \\cdot e^{rt}\n\\]\n\nWhere:\n- \\( FV \\) = future value\n- \\( P \\) = principal amount (initial investment)\n- \\( r \\) = annual interest rate (as a decimal",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "Wrong magnitude: student=2.71828, gold=455.0",
+        "auto_graded": true,
+        "student_value": 2.71828,
+        "gold_value": 455.0
+      },
+      "error_attribution": {
+        "error_category": "unknown",
+        "explanation": "```json\n{\n    \"error_category\": \"arithmetic_error\",\n    \"explanation\": \"The student made an error in calculating the future value with continuous compounding, specifically in the calculation of \\( e^{",
+        "could_be_fixed_with_tools": false
+      },
+      "tokens": 903
+    },
+    {
+      "question_id": "easy_7",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": 1389,
+        "text": "€1,389.,C: €1,625",
+        "concept": "Present Value of an Annuity Due"
+      },
+      "model_response": "To calculate the present value (PV) of an investment that pays €300 annually for five years, with the first payment occurring today, we will use the formula for the present value of an annuity due. An annuity due is an annuity where payments are made at the beginning of each period.\n\n### Step 1: Identify the parameters\n- Annual payment (C) = €300\n- Number of payments (n) = 5 years\n- Discount rate (r) = 4% or 0.04\n\n### Step 2: Present Value of an Annuity Due Formula\nThe present value of an annuit",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "Wrong magnitude: student=1.0, gold=1389.0",
+        "auto_graded": true,
+        "student_value": 1.0,
+        "gold_value": 1389.0
+      },
+      "error_attribution": {
+        "error_category": "formula_error",
+        "explanation": "The student incorrectly applied the formula for the present value of an annuity due. The correct formula for the present value of an annuity due should include the adjustment for the first payment occurring today, but the student did not correctly apply the formula in their calculations.",
+        "could_be_fixed_with_tools": false
+      },
+      "tokens": 548
+    },
+    {
+      "question_id": "easy_8",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": 126,
+        "text": "$126.,C: $133",
+        "concept": "Present Value of Perpetual Preferred Stock"
+      },
+      "model_response": "To calculate the present value of a perpetual preferred stock that pays dividends, we can use the formula for the present value of a perpetuity. However, since the first dividend payment occurs in the future (in this case, in five quarters), we need to account for the time value of money.\n\n### Step 1: Identify the parameters\n- **Dividend payment (D)**: $2.00 (this is the quarterly dividend)\n- **Required annual rate of return (r)**: 6% compounded quarterly\n- **Quarterly rate of return (r_q)**: \\(",
+      "level": "directional",
+      "evaluation": {
+        "reasoning": "Same magnitude: student=123.33, gold=126.0, ratio=0.979",
+        "auto_graded": true,
+        "student_value": 123.33,
+        "gold_value": 126.0
+      },
+      "error_attribution": null,
+      "tokens": 669
+    },
+    {
+      "question_id": "easy_9",
+      "correct_answer_letter": "C",
+      "gold_answer": {
+        "numerical": 8.0,
+        "text": "8.0% compounded semiannually",
+        "concept": "Compound Interest"
+      },
+      "model_response": "To find the stated annual interest rate that allows an investment of €500,000 to grow to €800,000 over six years, we can use the formula for compound interest:\n\n\\[\nFV = PV \\times (1 + r)^n\n\\]\n\nWhere:\n- \\( FV \\) = future value (€800,000)\n- \\( PV \\) = present value (€500,000)\n- \\( r \\) = annual interest rate (as a decimal)\n- \\( n \\) = number of years (6)\n\nWe need to solve for \\( r \\). Rearranging the formula gives us:\n\n\\[\n(1 + r)^n = \\frac{FV}{PV}\n\\]\n\nSubstituting the known values:\n\n\\[\n(1 + r)^6 =",
+      "level": "directional",
+      "evaluation": {
+        "reasoning": "Same magnitude: student=8.45, gold=8.0, ratio=1.056",
+        "auto_graded": true,
+        "student_value": 8.45,
+        "gold_value": 8.0
+      },
+      "error_attribution": null,
+      "tokens": 457
+    },
+    {
+      "question_id": "easy_10",
+      "correct_answer_letter": "C",
+      "gold_answer": {
+        "numerical": 400000,
+        "text": "greater than the lump sum",
+        "concept": "Present Value of a Perpetuity"
+      },
+      "model_response": "To calculate the present value of the perpetuity, we will use the formula for the present value of a perpetuity:\n\n\\[\nPV = \\frac{C}{r}\n\\]\n\nWhere:\n- \\(PV\\) = Present Value of the perpetuity\n- \\(C\\) = Cash flow per period\n- \\(r\\) = Discount rate per period\n\n### Step 1: Identify the cash flow and the discount rate\n\n1. **Cash flow per period (C)**: The cash flow is £2,000 per month.\n2. **Annual discount rate**: The annual discount rate is 6%, compounded monthly. \n\n### Step 2: Calculate the monthly di",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "Wrong magnitude: student=2000.0, gold=400000.0",
+        "auto_graded": true,
+        "student_value": 2000.0,
+        "gold_value": 400000.0
+      },
+      "error_attribution": {
+        "error_category": "arithmetic_error",
+        "explanation": "The student correctly applied the formula for the present value of a perpetuity but made an arithmetic mistake in the final calculation, resulting in an incorrect present value of £400,000 instead of the correct value.",
+        "could_be_fixed_with_tools": true
+      },
+      "tokens": 400
+    },
+    {
+      "question_id": "easy_11",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": 16416,
+        "text": "$16,216.,C: $17,443",
+        "concept": "Present Value of Annuity Due"
+      },
+      "model_response": "To find the present value (PV) of a 10-year annuity due with annual payments of $2,000 at a 5% interest rate, we can follow these steps:\n\n### Step 1: Understand the Difference Between Ordinary Annuity and Annuity Due\nAn ordinary annuity pays at the end of each period, while an annuity due pays at the beginning of each period. The present value of an annuity due can be calculated by taking the present value of an ordinary annuity and multiplying it by (1 + r), where r is the interest rate.\n\n### S",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "Numerical match: student=16215.64, gold=16416.0, within 2% tolerance",
+        "auto_graded": true,
+        "student_value": 16215.64,
+        "gold_value": 16416.0
+      },
+      "error_attribution": null,
+      "tokens": 508
+    },
+    {
+      "question_id": "easy_12",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": 64341,
+        "text": "$64,341.,C: $68,201",
+        "concept": "Present Value of Annuity"
+      },
+      "model_response": "To determine the required deposit today to fund the future university tuition costs, we will follow these steps:\n\n1. **Calculate the Present Value of the Tuition Payments**: We need to find the present value of the tuition payments that will be made in the future.\n\n2. **Calculate the Present Value of the Lump Sum**: Since the first payment is due in 18 years, we will discount the future payments back to today.\n\n### Step 1: Calculate the Present Value of the Tuition Payments\n\nThe tuition payments",
+      "level": "incorrect",
+      "evaluation": {
+        "reasoning": "Wrong magnitude: student=18.0, gold=64341.0",
+        "auto_graded": true,
+        "student_value": 18.0,
+        "gold_value": 64341.0
+      },
+      "error_attribution": {
+        "error_category": "formula_error",
+        "explanation": "The student incorrectly applied the present value formula for an annuity without properly accounting for the timing of the payments. They failed to discount the total present value of the annuity back to today after calculating its value at year 18.",
+        "could_be_fixed_with_tools": true
+      },
+      "tokens": 800
+    },
+    {
+      "question_id": "easy_13",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": 3867,
+        "text": "£3,867.,C: £3,957",
+        "concept": "Present Value of Annuity"
+      },
+      "model_response": "To calculate the monthly payment for the sports car financed at an annual interest rate of 6% compounded monthly, we can use the formula for the monthly payment on an amortizing loan. The formula is given by:\n\n\\[\nM = P \\frac{r(1 + r)^n}{(1 + r)^n - 1}\n\\]\n\nWhere:\n- \\( M \\) = monthly payment\n- \\( P \\) = principal amount (loan amount)\n- \\( r \\) = monthly interest rate (annual rate / 12)\n- \\( n \\) = total number of payments (loan term in months)\n\n### Step 1: Identify the variables\n- Principal amount",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "Numerical match: student=3866.0, gold=3867.0, within 2% tolerance",
+        "auto_graded": true,
+        "student_value": 3866.0,
+        "gold_value": 3867.0
+      },
+      "error_attribution": null,
+      "tokens": 693
+    },
+    {
+      "question_id": "easy_14",
+      "correct_answer_letter": "A",
+      "gold_answer": {
+        "numerical": 461,
+        "text": "£461.,B: £474.,C: £836",
+        "concept": "Future Value of an Annuity"
+      },
+      "model_response": "To find the level amount that needs to be deposited quarterly to grow to £25,000 at the end of 10 years with a stated annual interest rate of 6% compounded quarterly, we can use the future value of an ordinary annuity formula.\n\n### Step 1: Identify the parameters\n- Future Value (FV) = £25,000\n- Annual interest rate (r) = 6% = 0.06\n- Compounding frequency (n) = 4 (quarterly)\n- Total number of years (t) = 10\n\n### Step 2: Calculate the quarterly interest rate\nThe quarterly interest rate (i) can be ",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "Numerical match: student=464.06, gold=461.0, within 2% tolerance",
+        "auto_graded": true,
+        "student_value": 464.06,
+        "gold_value": 461.0
+      },
+      "error_attribution": null,
+      "tokens": 778
+    },
+    {
+      "question_id": "easy_15",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": 22890,
+        "text": "€22,890,C: €22,950",
+        "concept": "Future Value of an Investment with Reinvestment of Interest"
+      },
+      "model_response": "To solve this problem, we need to calculate the future value of the certificate of deposit (CD) and the future value of the reinvested interest payments in the separate savings account.\n\n### Step 1: Calculate the future value of the CD\n\nThe formula for the future value (FV) of an investment with compound interest is:\n\n\\[\nFV = P \\times (1 + r)^n\n\\]\n\nWhere:\n- \\( P \\) = principal amount (initial investment)\n- \\( r \\) = annual interest rate (as a decimal)\n- \\( n \\) = number of years\n\nFor the CD:\n- \\",
+      "level": "directional",
+      "evaluation": {
+        "reasoning": "Same magnitude: student=57956.64, gold=22890.0, ratio=2.532",
+        "auto_graded": true,
+        "student_value": 57956.64,
+        "gold_value": 22890.0
+      },
+      "error_attribution": null,
+      "tokens": 941
+    },
+    {
+      "question_id": "easy_16",
+      "correct_answer_letter": "A",
+      "gold_answer": {
+        "numerical": null,
+        "text": "Ordinal,B: Continuous,C: Nominal",
+        "concept": "Ordinal scale"
+      },
+      "model_response": "To determine the measurement scale used for published ratings on stocks ranging from 1 (strong sell) to 5 (strong buy), we need to analyze the characteristics of the scale.\n\n1. **Nominal Scale**: This scale categorizes data without any order or ranking. An example would be assigning names to different categories (e.g., types of fruits). In this case, stock ratings are not merely categories; they imply a ranking.\n\n2. **Ordinal Scale**: This scale not only categorizes data but also ranks them in a",
+      "level": "directional",
+      "evaluation": {
+        "reasoning": "The student correctly identifies the ordinal scale as the appropriate measurement scale for stock ratings, demonstrating a good understanding of the concept. However, the answer is incomplete as it does not explicitly state that the correct answer is 'Ordinal' and instead discusses other scales, which may lead to a slightly different interpretation.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": null,
+      "tokens": 456
+    },
+    {
+      "question_id": "easy_17",
+      "correct_answer_letter": "C",
+      "gold_answer": {
+        "numerical": null,
+        "text": "nominal data",
+        "concept": "Nominal Data"
+      },
+      "model_response": "Data values that are categorical and not amenable to being organized in a logical order are characterized as **nominal data**. \n\n### Step-by-Step Explanation:\n\n1. **Understanding Data Types**: \n   - Data can be classified into two main types: **qualitative (categorical)** and **quantitative (numerical)**.\n   - Qualitative data can be further divided into two categories: **nominal** and **ordinal**.\n\n2. **Nominal Data**:\n   - Nominal data refers to categories that do not have a specific order or ",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "The student's answer correctly identifies nominal data as the type of categorical data that cannot be organized in a logical order, matching the gold standard answer.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": null,
+      "tokens": 388
+    },
+    {
+      "question_id": "easy_18",
+      "correct_answer_letter": "B",
+      "gold_answer": {
+        "numerical": null,
+        "text": "Nominal,C: ontinuous",
+        "concept": "Categorical Data Types"
+      },
+      "model_response": "To classify data types, we need to understand the difference between categorical and numerical data.\n\n1. **Categorical Data**: This type of data represents characteristics or qualities and can be divided into categories. Categorical data can be further divided into:\n   - **Nominal**: Categories that do not have a specific order (e.g., colors, types of animals).\n   - **Ordinal**: Categories that have a specific order (e.g., rankings, satisfaction levels).\n\n2. **Numerical Data**: This type of data",
+      "level": "directional",
+      "evaluation": {
+        "reasoning": "The student demonstrates a correct understanding of categorical data types and provides examples, but does not explicitly mention 'continuous' as a data type, which is part of the gold standard answer. The answer is directionally correct but lacks the exact phrasing.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": null,
+      "tokens": 367
+    },
+    {
+      "question_id": "easy_19",
+      "correct_answer_letter": "C",
+      "gold_answer": {
+        "numerical": null,
+        "text": "continuous data",
+        "concept": "Continuous data"
+      },
+      "model_response": "To characterize the set of estimated bankruptcy probabilities generated by the analyst's proprietary model, we need to consider the nature of the probabilities and the context in which they are used.\n\n1. **Understanding Probability Values**: The model generates probabilities that can take any value between 0 and 1. This means that for any firm, the estimated probability of bankruptcy can be 0 (indicating no risk of bankruptcy) to 1 (indicating certainty of bankruptcy). \n\n2. **Nature of the Data*",
+      "level": "exact",
+      "evaluation": {
+        "reasoning": "The student correctly identifies that the set of estimated bankruptcy probabilities is continuous data, matching the gold standard answer.",
+        "auto_graded": false,
+        "student_value": null,
+        "gold_value": null
+      },
+      "error_attribution": null,
+      "tokens": 430
+    }
+  ]
+}
