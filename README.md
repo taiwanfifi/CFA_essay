@@ -7,23 +7,27 @@
 - **錯的時候知道自己錯嗎**？（過度自信比答錯更危險）
 - **在真實環境下還能維持嗎**？（噪音、偏誤、多模態）
 
+**作者**：程煒倫 (Wei-Lun Cheng)，台科大財金所博士班
+**指導教授**：主要指導教授 Daniel Wei-Chung Miao (繆維中)、共同指導教授 Guang-Di Chang (張光第)
+**單位**：Graduate Institute of Finance, National Taiwan University of Science and Technology (NTUST, 國立臺灣科技大學)
+
 ---
 
 ## 專案進度
 
 > **最後更新**：2026-02-06
 
-**7 篇論文初稿全部完成**，含編譯 PDF + 實驗數據。其中 5 篇數據規模足夠可直接投稿，2 篇需 scale up。
+**7 篇論文全部可投稿**，含編譯 PDF、完整實驗數據、14 張圖表。
 
-| 論文 | 標題 | 頁數 | 樣本量 | 規模 | 狀態 |
-|------|------|------|--------|------|------|
-| **D1+D4** | When AI Is Confidently Wrong | 14pp | N=257 | 完整 | 可投稿 |
-| **I1+I3** | Stress Testing Financial LLMs | 13pp | N=100 | 完整 | 可投稿 |
-| **E1** | The CFA Error Atlas | 8pp | N=229 | 完整 | 可投稿 |
-| **G2** | Certification Signal Erosion | 21pp | 理論 | 純理論 | 可投稿 |
-| **I2** | Inherited Irrationality | 17pp | N=20 | 完整 | 可投稿 |
-| **A1+A5** | Beyond Multiple Choice | 10pp | N=20 | POC | 需 scale up |
-| **D6** | Under Pressure | 7pp | N=15 | POC | 需 scale up |
+| 論文 | 標題 | 頁數 | 樣本量 | 狀態 |
+|------|------|------|--------|------|
+| **D1+D4** | When AI Is Confidently Wrong | 15pp | N=257 | 可投稿 |
+| **I1+I3** | Stress Testing Financial LLMs | 17pp | N=100 | 可投稿 |
+| **E1** | The CFA Error Atlas | 11pp | N=229 | 可投稿 |
+| **G2** | Certification Signal Erosion | 24pp | 理論 | 可投稿 |
+| **I2** | Inherited Irrationality | 23pp | N=20 | 可投稿 |
+| **D6** | Under Pressure | 9pp | N=47 | 可投稿 |
+| **A1+A5** | Beyond Multiple Choice | 11pp | N=100 | 可投稿 |
 
 詳細的論文狀態、核心數據、檔案結構、數據路徑見 [`drafts/selected/README.md`](drafts/selected/README.md)。
 
@@ -58,13 +62,13 @@ CFA_essay/
 │   ├── ideas/                     # 41 個研究點子（每個一個 .md）
 │   └── selected/                  # 7 篇完成初稿 + 詳細 README
 │       ├── README.md              # 論文總覽、數據路徑、投稿策略
-│       ├── D1_calibration/        # D1+D4: 信心校準 (14pp, N=257)
-│       ├── I1_counterfactual/     # I1+I3: 壓力測試 (13pp, N=100)
-│       ├── A1_open_ended/         # A1+A5: 開放式作答 (10pp, N=20)
-│       ├── E1_error_atlas/        # E1: 錯誤圖譜 (8pp, N=229)
-│       ├── D6_adversarial_ethics/ # D6: 道德壓力測試 (7pp, N=15)
-│       ├── G2_signaling_theory/   # G2: 訊號理論 (21pp, 理論)
-│       └── I2_behavioral_biases/  # I2: 行為偏誤 (17pp, N=20)
+│       ├── D1_calibration/        # D1+D4: 信心校準 (15pp, N=257)
+│       ├── I1_counterfactual/     # I1+I3: 壓力測試 (17pp, N=100)
+│       ├── A1_open_ended/         # A1+A5: 開放式作答 (11pp, N=100)
+│       ├── E1_error_atlas/        # E1: 錯誤圖譜 (11pp, N=229)
+│       ├── D6_adversarial_ethics/ # D6: 道德壓力測試 (9pp, N=47)
+│       ├── G2_signaling_theory/   # G2: 訊號理論 (24pp, 理論)
+│       └── I2_behavioral_biases/  # I2: 行為偏誤 (23pp, N=20)
 │
 ├── experiments/                   # 實驗程式碼 + 結果
 │   ├── shared/                    # 共用模組（LLM client, prompts, evaluation）
@@ -117,13 +121,15 @@ CFA_essay/
 | Max NSI (noise sensitivity) | 0.046 |
 | Memorization Suspect Rate | 28.0% |
 
-### A1+A5: 開放式作答 (N=20, POC)
+### A1+A5: 開放式作答 (N=100)
 
 | 指標 | 數值 |
 |------|------|
-| Option Bias | +10.0% |
-| Strict Accuracy (open-ended) | 40.0% |
-| Lenient Accuracy | 70.0% |
+| Option Bias | +12.0 pp |
+| McNemar p-value | 0.045 (顯著) |
+| Strict Accuracy (open-ended) | 34.0% |
+| Lenient Accuracy | 62.0% |
+| Dominant Error | Conceptual Error (55.3%) |
 
 ### E1: 錯誤圖譜 (N=229 errors)
 
@@ -133,13 +139,16 @@ CFA_essay/
 | Calculation Errors | 12.7% |
 | Concept Identification Bottleneck | 53.7% |
 
-### D6: 道德壓力測試 (N=15, POC)
+### D6: 道德壓力測試 (N=47)
 
-| 壓力類型 | ERS |
-|----------|-----|
-| Emotional manipulation (最弱) | 0.750 |
-| Authority pressure | 0.875 |
-| Reframing (反而提升) | 1.250 |
+| 壓力類型 | Accuracy | ERS | Flipped |
+|----------|----------|-----|---------|
+| Standard | 85.1% | 1.000 | — |
+| Profit incentive | 78.7% | 0.925 | 4 |
+| Authority pressure | 78.7% | 0.925 | 3 |
+| Emotional manipulation | 80.8% | 0.950 | 2 |
+| Reframing | 80.8% | 0.950 | 3 |
+| Moral dilemma | 80.8% | 0.950 | 2 |
 
 ### G2: 訊號理論 (理論)
 
@@ -285,28 +294,28 @@ experiments/XX_name/
 - **49.3% 推理前提錯誤** — 不是計算錯，是理解就錯了 (E1)
 - **CFA 認證僅保留 29% 訊號價值** — AI 已能複製 50% 的 CFA 能力 (G2)
 - **Loss aversion 最易去偏，recency/disposition 完全抵抗** (I2)
+- **Option bias +12.0 pp 且統計顯著** (McNemar p=0.045) — MCQ 格式系統性高估模型能力，開放式作答 strict accuracy 僅 34% (A1+A5)
+- **所有 5 種道德壓力均使準確率下降** — 利益誘導與權威壓力最有效 (ERS=0.925)，無反常提升 (D6)
 
 ---
 
 ## 下一步
 
-### 立即可投稿 (5 篇)
+### 7 篇論文全部可投稿
 
 1. **D1+D4** → Finance Research Letters (首選)
 2. **I1+I3** → Finance Research Letters
 3. **E1** → FRL / J. Financial Data Science
 4. **G2** → FRL / J. Financial Economics
 5. **I2** → FRL / J. Behavioral and Experimental Finance
+6. **D6** → FRL / J. Business Ethics
+7. **A1+A5** → FRL / J. Financial Education
 
-### 需 Scale Up (2 篇)
-
-6. **A1+A5** → 放大到 n≥100
-7. **D6** → 放大到 n≥50
+所有論文圖表已生成（共 14 張），PDF 已編譯完成。
 
 ### 強化方向
 
 - 多模型驗證：加入 gpt-4o, claude-3.5-sonnet, qwen3:32b
-- Publication-quality 圖表生成
 - 各論文交叉引用形成研究群
 
 ---
@@ -321,6 +330,12 @@ experiments/XX_name/
 6. **論文防禦**：`docs/05-審稿人挑戰與應對策略.md`
 
 ---
+
+## 聯絡資訊
+
+程煒倫 (Wei-Lun Cheng)
+Graduate Institute of Finance, National Taiwan University of Science and Technology (NTUST)
+國立臺灣科技大學 財務金融研究所 博士班
 
 ## 授權
 
