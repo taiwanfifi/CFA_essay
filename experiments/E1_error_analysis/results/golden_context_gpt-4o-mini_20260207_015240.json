@@ -1,0 +1,91 @@
+{
+  "metadata": {
+    "experiment": "E1_golden_context_injection",
+    "model": "gpt-4o-mini",
+    "a1_source": "experiments/A1_open_ended/results/run_20260206_173445/results.json",
+    "n_errors_tested": 5,
+    "timestamp": "20260207_015240"
+  },
+  "summary": {
+    "total": 5,
+    "full_recovery": 2,
+    "partial_recovery": 1,
+    "still_wrong": 2,
+    "recovery_rate": 60.0,
+    "full_recovery_rate": 40.0,
+    "by_error_category": {
+      "incomplete_reasoning": {
+        "total": 2,
+        "recovered": 0,
+        "partial": 1
+      },
+      "unknown": {
+        "total": 2,
+        "recovered": 1,
+        "partial": 0
+      },
+      "conceptual_error": {
+        "total": 1,
+        "recovered": 1,
+        "partial": 0
+      }
+    }
+  },
+  "results": [
+    {
+      "question_id": "easy_2",
+      "original_error_category": "incomplete_reasoning",
+      "concept_hint": "Compounding frequency and its effect on effective annual rate (EAR)",
+      "original_level": "incorrect",
+      "new_level": "directional",
+      "recovery": "partial",
+      "judge_reasoning": "The student's approach to determining the compounding frequency is correct, and they correctly identify that the bank is compounding interest monthly. However, the final answer does not match the gold standard answer, which lists daily, quarterly, and semiannually as options. The student did not provide the correct format or options as required.",
+      "model_response_length": 1893,
+      "tokens": 830
+    },
+    {
+      "question_id": "easy_6",
+      "original_error_category": "unknown",
+      "concept_hint": "Continuous Compounding vs. Daily Compounding",
+      "original_level": "incorrect",
+      "new_level": "incorrect",
+      "recovery": "none",
+      "judge_reasoning": "The student misinterpreted the problem and calculated the future values incorrectly, leading to an incorrect final answer of €0 instead of the expected €455.",
+      "model_response_length": 2395,
+      "tokens": 918
+    },
+    {
+      "question_id": "easy_10",
+      "original_error_category": "unknown",
+      "concept_hint": "Present Value of a Perpetuity",
+      "original_level": "incorrect",
+      "new_level": "exact",
+      "recovery": "full",
+      "judge_reasoning": "The student's final answer of £400,000 matches the gold standard answer exactly.",
+      "model_response_length": 951,
+      "tokens": 428
+    },
+    {
+      "question_id": "easy_12",
+      "original_error_category": "incomplete_reasoning",
+      "concept_hint": "Present Value of Annuity",
+      "original_level": "incorrect",
+      "new_level": "incorrect",
+      "recovery": "none",
+      "judge_reasoning": "The student's final answer of $50,749.43 is fundamentally wrong as it does not match the gold standard answer of $64,341. The calculations for the present value of the annuity and the discounting back to today are incorrect.",
+      "model_response_length": 2076,
+      "tokens": 831
+    },
+    {
+      "question_id": "easy_20",
+      "original_error_category": "conceptual_error",
+      "concept_hint": "Ordinal Data Classification",
+      "original_level": "incorrect",
+      "new_level": "exact",
+      "recovery": "full",
+      "judge_reasoning": "The student's final answer correctly identifies the sentiment data as ordinal data, matching the gold standard answer.",
+      "model_response_length": 1492,
+      "tokens": 445
+    }
+  ]
+}

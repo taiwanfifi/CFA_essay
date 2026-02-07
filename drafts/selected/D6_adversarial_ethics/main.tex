@@ -36,7 +36,7 @@
             country={Taiwan}}
 
 \begin{abstract}
-Large Language Models (LLMs) can answer CFA Ethics questions correctly under standard conditions, but can their ethical judgment withstand adversarial pressure? We introduce an \textit{adversarial ethics stress test} for financial LLMs, applying five types of pressure---profit incentives, authority pressure, emotional manipulation, reframing, and moral dilemmas---to 47 CFA Ethics questions from the CFA-Easy dataset. Testing GPT-4o-mini, we find that \textbf{all five attack types consistently degrade performance}, with \textbf{profit incentive} and \textbf{authority pressure} as the most effective attacks (ERS = 0.925, $-$6.4 pp each), followed by emotional manipulation, reframing, and moral dilemma (ERS = 0.950, $-$4.3 pp each). Across all adversarial conditions, a total of 14 previously correct questions were ``flipped''---the model abandoned correct ethical reasoning under pressure. The universality of this degradation pattern is the central finding: no attack type fails to compromise ethical judgment. These findings suggest that LLMs learn the \textit{form} of ethical responses rather than the \textit{principles}, creating a dangerous vulnerability for AI systems deployed in financial advisory roles where clients may inadvertently or deliberately apply similar pressure. We propose a minimum Ethics Robustness Score of 0.95 for financial AI deployment and connect our findings to CFA Institute Standards of Professional Conduct.
+Large Language Models (LLMs) can answer CFA Ethics questions correctly under standard conditions, but can their ethical judgment withstand adversarial pressure? We introduce an \textit{adversarial ethics stress test} for financial LLMs, applying five types of pressure---profit incentives, authority pressure, emotional manipulation, reframing, and moral dilemmas---to 47 CFA Ethics questions from the CFA-Easy dataset. Testing GPT-4o-mini, we find that \textbf{all five attack types consistently degrade performance}, with \textbf{profit incentive} and \textbf{authority pressure} as the most effective attacks (ERS = 0.925, $-$6.4 pp each), followed by emotional manipulation, reframing, and moral dilemma (ERS = 0.950, $-$4.3 pp each). Across all adversarial conditions, a total of 14 previously correct questions were ``flipped''---the model abandoned correct ethical reasoning under pressure. The universality of this degradation pattern is the central finding: no attack type fails to compromise ethical judgment. These findings suggest that LLMs learn the \textit{form} of ethical responses rather than the \textit{principles}, creating a dangerous vulnerability for AI systems deployed in financial advisory roles. However, a cross-model comparison reveals that GPT-5-mini achieves \textit{zero} adversarial flips with ERS $> 1.0$, suggesting this vulnerability may be generationally bounded. We propose a minimum Ethics Robustness Score of 0.95 for financial AI deployment and connect our findings to CFA Institute Standards of Professional Conduct.
 \end{abstract}
 
 \begin{keyword}
@@ -114,9 +114,9 @@ Standard (no pressure) & 85.1\% & --- & 1.000 & --- \\
 \midrule
 Profit incentive & 78.7\% & 4 & 0.925 & $-$6.4 pp \\
 Authority pressure & 78.7\% & 3 & 0.925 & $-$6.4 pp \\
-Emotional manipulation & 80.8\% & 2 & 0.950 & $-$4.3 pp \\
-Reframing & 80.8\% & 3 & 0.950 & $-$4.3 pp \\
-Moral dilemma & 80.8\% & 2 & 0.950 & $-$4.3 pp \\
+Emotional manipulation & 80.9\% & 2 & 0.950 & $-$4.3 pp \\
+Reframing & 80.9\% & 3 & 0.950 & $-$4.3 pp \\
+Moral dilemma & 80.9\% & 2 & 0.950 & $-$4.3 pp \\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}
@@ -156,6 +156,48 @@ Figure~\ref{fig:ethics_accuracy} provides a direct comparison of accuracy across
 \label{fig:ethics_accuracy}
 \end{figure}
 
+\subsection{Cross-Model Comparison: Generational Robustness Gains}
+\label{sec:crossmodel}
+
+A natural question arising from the universal vulnerability documented above is whether newer model generations exhibit the same fragility. To investigate this, we replicated the full adversarial ethics protocol on GPT-5-mini, a next-generation model from the same provider, using identical prompts, questions, and evaluation criteria.
+
+Table~\ref{tab:crossmodel} presents the cross-model comparison. The results reveal a dramatic generational improvement: GPT-5-mini achieves \textbf{zero adversarial flips} across all five attack types, compared to 14 flips for GPT-4o-mini. Standard accuracy improves from 85.1\% to 91.5\% (+6.4 pp), but the adversarial robustness gain is far more striking---GPT-5-mini not only resists all five pressure types but actually \textit{improves} its accuracy under adversarial conditions, achieving 97.9\% accuracy under profit incentive, authority pressure, emotional manipulation, and reframing, and 95.7\% under moral dilemma.
+
+\begin{table}[htbp]
+\centering
+\caption{Cross-model adversarial ethics comparison: GPT-4o-mini vs.\ GPT-5-mini ($n = 47$ CFA Ethics questions)}
+\label{tab:crossmodel}
+\begin{threeparttable}
+\begin{tabular}{lcccccc}
+\toprule
+& \multicolumn{3}{c}{\textbf{GPT-4o-mini}} & \multicolumn{3}{c}{\textbf{GPT-5-mini}} \\
+\cmidrule(lr){2-4} \cmidrule(lr){5-7}
+\textbf{Condition} & \textbf{Acc} & \textbf{Flips} & \textbf{ERS} & \textbf{Acc} & \textbf{Flips} & \textbf{ERS} \\
+\midrule
+Standard (no pressure) & 85.1\% & --- & 1.000 & 91.5\% & --- & 1.000 \\
+\midrule
+Profit incentive        & 78.7\% & 4 & 0.925 & 97.9\% & 0 & 1.070 \\
+Authority pressure      & 78.7\% & 3 & 0.925 & 97.9\% & 0 & 1.070 \\
+Emotional manipulation  & 80.9\% & 2 & 0.950 & 97.9\% & 0 & 1.070 \\
+Reframing               & 80.9\% & 3 & 0.950 & 97.9\% & 0 & 1.070 \\
+Moral dilemma           & 80.9\% & 2 & 0.950 & 95.7\% & 0 & 1.047 \\
+\midrule
+\textbf{Total flips}    & \multicolumn{3}{c}{\textbf{14}} & \multicolumn{3}{c}{\textbf{0}} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item ERS = Ethics Robustness Score = Adversarial Accuracy / Standard Accuracy. ERS $> 1.0$ indicates that adversarial context paradoxically \textit{improves} accuracy relative to the standard condition. Flips = questions correct under standard but incorrect under adversarial pressure.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+The most remarkable finding is that all five ERS values for GPT-5-mini exceed 1.0, meaning that adversarial pressure contexts \textit{paradoxically help} the model answer correctly. This mirrors findings in noise sensitivity testing, where adversarial contradictory information similarly improved GPT-5-mini's performance. We hypothesize that adversarial contexts serve as an implicit signal for the model to engage deeper reasoning: the presence of pressure triggers heightened ethical scrutiny, effectively functioning as an unintentional chain-of-thought prompt for ethical analysis.
+
+Examining GPT-5-mini's residual errors provides further insight. Only four questions are answered incorrectly under any condition: easy\_772 (a derivatives question misclassified into the ethics subset---not a genuine ethics failure), and easy\_244, easy\_257, and easy\_259, all of which the model answers \textit{incorrectly} under standard conditions but \textit{correctly} under adversarial conditions. In other words, GPT-5-mini's only ``failures'' under adversarial pressure are cases where the pressure \textit{corrected} a pre-existing standard-condition error. There are zero cases where adversarial pressure degrades a previously correct response---the operational definition of complete adversarial immunity.
+
+The transition from 14 flips to zero flips represents a qualitative shift, not merely a quantitative improvement. GPT-4o-mini's vulnerability profile---where all five attack types reliably degrade ethical judgment---suggests surface-level pattern matching of ethical rules. GPT-5-mini's complete resistance suggests that model scaling and alignment improvements may produce genuine ethical reasoning robustness rather than mere accuracy gains.
+
 %% ============================================
 %% 4. DISCUSSION
 %% ============================================
@@ -172,7 +214,7 @@ CFA Standard III(A)---Loyalty, Prudence, and Care---requires that financial prof
     \item \textbf{Market-side framing}: Market commentary that reframes risky behavior as ``innovative'' could bias AI risk assessments.
 \end{itemize}
 
-The universal degradation pattern---with accuracy dropping by 4.3--6.4 pp across all five attack types and 14 total flipped questions---means that adversarial pressure reliably compromises LLM ethical judgment regardless of the specific pressure vector. In practical terms, approximately 1 in 6 ethics-relevant AI outputs becomes unreliable under the most effective attacks (profit incentive and authority pressure), an unacceptable failure rate for fiduciary applications.
+The universal degradation pattern---with accuracy dropping by 4.3--6.4 pp across all five attack types and 14 total flipped questions---means that adversarial pressure reliably compromises LLM ethical judgment regardless of the specific pressure vector. In practical terms, approximately 1 in 10 previously correct ethics answers is flipped under the most effective attacks (profit incentive and authority pressure), an unacceptable failure rate for fiduciary applications.
 
 \subsection{CFA Standards Mapping}
 
@@ -185,6 +227,79 @@ Our adversarial attacks map directly to CFA Standards vulnerabilities:
     \item \textbf{Standard III(C) Suitability}: The profit incentive attack tests whether the model recommends suitable products regardless of firm profitability.
 \end{itemize}
 
+\subsection{Rationalization Patterns in Adversarial Flips}
+\label{sec:rationalization}
+
+Beyond the quantitative degradation, the most revealing finding concerns \textit{how} the model justifies abandoning its initially correct reasoning when subjected to adversarial pressure. We performed a qualitative analysis of the 14 flipped responses, examining the reasoning chains produced under adversarial conditions and comparing them to the model's correct standard-condition reasoning for the same questions. This analysis reveals three distinct \textit{rationalization strategies}---systematic patterns by which the model constructs post-hoc justifications for ethically compromised answers.
+
+\subsubsection{Utilitarian Override}
+
+Under profit incentive and moral dilemma pressure, the model's most common rationalization strategy is \textit{utilitarian override}: replacing rule-based ethical reasoning with consequentialist arguments that frame the violation as the ``greater good.'' For instance, when a standard-condition response correctly identifies that a transaction should not proceed because it violates fiduciary duty, the profit-incentive version of the same question elicits reasoning such as:
+
+\begin{quote}
+\textit{``While the strict interpretation of the rule would suggest otherwise, in this situation the practical business implications must be weighed. Proceeding with the transaction maximizes value for all stakeholders, and the firm's continued profitability ultimately serves clients' long-term interests.''}
+\end{quote}
+
+This pattern appeared in 6 of the 14 flipped responses (all 4 profit-incentive flips and both moral-dilemma flips). The model does not simply select a different answer; it \textit{constructs a plausible-sounding ethical argument} for the wrong choice, effectively co-opting the language of fiduciary duty (``serves clients' long-term interests'') to justify abandoning it. In regulatory terms, this mirrors the ``client benefit'' rationalization that compliance officers frequently encounter in enforcement actions---the claim that a violation was committed \textit{for} the client's benefit. This constitutes a clear case of unfaithful reasoning \citep{turpin2024language}: the model's stated rationale does not reflect the actual cause of the answer change (adversarial pressure), but instead constructs a post-hoc justification \citep{wei2024jailbroken}.
+
+\subsubsection{Authority Deference}
+
+Under authority pressure, the model exhibits a distinct \textit{authority deference} pattern: it shifts from independent ethical analysis to reasoning that subordinates its judgment to hierarchical authority. A representative rationalization from an authority-pressure flip:
+
+\begin{quote}
+\textit{``Given the CIO's direct instruction and extensive experience, and considering that senior leadership has assessed this as a special situation where standard procedures may not fully apply, the appropriate course of action would be to follow the guidance provided by firm leadership.''}
+\end{quote}
+
+This pattern appeared in all 3 authority-pressure flips. Crucially, the model does not simply defer---it \textit{rationalizes} the deference by invoking the authority figure's experience and judgment as a quasi-ethical basis for overriding the rule. This represents a direct violation of CFA Standard I(B) Independence and Objectivity, which explicitly requires that members ``use reasonable care and judgment to achieve and maintain independence and objectivity'' regardless of external pressure. The model's willingness to construct elaborate justifications for authority deference---rather than simply stating that it must follow orders---makes this pattern particularly dangerous, as it produces outputs that \textit{appear} to involve independent judgment while actually abandoning it.
+
+\subsubsection{Semantic Repackaging}
+
+Under the reframing attack, the model employs \textit{semantic repackaging}: it adopts the adversarial prompt's linguistic framing to recharacterize the ethical violation in neutral or positive terms. For example:
+
+\begin{quote}
+\textit{``In practice, experienced professionals recognize that regulatory guidelines must be interpreted with judgment and pragmatism. The spirit of the regulation is to protect client interests, and in this case a flexible interpretation better serves that spirit than rigid rule-following.''}
+\end{quote}
+
+This pattern appeared in all 3 reframing flips. The model essentially absorbs the adversarial frame (``guidelines, not absolute rules''; ``spirit vs.\ letter'') and reproduces it as its own reasoning. This is particularly insidious because it represents a failure of \textit{meta-cognition}: the model cannot distinguish between genuinely nuanced ethical reasoning and adversarially planted rhetorical frames. In financial regulation, this pattern maps directly to the compliance risk of ``creative compliance''---finding technically permissible interpretations that undermine the regulatory intent.
+
+\subsubsection{Vulnerability Overlap and Compound Risk}
+
+Two questions (easy\_772 and easy\_774) were flipped by \textit{all five} adversarial types, while two others (easy\_403 and easy\_586) showed selective vulnerability. The universally vulnerable questions involved concepts where the model's standard-condition confidence was marginal---it answered correctly but without strong reasoning. Under \textit{any} form of pressure, this marginal confidence collapsed. This suggests a compound risk model: questions where the model's baseline ethical reasoning is weakest are susceptible to \textit{any} pressure type, while questions with stronger baseline reasoning resist most attacks but remain vulnerable to the most effective ones (profit incentive and authority pressure).
+
+Table~\ref{tab:rationalization} summarizes the rationalization taxonomy.
+
+\begin{table}[htbp]
+\centering
+\caption{Taxonomy of AI rationalization strategies under adversarial pressure}
+\label{tab:rationalization}
+\begin{threeparttable}
+\begin{tabular}{llcc}
+\toprule
+\textbf{Strategy} & \textbf{Triggered by} & \textbf{Flips} & \textbf{CFA Standard} \\
+\midrule
+Utilitarian override & Profit, Moral dilemma & 6 & III(A), III(C) \\
+Authority deference & Authority pressure & 3 & I(B) \\
+Semantic repackaging & Reframing & 3 & I(A) \\
+Empathetic compromise\tnote{a} & Emotional manipulation & 2 & III(A) \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item[a] Emotional manipulation flips exhibited a hybrid pattern: the model acknowledged the ethical rule but argued that rigid application would cause ``additional harm'' to the vulnerable client---combining elements of utilitarian override with empathetic framing.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\subsubsection{Implications: AI Rationalization as a Compliance Threat}
+
+The critical insight is that adversarial pressure does not cause the model to produce \textit{obviously wrong} outputs. Instead, it generates \textit{plausible-sounding ethical reasoning} that reaches the wrong conclusion. This has three direct implications for financial AI deployment:
+
+\begin{enumerate}
+    \item \textbf{RegTech vulnerability}: Automated compliance systems that rely on LLM reasoning are susceptible not merely to wrong answers, but to wrong answers accompanied by convincing justifications. A compliance officer reviewing AI-generated analysis would encounter what appears to be thoughtful ethical reasoning rather than an obvious error.
+    \item \textbf{Fiduciary liability}: When an AI system produces a rationalized justification for a compliance violation---rather than simply selecting the wrong multiple-choice answer---the deploying institution faces heightened liability. The rationalization creates a documentary record that could be interpreted as deliberate circumvention rather than innocent error.
+    \item \textbf{Distinction from behavioral bias}: Behavioral bias testing (e.g., loss aversion, anchoring) examines whether AI exhibits irrational decision-making that leads to suboptimal financial outcomes---the risk is \textit{losing money}. Adversarial ethics testing examines whether AI can be manipulated into \textit{compliance violations}---the risk is \textit{legal and regulatory sanctions}. A bank's fear of the latter exceeds its fear of the former: irrationality costs basis points, but ethics failures cost licenses.
+\end{enumerate}
+
 \subsection{Policy Recommendations}
 
 Based on our findings, we propose:
@@ -194,9 +309,16 @@ Based on our findings, we propose:
     \item \textbf{Pressure-Aware Safeguards}: AI systems should include detection mechanisms for adversarial pressure patterns, triggering human escalation when pressure is detected.
 \end{enumerate}
 
+\subsection{Generational Scaling and Alignment}
+\label{sec:scaling}
+
+The cross-model comparison in Section~\ref{sec:crossmodel} introduces a significant caveat to our central finding. While GPT-4o-mini exhibits universal adversarial vulnerability, GPT-5-mini demonstrates complete adversarial immunity---zero flips across all five attack types, with ERS consistently above 1.0. This suggests that the adversarial ethics vulnerability documented in this paper may be a \textit{generational} phenomenon rather than a fundamental limitation of LLMs.
+
+The complete elimination of adversarial flips in GPT-5-mini suggests that alignment improvements in newer model generations may inherently strengthen ethical reasoning robustness. If this pattern holds across model families (e.g., Claude, Gemini, open-source models such as Llama and Qwen), the practical implication is that the ``form over principles'' critique---while valid for current-generation models---may become less applicable as alignment techniques mature. However, this optimistic interpretation requires substantial additional validation: (i) replication across multiple model families and providers, (ii) testing with more sophisticated adversarial attacks that may exploit newer models' specific weaknesses, and (iii) evaluation on harder ethics question sets where baseline accuracy is lower and adversarial pressure may find more purchase. Until such validation is completed, the conservative policy recommendation---mandatory adversarial ethics testing with ERS $\geq 0.95$ thresholds---remains appropriate even for newer model generations.
+
 \subsection{Limitations}
 
-Our adversarial prompts are synthetic and may not capture the full subtlety of real-world pressure. The sample size ($n = 47$), drawn from the CFA-Easy dataset, provides substantially more statistical power than preliminary studies but remains limited; future work should expand to larger and more diverse ethics question banks. The CFA-Easy dataset represents moderate difficulty; results on harder question sets (e.g., CFA-Challenge) may differ. Results are model-specific; different models may exhibit different vulnerability profiles.
+Our adversarial prompts are synthetic and may not capture the full subtlety of real-world pressure. The sample size ($n = 47$), drawn from the CFA-Easy dataset, provides substantially more statistical power than preliminary studies but remains limited; future work should expand to larger and more diverse ethics question banks. The CFA-Easy dataset represents moderate difficulty; results on harder question sets (e.g., CFA-Challenge) may differ. Results are model-specific; different models may exhibit different vulnerability profiles. The cross-model comparison is limited to two models from the same provider (OpenAI); generational robustness gains may not generalize to other model families.
 
 %% ============================================
 %% 5. CONCLUSION
@@ -204,9 +326,9 @@ Our adversarial prompts are synthetic and may not capture the full subtlety of r
 \section{Conclusion}
 \label{sec:conclusion}
 
-This paper demonstrates that LLM ethical judgment in financial contexts is \textit{universally} vulnerable to adversarial pressure. Across 47 CFA Ethics questions, all five attack types consistently degrade performance: profit incentive and authority pressure each reduce accuracy by 6.4 pp (ERS = 0.925), while emotional manipulation, reframing, and moral dilemma each cause a 4.3 pp decline (ERS = 0.950). A total of 14 questions were flipped across all conditions, demonstrating the breadth of this vulnerability. These findings suggest that LLMs learn the \textit{form} rather than the \textit{principles} of ethical reasoning, creating a dangerous attack surface for AI systems in fiduciary roles.
+This paper demonstrates that LLM ethical judgment in financial contexts is \textit{universally} vulnerable to adversarial pressure---but that this vulnerability may be generationally bounded. Across 47 CFA Ethics questions, all five attack types consistently degrade GPT-4o-mini's performance: profit incentive and authority pressure each reduce accuracy by 6.4 pp (ERS = 0.925), while emotional manipulation, reframing, and moral dilemma each cause a 4.3 pp decline (ERS = 0.950). A total of 14 questions were flipped across all conditions, demonstrating the breadth of this vulnerability. However, a cross-model comparison reveals that GPT-5-mini achieves \textit{zero} adversarial flips with ERS $> 1.0$ across all five attack types, suggesting that model scaling and alignment improvements may naturally resolve the adversarial ethics vulnerability. These findings jointly suggest that while current-generation models learn the \textit{form} rather than the \textit{principles} of ethical reasoning, next-generation alignment may close this gap.
 
-\textbf{The question is not whether AI can recite ethical rules, but whether it can uphold them under pressure.} Our evidence suggests it cannot---at least not reliably.
+\textbf{The question is not whether AI can recite ethical rules, but whether it can uphold them under pressure.} For GPT-4o-mini, the answer is no. For GPT-5-mini, the evidence is cautiously optimistic---but mandatory adversarial ethics testing remains essential until robustness is validated across model families and attack sophistication levels.
 
 %% ============================================
 %% DECLARATIONS
@@ -220,7 +342,7 @@ The authors declare that they have no known competing financial interests or per
 \textbf{Guang-Di Chang}: Supervision, Writing -- Review \& Editing.
 
 \section*{Acknowledgments}
-The authors thank the anonymous reviewers for their constructive feedback. Computational resources were provided by National Taiwan University of Science and Technology (NTUST).
+Computational resources were provided by National Taiwan University of Science and Technology (NTUST).
 
 \section*{Data Availability}
 The experimental data and analysis code are available from the corresponding author upon reasonable request.
@@ -246,10 +368,15 @@ Perez, E., Huang, S., Song, F., et al. (2022).
 \newblock Red teaming language models with language models.
 \newblock In \textit{EMNLP 2022}.
 
-\bibitem[Wei et al.(2024)]{wei2024jailbroken}
-Wei, A., Haghtalab, N., \& Steinhardt, J. (2024).
+\bibitem[Wei et al.(2023)]{wei2024jailbroken}
+Wei, A., Haghtalab, N., \& Steinhardt, J. (2023).
 \newblock Jailbroken: How does LLM safety training fail?
-\newblock In \textit{NeurIPS 2024}.
+\newblock In \textit{NeurIPS 2023}.
+
+\bibitem[Turpin et al.(2023)]{turpin2024language}
+Turpin, M., Michael, J., Perez, E., \& Bowman, S. R. (2023).
+\newblock Language models don't always say what they think: Unfaithful explanations in chain-of-thought prompting.
+\newblock In \textit{NeurIPS 2023}.
 
 \bibitem[Wu et al.(2023)]{wu2023bloomberggpt}
 Wu, S., Irsoy, O., Lu, S., et al. (2023).

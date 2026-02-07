@@ -59,7 +59,7 @@ def generate_i1i3_figures():
 
     # Load data
     i1_path = PROJECT_ROOT / 'experiments/I1_counterfactual/results/run_20260206_053445/results.json'
-    i3_path = PROJECT_ROOT / 'experiments/I3_noise_red_herrings/results/run_20260206_054039/results.json'
+    i3_path = PROJECT_ROOT / 'experiments/I3_noise_red_herrings/results/run_20260206_203913/results.json'
 
     with open(i1_path) as f:
         i1 = json.load(f)
@@ -133,7 +133,7 @@ def generate_i1i3_figures():
     # Fig 3: Combined 2x2 stress test framework
     fig, ax = plt.subplots(figsize=(6, 4))
     categories = ['Standard\nAccuracy', 'Noise-Degraded\n(Worst Case)', 'Robust\nAccuracy']
-    values = [86.0, 82.0, 58.0]
+    values = [82.4, 79.0, 63.5]
     colors_bar = [COLORS['blue'], COLORS['orange'], COLORS['red']]
     bars = ax.barh(categories, values, color=colors_bar, height=0.5, edgecolor='white')
 
@@ -254,61 +254,81 @@ def generate_i2_figures():
     print('\n=== I2: Behavioral Biases Figures ===')
     fig_dir = str(PROJECT_ROOT / 'drafts/selected/I2_behavioral_biases/figures')
 
-    # Load data
-    data_path = PROJECT_ROOT / 'experiments/I2_behavioral_biases/results/run_20260206_052135/results.json'
+    # Load latest data
+    results_dir = PROJECT_ROOT / 'experiments/I2_behavioral_biases/results'
+    result_files = sorted(results_dir.glob('run_*/results.json'))
+    data_path = result_files[-1] if result_files else None
+    if data_path is None:
+        print('  No I2 results found, skipping')
+        return
+    print(f'  Using: {data_path}')
     with open(data_path) as f:
         data = json.load(f)
 
     by_type = data['summary']['by_bias_type']
 
-    # Fig 1: Bias score comparison (inducing vs neutral)
-    fig, ax = plt.subplots(figsize=(8, 5))
-    bias_types = ['Loss\nAversion', 'Anchoring', 'Framing', 'Recency', 'Disposition\nEffect']
-    bias_keys = ['loss_aversion', 'anchoring', 'framing', 'recency', 'disposition_effect']
+    # Fig 1: Bias score comparison (inducing vs neutral) — 6 bias types
+    fig, ax = plt.subplots(figsize=(10, 5))
+    bias_types = ['Loss\nAversion', 'Framing', 'Anchoring', 'Disposition\nEffect', 'Over-\nconfidence', 'Recency']
+    bias_keys = ['loss_aversion', 'framing', 'anchoring', 'disposition_effect', 'overconfidence', 'recency']
 
     inducing = [by_type[k]['avg_bias_score'] for k in bias_keys]
     neutral = [by_type[k]['avg_neutral_score'] for k in bias_keys]
 
     x = np.arange(len(bias_types))
-    width = 0.35
+    width = 0.32
 
     bars1 = ax.bar(x - width/2, inducing, width, label='Bias-Inducing', color=COLORS['red'], edgecolor='white')
     bars2 = ax.bar(x + width/2, neutral, width, label='Neutral (Debiased)', color=COLORS['green'], edgecolor='white')
 
     ax.set_ylabel('Bias Score (0 = rational, 1 = fully biased)')
-    ax.set_title('Behavioral Bias Scores: Inducing vs. Neutral Framing')
+    ax.set_title(f'Behavioral Bias Scores: Inducing vs. Neutral Framing (N={data["summary"]["n_scenarios"]})')
     ax.set_xticks(x)
     ax.set_xticklabels(bias_types)
-    ax.legend()
+    ax.legend(loc='upper right')
     ax.set_ylim(0, 0.8)
-    ax.axhline(y=0.5, color=COLORS['gray'], linestyle='--', alpha=0.3, label='Chance level')
+    ax.axhline(y=0.5, color=COLORS['gray'], linestyle='--', alpha=0.3)
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
+
+    # Add tier labels
+    ax.axvspan(-0.5, 1.5, alpha=0.06, color=COLORS['green'])  # Tier 1
+    ax.axvspan(1.5, 2.5, alpha=0.06, color=COLORS['orange'])  # Tier 2
+    ax.axvspan(2.5, 5.5, alpha=0.06, color=COLORS['red'])     # Tier 3
+    ax.text(0.5, 0.75, 'Tier 1\n(Surface)', ha='center', fontsize=8, color=COLORS['green'], fontstyle='italic')
+    ax.text(2, 0.75, 'Tier 2', ha='center', fontsize=8, color=COLORS['orange'], fontstyle='italic')
+    ax.text(4, 0.75, 'Tier 3 (Deep)', ha='center', fontsize=8, color=COLORS['red'], fontstyle='italic')
 
     save_fig(fig, fig_dir, 'fig1_bias_score_comparison')
 
-    # Fig 2: Debiasing effect by type
-    fig, ax = plt.subplots(figsize=(7, 5))
+    # Fig 2: Debiasing effect by type — sorted by debiasing magnitude
+    fig, ax = plt.subplots(figsize=(9, 5))
     debiasing = [by_type[k]['avg_debiasing_effect'] for k in bias_keys]
     n_scenarios = [by_type[k]['n_scenarios'] for k in bias_keys]
 
-    bar_colors = [COLORS['green'] if d > 0 else COLORS['gray'] for d in debiasing]
-    bars = ax.bar(bias_types, debiasing, color=bar_colors, width=0.6, edgecolor='white')
+    bar_colors = [COLORS['green'] if d > 0.1 else COLORS['orange'] if d > 0 else COLORS['red'] if d < 0 else COLORS['gray'] for d in debiasing]
+    bars = ax.bar(bias_types, debiasing, color=bar_colors, width=0.55, edgecolor='white')
 
     for bar, d, n in zip(bars, debiasing, n_scenarios):
-        ax.text(bar.get_x() + bar.get_width()/2, max(d, 0) + 0.01,
-                f'+{d:.2f}\n(n={n})', ha='center', va='bottom', fontsize=10, fontweight='bold')
+        label = f'{d:+.2f}\n(n={n})'
+        y_pos = max(d, 0) + 0.01 if d >= 0 else d - 0.04
+        va = 'bottom' if d >= 0 else 'top'
+        ax.text(bar.get_x() + bar.get_width()/2, y_pos,
+                label, ha='center', va=va, fontsize=9, fontweight='bold')
 
-    ax.set_ylabel('Debiasing Effect (higher = easier to debias)')
-    ax.set_title('Debiasing Effect by Bias Type')
-    ax.set_ylim(-0.05, 0.55)
-    ax.axhline(y=0, color='black', linewidth=0.5)
+    ax.set_ylabel('Debiasing Effect ($\\Delta_{debias}$)')
+    ax.set_title('Three-Tier Debiasing Hierarchy')
+    ax.set_ylim(-0.15, 0.45)
+    ax.axhline(y=0, color='black', linewidth=0.8)
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
 
-    # Add annotation
-    ax.annotate('Resistant to\ndebiasing', xy=(3.5, 0), fontsize=9, color=COLORS['red'],
-                ha='center', va='top',
+    # Tier annotations
+    ax.annotate('Tier 1: Surface biases\n(amenable to debiasing)',
+                xy=(0.5, 0.35), fontsize=8, color=COLORS['green'], ha='center',
+                bbox=dict(boxstyle='round,pad=0.3', facecolor='#E0FFE0', edgecolor=COLORS['green'], alpha=0.8))
+    ax.annotate('Tier 3: Deep biases\n(resistant to debiasing)',
+                xy=(4, -0.10), fontsize=8, color=COLORS['red'], ha='center',
                 bbox=dict(boxstyle='round,pad=0.3', facecolor='#FFE0E0', edgecolor=COLORS['red'], alpha=0.8))
 
     save_fig(fig, fig_dir, 'fig2_debiasing_effect')

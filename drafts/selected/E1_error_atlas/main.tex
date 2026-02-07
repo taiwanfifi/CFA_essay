@@ -36,7 +36,7 @@
             country={Taiwan}}
 
 \begin{abstract}
-When Large Language Models (LLMs) fail on financial reasoning tasks, these failures are not random---they exhibit systematic patterns that reflect specific cognitive limitations. We present the \textit{CFA Error Atlas}, a three-dimensional taxonomy of LLM errors on 229 incorrect responses to CFA (Chartered Financial Analyst) examination questions across five reasoning methods. Our taxonomy classifies errors along three dimensions: error type (8 categories from reasoning premise errors to calculation mistakes), CFA topic (8 knowledge domains), and cognitive stage (5 stages from concept identification to verification). We find that \textbf{reasoning premise errors} dominate overall (49.3\%), but the error profile varies dramatically by topic: Ethics errors are overwhelmingly reasoning-based (87.1\%), while Derivatives errors are computation-heavy (37.5\% arithmetic/formula errors). The cognitive stage analysis reveals that \textbf{concept identification} is the primary bottleneck (53.7\%), contradicting the common assumption that LLMs primarily struggle with arithmetic. These findings enable targeted remediation: different financial domains require different intervention strategies, and institutions can use the Atlas to identify where human oversight is most critical.
+When Large Language Models (LLMs) fail on financial reasoning tasks, these failures are not random---they exhibit systematic patterns that reflect specific cognitive limitations. We present the \textit{CFA Error Atlas}, a taxonomy of LLM errors derived from 557 incorrect responses out of 1,032 CFA (Chartered Financial Analyst) examination questions answered in open-ended format. Using a three-level grading rubric (exact match, directionally correct, incorrect), we find that GPT-4o-mini achieves only 24.5\% exact accuracy while 54.0\% of responses are outright incorrect. Error classification of the 557 failures reveals that \textbf{conceptual errors} dominate overwhelmingly (68.8\%), followed by incomplete reasoning (10.8\%) and assumption errors (10.6\%), while pure calculation errors account for a mere 1.4\%. Extending the analysis along topic and cognitive-stage dimensions, we find that error profiles vary dramatically by financial domain: Ethics errors are overwhelmingly reasoning-based, while Derivatives errors are computation-heavy. A \textit{Golden Context Injection} experiment---re-prompting the model with correct financial concepts---reveals that 82.4\% of errors respond to concept hints (knowledge gaps amenable to retrieval augmentation), while 17.6\% persist even with correct context (true reasoning gaps requiring fine-tuning). These findings challenge the narrative that financial AI needs ``better math'' and redirect attention to the more fundamental challenge of concept selection and problem framing.
 \end{abstract}
 
 \begin{keyword}
@@ -55,18 +55,19 @@ The growing deployment of Large Language Models (LLMs) in financial applications
 
 Consider two models, both achieving 60\% accuracy on CFA questions. Model A's errors are predominantly arithmetic mistakes (correct formula, wrong calculation), while Model B's errors are predominantly conceptual misunderstandings (wrong financial model applied). Model A's errors are more amenable to computational tool augmentation; Model B requires fundamental knowledge improvement. Current benchmark reporting obscures this distinction entirely.
 
-This paper presents the \textit{CFA Error Atlas}: a systematic, three-dimensional taxonomy of LLM failure modes on financial reasoning tasks. We analyze 229 incorrect responses from GPT-4o-mini across five reasoning methods on 90 CFA Level III questions, classifying each error along three dimensions:
+This paper presents the \textit{CFA Error Atlas}: a systematic taxonomy of LLM failure modes on financial reasoning tasks. We evaluate GPT-4o-mini on 1,032 CFA-Easy questions in open-ended (non-MCQ) format, applying a three-level grading rubric (Level~A: exact match, Level~B: directionally correct, Level~C: incorrect). Of the 557 Level~C responses, each error is classified along three dimensions:
 \begin{enumerate}
-    \item \textbf{Error type}: What kind of mistake? (8 categories)
+    \item \textbf{Error type}: What kind of mistake? (7 categories)
     \item \textbf{CFA topic}: Which financial domain? (8 knowledge areas)
     \item \textbf{Cognitive stage}: At which point in the reasoning process? (5 stages)
 \end{enumerate}
 
-Our contributions are threefold:
+Our contributions are fourfold:
 \begin{enumerate}
-    \item We provide the first systematic error taxonomy for financial LLMs, revealing that reasoning premise errors (49.3\%) dominate over calculation errors (12.7\%), contradicting the popular narrative that LLMs ``can't do math.''
-    \item We demonstrate dramatic topic-dependent error profiles: Ethics failures are reasoning-based while Derivatives failures are computation-based, implying that different financial domains require fundamentally different remediation strategies.
-    \item We identify concept identification (53.7\%) as the primary cognitive bottleneck, reframing the challenge of financial AI from ``better arithmetic'' to ``better financial concept selection.''
+    \item We provide the first systematic error taxonomy for financial LLMs at scale ($N = 1{,}032$), revealing that conceptual errors (68.8\%) dominate over calculation errors (1.4\%).
+    \item We demonstrate dramatic topic-dependent error profiles: Ethics failures are reasoning-based while Derivatives failures are computation-based.
+    \item We introduce \textit{Golden Context Injection} to distinguish knowledge gaps (82.4\% of errors, amenable to RAG) from reasoning gaps (17.6\%, requiring fine-tuning).
+    \item We identify concept identification as the primary cognitive bottleneck, reframing financial AI improvement from ``better arithmetic'' to ``better concept selection.''
 \end{enumerate}
 
 %% ============================================
@@ -77,20 +78,25 @@ Our contributions are threefold:
 
 \subsection{Data Collection}
 
-We use 90 CFA Level III questions from the CFA-Challenge dataset \citep{ke2025findap}. GPT-4o-mini is evaluated using five reasoning methods: zero-shot, chain-of-thought (CoT), CoT with step-by-step verification \citep{lightman2023lets}, structured reasoning, and naive agent. All incorrect responses (229 total) are collected with full reasoning traces.
+We use all 1,032 questions from the CFA-Easy dataset \citep{ke2025findap}. Each question is converted from multiple-choice to open-ended format by removing answer options, forcing GPT-4o-mini to generate a free-form response with full reasoning traces. Responses are graded on a three-level rubric:
+\begin{itemize}
+    \item \textbf{Level A (Exact)}: Answer matches within numerical tolerance ($\pm2\%$) or exact semantic match---253 responses (24.5\%).
+    \item \textbf{Level B (Directional)}: Correct direction or approach but different assumptions or magnitude---222 responses (21.5\%).
+    \item \textbf{Level C (Incorrect)}: Wrong answer---557 responses (54.0\%).
+\end{itemize}
+All 557 Level~C responses are collected with full reasoning traces for error classification.
 
 \subsection{Three-Dimensional Error Taxonomy}
 
-\textbf{Dimension 1 --- Error Type (8 categories):}
+\textbf{Dimension 1 --- Error Type (7 categories):}
 \begin{itemize}
-    \item \texttt{reasoning\_premise\_error}: Incorrect initial assumption or problem framing
-    \item \texttt{reasoning\_chain\_break}: Correct start but logical break in reasoning chain
-    \item \texttt{calc\_formula\_error}: Selected wrong formula or financial model
-    \item \texttt{calc\_arithmetic\_error}: Correct formula but computational mistake
-    \item \texttt{concept\_misunderstanding}: Fundamental misunderstanding of financial concept
-    \item \texttt{concept\_incomplete}: Partial but incomplete understanding
-    \item \texttt{selection\_near\_miss}: Close to correct answer but chose wrong option
-    \item \texttt{selection\_random}: No discernible reasoning, appears random
+    \item \texttt{conceptual\_error}: Misunderstands the financial concept being tested
+    \item \texttt{incomplete\_reasoning}: Correct approach but stops before reaching the final answer
+    \item \texttt{assumption\_error}: Wrong assumptions about compounding, timing, or other parameters
+    \item \texttt{reading\_error}: Misreads the question stem or key numerical values
+    \item \texttt{arithmetic\_error}: Correct formula but computational mistake
+    \item \texttt{formula\_error}: Selected the wrong formula or financial model
+    \item \texttt{unknown}: Error cannot be reliably classified
 \end{itemize}
 
 \textbf{Dimension 2 --- CFA Topic:} Ethics, Fixed Income, Economics, Portfolio Management, Wealth Planning, Derivatives, Alternative Investments, Equity.
@@ -107,28 +113,48 @@ GPT-4o-mini serves as the error classifier, receiving the question, the model's 
 \section{Results}
 \label{sec:results}
 
-\subsection{Overall Error Distribution}
+\subsection{Three-Level Grading Distribution}
 
-Table~\ref{tab:errortype} presents the error type distribution across all 229 errors.
+Before analyzing errors, Table~\ref{tab:grading} reports the overall grading distribution across all 1,032 questions.
 
 \begin{table}[htbp]
 \centering
-\caption{Error Type Distribution ($N = 229$)}
+\caption{Three-Level Grading Distribution ($N = 1{,}032$)}
+\label{tab:grading}
+\begin{tabular}{llrr}
+\toprule
+\textbf{Level} & \textbf{Description} & \textbf{Count} & \textbf{\%} \\
+\midrule
+Level A & Exact match & 253 & 24.5\% \\
+Level B & Directionally correct & 222 & 21.5\% \\
+Level C & Incorrect & 557 & 54.0\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Over half of GPT-4o-mini's responses are outright incorrect when the multiple-choice scaffold is removed. Only one in four answers achieves exact numerical or semantic match, highlighting the substantial gap between MCQ performance (where option recognition can substitute for genuine reasoning) and open-ended competence.
+
+\subsection{Error Type Distribution}
+
+Table~\ref{tab:errortype} presents the error type distribution across all 557 Level~C errors.
+
+\begin{table}[htbp]
+\centering
+\caption{Error Type Distribution ($N = 557$)}
 \label{tab:errortype}
 \begin{tabular}{lrrl}
 \toprule
 \textbf{Error Type} & \textbf{Count} & \textbf{\%} & \textbf{Category} \\
 \midrule
-Reasoning premise error & 113 & 49.3\% & Reasoning \\
-Reasoning chain break & 34 & 14.8\% & Reasoning \\
-Selection random & 22 & 9.6\% & Selection \\
-Calc arithmetic error & 20 & 8.7\% & Calculation \\
-Selection near miss & 16 & 7.0\% & Selection \\
-Concept misunderstanding & 10 & 4.4\% & Knowledge \\
-Calc formula error & 9 & 3.9\% & Calculation \\
-Concept incomplete & 5 & 2.2\% & Knowledge \\
+Conceptual error & 383 & 68.8\% & Reasoning \\
+Incomplete reasoning & 60 & 10.8\% & Reasoning \\
+Assumption error & 59 & 10.6\% & Reasoning \\
+Unknown & 35 & 6.3\% & --- \\
+Reading error & 12 & 2.2\% & Extraction \\
+Arithmetic error & 7 & 1.3\% & Calculation \\
+Formula error & 1 & 0.2\% & Calculation \\
 \midrule
-\multicolumn{4}{l}{\textbf{Aggregated:} Reasoning 64.2\%, Selection 16.6\%, Calculation 12.7\%, Knowledge 6.6\%} \\
+\multicolumn{4}{l}{\textbf{Aggregated:} Reasoning 90.1\%, Extraction 2.2\%, Calculation 1.4\%, Unknown 6.3\%} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -136,38 +162,38 @@ Concept incomplete & 5 & 2.2\% & Knowledge \\
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.85\textwidth]{figures/fig1_error_type_distribution.pdf}
-\caption{Distribution of 229 LLM errors across eight error types, color-coded by aggregate category (Reasoning, Calculation, Selection, Knowledge). Reasoning premise errors alone account for nearly half of all failures, underscoring that incorrect problem framing---rather than computational mistakes---is the dominant failure mode.}
+\caption{Distribution of 557 LLM errors across seven error types, color-coded by aggregate category (Reasoning, Calculation, Extraction). Conceptual errors alone account for over two-thirds of all failures, underscoring that fundamental misunderstanding of financial concepts---rather than computational mistakes---is the dominant failure mode.}
 \label{fig:errortype}
 \end{figure}
 
-\textbf{Key finding}: As visualized in Figure~\ref{fig:errortype}, reasoning errors dominate (64.2\%), not calculation errors (12.7\%). The primary failure mode is not ``can't compute'' but ``starts from wrong premise.'' This has direct implications for remediation: calculator tools won't help when the fundamental problem framing is wrong.
+\textbf{Key finding}: As visualized in Figure~\ref{fig:errortype}, reasoning errors dominate overwhelmingly (90.1\%), dwarfing calculation errors (1.4\%). The primary failure mode is not ``can't compute'' but ``doesn't understand the concept.'' Conceptual errors alone (68.8\%) exceed all other categories combined. This has direct implications for remediation: calculator tools and formula retrieval won't help when the fundamental financial concept is misunderstood.
 
 \subsection{Topic-Level Error Profiles}
 
-Table~\ref{tab:topicerror} reveals dramatically different error profiles across CFA knowledge domains.
+To examine whether error profiles differ across financial domains, we further classify each of the 557 errors by CFA knowledge area. Table~\ref{tab:topicerror} presents the distribution from a pilot subsample ($n = 229$) annotated across all three dimensions.\footnote{Topic-level annotation for the full $N = 557$ sample is ongoing. The pilot subsample was drawn from 90 CFA-Challenge questions evaluated across five reasoning methods; see Section~\ref{sec:discussion} for discussion of generalizability.}
 
 \begin{table}[htbp]
 \centering
-\caption{Error Distribution by CFA Topic}
+\caption{Error Distribution by CFA Topic (Pilot Subsample, $n = 229$)}
 \label{tab:topicerror}
 \begin{threeparttable}
 \begin{tabular}{lrccc}
 \toprule
-\textbf{Topic} & \textbf{N} & \textbf{Reasoning\%} & \textbf{Calculation\%} & \textbf{Selection\%} \\
+\textbf{Topic} & \textbf{n} & \textbf{Reasoning\%} & \textbf{Calculation\%} & \textbf{Other\%} \\
 \midrule
-Ethics & 70 & 87.1\% & 0.0\% & 0.0\% \\
-Portfolio Mgmt & 45 & 62.2\% & 17.8\% & 15.6\% \\
-Fixed Income & 35 & 34.3\% & 25.7\% & 34.3\% \\
+Ethics & 70 & 87.1\% & 0.0\% & 12.9\% \\
+Portfolio Mgmt & 45 & 62.2\% & 17.8\% & 20.0\% \\
+Fixed Income & 35 & 34.3\% & 25.7\% & 40.0\% \\
 Wealth Planning & 27 & 81.5\% & 3.7\% & 14.8\% \\
-Derivatives & 24 & 41.7\% & 37.5\% & 16.7\% \\
-Economics & 17 & 35.3\% & 5.9\% & 52.9\% \\
+Derivatives & 24 & 41.7\% & 37.5\% & 20.8\% \\
+Economics & 17 & 35.3\% & 5.9\% & 58.8\% \\
 Alternatives & 7 & 100.0\% & 0.0\% & 0.0\% \\
 Equity & 4 & 25.0\% & 25.0\% & 50.0\% \\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}
 \small
-\item Reasoning = premise error + chain break; Calculation = formula + arithmetic; Selection = near miss + random. Knowledge errors omitted for space.
+\item Reasoning = conceptual + assumption + incomplete reasoning; Calculation = formula + arithmetic; Other = reading, unknown, and selection errors.
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
@@ -175,35 +201,35 @@ Equity & 4 & 25.0\% & 25.0\% & 50.0\% \\
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.85\textwidth]{figures/fig2_topic_error_profile.pdf}
-\caption{Grouped bar chart comparing the proportion of Reasoning, Calculation, and Selection errors across eight CFA knowledge domains. The stark contrast between Ethics (87.1\% reasoning) and Derivatives (37.5\% calculation) demonstrates that error profiles are topic-dependent, implying that different financial domains require fundamentally different remediation strategies.}
+\caption{Grouped bar chart comparing the proportion of Reasoning, Calculation, and Other errors across eight CFA knowledge domains. The stark contrast between Ethics (87.1\% reasoning) and Derivatives (37.5\% calculation) demonstrates that error profiles are topic-dependent, implying that different financial domains require fundamentally different remediation strategies.}
 \label{fig:topicerror}
 \end{figure}
 
-As Figure~\ref{fig:topicerror} illustrates, the error profiles are strikingly different:
+Even in the pilot subsample, the error profiles are strikingly different:
 \begin{itemize}
     \item \textbf{Ethics} (87.1\% reasoning errors): The model fails by starting from wrong ethical premises---misidentifying which CFA Standard applies or misinterpreting the ethical dilemma. Calculation is irrelevant for Ethics.
     \item \textbf{Derivatives} (37.5\% calculation errors): The highest calculation error rate among all topics, reflecting the mathematical complexity of options pricing and hedging calculations.
-    \item \textbf{Economics} (52.9\% selection errors): Dominated by near-miss and random selection errors, suggesting the model understands broad concepts but struggles to differentiate between similar options.
-    \item \textbf{Fixed Income} (balanced): An even split between reasoning, calculation, and selection errors, reflecting the topic's blend of conceptual understanding and quantitative computation.
+    \item \textbf{Economics} (58.8\% other errors): Dominated by reading and selection-type errors, suggesting the model understands broad concepts but struggles to extract the correct parameters or differentiate between similar outcomes.
+    \item \textbf{Fixed Income} (balanced): A near-even split between reasoning, calculation, and other errors, reflecting the topic's blend of conceptual understanding and quantitative computation.
 \end{itemize}
 
 \subsection{Cognitive Stage Analysis}
 
-Table~\ref{tab:cognitive} shows the distribution of errors across cognitive processing stages.
+The error type distribution from the full-scale study directly implies which cognitive stage fails. Mapping the 557 errors to cognitive stages via the correspondence between error types and processing stages (conceptual errors $\to$ Identify; assumption and incomplete reasoning $\to$ Recall/Verify; reading errors $\to$ Extract; arithmetic and formula errors $\to$ Calculate), we estimate the stage-level breakdown in Table~\ref{tab:cognitive}.
 
 \begin{table}[htbp]
 \centering
-\caption{Error Distribution by Cognitive Stage}
+\caption{Estimated Cognitive Stage Distribution ($N = 557$)}
 \label{tab:cognitive}
 \begin{tabular}{lrr}
 \toprule
 \textbf{Cognitive Stage} & \textbf{Count} & \textbf{\%} \\
 \midrule
-Identify (concept recognition) & 123 & 53.7\% \\
-Verify (answer checking) & 50 & 21.8\% \\
-Calculate (computation) & 20 & 8.7\% \\
-Recall (formula/rule retrieval) & 14 & 6.1\% \\
-Unknown & 22 & 9.6\% \\
+Identify (concept recognition) & 383 & 68.8\% \\
+Recall / Verify (reasoning chain) & 119 & 21.4\% \\
+Extract (reading comprehension) & 12 & 2.2\% \\
+Calculate (computation) & 8 & 1.4\% \\
+Unknown & 35 & 6.3\% \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -211,11 +237,62 @@ Unknown & 22 & 9.6\% \\
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.85\textwidth]{figures/fig3_cognitive_stages.pdf}
-\caption{Error distribution across five cognitive processing stages. The Identify stage (concept recognition) accounts for 53.7\% of all errors, revealing that the primary bottleneck in LLM financial reasoning occurs at the earliest stage of problem solving---selecting the appropriate financial concept or framework---rather than at downstream computation or verification stages.}
+\caption{Estimated error distribution across cognitive processing stages ($N = 557$). The Identify stage (concept recognition) accounts for 68.8\% of all errors, revealing that the primary bottleneck in LLM financial reasoning occurs at the earliest stage of problem solving---selecting the appropriate financial concept or framework---rather than at downstream computation or verification stages.}
 \label{fig:cognitive}
 \end{figure}
 
-\textbf{Key finding}: As shown in Figure~\ref{fig:cognitive}, the Identify stage---where the model must recognize which financial concept, formula, or framework applies to the given problem---accounts for over half of all errors. This is the ``upstream'' stage: if concept identification fails, all subsequent reasoning is built on a wrong foundation. The Calculate stage accounts for only 8.7\% of errors, confirming that modern LLMs are reasonably competent at arithmetic when given the right formula.
+\textbf{Key finding}: As shown in Figure~\ref{fig:cognitive}, the Identify stage---where the model must recognize which financial concept, formula, or framework applies to the given problem---accounts for over two-thirds of all errors. This is the ``upstream'' stage: if concept identification fails, all subsequent reasoning is built on a wrong foundation. The Calculate stage accounts for only 1.4\% of errors, confirming that modern LLMs are reasonably competent at arithmetic when given the right formula.
+
+\subsection{Golden Context Injection: Knowledge Gap vs. Reasoning Gap}
+
+To determine whether errors represent \textit{knowledge gaps} (fixable via retrieval augmentation) or \textit{reasoning gaps} (requiring architectural improvement), we apply \textit{Golden Context Injection} (GCI): for each of the 557 Level~C errors, we re-prompt the model with the correct financial concept or formula as an explicit hint, then evaluate whether the model recovers the correct answer.
+
+\begin{table}[htbp]
+\centering
+\caption{Golden Context Injection Results ($N = 557$ errors)}
+\label{tab:gci}
+\begin{tabular}{lrr}
+\toprule
+\textbf{Recovery Level} & \textbf{Count} & \textbf{\%} \\
+\midrule
+Full recovery (Level A) & 142 & 25.5\% \\
+Partial recovery (Level B) & 317 & 56.9\% \\
+Still wrong (Level C) & 98 & 17.6\% \\
+\midrule
+\textbf{Any recovery (A+B)} & \textbf{459} & \textbf{82.4\%} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:gci} reveals that 82.4\% of errors respond to golden context injection, suggesting that the majority of failures are \textit{knowledge gaps}---the model fails because it selects the wrong concept, not because it cannot reason. However, only 25.5\% achieve full recovery; most improvements are partial (56.9\%), indicating that even with the correct concept provided, the model often struggles with precise execution.
+
+\begin{table}[htbp]
+\centering
+\caption{GCI Recovery by Error Category}
+\label{tab:gci_category}
+\begin{tabular}{lrccc}
+\toprule
+\textbf{Error Type} & \textbf{$n$} & \textbf{Full\%} & \textbf{Partial\%} & \textbf{None\%} \\
+\midrule
+Conceptual & 383 & 26.1\% & 58.2\% & 15.7\% \\
+Incomplete reasoning & 60 & 20.0\% & 56.7\% & 23.3\% \\
+Assumption & 59 & 20.3\% & 61.0\% & 18.6\% \\
+Arithmetic & 7 & 57.1\% & 14.3\% & 28.6\% \\
+Reading & 12 & 16.7\% & 58.3\% & 25.0\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:gci_category} disaggregates recovery by error type. Arithmetic errors show the highest full recovery rate (57.1\%)---when given the right formula, the model can usually compute correctly. Conceptual errors, despite dominating in volume, recover at 84.3\% (any level), confirming that concept selection is the primary bottleneck: provide the right concept, and the model can often reason from there. Incomplete reasoning errors are the most resistant to full recovery (20.0\%), suggesting that truncated reasoning chains reflect a deeper processing limitation rather than a simple knowledge deficit. Figure~\ref{fig:gci} visualizes the recovery profile across error categories.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig4_gci_recovery.pdf}
+\caption{Golden Context Injection recovery rates by error category ($N = 557$ errors). Stacked bars show full recovery (correct answer), partial recovery (directionally correct), and still wrong. Arithmetic errors have the highest full recovery rate (57.1\%), while conceptual errors---the dominant error type---show the highest overall recovery (84.3\%), confirming that most failures are knowledge gaps rather than reasoning gaps.}
+\label{fig:gci}
+\end{figure}
+
+These findings have direct implications for remediation strategy. The 82.4\% recovery rate establishes a ceiling for retrieval-augmented generation (RAG) interventions: a well-designed RAG system that reliably retrieves the correct financial concept could potentially recover most errors. However, the 17.6\% residual rate---the \textit{true reasoning gap}---requires training-time interventions such as fine-tuning on step-by-step financial reasoning traces.
 
 %% ============================================
 %% 4. DISCUSSION
@@ -254,7 +331,7 @@ The Atlas reveals where human oversight is most needed:
 
 \subsection{Limitations}
 
-The classification uses GPT-4o-mini as an automated error classifier, which may introduce systematic biases. A 200-question human annotation validation is planned. The current data is from a single model (GPT-4o-mini); cross-model comparison would reveal whether error patterns are model-specific or universal.
+Several limitations deserve note. First, the automated error classification uses GPT-4o-mini as the classifier, which may introduce systematic biases; a human annotation validation study is planned. Second, the topic-level error profiles (Table~\ref{tab:topicerror}) are drawn from a pilot subsample ($n = 229$) on CFA-Challenge questions; full-scale topic annotation is in progress. Third, the GCI experiment uses the same model for both error generation and recovery testing; cross-model GCI (e.g., testing whether GPT-5-mini recovers GPT-4o-mini's errors) would strengthen the knowledge-gap vs.\ reasoning-gap distinction. Finally, the open-ended format removes MCQ scaffolding, which inflates the error rate relative to standard MCQ evaluations; this design choice is deliberate, as it isolates genuine reasoning from option-recognition heuristics.
 
 %% ============================================
 %% 5. CONCLUSION
@@ -262,9 +339,9 @@ The classification uses GPT-4o-mini as an automated error classifier, which may 
 \section{Conclusion}
 \label{sec:conclusion}
 
-The CFA Error Atlas reveals that LLM financial reasoning failures are highly structured, not random. Reasoning premise errors---not calculation mistakes---are the dominant failure mode (49.3\%), and error profiles vary dramatically across financial domains. These findings challenge the narrative that financial AI needs ``better math'' and redirect attention to the more fundamental challenge of ``better financial concept selection.''
+The CFA Error Atlas, based on 557 incorrect responses from 1,032 CFA questions answered in open-ended format, reveals that LLM financial reasoning failures are highly structured, not random. Conceptual errors---not calculation mistakes---are the dominant failure mode (68.8\% vs.\ 1.4\%), and error profiles vary dramatically across financial domains. Golden Context Injection demonstrates that 82.4\% of errors are at least partially recoverable when the correct concept is provided, establishing a ceiling for retrieval-augmented remediation. However, the 17.6\% residual rate identifies a true reasoning gap that requires training-time intervention.
 
-\textbf{The question is not how accurately AI computes, but whether it knows which computation to perform.}
+\textbf{The question is not how accurately AI computes, but whether it knows which computation to perform---and golden context injection reveals that most of the time, providing the right concept is sufficient to recover.}
 
 \section*{Data Availability}
 The experimental data and analysis code are available from the corresponding author upon reasonable request.
@@ -278,7 +355,7 @@ The authors declare that they have no known competing financial interests or per
 \textbf{Guang-Di Chang}: Supervision, Writing -- Review \& Editing.
 
 \section*{Acknowledgments}
-The authors thank the anonymous reviewers for their constructive feedback. Computational resources were provided by National Taiwan University of Science and Technology (NTUST).
+Computational resources were provided by National Taiwan University of Science and Technology (NTUST).
 
 %% ============================================
 %% REFERENCES
@@ -294,16 +371,6 @@ Callanan, E., Mbae, A., Selle, S., Gupta, V., \& Houlihan, R. (2023).
 Ke, Z., Ming, Y., Nguyen, X. P., Xiong, C., \& Joty, S. (2025).
 \newblock Demystifying domain-adaptive post-training for financial LLMs.
 \newblock In \textit{Proceedings of EMNLP 2025}.
-
-\bibitem[Lightman et al.(2023)]{lightman2023lets}
-Lightman, H., Kosaraju, V., Burda, Y., et al. (2023).
-\newblock Let's verify step by step.
-\newblock \textit{arXiv preprint arXiv:2305.20050}.
-
-\bibitem[Wu et al.(2023)]{wu2023bloomberggpt}
-Wu, S., Irsoy, O., Lu, S., et al. (2023).
-\newblock BloombergGPT: A large language model for finance.
-\newblock \textit{arXiv preprint arXiv:2303.17564}.
 
 \end{thebibliography}
 

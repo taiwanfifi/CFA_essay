@@ -19,7 +19,7 @@
 | 4 | **E1** | The CFA Error Atlas: Mapping Failure Modes of LLMs in Financial Reasoning | 11pp | N=229 errors | **完整** (全部錯誤分析) | **可投稿** |
 | 5 | **D6** | Under Pressure: Adversarial Stress Testing of LLM Ethical Judgment in Financial Decision-Making | 9pp | N=47 | **完整** (47Q × 5 attacks) | **可投稿** |
 | 6 | **G2** | The Certification Signal Erosion Hypothesis: A Modified Spence Model for AI-Disrupted Professional Credentialing | 24pp | 理論模型 | **純理論** (不需實驗) | **可投稿** |
-| 7 | **I2** | Inherited Irrationality: Behavioral Finance Biases in LLM Financial Recommendations | 23pp | N=20 (5 bias types) | **完整** (5 偏誤類型) | **可投稿** |
+| 7 | **I2** | Inherited Irrationality: Behavioral Finance Biases in LLM Financial Recommendations | 32pp | N=60 (6 bias types × 10) | **完整** (6 偏誤類型) | **可投稿** |
 
 ### 合併邏輯
 
@@ -455,39 +455,40 @@ drafts/selected/G2_signaling_theory/
 
 **Target Journal**: Finance Research Letters / J. Behavioral and Experimental Finance
 
-**Status**: PUBLICATION-READY — 23 pages, 5 種偏誤類型完整測試
+**Status**: PUBLICATION-READY — 32 pages, 6 種偏誤類型完整測試 (N=60)
 
 #### 中文摘要
 
 - **論文題目**：遺傳的非理性：大型語言模型金融建議中的行為金融學偏誤
-- **摘要**：本研究設計 20 個金融決策情境（涵蓋 5 種經典行為偏誤），測試 GPT-4o-mini 是否「繼承」了人類的非理性偏誤。發現 LLM 在誘導性情境下平均偏誤分數 0.525（0=完全理性, 1=完全偏誤），中性重構後降至 0.350（Wilcoxon p=0.012）。偏誤的可去除程度呈現清晰層級：損失趨避最易去偏 (+0.400)，近因偏誤和處置效應完全抵抗去偏 (0.000)。
-- **實驗方法**：20 paired scenarios (bias-inducing + neutral), 5 bias types, LLM-as-judge scoring (0/0.5/1), Wilcoxon signed-rank test
-- **主要結果**：Overall Bias Score: inducing 0.525 vs neutral 0.350 (Wilcoxon p=0.012)；Loss aversion debiasing +0.400；Recency & Disposition Effect debiasing 0.000
-- **結論**：LLM 確實「繼承」了行為偏誤，但不同偏誤的來源機制不同——損失趨避來自表面語言（可去偏），近因偏誤來自訓練數據結構（不可去偏）。
+- **摘要**：本研究設計 60 個金融決策情境（涵蓋 6 種經典行為偏誤：損失趨避、錨定、框架、近因、處置效應、過度自信），測試 GPT-4o-mini 是否「繼承」了人類的非理性偏誤。發現 LLM 在誘導性情境下平均偏誤分數 0.500，中性重構後降至 0.425（Wilcoxon W=14.0, p=0.023）。偏誤的可去除程度呈現三層階層：表面偏誤（損失趨避 +0.300, 框架 +0.150）對去偏反應強；深層偏誤（處置效應、過度自信 0.000）完全抵抗去偏。
+- **實驗方法**：60 paired scenarios (bias-inducing + neutral), 6 bias types × 10 each, LLM-as-judge scoring (0/0.5/1), Wilcoxon signed-rank test
+- **主要結果**：Overall Bias Score: inducing 0.500 vs neutral 0.425 (Wilcoxon W=14.0, p=0.023)；Loss aversion debiasing +0.300；Disposition Effect & Overconfidence debiasing 0.000
+- **結論**：LLM 確實「繼承」了行為偏誤，呈現三層去偏階層——表面偏誤（損失趨避、框架）可去偏，深層偏誤（處置效應、過度自信）完全抵抗去偏，深植於訓練數據結構。
 
-#### 核心結果 (n=20 scenarios, 5 bias types, GPT-4o-mini)
+#### 核心結果 (n=60 scenarios, 6 bias types × 10, GPT-4o-mini)
 
 | 偏誤類型 | N | Bias Score (inducing) | Neutral Score | Debiasing Effect |
 |----------|---|----------------------|---------------|-----------------|
-| Loss Aversion | 5 | 0.500 | 0.100 | **+0.400** |
-| Anchoring | 5 | 0.600 | 0.400 | +0.200 |
-| Framing | 5 | 0.500 | 0.400 | +0.100 |
-| Recency | 3 | 0.500 | 0.500 | 0.000 |
-| Disposition Effect | 2 | 0.500 | 0.500 | 0.000 |
-| **Overall** | **20** | **0.525** | **0.350** | **+0.175** |
+| Loss Aversion | 10 | 0.600 | 0.300 | **+0.300** |
+| Anchoring | 10 | 0.400 | 0.350 | +0.050 |
+| Framing | 10 | 0.500 | 0.350 | **+0.150** |
+| Recency | 10 | 0.500 | 0.550 | −0.050 |
+| Disposition Effect | 10 | 0.500 | 0.500 | 0.000 |
+| Overconfidence | 10 | 0.500 | 0.500 | 0.000 |
+| **Overall** | **60** | **0.500** | **0.425** | **+0.075** |
 
-**關鍵發現**:
-- **Debiasing hierarchy**: Loss aversion >> Anchoring > Framing >> Recency = Disposition
-- Loss aversion: 4/5 scenarios 完全去偏
-- Recency + Disposition: 0/5 scenarios 有去偏效果 (完全抵抗去偏)
-- 極端偏誤案例: an_04, fr_05 (bias=1.0)
-- 完全理性案例: fr_02 (bias=0.0)
+**關鍵發現：三層去偏階層**
+- **表面偏誤**：Loss Aversion (+0.300), Framing (+0.150) — 改措辭就能去偏
+- **弱反應偏誤**：Anchoring (+0.050) — 微弱反應
+- **深層偏誤**：Disposition (0.000), Overconfidence (0.000), Recency (−0.050) — 完全抵抗去偏
+- Wilcoxon signed-rank test: W=14.0, **p=0.023** (顯著)
 
 #### 實驗數據路徑
 
 | 資料 | 路徑 |
 |------|------|
-| I2 完整結果 (N=20, 5 types) | `experiments/I2_behavioral_biases/results/run_20260206_052135/results.json` |
+| I2 完整結果 (N=60, 6 types) | `experiments/I2_behavioral_biases/results/run_20260206_140527/results.json` |
+| I2 初期結果 (N=20, 5 types) | `experiments/I2_behavioral_biases/results/run_20260206_052135/results.json` |
 | I2 POC (N=10, 2 types) | `experiments/I2_behavioral_biases/results/run_20260205_010409/results.json` |
 
 #### 論文檔案結構
@@ -570,7 +571,7 @@ python -m experiments.E1_error_analysis.run_experiment --input "experiments/D1_c
 | A5 Option Bias | 2026-02-06 | **100** | `experiments/A5_option_bias/results/run_20260206_112714/` | A1+A5 |
 | I1 Counterfactual | 2026-02-06 | 100 | `experiments/I1_counterfactual/results/run_20260206_053445/` | I1+I3 |
 | I3 Noise | 2026-02-06 | 100 | `experiments/I3_noise_red_herrings/results/run_20260206_054039/` | I1+I3 |
-| I2 Biases | 2026-02-06 | 20 | `experiments/I2_behavioral_biases/results/run_20260206_052135/` | I2 |
+| I2 Biases | 2026-02-06 | **60** | `experiments/I2_behavioral_biases/results/run_20260206_140527/` | I2 |
 | D6 Ethics | 2026-02-06 | **47** | `experiments/D6_adversarial_ethics/results/run_20260206_112341/` | D6 |
 
 ---
@@ -626,21 +627,19 @@ cd drafts/selected/D1_calibration
 
 ## 檔案索引
 
-### 研究提案 -> 論文對應
+### 論文說明文件（每篇含學術說明 + 具體舉例 + 實際結果）
 
-| 提案 `.md` | 說明 | 歸屬論文 |
-|-----------|------|---------|
-| `A1-open-ended-numerical.md` | 開放式數值推理 | -> `A1_open_ended/` |
-| `A5-mcq-option-bias.md` | 選項偏差量化 | -> `A1_open_ended/` (合併) |
-| `D1-calibration-selective-prediction.md` | 信心校準 | -> `D1_calibration/` |
-| `D4-overconfident-ai-regulation.md` | 過度自信風險 | -> `D1_calibration/` (合併) |
-| `D6-adversarial-ethics-jailbreak.md` | 對抗式道德測試 | -> `D6_adversarial_ethics/` |
-| `E1-error-pattern-atlas.md` | 錯誤圖譜 | -> `E1_error_atlas/` |
-| `G2-signaling-theory.md` | 訊號理論 | -> `G2_signaling_theory/` |
-| `H1-multimodal-financial-reasoning.md` | 多模態金融推理 | 暫緩 |
-| `I1-counterfactual-stress-test.md` | 反事實壓力測試 | -> `I1_counterfactual/` |
-| `I2-behavioral-biases-llm.md` | 行為金融學偏誤 | -> `I2_behavioral_biases/` |
-| `I3-noise-red-herrings.md` | 雜訊與紅鯡魚 | -> `I1_counterfactual/` (合併) |
+| 說明文件 | 論文 | 論文資料夾 |
+|---------|------|-----------|
+| `P1-A1+A5-選項偏差與開放式評估.md` | Beyond Multiple Choice (A1+A5 合併) | `A1_open_ended/` |
+| `P2-I1+I3-反事實壓力測試與雜訊.md` | Stress Testing Financial LLMs (I1+I3 合併) | `I1_counterfactual/` |
+| `P3-I2-行為金融偏誤.md` | Inherited Irrationality (I2) | `I2_behavioral_biases/` |
+| `P4-D6-對抗式道德測試.md` | Under Pressure: Adversarial Ethics (D6) | `D6_adversarial_ethics/` |
+| `P5-E1-錯誤圖譜.md` | The CFA Error Atlas (E1) | `E1_error_atlas/` |
+| `P6-D1+D4-信心校準與風險.md` | When AI Is Confidently Wrong (D1+D4 合併) | `D1_calibration/` |
+| `P7-G2-訊號理論.md` | Certification Signal Erosion (G2) | `G2_signaling_theory/` |
+
+> **注意**：原始 11 個研究提案（A1, A5, D1, D4, D6, E1, G2, H1, I1, I2, I3）已合併/更新為上述 7 份說明文件。H1（多模態金融推理）因缺乏 CFA 圖表資料而暫緩，未開發論文。
 
 ### 論文資料夾結構（每個都相同）
 

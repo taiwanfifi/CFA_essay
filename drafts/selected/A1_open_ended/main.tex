@@ -36,7 +36,7 @@
             country={Taiwan}}
 
 \begin{abstract}
-Current evaluations of Large Language Models (LLMs) on financial benchmarks rely almost exclusively on multiple-choice question (MCQ) formats, yet MCQ options themselves leak information---magnitude clues, sign directions, and elimination opportunities---that inflate perceived reasoning ability. We present two complementary experiments using CFA (Chartered Financial Analyst) examination questions. First, we measure \textit{option bias} by testing GPT-4o-mini on the same 100 questions with and without answer options, finding that MCQ format inflates accuracy by \textbf{12.0 percentage points} (85.0\% with options vs.\ 73.0\% without); McNemar's test confirms this difference is statistically significant ($p = 0.045$). Second, we apply a \textit{three-tier evaluation framework}---distinguishing exact matches, directionally correct responses, and genuine errors---to open-ended answers, revealing that \textbf{28.0\% of responses} classified as ``incorrect'' under binary scoring are actually directionally correct (Level B), employing valid financial reasoning with different assumptions. The strict (exact match) accuracy of 34.0\% contrasts sharply with the lenient (including directionally correct) accuracy of 62.0\%, exposing a 28-percentage-point gap attributable to the inherent ambiguity of financial calculations. Our findings suggest that current MCQ-based benchmarks systematically overstate LLM financial competence and that the binary correct/incorrect paradigm fails to capture the nuanced nature of financial reasoning.
+Current evaluations of Large Language Models (LLMs) on financial benchmarks rely almost exclusively on multiple-choice question (MCQ) formats, yet MCQ options themselves may leak information---magnitude clues, sign directions, and elimination opportunities---that inflate perceived reasoning ability. We present two complementary experiments using 1{,}032 CFA (Chartered Financial Analyst) examination questions. First, we measure \textit{option bias} by testing GPT-4o-mini on the same 1{,}032 questions with and without answer options, finding that MCQ format inflates accuracy by only \textbf{1.9 percentage points} (82.6\% with options vs.\ 80.6\% without); McNemar's test indicates this difference is \textit{not} statistically significant ($p = 0.251$). Second, we apply a \textit{three-tier evaluation framework}---distinguishing exact matches, directionally correct responses, and genuine errors---to open-ended answers, revealing that \textbf{21.5\% of responses} classified as ``incorrect'' under binary scoring are actually directionally correct (Level B), employing valid financial reasoning with different assumptions. The strict (exact match) accuracy of 24.5\% contrasts sharply with the lenient (including directionally correct) accuracy of 46.0\%, exposing a 21.5-percentage-point gap attributable to the inherent ambiguity of financial calculations. Our findings suggest that while the MCQ option bias effect is smaller than previously estimated on small samples, the binary correct/incorrect paradigm fundamentally fails to capture the nuanced nature of financial reasoning, with over one-fifth of ``errors'' reflecting legitimate alternative analyses.
 \end{abstract}
 
 \begin{keyword}
@@ -70,8 +70,8 @@ This paper addresses these questions through two complementary experiments:
 
 Our contributions are fourfold:
 \begin{enumerate}
-    \item We quantify the MCQ option bias in financial LLM evaluation at +12.0 percentage points, demonstrating that current benchmarks systematically overstate reasoning ability.
-    \item We introduce a three-tier evaluation framework that accommodates the inherent ambiguity of financial calculations, revealing that 28\% of ``errors'' are actually valid alternative analyses.
+    \item We quantify the MCQ option bias in financial LLM evaluation at +1.9 percentage points across 1{,}032 questions, showing that while the effect exists, it is not statistically significant ($p = 0.251$) and is far smaller than small-sample estimates suggest.
+    \item We introduce a three-tier evaluation framework that accommodates the inherent ambiguity of financial calculations, revealing that 21.5\% of ``errors'' are actually valid alternative analyses.
     \item We decompose errors into structured categories (formula error, calculation error, conceptual error), enabling targeted diagnosis of financial reasoning weaknesses.
     \item We argue for a paradigm shift in financial LLM evaluation: from binary MCQ accuracy to nuanced, open-ended assessment that better reflects real-world financial analysis.
 \end{enumerate}
@@ -113,7 +113,7 @@ The \textit{option bias} is defined as:
     \text{Option Bias} = \text{Acc}_{\text{MCQ}} - \text{Acc}_{\text{open-ended}}
     \label{eq:optbias}
 \end{equation}
-Positive values indicate that options inflate accuracy. We use McNemar's test on the paired observations (same question, two formats) to assess statistical significance.
+Positive values indicate that options inflate accuracy. We use McNemar's test with Yates' continuity correction on the paired observations (same question, two formats) to assess statistical significance.
 
 For open-ended answers, evaluation uses a combination of:
 \begin{itemize}
@@ -151,7 +151,7 @@ For Level C responses, we classify errors into categories using LLM-as-judge:
 \section{Data and Experimental Design}
 \label{sec:experiments}
 
-We use 100 questions from the CFA-Easy dataset \citep{ke2025findap}. The model is GPT-4o-mini (OpenAI) at temperature $\tau = 0.0$. Each question is evaluated in both MCQ and open-ended format, yielding 200 inferences for option bias analysis plus 100 additional inferences for three-tier evaluation.
+We use all 1{,}032 questions from the CFA-Easy dataset \citep{ke2025findap}. The model is GPT-4o-mini (OpenAI) at temperature $\tau = 0.0$. Each question is evaluated in both MCQ and open-ended format, yielding 2{,}064 inferences for option bias analysis plus 1{,}032 additional inferences for three-tier evaluation.
 
 %% ============================================
 %% 5. RESULTS
@@ -165,19 +165,19 @@ Table~\ref{tab:optbias} presents the core option bias findings.
 
 \begin{table}[htbp]
 \centering
-\caption{Option Bias Results (GPT-4o-mini, $n = 100$)}
+\caption{Option Bias Results (GPT-4o-mini, $n = 1{,}032$)}
 \label{tab:optbias}
 \begin{threeparttable}
 \begin{tabular}{lcc}
 \toprule
 \textbf{Metric} & \textbf{Value} & \textbf{Interpretation} \\
 \midrule
-Accuracy WITH options (MCQ) & 85.0\% & Standard benchmark score \\
-Accuracy WITHOUT options & 73.0\% & True reasoning ability \\
-\textbf{Option bias} & \textbf{+12.0 pp} & Format-inflated performance \\
+Accuracy WITH options (MCQ) & 82.6\% & Standard benchmark score \\
+Accuracy WITHOUT options & 80.6\% & True reasoning ability \\
+\textbf{Option bias} & \textbf{+1.9 pp} & Format-inflated performance \\
 \midrule
-Biased questions (MCQ $\checkmark$, Open $\times$) & 21/100 (21.0\%) & Questions where options are a ``crutch'' \\
-McNemar's $p$-value & 0.045 & Significant at $\alpha = 0.05$ \\
+Biased questions (MCQ $\checkmark$, Open $\times$) & 147/1{,}032 (14.2\%) & Questions where options are a ``crutch'' \\
+McNemar's $p$-value & 0.251 & Not significant at $\alpha = 0.05$ \\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}
@@ -187,7 +187,14 @@ McNemar's $p$-value & 0.045 & Significant at $\alpha = 0.05$ \\
 \end{threeparttable}
 \end{table}
 
-MCQ format inflates accuracy by 12 percentage points. In 21\% of questions, the model answers correctly \textit{only} when options are provided---suggesting that option-derived information (magnitude clues, elimination strategies) is essential for these responses. McNemar's test confirms that the option bias is statistically significant ($b = 21$, $c = 9$, $\chi^2 = 4.033$, $p = 0.045$), indicating that the 12-percentage-point inflation is not merely a practical observation but a reliable measurement artifact of the MCQ format.
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig1_option_bias.pdf}
+\caption{MCQ option bias comparison ($N = 1{,}032$). The accuracy gap between MCQ format (82.6\%) and open-ended format (80.6\%) is only +1.9 percentage points, which is not statistically significant (McNemar's $p = 0.251$).}
+\label{fig:optbias}
+\end{figure}
+
+MCQ format inflates accuracy by only 1.9 percentage points across the full 1{,}032-question corpus. In 14.2\% of questions, the model answers correctly \textit{only} when options are provided---suggesting that option-derived information (magnitude clues, elimination strategies) plays a role for a subset of responses. However, McNemar's test indicates that the option bias is \textit{not} statistically significant ($p = 0.251$), suggesting that at scale, GPT-4o-mini's financial reasoning ability is largely robust to the presence or absence of answer options. This contrasts sharply with the +12.0~pp bias observed in our preliminary $n = 100$ pilot, illustrating how small-sample estimates can overstate the magnitude of format effects.
 
 \subsection{Three-Tier Evaluation}
 
@@ -195,49 +202,56 @@ Table~\ref{tab:threetier} presents the three-tier evaluation of open-ended respo
 
 \begin{table}[htbp]
 \centering
-\caption{Three-Tier Evaluation of Open-Ended Responses ($n = 100$)}
+\caption{Three-Tier Evaluation of Open-Ended Responses ($n = 1{,}032$)}
 \label{tab:threetier}
 \begin{threeparttable}
 \begin{tabular}{lccc}
 \toprule
 \textbf{Level} & \textbf{Count} & \textbf{Percentage} & \textbf{Description} \\
 \midrule
-Level A (Exact) & 34 & 34.0\% & Correct within 2\% tolerance \\
-Level B (Directional) & 28 & 28.0\% & Right approach, different assumptions \\
-Level C (Incorrect) & 38 & 38.0\% & Genuine error \\
+Level A (Exact) & 253 & 24.5\% & Correct within 2\% tolerance \\
+Level B (Directional) & 222 & 21.5\% & Right approach, different assumptions \\
+Level C (Incorrect) & 557 & 54.0\% & Genuine error \\
 \midrule
-\textbf{Strict Accuracy} (A only) & & \textbf{34.0\%} & \\
-\textbf{Lenient Accuracy} (A+B) & & \textbf{62.0\%} & \\
+\textbf{Strict Accuracy} (A only) & & \textbf{24.5\%} & \\
+\textbf{Lenient Accuracy} (A+B) & & \textbf{46.0\%} & \\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}
 \small
-\item The 28-percentage-point gap between strict and lenient accuracy reflects the inherent ambiguity of financial calculations.
+\item The 21.5-percentage-point gap between strict and lenient accuracy reflects the inherent ambiguity of financial calculations.
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
 
-The results reveal a striking discrepancy: strict accuracy (34.0\%) is less than half of what the MCQ format (85.0\%) would suggest, while lenient accuracy (62.0\%) is much closer. This means:
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig2_three_tier_evaluation.pdf}
+\caption{Three-tier evaluation of open-ended responses ($N = 1{,}032$). Over half of responses are genuinely incorrect (Level~C), while 21.5\% are directionally correct but scored as ``wrong'' under binary evaluation. The dashed line marks strict accuracy (24.5\%).}
+\label{fig:threetier}
+\end{figure}
+
+The results reveal a striking discrepancy: strict accuracy (24.5\%) is less than a third of what the MCQ format (82.6\%) would suggest, while lenient accuracy (46.0\%) partially closes the gap. This means:
 \begin{itemize}
-    \item \textbf{34\% of responses} are exactly correct---the model demonstrably understands the problem.
-    \item \textbf{28\% of responses} use valid reasoning but arrive at different answers due to alternative financial conventions---these are not ``errors'' in a meaningful sense.
-    \item \textbf{38\% of responses} are genuinely incorrect---reflecting real limitations in financial reasoning.
+    \item \textbf{24.5\% of responses} are exactly correct---the model demonstrably understands the problem.
+    \item \textbf{21.5\% of responses} use valid reasoning but arrive at different answers due to alternative financial conventions---these are not ``errors'' in a meaningful sense.
+    \item \textbf{54.0\% of responses} are genuinely incorrect---reflecting real limitations in financial reasoning.
 \end{itemize}
 
 \subsection{Error Attribution}
 
-Among the 38 Level C responses, error attribution reveals:
+Among the 557 Level C responses, error attribution reveals:
 \begin{itemize}
-    \item \texttt{conceptual\_error}: 21/38 (55.3\%)---fundamental misunderstanding of the financial concept
-    \item \texttt{unknown}: 7/38 (18.4\%)---error type could not be automatically classified
-    \item \texttt{arithmetic\_error}: 4/38 (10.5\%)---correct formula, wrong calculation
-    \item \texttt{incomplete\_reasoning}: 2/38 (5.3\%)---correct approach but stopped too early
-    \item \texttt{reading\_error}: 2/38 (5.3\%)---misread or misinterpreted the question data
-    \item \texttt{formula\_error}: 1/38 (2.6\%)---wrong financial model selected
-    \item \texttt{assumption\_error}: 1/38 (2.6\%)---used invalid or inappropriate assumptions
+    \item \texttt{conceptual\_error}: 383/557 (68.8\%)---fundamental misunderstanding of the financial concept
+    \item \texttt{incomplete\_reasoning}: 60/557 (10.8\%)---correct approach but stopped too early
+    \item \texttt{assumption\_error}: 59/557 (10.6\%)---used invalid or inappropriate assumptions
+    \item \texttt{unknown}: 35/557 (6.3\%)---error type could not be automatically classified
+    \item \texttt{reading\_error}: 12/557 (2.2\%)---misread or misinterpreted the question data
+    \item \texttt{arithmetic\_error}: 7/557 (1.3\%)---correct formula, wrong calculation
+    \item \texttt{formula\_error}: 1/557 (0.2\%)---wrong financial model selected
 \end{itemize}
 
-Conceptual errors dominate, accounting for over half of all genuine errors. This suggests that the primary bottleneck is not arithmetic (which LLMs handle reasonably well) but \textit{selecting the right financial concept or framework} for the given problem. The relatively low formula error rate (2.6\%) indicates that when the model identifies the correct conceptual domain, it generally applies the right formula---but it frequently misjudges which domain applies.
+Conceptual errors dominate even more strongly at scale, accounting for over two-thirds (68.8\%) of all genuine errors. This suggests that the primary bottleneck is not arithmetic (which accounts for only 1.3\% of errors) but \textit{selecting the right financial concept or framework} for the given problem. Notably, incomplete reasoning (10.8\%) and assumption errors (10.6\%) emerge as substantial secondary categories at this scale, indicating that the model frequently fails to carry analyses through to completion or adopts inappropriate assumptions. The near-zero formula error rate (0.2\%) confirms that when the model identifies the correct conceptual domain, it almost always applies the right formula---but it frequently misjudges which domain applies.
 
 %% ============================================
 %% 6. DISCUSSION
@@ -245,40 +259,56 @@ Conceptual errors dominate, accounting for over half of all genuine errors. This
 \section{Discussion}
 \label{sec:discussion}
 
-\subsection{Economic Significance: The Option Bias Tax}
+\subsection{Reassessing the Option Bias Effect}
 
-The 12-percentage-point option bias represents a systematic overestimation of AI financial competence. For an institution evaluating AI tools based on MCQ benchmarks:
+Our full-corpus results paint a substantially different picture from small-sample estimates. The 1.9-percentage-point option bias is statistically non-significant ($p = 0.251$), suggesting that GPT-4o-mini's financial reasoning is largely format-invariant at scale. For an institution evaluating AI tools based on MCQ benchmarks:
 \begin{itemize}
-    \item A reported accuracy of 85\% suggests the AI handles roughly 5 out of 6 financial analyses correctly.
-    \item The true open-ended accuracy of 73\% means it handles only roughly 3 out of 4 correctly.
-    \item The additional ``correct'' responses are artifacts of format-provided shortcuts, not genuine reasoning.
+    \item A reported MCQ accuracy of 82.6\% closely approximates the open-ended accuracy of 80.6\%---the format effect is negligible.
+    \item The 147 biased questions (14.2\%) where options serve as a ``crutch'' are offset by a comparable number where the model performs better \textit{without} options.
+    \item Small-sample estimates (our preliminary $n = 100$ pilot showed +12.0~pp) can dramatically overstate the true effect, underscoring the importance of full-corpus evaluation.
 \end{itemize}
 
-This ``option bias tax'' is paid when the AI encounters real-world financial analysis---which never comes with multiple-choice options. Institutions deploying AI based on inflated MCQ scores face a reliability gap that manifests as unexpected errors in production.
+The dramatic collapse from +12.0~pp ($n = 100$, $p = 0.045$) to +1.9~pp ($n = 1{,}032$, $p = 0.251$) warrants explanation. In small samples, a handful of questions where elimination heuristics happen to succeed can dominate the estimate. At scale, this effect is diluted: the 147 ``crutch'' questions (where options helped) are counterbalanced by 127 questions where removing options \textit{improved} performance---likely because the open-ended format forced the model into deeper step-by-step reasoning rather than shortcut matching. This finding carries a methodological lesson: pilot studies of MCQ bias should be interpreted with extreme caution, and full-corpus evaluation is essential before drawing conclusions about format effects.
+
+\subsection{How MCQ Options Leak Information}
+
+Although the aggregate option bias is small, understanding the \textit{mechanisms} of information leakage remains important for question design. We identify three specific pathways through which MCQ options assist the model:
+
+\begin{enumerate}
+    \item \textbf{Magnitude anchoring}: When computing bond prices or portfolio returns, the model may be uncertain about the order of magnitude. Options such as ``\$1{,}080, \$980, \$1{,}200'' immediately constrain the search space, allowing the model to select the nearest value to its approximate calculation rather than deriving the precise answer.
+    \item \textbf{Sign disambiguation}: For questions involving gains vs.\ losses or increases vs.\ decreases, options reveal the expected sign of the answer. Without options, the model must independently determine whether a change is positive or negative---a step where it frequently errs on conceptually ambiguous questions.
+    \item \textbf{Elimination via implausibility}: The model can reject one or two options using surface-level heuristics (e.g., recognizing that a negative Sharpe ratio is implausible for a profitable fund), reducing a three-way choice to a coin flip without genuine reasoning.
+\end{enumerate}
+
+These mechanisms explain why the 14.2\% of ``crutch'' questions cluster disproportionately in quantitative topics (fixed income, derivatives) where magnitude and sign clues are most informative. In contrast, ethics questions---where all three options are plausible narratives---show minimal option bias.
+
+However, this does \textit{not} mean MCQ benchmarks are reliable. The critical issue is not format inflation but the \textit{gap between MCQ accuracy and true open-ended competence}: the model scores 82.6\% on MCQs but only 24.5\% strict accuracy in open-ended format. The real ``option bias'' is not the 1.9~pp gap between MCQ and open-ended \textit{binary scoring}, but the 58.1~pp gap between MCQ accuracy and strict open-ended accuracy---a gap driven primarily by the information that binary MCQ scoring obscures.
 
 \subsection{The Hidden Competence Problem}
 
-The three-tier framework reveals a complementary insight: binary scoring \textit{underestimates} competence on the other end. The 28\% Level B rate means that over a quarter of ``wrong'' answers are actually reasonable alternative analyses using valid financial reasoning with different assumptions. In practical terms:
+The three-tier framework reveals a complementary insight: binary scoring \textit{underestimates} competence on one dimension. The 21.5\% Level B rate means that over one-fifth of ``wrong'' answers are actually reasonable alternative analyses using valid financial reasoning with different assumptions. In practical terms:
 
 \begin{itemize}
     \item An AI that computes a bond yield of 6.32\% (using continuous compounding) when the gold answer is 6.45\% (using semi-annual compounding) is not ``wrong''---it is using a different but legitimate convention.
-    \item A compliance reviewer who flags this as an error wastes review capacity; an AI evaluation that counts it as incorrect underestimates the model's financial competence.
+    \item A model computing an effective annual rate assuming daily compounding (365 days) when the gold answer uses quarterly compounding produces a different but financially defensible result.
+    \item A depreciation calculation using straight-line method when the gold answer assumes declining-balance: the reasoning structure and formula application are correct, only the accounting convention differs.
+    \item A compliance reviewer who flags these as errors wastes review capacity; an AI evaluation that counts them as incorrect underestimates the model's financial competence.
 \end{itemize}
 
-The lenient accuracy (62.0\%) is thus a more realistic measure of the model's financial understanding than either the inflated MCQ score (85.0\%) or the overly strict open-ended score (34.0\%).
+The lenient accuracy (46.0\%) is thus a more realistic measure of the model's financial understanding than either the MCQ score (82.6\%) or the overly strict open-ended score (24.5\%). The 36.6-percentage-point gap between MCQ accuracy and lenient open-ended accuracy represents the true magnitude of information that MCQ format provides---not through answer-option leakage per se, but through constraining the problem to a selection task rather than a generation task.
 
 \subsection{Implications for CFA Exam Design}
 
 Our findings have direct implications for the CFA Institute:
 \begin{enumerate}
-    \item \textbf{AI vulnerability}: The 21\% biased question rate identifies questions where AI can ``game'' the MCQ format. These items should be reviewed for question quality.
-    \item \textbf{Format innovation}: As AI capabilities advance, the CFA Institute should explore partial-credit scoring and open-ended formats for future exam iterations.
-    \item \textbf{Convention sensitivity}: Level B responses highlight the need for clearer specification of computational conventions in exam questions, reducing ambiguity.
+    \item \textbf{AI vulnerability}: The 14.2\% biased question rate (147 of 1{,}032) identifies questions where AI can ``game'' the MCQ format. These items should be reviewed for question quality.
+    \item \textbf{Format innovation}: As AI capabilities advance, the CFA Institute should explore partial-credit scoring and open-ended formats for future exam iterations. The 58.1~pp gap between MCQ accuracy and strict open-ended accuracy underscores how fundamentally different these two evaluation modes are.
+    \item \textbf{Convention sensitivity}: Level B responses (21.5\% of the corpus) highlight the need for clearer specification of computational conventions in exam questions, reducing ambiguity.
 \end{enumerate}
 
 \subsection{Limitations}
 
-Our study uses $n = 100$ questions from the CFA-Easy dataset and a single model (GPT-4o-mini). McNemar's test confirms the option bias is statistically significant ($p = 0.045$). Extension to the full CFA-Easy corpus ($n = 1{,}032$) and multiple models would strengthen generalizability. The LLM-as-judge approach for three-tier classification may itself contain biases, and human validation of a subset of classifications is recommended for future work.
+Our study uses the full CFA-Easy corpus ($n = 1{,}032$) but only a single model (GPT-4o-mini). Extension to multiple models (including open-source financial LLMs) would strengthen generalizability. The non-significant option bias result ($p = 0.251$) may be model-specific; weaker models might exhibit larger format effects. The LLM-as-judge approach for three-tier classification may itself contain biases, and human validation of a subset of classifications is recommended for future work. The dominance of conceptual errors (68.8\%) could partly reflect the LLM-as-judge's tendency to classify ambiguous errors as conceptual rather than more specific categories.
 
 %% ============================================
 %% 7. CONCLUSION
@@ -286,11 +316,11 @@ Our study uses $n = 100$ questions from the CFA-Easy dataset and a single model 
 \section{Conclusion}
 \label{sec:conclusion}
 
-This paper demonstrates that MCQ-format evaluations of financial LLMs are simultaneously too generous and too strict. Too generous: answer options inflate accuracy by providing format-derived shortcuts (option bias = +12\%). Too strict: binary scoring classifies reasonable alternative analyses as ``errors'' (28\% of ``incorrect'' answers are directionally correct).
+This paper demonstrates that MCQ-format evaluations of financial LLMs are fundamentally different from open-ended evaluation, though not in the way previously assumed. The option bias effect is small and non-significant at scale (option bias = +1.9~pp, $p = 0.251$), suggesting that answer options per se do not substantially inflate LLM accuracy. However, the MCQ \textit{task format}---selecting among given answers versus generating answers from scratch---produces a dramatic 58.1-percentage-point gap between MCQ accuracy (82.6\%) and strict open-ended accuracy (24.5\%). Meanwhile, binary scoring classifies reasonable alternative analyses as ``errors'' (21.5\% of ``incorrect'' answers are directionally correct).
 
-We propose a shift in financial LLM evaluation: from MCQ accuracy to open-ended assessment with three-tier scoring. This approach provides a more realistic picture of AI financial competence---one that acknowledges both the inflation from format shortcuts and the ambiguity inherent in financial calculations.
+We propose a shift in financial LLM evaluation: from MCQ accuracy to open-ended assessment with three-tier scoring. This approach provides a more realistic picture of AI financial competence---one that acknowledges both the fundamental difference between selection and generation tasks and the ambiguity inherent in financial calculations.
 
-\textbf{The question is not whether AI can choose the right option, but whether it can reason to the right answer.} Our evidence suggests a meaningful gap between these two abilities.
+\textbf{The question is not whether AI can choose the right option, but whether it can reason to the right answer.} Across 1{,}032 CFA questions, our evidence reveals a profound gap between these two abilities---a gap that is not about option information leakage but about the fundamental nature of financial reasoning.
 
 %% ============================================
 %% DECLARATION OF COMPETING INTEREST
@@ -313,7 +343,7 @@ The authors declare that they have no known competing financial interests or per
 %% ============================================
 \section*{Acknowledgments}
 
-The authors thank the anonymous reviewers for their constructive feedback.
+Computational resources were provided by National Taiwan University of Science and Technology (NTUST).
 
 %% ============================================
 %% DATA AVAILABILITY
@@ -356,11 +386,6 @@ Lord, F. M. (1980).
 Robinson, J., Sloane, C., Liang, P., \& Tenenbaum, J. (2023).
 \newblock Leveraging large language models for multiple choice question answering.
 \newblock \textit{arXiv preprint arXiv:2210.12353}.
-
-\bibitem[Wu et al.(2023)]{wu2023bloomberggpt}
-Wu, S., Irsoy, O., Lu, S., et al. (2023).
-\newblock BloombergGPT: A large language model for finance.
-\newblock \textit{arXiv preprint arXiv:2303.17564}.
 
 \end{thebibliography}
 

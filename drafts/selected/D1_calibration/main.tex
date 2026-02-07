@@ -37,7 +37,7 @@
 
 \begin{abstract}
 Large Language Models (LLMs) are increasingly deployed in financial applications, yet their reliability in high-stakes decision-making remains understudied.
-We evaluate the confidence calibration of LLMs on 90 CFA (Chartered Financial Analyst) examination questions, generating 257 model--method observations using two models (GPT-4o-mini, Qwen3-32B) and two confidence estimation methods (verbalized, self-consistency).
+We evaluate the confidence calibration of LLMs on 90 CFA (Chartered Financial Analyst) examination questions, generating 257 model--method observations using two models (GPT-4o-mini, Qwen3-32B) and two confidence estimation methods (verbalized, self-consistency) across three model--method configurations.
 We find pervasive overconfidence: the average expressed confidence exceeds actual accuracy by 22--32 percentage points ($t = 9.70$, $p < 0.0001$).
 Critically, \textbf{30.0\% of all responses are high-confidence errors} (confidence $\geq 80\%$), and among incorrect answers, 66.4\% are delivered with high confidence.
 These overconfident errors are not uniformly distributed: Ethics \& Standards questions exhibit a 43.5\% overconfident error rate, compared to 22.2\% for Derivatives ($\chi^2 = 12.37$, $p = 0.030$).
@@ -60,6 +60,8 @@ Large Language Models \sep Calibration \sep Financial AI \sep Risk Management \s
 The deployment of Large Language Models (LLMs) in financial services has accelerated rapidly, with applications spanning automated financial advice, risk assessment, equity research, and regulatory compliance \citep{wu2023bloomberggpt, ke2025findap}. A growing body of work evaluates LLM \textit{accuracy} on financial benchmarks---whether models can pass the CFA exam, correctly price derivatives, or interpret financial statements. However, accuracy alone is a poor guide to deployment safety.
 
 Consider two AI systems: Model A achieves 70\% accuracy with well-calibrated confidence (it says ``85\% confident'' when it is correct 85\% of the time), while Model B achieves 75\% accuracy but systematically overstates confidence. Model B is more dangerous despite being more accurate, because its confidence signal cannot be trusted to identify errors. A financial advisor who says ``I'm 95\% certain this bond has a duration of 4.2 years'' but is wrong poses a far greater risk than one who acknowledges uncertainty. This phenomenon---\textit{overconfident error}---represents the most dangerous failure mode for AI systems in finance.
+
+In behavioral finance, this failure mode has a well-established name: \textit{overconfidence bias}---the systematic tendency to overestimate the precision of one's knowledge \citep{debondt1995overconfidence}. Decades of research document overconfidence bias among human investors, linking it to excessive trading, under-diversification, and poor risk assessment. However, human overconfidence is heterogeneous: it varies across individuals, is modulated by experience, and can be partially corrected through feedback. LLM overconfidence is qualitatively more dangerous because it is \textit{systematic}---every user of the same model receives the same miscalibrated confidence signal, and no amount of individual experience corrects it. When an AI system deployed to thousands of financial advisors simultaneously expresses 90\% confidence on an answer that is wrong 40\% of the time, the resulting correlated errors can produce systemic risk at a scale that idiosyncratic human overconfidence never could.
 
 Yet confidence calibration of LLMs in financial contexts remains largely unexplored. Prior calibration studies focus on general knowledge \citep{kadavath2022language}, medical diagnosis \citep{nori2023capabilities}, or scientific reasoning \citep{lin2022teaching}, leaving a critical gap in understanding how LLMs behave in domains where miscalibrated confidence carries direct monetary consequences.
 
@@ -143,7 +145,7 @@ CaR answers the question: ``What is the minimum confidence level at which the er
 
 \subsection{Dataset}
 
-We use the CFA-Challenge dataset from FinEval \citep{ke2025findap}, comprising 90 questions drawn from CFA Level III curriculum materials (SchweserNotes). All questions are multiple-choice with three options (A, B, C), spanning the full CFA curriculum: Ethics \& Standards, Quantitative Methods, Economics, Financial Reporting, Corporate Finance, Equity, Fixed Income, Derivatives, Alternative Investments, and Portfolio Management. CFA Level III questions emphasize application and analysis, representing the most cognitively demanding tier of the CFA Program.
+Table~\ref{tab:dataset} summarizes our dataset: the CFA-Challenge corpus from FinEval \citep{ke2025findap}, comprising 90 questions drawn from CFA Level III curriculum materials (SchweserNotes). All questions are multiple-choice with three options (A, B, C), spanning the full CFA curriculum. CFA Level III questions emphasize application and analysis, representing the most cognitively demanding tier of the CFA Program.
 
 \begin{table}[htbp]
 \centering
@@ -162,8 +164,8 @@ CFA-Challenge & 90 & 3 (A/B/C) & SchweserNotes Level III \\
 
 We evaluate two LLMs representing different architectures and scales:
 \begin{itemize}
-    \item \textbf{GPT-4o-mini} (OpenAI): A proprietary, cloud-hosted model optimized for efficient inference. Evaluated using both verbalized confidence ($n = 95$) and self-consistency with $k = 10$ samples ($n = 90$).
-    \item \textbf{Qwen3-32B} (Alibaba): An open-weight, 32-billion parameter model run locally via Ollama. Evaluated using verbalized confidence ($n = 72$).
+    \item \textbf{GPT-4o-mini} (OpenAI): A proprietary, cloud-hosted model optimized for efficient inference. Evaluated using both verbalized confidence ($n = 95$) and self-consistency with $k = 10$ samples ($n = 90$).\footnote{The verbalized run includes 5 additional questions from an extended SchweserNotes set. Self-consistency and Qwen3-32B results are on the standard 90-question CFA-Challenge corpus.}
+    \item \textbf{Qwen3-32B} (Alibaba): An open-weight, 32-billion parameter model run locally via Ollama. Evaluated using verbalized confidence ($n = 72$; 18 responses failed confidence extraction).
 \end{itemize}
 
 The total dataset comprises 257 model--question--method observations. Both models are evaluated at temperature $\tau = 0.0$ for single-shot methods and $\tau = 0.7$ for self-consistency sampling. Answers and confidence values are extracted using a five-layer regex chain with fallback parsing.
@@ -183,21 +185,24 @@ Table~\ref{tab:calibration} presents calibration metrics across all model--metho
 \caption{Calibration Metrics by Model and Confidence Estimation Method}
 \label{tab:calibration}
 \begin{threeparttable}
-\begin{tabular}{llccccccc}
+\small
+\begin{tabular}{@{}llccccccc@{}}
 \toprule
-\textbf{Model} & \textbf{Method} & \textbf{N} & \textbf{Acc.} & \textbf{Avg Conf.} & \textbf{ECE} & \textbf{Brier} & \textbf{AUROC} & \textbf{OC Gap} \\
+\textbf{Model} & \textbf{Method} & \textbf{N} & \textbf{Acc} & \textbf{Conf} & \textbf{ECE} & \textbf{Brier} & \textbf{AUC} & \textbf{OC Gap} \\
 \midrule
-GPT-4o-mini & Self-consistency & 90 & .522 & .829 & .307 & .334 & .639 & +.307 \\
+GPT-4o-mini & Self-cons. & 90 & .522 & .829 & .307 & .334 & .639 & +.307 \\
 GPT-4o-mini & Verbalized & 95 & .526 & .841 & .315 & .340 & .586 & +.315 \\
 Qwen3-32B & Verbalized & 72 & .611 & .836 & .247 & .226 & .787 & +.225 \\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}
-\small
-\item ECE = Expected Calibration Error; Brier = Brier Score; AUROC = Area Under ROC Curve; OC Gap = Overconfidence Gap (Avg Confidence $-$ Accuracy).
+\footnotesize
+\item ECE = Expected Calibration Error; Brier = Brier Score; AUC = Area Under ROC; OC Gap = Avg Confidence $-$ Accuracy.
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
+
+To put this in concrete terms: across all configurations, models express an average confidence of 84\% while achieving only 52--61\% accuracy---a gap of 22--32 percentage points. The AI's confidence signal systematically overstates its reliability by more than half. A financial professional acting on these signals would make decisions as if the model were correct five out of six times, when in reality it is wrong nearly every other time.
 
 A one-sample $t$-test on the per-observation overconfidence gap (confidence minus correctness indicator) yields $t = 9.70$ ($p < 0.0001$), confirming that LLM overconfidence on CFA questions is highly statistically significant (H1).
 
@@ -229,11 +234,12 @@ Table~\ref{tab:overconf} details the overconfident error profile. Across all 257
 \centering
 \caption{Overconfident Error Analysis (Confidence $\geq$ 80\%)}
 \label{tab:overconf}
-\begin{tabular}{lcccc}
+\small
+\begin{tabular}{@{}lcccc@{}}
 \toprule
 \textbf{Model / Method} & \textbf{Total} & \textbf{Errors} & \textbf{OC Errors} & \textbf{OC Rate} \\
 \midrule
-GPT-4o-mini / Self-consistency & 90 & 43 & 25 & 27.8\% \\
+GPT-4o-mini / Self-cons. & 90 & 43 & 25 & 27.8\% \\
 GPT-4o-mini / Verbalized & 95 & 45 & 38 & 40.0\% \\
 Qwen3-32B / Verbalized & 72 & 28 & 14 & 19.4\% \\
 \midrule
@@ -290,16 +296,17 @@ Table~\ref{tab:hypotheses} summarizes all hypothesis tests:
 \centering
 \caption{Statistical Tests for Research Hypotheses}
 \label{tab:hypotheses}
-\begin{tabular}{p{3cm}p{5.5cm}lc}
+\small
+\begin{tabular}{@{}p{2.8cm}p{4.5cm}lc@{}}
 \toprule
 \textbf{Hypothesis} & \textbf{Test} & \textbf{Statistic} & \textbf{$p$-value} \\
 \midrule
-H1: Systematic overconfidence & One-sample $t$-test on confidence gap & $t = 9.70$ & $< 0.0001$*** \\
-H2: Overconf.\ error $> 20\%$ & Binomial test, $\hat{p} = 0.300$ & $z = 3.99$ & $< 0.0001$*** \\
-H2b: Majority of errors are overconf. & Binomial test, $\hat{p} = 0.664$ & $z = 3.53$ & 0.0002*** \\
-H3: Topic-dependent miscalib. & Chi-squared independence test & $\chi^2 = 12.37$ & 0.030* \\
+H1: Systematic overconfidence & One-sample $t$-test on gap & $t = 9.70$ & $< 0.0001$*** \\
+H2: OC error $> 20\%$ & Binomial, $\hat{p} = 0.300$ & $z = 3.99$ & $< 0.0001$*** \\
+H2b: Most errors are OC & Binomial, $\hat{p} = 0.664$ & $z = 3.53$ & 0.0002*** \\
+H3: Topic-dependent & Chi-squared test & $\chi^2 = 12.37$ & 0.030* \\
 \bottomrule
-\multicolumn{4}{l}{\small $^{***}p<0.001$; $^{*}p<0.05$}
+\multicolumn{4}{@{}l}{\footnotesize $^{***}p<0.001$; $^{*}p<0.05$. OC = overconfident.}
 \end{tabular}
 \end{table}
 
@@ -331,9 +338,17 @@ We map overconfident errors to three CFA Institute Standards of Professional Con
 
 \textbf{Standard III(C) --- Suitability.} Our topic-level analysis reveals that Ethics \& Standards questions---which directly test professional judgment---exhibit the highest overconfident error rate (43.5\%). An AI system confidently recommending actions that violate fiduciary standards undermines the suitability requirement.
 
+\subsection{The Dunning-Kruger Pattern in LLM Confidence}
+
+Our topic-level results reveal a striking pattern that parallels the Dunning-Kruger effect \citep{kruger1999dunning}: models are most overconfident precisely where they are least competent. Ethics \& Standards---the domain where models perform worst (47.8\% accuracy)---simultaneously exhibits the highest overconfident error rate (43.5\%). This is the hallmark of the Dunning-Kruger effect: individuals who lack competence in a domain also lack the metacognitive ability to recognize their incompetence, leading to inflated self-assessments.
+
+In human cognition, the Dunning-Kruger effect arises because the skills needed to produce correct answers are the same skills needed to recognize what a correct answer looks like. An analogous mechanism may operate in LLMs: ethics questions require subtle professional judgment about competing obligations and contextual nuance---precisely the kind of reasoning where models lack reliable internal signals to gauge their own uncertainty. By contrast, Derivatives questions (22.2\% overconfident error rate, 59.3\% accuracy) involve more structured, computation-grounded reasoning where models can partially verify their own logic, producing better-calibrated confidence.
+
+This Dunning-Kruger parallel has practical implications for financial AI governance. It suggests that calibration failures are not uniform but are \textit{inversely correlated with task difficulty}---the hardest questions receive the most dangerously overconfident answers. Regulatory calibration standards should therefore be evaluated on a per-domain basis, not merely in aggregate, as overall ECE can mask catastrophic miscalibration in the domains that matter most.
+
 \subsection{Regulatory Implications and Policy Recommendations}
 
-Our findings have direct implications for emerging AI financial regulation:
+Our findings have direct implications for emerging AI financial regulation. Table~\ref{tab:regulatory} maps our findings to specific regulatory frameworks:
 
 \begin{table}[htbp]
 \centering
@@ -397,13 +412,18 @@ The authors declare that they have no known competing financial interests or per
 \textbf{Guang-Di Chang}: Supervision, Writing -- Review \& Editing.
 
 \section*{Acknowledgments}
-The authors thank the anonymous reviewers for their constructive feedback. Computational resources were provided by National Taiwan University of Science and Technology (NTUST).
+Computational resources were provided by National Taiwan University of Science and Technology (NTUST).
 
 %% ============================================
 %% REFERENCES
 %% ============================================
 
 \begin{thebibliography}{20}
+
+\bibitem[De~Bondt and Thaler(1995)]{debondt1995overconfidence}
+De~Bondt, W. F.~M. and Thaler, R. H. (1995).
+\newblock Financial decision-making in markets and firms: A behavioral perspective.
+\newblock In \textit{Handbooks in Operations Research and Management Science}, Vol.~9 (pp.~385--410). Elsevier.
 
 \bibitem[Callanan et al.(2023)]{callanan2023gpt}
 Callanan, E., Mbae, A., Selle, S., Gupta, V., \& Houlihan, R. (2023).
@@ -429,6 +449,11 @@ Guo, C., Pleiss, G., Sun, Y., \& Weinberger, K. Q. (2017).
 Kadavath, S., Conerly, T., Askell, A., et al. (2022).
 \newblock Language models (mostly) know what they know.
 \newblock \textit{arXiv preprint arXiv:2207.05221}.
+
+\bibitem[Kruger and Dunning(1999)]{kruger1999dunning}
+Kruger, J. and Dunning, D. (1999).
+\newblock Unskilled and unaware of it: How difficulties in recognizing one's own incompetence lead to inflated self-assessments.
+\newblock \textit{Journal of Personality and Social Psychology}, 77(6), 1121--1134.
 
 \bibitem[Ke et al.(2025)]{ke2025findap}
 Ke, Z., Ming, Y., Nguyen, X. P., Xiong, C., \& Joty, S. (2025).

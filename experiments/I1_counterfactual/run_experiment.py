@@ -3,6 +3,9 @@
 Usage:
     python -m experiments.I1_counterfactual.run_experiment \
         --dataset easy --limit 5 --model gpt-4o-mini --perturbation-levels 1
+
+    # Resume interrupted run:
+    python -m experiments.I1_counterfactual.run_experiment --resume experiments/I1_counterfactual/results/run_XXXXXXXX_XXXXXX
 """
 
 import argparse
@@ -26,6 +29,24 @@ from .config import MCQ_SYSTEM, OPEN_SYSTEM
 from .perturb import generate_perturbation
 
 RESULTS_DIR = Path(__file__).parent / "results"
+
+
+def _load_checkpoint(checkpoint_path: Path) -> list:
+    """Load completed results from a JSONL checkpoint file."""
+    results = []
+    if checkpoint_path.exists():
+        with open(checkpoint_path, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if line:
+                    results.append(json.loads(line))
+    return results
+
+
+def _append_checkpoint(checkpoint_path: Path, result: dict):
+    """Append a single result to the JSONL checkpoint file."""
+    with open(checkpoint_path, "a", encoding="utf-8") as f:
+        f.write(json.dumps(result, ensure_ascii=False) + "\n")
 
 
 def answer_question(client: LLMClient, query: str, is_mcq: bool = True) -> dict:
@@ -75,14 +96,39 @@ def run(args):
     levels = [int(x) for x in args.perturbation_levels]
     questions = load_dataset(args.dataset, args.limit)
 
+    # Handle resume
+    if args.resume:
+        resume_dir = Path(args.resume)
+        if not resume_dir.is_absolute():
+            resume_dir = Path(__file__).resolve().parent.parent.parent / args.resume
+        output_dir = resume_dir
+        checkpoint_path = output_dir / "checkpoint.jsonl"
+        existing = _load_checkpoint(checkpoint_path)
+        done_ids = {r["question_id"] for r in existing}
+        results = existing
+        print(f"I1 Counterfactual Experiment (RESUMING)")
+        print(f"  Resumed from: {output_dir}")
+        print(f"  Already completed: {len(done_ids)}/{len(questions)}")
+    else:
+        RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        output_dir = RESULTS_DIR / f"run_{timestamp}"
+        output_dir.mkdir()
+        checkpoint_path = output_dir / "checkpoint.jsonl"
+        done_ids = set()
+        results = []
+
     print(f"I1 Counterfactual Experiment")
     print(f"  Model: {args.model}")
     print(f"  Dataset: {args.dataset} ({len(questions)} questions)")
     print(f"  Perturbation levels: {levels}")
+    print(f"  Output: {output_dir}")
     print()
 
-    results = []
     for i, q in enumerate(questions):
+        if q["id"] in done_ids:
+            continue
+
         print(f"  [{i+1}/{len(questions)}] {q['id']}...", end=" ", flush=True)
 
         # Answer original question
@@ -132,6 +178,7 @@ def run(args):
             status_parts.append(f"L{level}={'✓' if pert_correct else '✗'}")
 
         results.append(entry)
+        _append_checkpoint(checkpoint_path, entry)
         print(" ".join(status_parts))
 
     # Compute summary
@@ -175,12 +222,7 @@ def run(args):
         "memorization_suspect": round(acc_original - robust_accuracy, 4),
     }
 
-    # Save results
-    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    output_dir = RESULTS_DIR / f"run_{timestamp}"
-    output_dir.mkdir()
-
+    # Save final results
     output = {
         "metadata": {
             "experiment": "I1_counterfactual",
@@ -188,7 +230,7 @@ def run(args):
             "dataset": args.dataset,
             "n_questions": n,
             "perturbation_levels": levels,
-            "timestamp": timestamp,
+            "timestamp": datetime.now().strftime("%Y%m%d_%H%M%S"),
         },
         "summary": summary,
         "results": results,
@@ -219,6 +261,8 @@ def main():
         "--perturbation-levels", nargs="+", default=["1"],
         help="Perturbation levels to test (1, 2, 3)",
     )
+    parser.add_argument("--resume", type=str, default=None,
+                        help="Path to previous run directory to resume from")
     args = parser.parse_args()
     run(args)
 

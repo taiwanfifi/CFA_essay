@@ -14,6 +14,9 @@ logger = logging.getLogger(__name__)
 
 MAX_RETRIES = 3
 RETRY_BACKOFF = (10, 30, 60)
+# Reasoning models (gpt-5-*, o1, o3) use thinking tokens that count toward
+# max_completion_tokens.  A low limit silently produces empty visible output.
+_REASONING_MIN_TOKENS = 16384
 
 
 @dataclass
@@ -137,30 +140,72 @@ class LLMClient:
         max_tokens: int,
     ) -> LLMResponse:
         """Chat using OpenAI-compatible API (OpenAI, DeepSeek, Ollama)."""
-        from openai import APITimeoutError
+        from openai import APITimeoutError, BadRequestError
 
         last_err = None
+        model_id = self.config.model_id
+        is_reasoning = any(model_id.startswith(p) for p in ("gpt-5", "o1", "o3"))
+
+        # Reasoning models need much higher token budget for thinking + output.
+        effective_max = max(max_tokens, _REASONING_MIN_TOKENS) if is_reasoning else max_tokens
+
         for attempt in range(MAX_RETRIES):
             try:
                 t0 = time.time()
+                # Newer OpenAI models (gpt-5-*, o1, o3, etc.) require
+                # max_completion_tokens instead of max_tokens.
+                token_kwarg = {}
+                if is_reasoning:
+                    token_kwarg["max_completion_tokens"] = effective_max
+                else:
+                    token_kwarg["max_tokens"] = effective_max
+
+                # Newer OpenAI reasoning models (gpt-5-*, o1, o3) only
+                # support temperature=1 (the default).
+                temp_kwarg = {}
+                if not is_reasoning:
+                    temp_kwarg["temperature"] = temperature
+
                 response = self._client.chat.completions.create(
-                    model=self.config.model_id,
+                    model=model_id,
                     messages=messages,
-                    temperature=temperature,
-                    max_tokens=max_tokens,
+                    **temp_kwarg,
+                    **token_kwarg,
                 )
                 elapsed = time.time() - t0
 
                 choice = response.choices[0]
                 usage = response.usage
+                content = choice.message.content or ""
+
+                # Reasoning models may exhaust tokens on thinking, leaving
+                # empty visible output.  Retry once with a larger budget.
+                if is_reasoning and len(content.strip()) == 0 and effective_max < 32768:
+                    effective_max = min(effective_max * 2, 32768)
+                    logger.warning(
+                        "%s returned empty content (reasoning tokens exhausted), "
+                        "retrying with %d max_completion_tokens",
+                        self.config.name, effective_max,
+                    )
+                    continue
 
                 return LLMResponse(
-                    content=choice.message.content or "",
+                    content=content,
                     prompt_tokens=usage.prompt_tokens if usage else 0,
                     completion_tokens=usage.completion_tokens if usage else 0,
                     elapsed=round(elapsed, 2),
                     model=self.config.model_id,
                 )
+            except BadRequestError as e:
+                # GPT-5/o1/o3 throw 400 when max_completion_tokens is hit
+                if "max_tokens" in str(e) or "model output limit" in str(e):
+                    effective_max = min(effective_max * 2, 32768)
+                    logger.warning(
+                        "%s hit max_tokens limit, retrying with %d tokens",
+                        self.config.name, effective_max,
+                    )
+                    continue
+                raise  # re-raise non-token-limit BadRequestErrors
             except (APITimeoutError, requests.ConnectionError) as e:
                 last_err = e
                 wait = RETRY_BACKOFF[min(attempt, len(RETRY_BACKOFF) - 1)]
