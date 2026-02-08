@@ -36,7 +36,7 @@
             country={Taiwan}}
 
 \begin{abstract}
-When Large Language Models (LLMs) fail on financial reasoning tasks, these failures are not random---they exhibit systematic patterns that reflect specific cognitive limitations. We present the \textit{CFA Error Atlas}, a taxonomy of LLM errors derived from 557 incorrect responses out of 1,032 CFA (Chartered Financial Analyst) examination questions answered in open-ended format. Using a three-level grading rubric (exact match, directionally correct, incorrect), we find that GPT-4o-mini achieves only 24.5\% exact accuracy while 54.0\% of responses are outright incorrect. Error classification of the 557 failures reveals that \textbf{conceptual errors} dominate overwhelmingly (68.8\%), followed by incomplete reasoning (10.8\%) and assumption errors (10.6\%), while pure calculation errors account for a mere 1.4\%. Extending the analysis along topic and cognitive-stage dimensions, we find that error profiles vary dramatically by financial domain: Ethics errors are overwhelmingly reasoning-based, while Derivatives errors are computation-heavy. A \textit{Golden Context Injection} experiment---re-prompting the model with correct financial concepts---reveals that 82.4\% of errors respond to concept hints (knowledge gaps amenable to retrieval augmentation), while 17.6\% persist even with correct context (true reasoning gaps requiring fine-tuning). These findings challenge the narrative that financial AI needs ``better math'' and redirect attention to the more fundamental challenge of concept selection and problem framing.
+When Large Language Models (LLMs) fail on financial reasoning tasks, these failures are not random---they exhibit systematic patterns that reflect specific cognitive limitations. We present the \textit{CFA Error Atlas}, a taxonomy of LLM errors derived from 557 incorrect responses out of 1,032 CFA (Chartered Financial Analyst) examination questions answered in open-ended format. Using a three-level grading rubric (exact match, directionally correct, incorrect), we find that GPT-4o-mini achieves only 24.5\% exact accuracy while 54.0\% of responses are outright incorrect. Error classification of the 557 failures reveals that \textbf{conceptual errors} dominate overwhelmingly (68.8\%), followed by incomplete reasoning (10.8\%) and assumption errors (10.6\%), while pure calculation errors account for a mere 1.4\%. A \textit{Golden Context Injection} (GCI) experiment---re-prompting the model with correct financial concepts---reveals that 82.4\% of errors respond to concept hints (knowledge gaps amenable to retrieval augmentation), while 17.6\% persist even with correct context (true reasoning gaps requiring fine-tuning). A cross-model GCI replication with GPT-5-mini demonstrates that the reasoning model nearly doubles the full recovery rate (\textbf{50.4\%} vs.\ 25.5\%) and reduces the true reasoning gap to \textbf{11.7\%}, suggesting that extended chain-of-thought reasoning substantially improves concept \textit{execution} once the correct concept is provided. These findings challenge the narrative that financial AI needs ``better math'' and redirect attention to the more fundamental challenge of concept selection and problem framing.
 \end{abstract}
 
 \begin{keyword}
@@ -294,6 +294,41 @@ Table~\ref{tab:gci_category} disaggregates recovery by error type. Arithmetic er
 
 These findings have direct implications for remediation strategy. The 82.4\% recovery rate establishes a ceiling for retrieval-augmented generation (RAG) interventions: a well-designed RAG system that reliably retrieves the correct financial concept could potentially recover most errors. However, the 17.6\% residual rate---the \textit{true reasoning gap}---requires training-time interventions such as fine-tuning on step-by-step financial reasoning traces.
 
+\subsection{Cross-Model GCI: Extended Reasoning Amplifies Recovery}
+\label{sec:crossmodel_gci}
+
+To assess whether the knowledge-gap vs.\ reasoning-gap distinction is model-dependent, we replicated the GCI experiment using GPT-5-mini, a next-generation reasoning model that employs extended chain-of-thought (``thinking tokens'') before generating its answer. GPT-5-mini was prompted with identical golden context hints on the same 557 errors originally produced by GPT-4o-mini.\footnote{We deliberately test GPT-5-mini's ability to recover GPT-4o-mini's errors, rather than GPT-5-mini's own errors, to hold the error set constant across models. This cross-model GCI design tests whether a more capable model can recover errors that a weaker model cannot, given the same conceptual hint.}
+
+\begin{table}[htbp]
+\centering
+\caption{Cross-Model GCI Recovery Comparison ($N = 557$ GPT-4o-mini errors)}
+\label{tab:gci_cross}
+\begin{tabular}{lccccc}
+\toprule
+& \multicolumn{2}{c}{\textbf{GPT-4o-mini}} & \multicolumn{2}{c}{\textbf{GPT-5-mini}} & \textbf{$\Delta$} \\
+\cmidrule(lr){2-3} \cmidrule(lr){4-5}
+\textbf{Recovery Level} & Count & \% & Count & \% & pp \\
+\midrule
+Full recovery (A) & 142 & 25.5\% & 281 & 50.4\% & +24.9 \\
+Partial recovery (B) & 317 & 56.9\% & 211 & 37.9\% & $-$19.0 \\
+Still wrong (C) & 98 & 17.6\% & 65 & 11.7\% & $-$5.9 \\
+\midrule
+\textbf{Any recovery (A+B)} & 459 & \textbf{82.4\%} & 492 & \textbf{88.3\%} & +5.9 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Figure~\ref{fig:gci_cross} and Table~\ref{tab:gci_cross} reveal a striking pattern: GPT-5-mini nearly doubles the full recovery rate (50.4\% vs.\ 25.5\%) while the partial recovery rate decreases (37.9\% vs.\ 56.9\%).
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig5_cross_model_gci.pdf}
+\caption{Cross-model Golden Context Injection recovery ($N = 557$ errors). GPT-5-mini nearly doubles the full recovery rate (50.4\% vs.\ 25.5\%) while reducing the true reasoning gap from 17.6\% to 11.7\%. Extended chain-of-thought reasoning improves concept \textit{execution}, not just concept \textit{recognition}.}
+\label{fig:gci_cross}
+\end{figure} The total recovery rate improves modestly (88.3\% vs.\ 82.4\%). This means GPT-5-mini's primary advantage is not recovering \textit{more} errors but recovering them \textit{more completely}---converting partial recoveries into full recoveries through more precise execution. The extended chain-of-thought reasoning enables the model to follow through on the provided concept with fewer computational missteps.
+
+The true reasoning gap narrows from 17.6\% to 11.7\%, suggesting that some errors classified as ``reasoning gaps'' for GPT-4o-mini are actually \textit{execution gaps} that more capable reasoning can overcome. Nevertheless, 65 errors (11.7\%) persist even with golden context and extended reasoning, representing a hard core of genuine reasoning limitations that neither concept provision nor enhanced inference can address.
+
 %% ============================================
 %% 4. DISCUSSION
 %% ============================================
@@ -331,7 +366,7 @@ The Atlas reveals where human oversight is most needed:
 
 \subsection{Limitations}
 
-Several limitations deserve note. First, the automated error classification uses GPT-4o-mini as the classifier, which may introduce systematic biases; a human annotation validation study is planned. Second, the topic-level error profiles (Table~\ref{tab:topicerror}) are drawn from a pilot subsample ($n = 229$) on CFA-Challenge questions; full-scale topic annotation is in progress. Third, the GCI experiment uses the same model for both error generation and recovery testing; cross-model GCI (e.g., testing whether GPT-5-mini recovers GPT-4o-mini's errors) would strengthen the knowledge-gap vs.\ reasoning-gap distinction. Finally, the open-ended format removes MCQ scaffolding, which inflates the error rate relative to standard MCQ evaluations; this design choice is deliberate, as it isolates genuine reasoning from option-recognition heuristics.
+Several limitations deserve note. First, the automated error classification uses GPT-4o-mini as the classifier, which may introduce systematic biases; a human annotation validation study is planned. Second, the topic-level error profiles (Table~\ref{tab:topicerror}) are drawn from a pilot subsample ($n = 229$) on CFA-Challenge questions; full-scale topic annotation is in progress. Third, while the cross-model GCI experiment (Section~\ref{sec:crossmodel_gci}) addresses the single-model limitation for recovery testing, the error taxonomy itself is derived from GPT-4o-mini's failures; GPT-5-mini may produce a different error distribution that warrants separate analysis. Finally, the open-ended format removes MCQ scaffolding, which inflates the error rate relative to standard MCQ evaluations; this design choice is deliberate, as it isolates genuine reasoning from option-recognition heuristics.
 
 %% ============================================
 %% 5. CONCLUSION
@@ -339,9 +374,9 @@ Several limitations deserve note. First, the automated error classification uses
 \section{Conclusion}
 \label{sec:conclusion}
 
-The CFA Error Atlas, based on 557 incorrect responses from 1,032 CFA questions answered in open-ended format, reveals that LLM financial reasoning failures are highly structured, not random. Conceptual errors---not calculation mistakes---are the dominant failure mode (68.8\% vs.\ 1.4\%), and error profiles vary dramatically across financial domains. Golden Context Injection demonstrates that 82.4\% of errors are at least partially recoverable when the correct concept is provided, establishing a ceiling for retrieval-augmented remediation. However, the 17.6\% residual rate identifies a true reasoning gap that requires training-time intervention.
+The CFA Error Atlas, based on 557 incorrect responses from 1,032 CFA questions answered in open-ended format, reveals that LLM financial reasoning failures are highly structured, not random. Conceptual errors---not calculation mistakes---are the dominant failure mode (68.8\% vs.\ 1.4\%), and error profiles vary dramatically across financial domains. Golden Context Injection demonstrates that 82.4\% of errors are at least partially recoverable when the correct concept is provided, establishing a ceiling for retrieval-augmented remediation. Cross-model GCI with GPT-5-mini narrows the true reasoning gap from 17.6\% to 11.7\% and nearly doubles the full recovery rate (50.4\% vs.\ 25.5\%), revealing that extended chain-of-thought reasoning substantially improves concept execution once the correct concept is provided.
 
-\textbf{The question is not how accurately AI computes, but whether it knows which computation to perform---and golden context injection reveals that most of the time, providing the right concept is sufficient to recover.}
+\textbf{The question is not how accurately AI computes, but whether it knows which computation to perform---and our cross-model evidence shows that while providing the right concept is usually sufficient, the completeness of recovery depends critically on the model's reasoning depth.}
 
 \section*{Data Availability}
 The experimental data and analysis code are available from the corresponding author upon reasonable request.

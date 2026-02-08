@@ -52,7 +52,7 @@
             country={Taiwan}}
 
 \begin{abstract}
-Professional certifications such as the Chartered Financial Analyst (CFA) designation have long served as credible signals in financial labor markets, enabling employers to screen for scarce cognitive abilities. We develop a Modified Spence Signaling Model that incorporates an AI replication cost parameter to analyze how large language models (LLMs) erode certification signaling value. Our central theoretical result---the Partial Signaling Collapse Theorem---demonstrates that signaling erosion is \emph{selective}, not total: certification loses its screening power over formalizable abilities (formula recall, rule application, algorithmic computation) where AI replication costs approach zero, but retains signaling value for tacit abilities (ethical judgment, stakeholder reasoning, fiduciary decision-making) that resist low-cost AI replication. Integrating the \citet{autor2003skill} task-based framework with \citet{becker1964human} human capital theory, we map the CFA curriculum onto a six-dimensional ability taxonomy and derive a tipping-point condition: when the fraction of AI-replicable abilities exceeds a critical threshold $\alpha^*$, the separating equilibrium collapses into pooling. We provide empirical support through a controlled option bias experiment ($N = 1{,}032$ CFA-style questions): a frontier LLM achieves 82.6\% accuracy with multiple-choice options versus 80.6\% without, a difference of $+1.9$ percentage points that is not statistically significant (McNemar's test with Yates' correction, $p = 0.251$). This result demonstrates that AI performance on formalizable financial tasks is largely independent of the option signal structure---implying that the multiple-choice format, which dominates certification assessment, provides negligible screening value against AI replication. Our analysis yields concrete policy implications: certification bodies must rebalance assessment toward AI-resistant competencies---context-dependent judgment, interpersonal reasoning, and responsibility-bearing decision-making---to preserve institutional credibility in the age of artificial intelligence.
+Professional certifications such as the Chartered Financial Analyst (CFA) designation have long served as credible signals in financial labor markets, enabling employers to screen for scarce cognitive abilities. We develop a Modified Spence Signaling Model that incorporates an AI replication cost parameter to analyze how large language models (LLMs) erode certification signaling value. Our central theoretical result---the Partial Signaling Collapse Theorem---demonstrates that signaling erosion is \emph{selective}, not total: certification loses its screening power over formalizable abilities (formula recall, rule application, algorithmic computation) where AI replication costs approach zero, but retains signaling value for tacit abilities (ethical judgment, stakeholder reasoning, fiduciary decision-making) that resist low-cost AI replication. Integrating the \citet{autor2003skill} task-based framework with \citet{becker1964human} human capital theory, we map the CFA curriculum onto a six-dimensional ability taxonomy and derive a tipping-point condition: when the fraction of AI-replicable abilities exceeds a critical threshold $\alpha^*$, the separating equilibrium collapses into pooling. We provide empirical support through a controlled option bias experiment ($N = 1{,}032$ CFA-style questions) across two model generations: GPT-4o-mini achieves 82.6\% accuracy with options vs.\ 80.6\% without ($+1.9$~pp, $p = 0.251$, not significant), while GPT-5-mini achieves 92.8\% with vs.\ 83.2\% without ($+9.6$~pp, $p < 0.001$, highly significant). The cross-model reversal reveals that format invariance is \emph{generation-dependent}: more capable reasoning models benefit disproportionately from MCQ scaffolding, yet their without-options accuracy still exceeds the previous generation's with-options accuracy. This implies that assessment format reform may slow but cannot reverse signaling erosion. Our analysis yields concrete policy implications: certification bodies must rebalance assessment \emph{content}---not merely format---toward AI-resistant competencies to preserve institutional credibility in the age of artificial intelligence.
 \end{abstract}
 
 \begin{keyword}
@@ -433,45 +433,51 @@ This paired design enables within-question comparison, eliminating confounds fro
 
 \subsection{Results}
 
-Table~\ref{tab:option_bias} presents the aggregate results from the option bias experiment.
+Table~\ref{tab:option_bias} presents the aggregate results from the option bias experiment across two model generations.
 
 \begin{table}[htbp]
 \centering
-\caption{Option Bias Experiment Results ($N = 1{,}032$, GPT-4o-mini)}
+\caption{Option Bias Experiment Results ($N = 1{,}032$)}
 \label{tab:option_bias}
-\begin{tabular}{@{}lc@{}}
+\begin{tabular}{@{}lcc@{}}
 \toprule
-\textbf{Metric} & \textbf{Value} \\
+\textbf{Metric} & \textbf{GPT-4o-mini} & \textbf{GPT-5-mini} \\
 \midrule
-Accuracy with options & 82.6\% (852/1,032) \\
-Accuracy without options & 80.6\% (832/1,032) \\
-Option bias ($\Delta$) & $+1.9$ pp \\
-Questions with option-dependent correctness & 147/1,032 (14.2\%) \\
+Accuracy with options & 82.6\% (852/1,032) & 92.8\% (958/1,032) \\
+Accuracy without options & 80.6\% (832/1,032) & 83.2\% (859/1,032) \\
+Option bias ($\Delta$) & $+1.9$ pp & $+9.6$ pp \\
 \midrule
-\multicolumn{2}{@{}l}{\textit{McNemar's Test with Yates' Correction (paired comparison)}} \\
-\quad Discordant pair $b$ (correct $\to$ incorrect) & 147 \\
-\quad Discordant pair $c$ (incorrect $\to$ correct) & 127 \\
-\quad $\chi^2$ statistic (Yates corrected) & 1.318 \\
-\quad $p$-value & 0.251 \\
-\quad Significant at $\alpha = 0.05$? & No \\
+Discordant $b$ (with $\checkmark$, without $\times$) & 147 & 146 \\
+Discordant $c$ (with $\times$, without $\checkmark$) & 127 & 47 \\
+$\chi^2$ (Yates corrected) & 1.318 & 49.76 \\
+$p$-value & 0.251 & $< 0.001$*** \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-The LLM achieves high accuracy regardless of option presence (82.6\% vs.\ 80.6\%), and the $+1.9$ pp difference is not statistically significant (McNemar's test with Yates' correction, $\chi^2 = 1.318$, $p = 0.251$). While 14.2\% of questions show option-dependent correctness, the balanced discordant pairs ($b = 147$ vs.\ $c = 127$) indicate symmetric, noise-like variation rather than a systematic option-signal advantage.
+For GPT-4o-mini, the option bias is not statistically significant ($p = 0.251$), with balanced discordant pairs ($b = 147$ vs.\ $c = 127$) indicating symmetric variation. However, GPT-5-mini---a next-generation reasoning model---reveals a dramatically different pattern: the option bias widens to +9.6~pp and becomes highly significant ($p < 0.001$), with strongly asymmetric discordant pairs ($b = 146$ vs.\ $c = 47$). The reasoning model benefits substantially more from option presence.
 
 \subsection{Implications for Signaling Theory}
 
-Within our model, the multiple-choice option set can be interpreted as a \emph{secondary signal} that reduces task difficulty by constraining the response space. If AI exploits this signal, then the MCQ format inflates measured replicability $\rho_k$, and switching to free-response could restore signaling value. Our result refutes this optimistic scenario:
+The cross-model comparison introduces a nuanced picture for the format-invariance hypothesis. For GPT-4o-mini:
 \begin{equation}
     \rho_k^{\text{MC}} \approx \rho_k^{\text{free-response}} \quad \text{for } k \in \mathcal{F}
     \label{eq:format_invariance}
 \end{equation}
-AI replicability of formalizable skills is approximately \emph{format-invariant}, strengthening Proposition~\ref{prop:partial_collapse}: signaling erosion reflects genuine knowledge replication, not format exploitation. The policy corollary is that assessment format reform alone is insufficient; meaningful signaling restoration requires \emph{content} reform---reweighting toward tacit abilities ($s_5$, $s_6$) where AI replicability remains low regardless of format.
+AI replicability of formalizable skills is approximately \emph{format-invariant}, supporting Proposition~\ref{prop:partial_collapse}: signaling erosion reflects genuine knowledge replication, not format exploitation.
+
+However, GPT-5-mini's significant option bias ($p < 0.001$) reveals that format invariance may be \emph{generation-dependent}. As models evolve from pattern-matching to extended chain-of-thought reasoning, MCQ options serve increasingly as convergence anchors for multi-path deliberation. This has two competing implications:
+
+\begin{enumerate}[nosep]
+    \item \textbf{Optimistic (for certification)}: If more capable models are more format-dependent, then open-ended assessment formats may partially restore signaling value against future AI systems. The MCQ format inflates AI replicability; switching to free-response would reduce measured $\rho_k$ for reasoning models.
+    \item \textbf{Pessimistic (for certification)}: GPT-5-mini's without-options accuracy (83.2\%) still exceeds GPT-4o-mini's with-options accuracy (82.6\%). The absolute level of AI replicability continues to rise across generations regardless of format, meaning that format reform merely slows, rather than reverses, signaling erosion.
+\end{enumerate}
+
+The net effect on the Signaling Retention Ratio $R$ depends on which dynamic dominates. Under the pessimistic interpretation---which our data supports more strongly---the policy prescription remains content reform rather than format reform, though the cross-model evidence suggests that format reform may provide a meaningful \emph{complementary} intervention, particularly against reasoning models where the option bias is substantial.
 
 \subsection{Robustness and Scope Conditions}
 
-The experiment uses a single frontier model (GPT-4o-mini) on a question pool dominated by formalizable abilities ($s_1$, $s_2$). The format-invariance result may not hold for $s_4$--$s_6$, where options could provide more substantive scaffolding. Future work should extend to CFA Level III essay items targeting integrative judgment and ethical reasoning.
+The experiment spans two model generations (GPT-4o-mini and GPT-5-mini) on a question pool dominated by formalizable abilities ($s_1$, $s_2$). The cross-model reversal in significance (from $p = 0.251$ to $p < 0.001$) demonstrates that format effects are not static properties of the assessment instrument but dynamic properties of the model--format interaction. Extension to additional model families and to CFA Level III essay items targeting integrative judgment and ethical reasoning would further refine the format-invariance boundary.
 
 
 %% ============================================================
@@ -489,7 +495,7 @@ The model generates three key testable predictions:
 
     \item \textbf{Employer behavioral shifts.} Rational employers should supplement certification screening with methods targeting tacit abilities (behavioral interviews, case simulations), with adoption rates increasing with AI replicability of the certification's core content.
 
-    \item \textbf{Format invariance (supported).} AI replicability of formalizable skills should be approximately format-invariant. Our option bias experiment supports this: the $+1.9$ pp difference is not significant ($p = 0.251$, $N = 1{,}032$).
+    \item \textbf{Format invariance (partially supported).} AI replicability of formalizable skills should be approximately format-invariant. GPT-4o-mini supports this ($+1.9$ pp, $p = 0.251$), but GPT-5-mini shows significant format dependence ($+9.6$ pp, $p < 0.001$), suggesting format invariance may erode for reasoning models while absolute replicability continues to rise.
 \end{enumerate}
 
 \subsection{Policy Implications for Certification Design}
@@ -517,7 +523,7 @@ Our formalizable--tacit distinction connects to ``Polanyi's Paradox'' \citep{aut
 
 \subsection{Limitations}
 
-Our model treats AI replicability as exogenous and monotonically increasing; in practice, capabilities develop unevenly. The two-type model is stylized; a continuous-type extension would yield richer dynamics. The $\rho_k$ values are calibrated assumptions---perturbing all by $\pm 0.10$ shifts $R$ to approximately $[0.19, 0.39]$, indicating moderate sensitivity that does not alter the qualitative conclusion. We abstract from reputational and network effects of CFA membership, and our empirical evidence is limited to a single model and formalizable question pool. Despite these limitations, the core result---partial, selective signaling erosion concentrated on formalizable abilities---is robust and provides a clear qualitative prediction distinguishing our framework from polar positions in the current discourse.
+Our model treats AI replicability as exogenous and monotonically increasing; in practice, capabilities develop unevenly. The two-type model is stylized; a continuous-type extension would yield richer dynamics. The $\rho_k$ values are calibrated assumptions---perturbing all by $\pm 0.10$ shifts $R$ to approximately $[0.19, 0.39]$, indicating moderate sensitivity that does not alter the qualitative conclusion. We abstract from reputational and network effects of CFA membership. The cross-generational evidence (two OpenAI models) strengthens the empirical base but remains within a single provider family; extension to open-source models (e.g., Llama-Fin) and reasoning-specialized architectures would further test the framework's generality. The generation-dependent format invariance result introduces complexity into the policy prescription: the interaction between model architecture and assessment format may require certification bodies to monitor both content and format sensitivity as AI evolves. Despite these limitations, the core result---partial, selective signaling erosion concentrated on formalizable abilities---is robust and provides a clear qualitative prediction distinguishing our framework from polar positions in the current discourse.
 
 
 %% ============================================================
@@ -526,11 +532,11 @@ Our model treats AI replicability as exogenous and monotonically increasing; in 
 \section{Conclusion}
 \label{sec:conclusion}
 
-We develop a Modified Spence Signaling Model showing that AI-driven signaling erosion is \emph{partial and selective}: certification loses informational content on formalizable abilities while preserving signaling value for tacit competencies. A controlled option bias experiment ($N = 1{,}032$, McNemar's test with Yates' correction, $p = 0.251$) confirms that AI performance on formalizable tasks is format-invariant, ruling out the possibility that assessment format reform alone can restore signaling value.
+We develop a Modified Spence Signaling Model showing that AI-driven signaling erosion is \emph{partial and selective}: certification loses informational content on formalizable abilities while preserving signaling value for tacit competencies. A cross-generational option bias experiment ($N = 1{,}032$) reveals that format invariance is generation-dependent---non-significant for GPT-4o-mini ($p = 0.251$) but highly significant for GPT-5-mini ($p < 0.001$)---yet the absolute level of AI replicability rises regardless of format, supporting the content reform prescription over format reform alone.
 
-Applied to the CFA, approximately 50\% of curriculum weight is already highly AI-replicable, and the certification retains only about 29\% of its pre-AI signaling value. The policy prescription is clear: certification bodies must rebalance assessment \emph{content}---not merely format---toward ethical reasoning, integrative judgment, and stakeholder deliberation, where human professionals retain comparative advantage. A certification that primarily tests abilities available from AI at negligible cost cannot sustain the signaling equilibrium on which its economic value depends.
+Applied to the CFA, approximately 50\% of curriculum weight is already highly AI-replicable, and the certification retains only about 29\% of its pre-AI signaling value. The cross-model evidence introduces a temporal dimension: each model generation simultaneously increases baseline replicability \emph{and} may alter the format sensitivity landscape, requiring continuous recalibration of the AI replicability index $\rho_k$. The policy prescription is clear: certification bodies must rebalance assessment content toward ethical reasoning, integrative judgment, and stakeholder deliberation---and must institute dynamic review mechanisms linked to AI capability benchmarks, as the signaling landscape shifts with each model generation.
 
-More broadly, our framework demonstrates that AI reshapes not just production but the \emph{institutions} that organize economic activity. Professional certification, educational degrees, and occupational licensing all face analogous pressures; understanding the selective nature of AI-driven institutional erosion is essential for designing adaptive responses.
+More broadly, our framework demonstrates that AI reshapes not just production but the \emph{institutions} that organize economic activity. The cross-generational evidence underscores that this reshaping is not a one-time event but a continuous process, requiring institutional adaptation at the pace of AI advancement.
 
 
 \section*{Data Availability}

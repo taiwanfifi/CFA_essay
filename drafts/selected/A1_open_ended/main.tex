@@ -36,7 +36,7 @@
             country={Taiwan}}
 
 \begin{abstract}
-Current evaluations of Large Language Models (LLMs) on financial benchmarks rely almost exclusively on multiple-choice question (MCQ) formats, yet MCQ options themselves may leak information---magnitude clues, sign directions, and elimination opportunities---that inflate perceived reasoning ability. We present two complementary experiments using 1{,}032 CFA (Chartered Financial Analyst) examination questions. First, we measure \textit{option bias} by testing GPT-4o-mini on the same 1{,}032 questions with and without answer options, finding that MCQ format inflates accuracy by only \textbf{1.9 percentage points} (82.6\% with options vs.\ 80.6\% without); McNemar's test indicates this difference is \textit{not} statistically significant ($p = 0.251$). Second, we apply a \textit{three-tier evaluation framework}---distinguishing exact matches, directionally correct responses, and genuine errors---to open-ended answers, revealing that \textbf{21.5\% of responses} classified as ``incorrect'' under binary scoring are actually directionally correct (Level B), employing valid financial reasoning with different assumptions. The strict (exact match) accuracy of 24.5\% contrasts sharply with the lenient (including directionally correct) accuracy of 46.0\%, exposing a 21.5-percentage-point gap attributable to the inherent ambiguity of financial calculations. Our findings suggest that while the MCQ option bias effect is smaller than previously estimated on small samples, the binary correct/incorrect paradigm fundamentally fails to capture the nuanced nature of financial reasoning, with over one-fifth of ``errors'' reflecting legitimate alternative analyses.
+Current evaluations of Large Language Models (LLMs) on financial benchmarks rely almost exclusively on multiple-choice question (MCQ) formats, yet MCQ options themselves may leak information---magnitude clues, sign directions, and elimination opportunities---that inflate perceived reasoning ability. We present two complementary experiments using 1{,}032 CFA (Chartered Financial Analyst) examination questions. First, we measure \textit{option bias} by testing GPT-4o-mini on the same 1{,}032 questions with and without answer options, finding that MCQ format inflates accuracy by only \textbf{1.9 percentage points} (82.6\% with options vs.\ 80.6\% without); McNemar's test indicates this difference is \textit{not} statistically significant ($p = 0.251$). Second, we apply a \textit{three-tier evaluation framework}---distinguishing exact matches, directionally correct responses, and genuine errors---to open-ended answers, revealing that \textbf{21.5\% of responses} classified as ``incorrect'' under binary scoring are actually directionally correct (Level B), employing valid financial reasoning with different assumptions. A cross-model replication with GPT-5-mini reveals a striking reversal: the option bias widens to \textbf{+9.6 percentage points} (92.8\% with vs.\ 83.2\% without, McNemar $p < 0.001$), and strict open-ended accuracy nearly doubles to \textbf{41.8\%}---suggesting that more capable reasoning models benefit \textit{disproportionately} from MCQ scaffolding while simultaneously demonstrating genuine gains in open-ended financial reasoning. Our findings challenge the assumption that option bias is a fixed property of the evaluation format: it is model-dependent, and advancing AI capabilities may amplify rather than diminish the distortion introduced by multiple-choice assessment.
 \end{abstract}
 
 \begin{keyword}
@@ -254,6 +254,98 @@ Among the 557 Level C responses, error attribution reveals:
 Conceptual errors dominate even more strongly at scale, accounting for over two-thirds (68.8\%) of all genuine errors. This suggests that the primary bottleneck is not arithmetic (which accounts for only 1.3\% of errors) but \textit{selecting the right financial concept or framework} for the given problem. Notably, incomplete reasoning (10.8\%) and assumption errors (10.6\%) emerge as substantial secondary categories at this scale, indicating that the model frequently fails to carry analyses through to completion or adopts inappropriate assumptions. The near-zero formula error rate (0.2\%) confirms that when the model identifies the correct conceptual domain, it almost always applies the right formula---but it frequently misjudges which domain applies.
 
 %% ============================================
+%% 5.5 CROSS-MODEL COMPARISON
+%% ============================================
+\subsection{Cross-Model Comparison: GPT-5-mini}
+\label{sec:crossmodel}
+
+To assess whether the observed patterns are model-specific, we replicated both experiments using GPT-5-mini, a next-generation reasoning model from the same provider. GPT-5-mini employs extended chain-of-thought reasoning (``thinking tokens'') before generating its visible response, representing a qualitatively different inference paradigm.
+
+\subsubsection{Option Bias: From Non-Significant to Highly Significant}
+
+Table~\ref{tab:optbias_cross} presents the cross-model option bias comparison.
+
+\begin{table}[htbp]
+\centering
+\caption{Cross-Model Option Bias Comparison ($N = 1{,}032$)}
+\label{tab:optbias_cross}
+\begin{threeparttable}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Metric} & \textbf{GPT-4o-mini} & \textbf{GPT-5-mini} \\
+\midrule
+Accuracy WITH options & 82.6\% & 92.8\% \\
+Accuracy WITHOUT options & 80.6\% & 83.2\% \\
+\textbf{Option bias} & \textbf{+1.9 pp} & \textbf{+9.6 pp} \\
+\midrule
+Discordant $b$ (with $\checkmark$, without $\times$) & 147 & 146 \\
+Discordant $c$ (with $\times$, without $\checkmark$) & 127 & 47 \\
+McNemar's $\chi^2$ (Yates) & 1.318 & 49.76 \\
+$p$-value & 0.251 & $< 0.001$*** \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item McNemar's test with Yates' continuity correction. The dramatic shift from $p = 0.251$ to $p < 0.001$ reflects a qualitative change in the model--format interaction.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+Figure~\ref{fig:cross_optbias} visualizes the cross-model option bias comparison. The cross-model comparison reveals a striking reversal: the option bias that was non-significant for GPT-4o-mini (+1.9~pp, $p = 0.251$) becomes highly significant for GPT-5-mini (+9.6~pp, $p < 0.001$).
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig3_cross_model_option_bias.pdf}
+\caption{Cross-model option bias comparison ($N = 1{,}032$). GPT-4o-mini shows a non-significant +1.9~pp option bias ($p = 0.251$), while GPT-5-mini exhibits a highly significant +9.6~pp bias ($p < 0.001$)---demonstrating that more capable reasoning models benefit disproportionately from MCQ scaffolding.}
+\label{fig:cross_optbias}
+\end{figure} This is not merely a quantitative increase---it is a qualitative shift from ``format doesn't matter'' to ``format substantially matters.'' The asymmetry in discordant pairs is particularly revealing: GPT-5-mini has 146 questions where options help (virtually identical to GPT-4o-mini's 147), but only 47 where removing options helps (vs.\ GPT-4o-mini's 127). The option-assistance rate is preserved across generations, but the ``reverse crutch'' cases---where the open-ended format forces deeper reasoning that outperforms MCQ-assisted selection---decline sharply, producing a net bias nearly five times larger.
+
+We hypothesize that this paradox reflects the interaction between extended chain-of-thought reasoning and answer-space constraint. GPT-5-mini's reasoning traces are substantially longer, exploring multiple solution paths before converging. When answer options are present, they serve as convergence anchors---the model can verify candidate answers against the provided options, pruning incorrect reasoning branches early. Without options, the extended reasoning process can diverge into plausible but incorrect alternative analyses, increasing the error rate. In essence, \textit{more capable reasoning amplifies the anchoring benefit of answer options}.
+
+\subsubsection{Three-Tier Evaluation: Genuine Reasoning Gains}
+
+Table~\ref{tab:threetier_cross} presents the cross-model three-tier evaluation.
+
+\begin{table}[htbp]
+\centering
+\caption{Cross-Model Three-Tier Evaluation ($N = 1{,}032$)}
+\label{tab:threetier_cross}
+\begin{threeparttable}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Level} & \multicolumn{2}{c}{\textbf{GPT-4o-mini}} & \multicolumn{2}{c}{\textbf{GPT-5-mini}} \\
+\cmidrule(lr){2-3} \cmidrule(lr){4-5}
+& Count & \% & Count & \% \\
+\midrule
+Level A (Exact) & 253 & 24.5\% & 431 & 41.8\% \\
+Level B (Directional) & 222 & 21.5\% & 230 & 22.3\% \\
+Level C (Incorrect) & 557 & 54.0\% & 371 & 35.9\% \\
+\midrule
+\textbf{Strict Accuracy} (A) & & 24.5\% & & 41.8\% \\
+\textbf{Lenient Accuracy} (A+B) & & 46.0\% & & 64.1\% \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item GPT-5-mini initially produced 108 empty responses (10.5\%) due to reasoning token budget exhaustion; these were re-run with increased token allocation. The figures above reflect the complete, corrected dataset.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+Figure~\ref{fig:cross_threetier} presents the cross-model three-tier comparison. GPT-5-mini nearly doubles the strict accuracy (41.8\% vs.\ 24.5\%), demonstrating genuine improvement in open-ended financial reasoning.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig4_cross_model_three_tier.pdf}
+\caption{Cross-model three-tier evaluation ($N = 1{,}032$). GPT-5-mini nearly doubles the Level~A (exact match) rate from 24.5\% to 41.8\%, while Level~B remains stable ($\sim$22\%). The primary improvement converts genuine errors (Level~C) into exact matches rather than shifting answers to the ambiguity zone.}
+\label{fig:cross_threetier}
+\end{figure}
+
+The Level B rate remains stable (22.3\% vs.\ 21.5\%), confirming that the ``ambiguity zone'' of legitimate alternative analyses is a property of the questions, not the model. The primary effect of increased model capability is converting Level C errors into Level A exact matches---not merely shifting answers from ``wrong'' to ``approximately right.''
+
+The lenient accuracy of 64.1\% for GPT-5-mini approaches two-thirds of the MCQ accuracy (92.8\%), substantially narrowing the format gap observed for GPT-4o-mini (46.0\% vs.\ 82.6\%). This suggests that while the generation-vs-selection distinction remains meaningful, more capable models are progressively closing the gap between what they can \textit{recognize} and what they can \textit{produce}.
+
+%% ============================================
 %% 6. DISCUSSION
 %% ============================================
 \section{Discussion}
@@ -306,9 +398,20 @@ Our findings have direct implications for the CFA Institute:
     \item \textbf{Convention sensitivity}: Level B responses (21.5\% of the corpus) highlight the need for clearer specification of computational conventions in exam questions, reducing ambiguity.
 \end{enumerate}
 
+\subsection{The Option Bias Paradox: Model Capability Amplifies Format Dependence}
+
+The cross-model comparison in Section~\ref{sec:crossmodel} introduces a counter-intuitive finding that challenges the conventional assumption that format effects diminish as models improve. GPT-5-mini, despite being substantially more capable (92.8\% MCQ accuracy vs.\ 82.6\%), exhibits a \textit{larger and statistically significant} option bias (+9.6~pp, $p < 0.001$) compared to GPT-4o-mini's non-significant bias (+1.9~pp, $p = 0.251$).
+
+This ``option bias paradox'' has three implications:
+\begin{enumerate}
+    \item \textbf{For benchmark design}: Option bias is not a fixed property of the evaluation instrument---it is an emergent property of the model-format interaction. Benchmark designers cannot assume that format effects measured on one model generation transfer to the next.
+    \item \textbf{For AI deployment}: Institutions evaluating AI tools based on MCQ benchmarks face an increasing risk of overestimation as models become more capable. The 9.6~pp gap between MCQ and open-ended performance for GPT-5-mini means that roughly one in ten ``correct'' MCQ answers reflects format-assisted performance rather than genuine reasoning.
+    \item \textbf{For signaling theory}: The format-invariance assumption underlying MCQ-based professional certification screening \citep{lord1980applications} may become increasingly untenable as AI models improve, necessitating format reform precisely when AI performance appears most impressive.
+\end{enumerate}
+
 \subsection{Limitations}
 
-Our study uses the full CFA-Easy corpus ($n = 1{,}032$) but only a single model (GPT-4o-mini). Extension to multiple models (including open-source financial LLMs) would strengthen generalizability. The non-significant option bias result ($p = 0.251$) may be model-specific; weaker models might exhibit larger format effects. The LLM-as-judge approach for three-tier classification may itself contain biases, and human validation of a subset of classifications is recommended for future work. The dominance of conceptual errors (68.8\%) could partly reflect the LLM-as-judge's tendency to classify ambiguous errors as conceptual rather than more specific categories.
+Our study uses the full CFA-Easy corpus ($n = 1{,}032$) and two model generations (GPT-4o-mini and GPT-5-mini). Extension to additional model families (including open-source financial LLMs) would strengthen generalizability. The reversal of the option bias result from non-significant ($p = 0.251$) to highly significant ($p < 0.001$) across model generations suggests that the effect is sensitive to model architecture, particularly the use of extended chain-of-thought reasoning. The LLM-as-judge approach for three-tier classification may itself contain biases, and human validation of a subset of classifications is recommended for future work. GPT-5-mini initially produced 108 empty responses (10.5\%) in the open-ended (A1) experiment due to token budget exhaustion in the reasoning phase; these were subsequently re-run with increased allocation. In the option bias (A5) experiment, 58 without-options responses (5.6\%) were empty; these are treated as incorrect in the reported accuracy, yielding a conservative estimate of true without-options performance.
 
 %% ============================================
 %% 7. CONCLUSION
@@ -316,11 +419,11 @@ Our study uses the full CFA-Easy corpus ($n = 1{,}032$) but only a single model 
 \section{Conclusion}
 \label{sec:conclusion}
 
-This paper demonstrates that MCQ-format evaluations of financial LLMs are fundamentally different from open-ended evaluation, though not in the way previously assumed. The option bias effect is small and non-significant at scale (option bias = +1.9~pp, $p = 0.251$), suggesting that answer options per se do not substantially inflate LLM accuracy. However, the MCQ \textit{task format}---selecting among given answers versus generating answers from scratch---produces a dramatic 58.1-percentage-point gap between MCQ accuracy (82.6\%) and strict open-ended accuracy (24.5\%). Meanwhile, binary scoring classifies reasonable alternative analyses as ``errors'' (21.5\% of ``incorrect'' answers are directionally correct).
+This paper demonstrates that MCQ-format evaluations of financial LLMs are fundamentally different from open-ended evaluation, and that this difference is \textit{model-dependent}. For GPT-4o-mini, the option bias is small and non-significant (+1.9~pp, $p = 0.251$); for GPT-5-mini, it is large and highly significant (+9.6~pp, $p < 0.001$)---revealing an ``option bias paradox'' where more capable models benefit disproportionately from MCQ scaffolding. Three-tier evaluation shows that GPT-5-mini nearly doubles strict open-ended accuracy (41.8\% vs.\ 24.5\%), demonstrating genuine reasoning gains, while the Level~B rate remains stable ($\sim$22\%), confirming that financial calculation ambiguity is a property of the domain, not the model.
 
-We propose a shift in financial LLM evaluation: from MCQ accuracy to open-ended assessment with three-tier scoring. This approach provides a more realistic picture of AI financial competence---one that acknowledges both the fundamental difference between selection and generation tasks and the ambiguity inherent in financial calculations.
+We propose a shift in financial LLM evaluation: from MCQ accuracy to open-ended assessment with three-tier scoring. This approach provides a more realistic picture of AI financial competence and reveals format-dependence patterns that single-format benchmarks obscure. The cross-model comparison underscores that benchmark validity must be reassessed with each model generation.
 
-\textbf{The question is not whether AI can choose the right option, but whether it can reason to the right answer.} Across 1{,}032 CFA questions, our evidence reveals a profound gap between these two abilities---a gap that is not about option information leakage but about the fundamental nature of financial reasoning.
+\textbf{The question is not whether AI can choose the right option, but whether it can reason to the right answer---and our cross-model evidence shows that the gap between these abilities widens, not narrows, as models become more capable.}
 
 %% ============================================
 %% DECLARATION OF COMPETING INTEREST

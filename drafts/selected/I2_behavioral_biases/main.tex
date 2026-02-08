@@ -50,7 +50,7 @@
             country={Taiwan}}
 
 \begin{abstract}
-Large language models (LLMs) are increasingly deployed as financial advisors and analytical tools. Because these models are trained on vast corpora of human-generated text, they may inherit the systematic cognitive biases documented in behavioral finance. We design a paired-scenario experimental framework to measure six canonical biases---loss aversion, anchoring, framing, recency bias, the disposition effect, and overconfidence---in GPT-4o-mini across 60 financial decision scenarios (10 per bias type). Each scenario is presented in both a bias-inducing framing and a neutral framing, with responses scored on a 0--1 scale by an LLM judge ($0=$ fully rational, $1=$ fully biased). Our results reveal a mean bias score of 0.500, indicating that the model exhibits biased behavior in half of its financial recommendations. Neutral re-framing reduces the mean score to 0.425, yielding a statistically significant debiasing effect of $+0.075$ (Wilcoxon signed-rank $W = 14.0$, $p = 0.023$). Critically, debiasing effectiveness reveals a three-tier hierarchy: \emph{surface biases} (loss aversion $+0.300$, framing $+0.150$) respond strongly to prompt-level intervention; \emph{weakly responsive biases} (anchoring $+0.050$) show marginal improvement; and \emph{deep biases} (disposition effect $+0.000$, overconfidence $+0.000$, recency $-0.050$) are entirely resistant to neutral re-framing, with recency bias paradoxically \emph{increasing} under neutral conditions. A cross-generational comparison with GPT-5-mini reveals that model scaling does not uniformly reduce biases: some biases are eliminated (recency), some reverse direction (framing), and others persist or strengthen (loss aversion, disposition effect, overconfidence), suggesting that deeply embedded biases are structural features of financial language rather than artifacts of limited model capacity. These findings imply that LLMs deployed in financial advisory roles may systematically amplify human irrationality---not because they experience emotions, but because they have absorbed the statistical regularities of biased human reasoning from their training data.
+Large language models (LLMs) are increasingly deployed as financial advisors and analytical tools. Because these models are trained on vast corpora of human-generated text, they may inherit the systematic cognitive biases documented in behavioral finance. We design a paired-scenario experimental framework to measure six canonical biases---loss aversion, anchoring, framing, recency bias, the disposition effect, and overconfidence---in GPT-4o-mini across 60 financial decision scenarios (10 per bias type). Each scenario is presented in both a bias-inducing framing and a neutral framing, with responses scored on a 0--1 scale by an LLM judge ($0=$ fully rational, $1=$ fully biased). Our results reveal a mean bias score of 0.500, indicating that the model exhibits biased behavior in half of its financial recommendations. Neutral re-framing reduces the mean score to 0.425, yielding a statistically significant debiasing effect of $+0.075$ (Wilcoxon signed-rank $W = 14.0$, $p = 0.023$). Critically, debiasing effectiveness reveals a three-tier hierarchy: \emph{surface biases} (loss aversion $+0.300$, framing $+0.150$) respond strongly to prompt-level intervention; \emph{weakly responsive biases} (anchoring $+0.050$) show marginal improvement; and \emph{deep biases} (disposition effect $+0.000$, overconfidence $+0.000$, recency $-0.050$) are entirely resistant to neutral re-framing, with recency bias paradoxically \emph{increasing} under neutral conditions. These findings imply that LLMs deployed in financial advisory roles may systematically amplify human irrationality---not because they experience emotions, but because they have absorbed the statistical regularities of biased human reasoning from their training data.
 \end{abstract}
 
 \begin{keyword}
@@ -169,7 +169,7 @@ We define the \emph{debiasing effect} as the reduction in bias score achieved by
 
 \subsection{Overall Bias Measurement}
 
-Table~\ref{tab:overall} presents the aggregate results across all 60 scenarios tested on GPT-4o-mini. The model exhibits a mean bias score of 0.500 under bias-inducing framing, indicating that, on average, its financial recommendations are partially driven by the same cognitive biases documented in human subjects. Neutral re-framing reduces the mean score to 0.425, yielding an average debiasing effect of $+0.075$. A Wilcoxon signed-rank test on the 60 paired observations yields $W = 14.0$, $p = 0.023$, with an effect size of $r = 0.154$, confirming that the bias-inducing condition elicits significantly higher scores than the neutral condition at the 5\% level. Of the 60 scenario pairs, 13 exhibit non-zero differences between conditions.
+Table~\ref{tab:overall} presents the aggregate results across all 60 scenarios tested on GPT-4o-mini. The model exhibits a mean bias score of 0.500 under bias-inducing framing, indicating that, on average, its financial recommendations are partially driven by the same cognitive biases documented in human subjects. Neutral re-framing reduces the mean score to 0.425, yielding an average debiasing effect of $+0.075$. A Wilcoxon signed-rank test on the 60 paired observations yields $W = 14.0$, $p = 0.023$, with an effect size of $r = 0.284$, confirming that the bias-inducing condition elicits significantly higher scores than the neutral condition at the 5\% level. Of the 60 scenario pairs, 13 exhibit non-zero differences between conditions.
 
 \begin{table}[H]
 \centering
@@ -246,41 +246,6 @@ The three-tier hierarchy is further illustrated in Figure~\ref{fig:debiasing_eff
 Scenario-level analysis reveals several notable patterns. Loss aversion shows a bimodal debiasing pattern: 6 of 10 scenarios achieve full debiasing ($\Delta = +0.50$), while 4 scenarios involving higher-stakes tradeoffs (retirement income, venture capital, endowment drawdowns) resist re-framing entirely. Two framing scenarios---fr\_03 (``save 200'' vs.\ ``lose 400'' jobs) and fr\_04 (``protects 95\%'' vs.\ ``5\% exposed'')---produced fully biased responses (score $= 1.0$), demonstrating the model's sensitivity to gain/loss presentation of identical outcomes. The disposition effect and overconfidence show remarkable uniformity: all 20 scenarios across these two types produce identical scores of $0.50/0.50$, with the model consistently recommending selling winners to ``lock in gains'' while holding losers---precisely the asymmetric behavior predicted by \citet{shefrin1985disposition}. Recency bias produces a paradoxical result: scenario re\_04 receives a lower bias score under the bias-inducing condition (0.00) than under the neutral condition (0.50), suggesting that explicit recent performance data alongside long-term fundamentals can actually aid rational reasoning by providing informational contrast.
 
 
-\subsection{Cross-Model Comparison: Bias Profile Evolution}
-
-To investigate whether model scaling uniformly reduces behavioral biases, we replicate the full 60-scenario experiment on GPT-5-mini (OpenAI, 2025), a next-generation model from the same family as GPT-4o-mini. This cross-generational comparison reveals that scaling does not simply attenuate all biases---it \emph{reshapes} the bias landscape in unexpected ways.
-
-\paragraph{Experimental note.} GPT-5-mini exposes only a fixed temperature of $1.0$ (stochastic sampling), whereas GPT-4o-mini was evaluated at temperature $= 0.0$ (greedy decoding). This difference may contribute to absolute score differences; however, the \emph{relative} pattern---which biases are strongest and how debiasing effectiveness varies across types---remains the theoretically informative comparison.
-
-Table~\ref{tab:cross_model} presents a bias-by-bias comparison of the two models. GPT-5-mini achieves a higher mean bias score of 0.892 versus 0.500 for GPT-4o-mini.\footnote{GPT-5-mini's higher absolute scores likely reflect the temperature mismatch ($T{=}1.0$ vs.\ $T{=}0.0$) and changes in response style rather than increased bias per se. The cross-model comparison therefore focuses on \emph{relative debiasing patterns} ($\Delta$ values) rather than absolute score levels.} Yet the aggregate debiasing effect is \emph{smaller} for GPT-5-mini ($+0.033$ versus $+0.075$), because improvements and regressions across individual bias types largely cancel out.
-
-\begin{table}[H]
-\centering
-\caption{Cross-model comparison of bias scores and debiasing effects by bias type ($N=60$ scenarios per model, 10 per bias type).}
-\label{tab:cross_model}
-\small
-\begin{tabular}{@{}l ccc ccc@{}}
-\toprule
- & \multicolumn{3}{c}{\textbf{GPT-4o-mini} ($T{=}0.0$)} & \multicolumn{3}{c}{\textbf{GPT-5-mini} ($T{=}1.0$)} \\
-\cmidrule(lr){2-4} \cmidrule(lr){5-7}
-\textbf{Bias Type} & \textbf{Bias} & \textbf{Neutral} & \textbf{$\Delta$} & \textbf{Bias} & \textbf{Neutral} & \textbf{$\Delta$} \\
-\midrule
-Loss Aversion      & 0.50 & 0.20 & +0.30 & 1.00 & 0.60 & +0.40 \\
-Framing            & 0.55 & 0.40 & +0.15 & 0.70 & 0.90 & $-$0.20 \\
-Anchoring          & 0.50 & 0.45 & +0.05 & 0.85 & 0.80 & +0.05 \\
-Disposition Effect & 0.50 & 0.50 & +0.00 & 0.90 & 0.90 & +0.00 \\
-Overconfidence     & 0.50 & 0.50 & +0.00 & 0.90 & 0.95 & $-$0.05 \\
-Recency            & 0.45 & 0.50 & $-$0.05 & 1.00 & 1.00 & +0.00 \\
-\midrule
-\textbf{Overall}   & \textbf{0.500} & \textbf{0.425} & \textbf{+0.075} & \textbf{0.892} & \textbf{0.858} & \textbf{+0.033} \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-The comparison reveals five patterns: (i)~loss aversion is \emph{amplified} by scaling (debiasing effect increases from $+0.30$ to $+0.40$), suggesting it is deeply embedded in financial training corpora; (ii)~framing \emph{reverses} direction ($+0.15 \to -0.20$), with GPT-5-mini scoring higher under neutral than bias-inducing conditions; (iii)~recency bias is \emph{eliminated} (perfect scores under both conditions); (iv)~disposition effect and overconfidence remain \emph{persistent} ($\Delta = 0.00$ in both generations); and (v)~anchoring is \emph{stable} ($\Delta = +0.05$ in both models).
-
-These patterns suggest a \textbf{bias persistence hierarchy}: \emph{shallow} biases (recency) self-correct through scaling; \emph{mutable} biases (framing) shift unpredictably across model generations; and \emph{persistent} biases (loss aversion, anchoring, disposition effect, overconfidence) survive scaling intact because they reflect structural properties of financial reasoning as encoded in training corpora.
-
 
 %% -----------------------------------------------------------------------
 \section{Discussion}
@@ -299,17 +264,13 @@ The three-tier hierarchy provides a taxonomic framework for understanding how bi
 
 The overconfidence and recency results reveal counterintuitive patterns. For overconfidence, the model consistently acknowledges base rates and statistical evidence but stops short of the fully rational recommendation, producing hedged scores of 0.50 under both conditions. We argue this ``acknowledge but hedge'' pattern represents a form of \emph{calibration failure}: the model has learned to present ``both sides'' even when the evidence is one-sided, likely inherited from training on balanced financial commentary. For recency bias, the negative debiasing effect ($\Delta = -0.050$) suggests that the bias-inducing framing---which presents recent performance alongside long-term fundamentals---actually provides informational contrast that aids rational reasoning, while the neutral framing removes this useful context. This implies that removing potentially biasing information is not always the optimal debiasing strategy for LLM financial advisors.
 
-\subsection{Bias Persistence Under Scaling}
-
-Our cross-model comparison introduces a new dimension to the debiasing hierarchy. The distinction between \emph{shallow} biases (recency, eliminated in GPT-5-mini), \emph{mutable} biases (framing, reversed from $+0.15$ to $-0.20$), and \emph{persistent} biases (loss aversion, disposition effect, overconfidence, anchoring---robust to scaling) likely reflects the depth at which financial heuristics are encoded in training corpora. Loss-averse reasoning is not a peripheral pattern but a central organizing principle of financial discourse, constituting a dominant statistical mode that larger models learn more faithfully, not less. This implies that regulators designing bias-testing frameworks for AI advisory systems should focus audit resources on persistent biases and anticipate that more capable models may be more, not less, biased on certain dimensions.
-
 \subsection{Economic Significance}
 
 The observed biases have concrete economic consequences. The disposition effect---entirely resistant to prompt-level debiasing across all 10 scenarios---could materially reduce portfolio returns if robo-advisors serving millions of clients systematically sell winners too early while holding losers \citep{shefrin1985disposition}. Anchoring results show that 8 of 10 scenarios exhibit residual bias even when the explicit anchor is removed, suggesting inherently reference-dependent valuation heuristics. The model's persistent hedging between base-rate reasoning and expert conviction across overconfidence scenarios implies a systematic underweighting of statistical evidence in favor of narrative reasoning.
 
 \subsection{Limitations}
 
-Several limitations should be acknowledged. First, within-type heterogeneity remains high with only 10 scenarios per bias type; a comprehensive benchmark should include 20--30 scenarios per type with multiple stochastic runs. Second, the LLM-as-judge scoring methodology may introduce its own biases; future work should validate against human expert judges. Third, the coarse bias score scale $\{0.0, 0.5, 1.0\}$ may obscure nuanced patterns. Fourth, the temperature mismatch between GPT-4o-mini ($T{=}0.0$) and GPT-5-mini ($T{=}1.0$) limits strict comparability of absolute scores, and the bias profiles of other model families may differ substantially.
+Several limitations should be acknowledged. First, within-type heterogeneity remains high with only 10 scenarios per bias type; a comprehensive benchmark should include 20--30 scenarios per type with multiple stochastic runs. Second, the LLM-as-judge scoring methodology may introduce its own biases; future work should validate against human expert judges. Third, the coarse bias score scale $\{0.0, 0.5, 1.0\}$ may obscure nuanced patterns. Fourth, our results are based on a single model (GPT-4o-mini); cross-model validation with additional model families and reasoning-specialized architectures would strengthen generalizability.
 
 
 %% -----------------------------------------------------------------------
@@ -323,9 +284,7 @@ Our most important finding is the \emph{three-tier debiasing hierarchy}. Surface
 
 These findings challenge the assumption that AI-driven financial advice is inherently more rational than human advice. LLMs do not experience fear, greed, or regret, yet they reproduce the behavioral signatures of these emotions because they have learned from text produced by agents who do. The three-tier hierarchy has direct practical implications: while loss-averse behavior and certain framing effects can be mitigated through careful prompt engineering, deeper biases like the disposition effect, overconfidence, and recency require training-time interventions.
 
-Our cross-model comparison with GPT-5-mini reveals that model scaling does not uniformly reduce all biases but rather \emph{reshapes} the bias landscape: recency bias is completely eliminated, framing effects reverse direction, and loss aversion actually \emph{intensifies}. This leads us to propose a \emph{bias persistence hierarchy}---shallow biases (recency) self-correct through scaling, mutable biases (framing) shift unpredictably, and persistent biases (loss aversion, disposition effect, overconfidence, anchoring) survive scaling intact. These findings have direct implications for financial regulation: audit frameworks should focus on persistent biases, and regulatory thresholds must be re-evaluated with each model generation.
-
-Future work should extend the cross-model comparison to additional model families and scales, investigate the neural mechanisms underlying bias persistence (e.g., whether persistent biases correspond to specific attention patterns or weight distributions), and develop training-time debiasing techniques---such as bias-aware reinforcement learning from human feedback (RLHF), contrastive fine-tuning on rational vs.\ biased reasoning pairs, or synthetic data augmentation with debiased financial reasoning---that address the root cause of inherited irrationality rather than relying on prompt-level workarounds.
+Future work should extend this analysis to additional model families and scales to investigate whether model scaling uniformly reduces biases or reshapes the bias landscape, examine the neural mechanisms underlying bias persistence (e.g., whether persistent biases correspond to specific attention patterns or weight distributions), and develop training-time debiasing techniques---such as bias-aware reinforcement learning from human feedback (RLHF), contrastive fine-tuning on rational vs.\ biased reasoning pairs, or synthetic data augmentation with debiased financial reasoning---that address the root cause of inherited irrationality rather than relying on prompt-level workarounds.
 
 
 %% -----------------------------------------------------------------------

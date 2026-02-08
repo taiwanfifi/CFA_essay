@@ -36,7 +36,7 @@
             country={Taiwan}}
 
 \begin{abstract}
-Large Language Models (LLMs) achieve impressive accuracy on financial examination benchmarks, but these scores may be inflated by memorization of training data rather than genuine financial reasoning. We introduce two complementary stress tests for financial LLMs using CFA (Chartered Financial Analyst) examination questions. First, \textit{counterfactual perturbation} modifies numerical parameters and conditions while preserving the underlying financial logic, measuring whether models can consistently reason through novel variants. Second, \textit{noise injection} introduces irrelevant data, misleading statements, format noise, and contradictory information, measuring whether models can filter signal from noise---a critical skill in real-world financial analysis. Testing GPT-4o-mini on the full CFA-Easy corpus ($N = 1{,}032$) for both stress test dimensions, we find: (1) a memorization gap of \textbf{18.6 percentage points} between original and perturbed accuracy ($n = 702$ valid perturbations), suggesting substantial reliance on pattern matching; (2) noise sensitivity indices ranging from \textbf{$-$0.072 to 0.032}, with irrelevant data injection (N1) causing the greatest degradation while contradictory hints (N4) significantly \textit{improve} performance; and (3) robust accuracy---requiring correctness on both original and all perturbation variants---of only \textbf{63.5\%}, substantially below the \textbf{82.4\%} standard accuracy. We introduce \textit{Robust Accuracy} as a more realistic measure of AI financial competence and argue that financial regulators should require stress-tested performance metrics alongside standard accuracy when evaluating AI deployment readiness.
+Large Language Models (LLMs) achieve impressive accuracy on financial examination benchmarks, but these scores may be inflated by memorization of training data rather than genuine financial reasoning. We introduce two complementary stress tests for financial LLMs using CFA (Chartered Financial Analyst) examination questions. First, \textit{counterfactual perturbation} modifies numerical parameters and conditions while preserving the underlying financial logic, measuring whether models can consistently reason through novel variants. Second, \textit{noise injection} introduces irrelevant data, misleading statements, format noise, and contradictory information, measuring whether models can filter signal from noise---a critical skill in real-world financial analysis. Testing GPT-4o-mini on the full CFA-Easy corpus ($N = 1{,}032$), we find a memorization gap of \textbf{18.6 percentage points} and noise sensitivity indices ranging from $-$0.072 to 0.032. A cross-model replication with GPT-5-mini reveals a \textit{memorization paradox}: despite achieving substantially higher standard accuracy (91.8\% vs.\ 82.4\%), the memorization gap nearly doubles to \textbf{36.4 percentage points}---suggesting that more capable models may be \textit{more} dependent on memorized patterns, not less. Noise sensitivity, by contrast, roughly halves (max NSI 0.017 vs.\ 0.032), indicating genuine improvement in information filtering. We introduce \textit{Robust Accuracy} as a regulatory-relevant metric and argue that advancing model capabilities may widen the gap between standard and stress-tested performance, making robustness evaluation increasingly essential.
 \end{abstract}
 
 \begin{keyword}
@@ -183,8 +183,8 @@ Perturbation (I1) & Level 1 (numerical) & 1,032 & 702\textsuperscript{a} \\
 Baseline (I3) & Original (clean) & 1,032 & 1,032 \\
 \multirow{4}{*}{Noise (I3)} & N1 (irrelevant data) & 1,032 & 1,032 \\
  & N2 (misleading) & 1,032 & 1,032 \\
- & N3 (format noise) & 1,032 & 1,032 \\
- & N4 (contradictory) & 1,032 & 1,032 \\
+ & N3 (verbose context) & 1,032 & 1,032 \\
+ & N4 (contradictory hint) & 1,032 & 1,032 \\
 \midrule
 \textbf{Total} & & & \textbf{6,894} \\
 \bottomrule
@@ -271,14 +271,14 @@ N4 (contradictory hint) & 87.5\% & 21/1,032 & $-$0.072 & Negative (helps) \\
 \end{threeparttable}
 \end{table}
 
-The full-corpus results ($N = 1{,}032$) reveal a nuanced noise sensitivity profile with a striking finding: two of the four noise types actually \textit{improve} model performance. N1 (irrelevant data injection) produces the highest sensitivity (NSI = 0.032), indicating that extraneous numerical data causes measurable confusion, though the effect is modest. N2 (misleading financial distractors) shows minimal sensitivity (NSI = 0.015). More surprisingly, N3 (format noise) yields a slightly negative NSI ($-$0.005), suggesting that formatting inconsistencies have negligible impact and may marginally encourage more careful parsing. Most strikingly, N4 (contradictory hints) produces a strongly negative NSI of $-$0.072, boosting accuracy from 81.6\% to 87.5\%---a 5.9 percentage point improvement. Because N4 hints explicitly reference common incorrect answers, the model receives useful information about which options to avoid, effectively narrowing the search space. This finding highlights an important design consideration: adversarial prompts that name specific wrong answers may inadvertently aid sophisticated models rather than confuse them.
+The full-corpus results ($N = 1{,}032$) reveal a nuanced noise sensitivity profile with a striking finding: two of the four noise types actually \textit{improve} model performance. N1 (irrelevant data injection) produces the highest sensitivity (NSI = 0.032), indicating that extraneous numerical data causes measurable confusion, though the effect is modest. N2 (misleading financial distractors) shows minimal sensitivity (NSI = 0.015). More surprisingly, N3 (verbose context) yields a slightly negative NSI ($-$0.005), suggesting that formatting inconsistencies have negligible impact and may marginally encourage more careful parsing. Most strikingly, N4 (contradictory hints) produces a strongly negative NSI of $-$0.072, boosting accuracy from 81.6\% to 87.5\%---a 5.9 percentage point improvement. Because N4 hints explicitly reference common incorrect answers, the model receives useful information about which options to avoid, effectively narrowing the search space. This finding highlights an important design consideration: adversarial prompts that name specific wrong answers may inadvertently aid sophisticated models rather than confuse them.
 
 The overall pattern---NSI ranging from $-$0.072 to 0.032---reveals that GPT-4o-mini is substantially more noise-robust than the counterfactual perturbation results would suggest, and that certain noise types can paradoxically enhance performance. This asymmetry is itself an important finding: the model's primary vulnerability lies in memorization-dependent reasoning rather than susceptibility to information noise. The worst-case noise degradation (N1, NSI\,=\,0.032, corresponding to a 2.6 pp absolute accuracy drop) is far less than the 18.6 pp memorization gap from counterfactual perturbation. As shown in Figure~\ref{fig:noise_sensitivity}, the NSI values span both positive and negative territory, with N1 (irrelevant data) as the only substantial degradation source and N4 (contradictory hints) producing a large beneficial effect.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.85\textwidth]{figures/fig2_noise_sensitivity.pdf}
-\caption{Noise Sensitivity Index (NSI) by noise type ($N = 1{,}032$). N1 (irrelevant data injection) causes the greatest performance degradation (NSI\,=\,0.032). N2 (misleading distractors) shows minimal sensitivity (NSI\,=\,0.015). N3 (format noise) and N4 (contradictory information) yield negative NSI values ($-$0.005 and $-$0.072, respectively), indicating that these noise types actually \textit{improve} performance---particularly N4, which boosts accuracy by 5.9 pp. Overall, noise sensitivity is substantially lower than the memorization gap observed under counterfactual perturbation, and contradictory information appears to trigger more deliberate reasoning.}
+\caption{Noise Sensitivity Index (NSI) by noise type ($N = 1{,}032$). N1 (irrelevant data injection) causes the greatest performance degradation (NSI\,=\,0.032). N2 (misleading distractors) shows minimal sensitivity (NSI\,=\,0.015). N3 (verbose context) and N4 (contradictory hint) yield negative NSI values ($-$0.005 and $-$0.072, respectively), indicating that these noise types actually \textit{improve} performance---particularly N4, which boosts accuracy by 5.9 pp. Overall, noise sensitivity is substantially lower than the memorization gap observed under counterfactual perturbation, and contradictory hints appear to trigger more deliberate reasoning.}
 \label{fig:noise_sensitivity}
 \end{figure}
 
@@ -332,6 +332,79 @@ Clean vs. N1 (worst noise, $n = 1{,}032$) & McNemar's & $\chi^2 = 8.19$ & 0.004*
 \bottomrule
 \end{tabular}
 \end{table}
+
+%% ============================================
+%% 5.5 CROSS-MODEL COMPARISON
+%% ============================================
+\subsection{Cross-Model Comparison: The Memorization Paradox}
+\label{sec:crossmodel}
+
+To assess whether the stress test patterns are model-specific, we replicated the full framework on GPT-5-mini, a next-generation reasoning model that employs extended chain-of-thought (``thinking tokens'') before producing its answer.
+
+\subsubsection{Counterfactual Perturbation}
+
+Table~\ref{tab:perturbation_cross} presents the cross-model perturbation comparison.
+
+\begin{table}[htbp]
+\centering
+\caption{Cross-Model Counterfactual Perturbation Comparison ($N = 1{,}032$)}
+\label{tab:perturbation_cross}
+\begin{threeparttable}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Metric} & \textbf{GPT-4o-mini} & \textbf{GPT-5-mini} \\
+\midrule
+Standard accuracy & 82.4\% & 91.8\% \\
+Level 1 accuracy ($n$ valid) & 63.8\% ($n = 702$) & 55.3\% ($n = 638$) \\
+\textbf{Memorization gap} & \textbf{18.6 pp} & \textbf{36.4 pp} \\
+Robust accuracy & 63.5\% & 67.2\% \\
+Memorization suspect & 18.9\% & 24.5\% \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item GPT-5-mini's lower valid perturbation count (638 vs.\ 702) reflects stricter answer extraction requirements for the reasoning model's longer outputs.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+Figure~\ref{fig:mem_paradox} visualizes the memorization paradox. The cross-model comparison reveals a \textit{memorization paradox}: GPT-5-mini achieves substantially higher standard accuracy (+9.4~pp) but exhibits a nearly doubled memorization gap (36.4~pp vs.\ 18.6~pp).
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig4_memorization_paradox.pdf}
+\caption{The Memorization Paradox ($N = 1{,}032$). GPT-5-mini achieves higher standard accuracy (91.8\% vs.\ 82.4\%) but lower perturbed accuracy (55.3\% vs.\ 63.8\%), resulting in a memorization gap (36.4~pp) nearly double that of GPT-4o-mini (18.6~pp). More capable models may be more memorization-dependent.}
+\label{fig:mem_paradox}
+\end{figure} In absolute terms, GPT-5-mini actually performs \textit{worse} on perturbed questions (55.3\% vs.\ 63.8\%), despite dominating on originals. The robust accuracy improves only modestly (67.2\% vs.\ 63.5\%), meaning most of GPT-5-mini's apparent improvement evaporates under perturbation stress.
+
+This result has a natural interpretation: GPT-5-mini, trained on a larger corpus with deeper reasoning capabilities, has likely encountered more CFA question templates during training and developed stronger template-matching associations. When original questions match these templates, the model exploits both memorization and reasoning, yielding exceptional accuracy. When perturbation breaks the template match, the model must fall back on pure reasoning---and the 55.3\% perturbed accuracy reveals that this reasoning baseline, while adequate, is far below the 91.8\% headline figure.
+
+\subsubsection{Noise Sensitivity}
+
+Table~\ref{tab:noise_cross} presents the cross-model noise sensitivity comparison.
+
+\begin{table}[htbp]
+\centering
+\caption{Cross-Model Noise Sensitivity Comparison ($N = 1{,}032$)}
+\label{tab:noise_cross}
+\begin{tabular}{lcccc}
+\toprule
+& \multicolumn{2}{c}{\textbf{GPT-4o-mini}} & \multicolumn{2}{c}{\textbf{GPT-5-mini}} \\
+\cmidrule(lr){2-3} \cmidrule(lr){4-5}
+\textbf{Condition} & \textbf{Acc.} & \textbf{NSI} & \textbf{Acc.} & \textbf{NSI} \\
+\midrule
+Clean (baseline) & 81.6\% & --- & 92.3\% & --- \\
+N1 (irrelevant data) & 79.0\% & 0.032 & 90.8\% & 0.017 \\
+N2 (misleading) & 80.3\% & 0.015 & 91.0\% & 0.015 \\
+N3 (verbose context) & 82.0\% & $-$0.005 & 92.4\% & $-$0.001 \\
+N4 (contradictory hint) & 87.5\% & $-$0.072 & 96.1\% & $-$0.041 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+In contrast to the memorization paradox, the noise sensitivity results show clear improvement: GPT-5-mini's worst-case NSI (0.017 for N1) is roughly half of GPT-4o-mini's worst case (0.032 for N1). The model is substantially better at filtering irrelevant and misleading information, likely because extended chain-of-thought reasoning allows it to explicitly identify and discard noise. The N4 (contradictory hint) benefit is also smaller ($-$0.041 vs.\ $-$0.072), consistent with a model that relies less on elimination heuristics.
+
+The memorization--noise asymmetry is thus amplified across generations: GPT-5-mini is simultaneously more memorization-dependent \textit{and} more noise-robust than its predecessor. This dissociation confirms that counterfactual perturbation and noise injection probe fundamentally different cognitive dimensions (Section~\ref{sec:discussion}).
 
 %% ============================================
 %% 6. DISCUSSION
@@ -396,9 +469,17 @@ The EU AI Act classifies AI in financial services as ``high-risk,'' requiring pr
     \item \textbf{Robust Accuracy Reporting}: Regulators should require Robust Accuracy alongside standard accuracy, analogous to how banks report both unstressed and stressed capital ratios.
 \end{enumerate}
 
+\subsection{The Memorization Paradox: Why Better Models May Be Less Robust}
+
+The cross-model comparison in Section~\ref{sec:crossmodel} introduces a finding with important implications for AI governance: GPT-5-mini's memorization gap (36.4~pp) is nearly double GPT-4o-mini's (18.6~pp), despite GPT-5-mini being the more capable model. This ``memorization paradox'' suggests that \textbf{standard accuracy improvements may be substantially attributable to enhanced memorization rather than enhanced reasoning}.
+
+Three mechanisms may contribute: (1) larger training corpora increase the probability that specific question templates---including CFA study materials---are well-represented; (2) reasoning models' extended thinking may facilitate more effective template retrieval through elaborative search; and (3) the higher standard accuracy itself creates a higher ceiling for memorization-dependent performance to occupy.
+
+The regulatory implication is direct: as AI models improve, the gap between standard and robust accuracy may \textit{widen}, not narrow. Financial regulators who track standard accuracy as a proxy for AI competence may observe steady improvement while the underlying robustness stagnates or even deteriorates. Mandatory stress testing---analogous to bank capital stress tests---becomes more, not less, important as headline accuracy rises.
+
 \subsection{Limitations}
 
-Several limitations should be acknowledged. First, perturbation generation relies on GPT-4o-mini, which may introduce its own errors in generating valid perturbations; the valid perturbation rate of 68.0\% (702 out of 1,032) reflects this challenge, and we report accuracy only on valid perturbations. Second, the current study evaluates only Level 1 (numerical) perturbation; Level 2 (conditional inversion) perturbation would provide additional evidence on deeper reasoning failures. Third, our noise types, while domain-informed, are synthetic; real-world financial noise may be more subtle or more severe. Fourth, we test a single model; cross-model comparison is needed to determine whether the observed memorization-noise asymmetry generalizes across model families.
+Several limitations should be acknowledged. First, perturbation generation relies on GPT-4o-mini, which may introduce its own errors in generating valid perturbations; the valid perturbation rate of 68.0\% for GPT-4o-mini (702/1,032) and 61.8\% for GPT-5-mini (638/1,032) reflects this challenge. Second, the current study evaluates only Level 1 (numerical) perturbation; Level 2 (conditional inversion) perturbation would provide additional evidence on deeper reasoning failures. Third, our noise types, while domain-informed, are synthetic; real-world financial noise may be more subtle or more severe. Fourth, the memorization paradox could partly reflect differences in the reasoning model's answer extraction rate rather than pure memorization effects.
 
 %% ============================================
 %% 7. CONCLUSION
@@ -406,11 +487,9 @@ Several limitations should be acknowledged. First, perturbation generation relie
 \section{Conclusion}
 \label{sec:conclusion}
 
-This paper demonstrates that standard benchmark accuracy significantly overstates the financial reasoning ability of Large Language Models. Our two-dimensional stress testing framework---combining counterfactual perturbation with noise injection---reveals a meaningful memorization gap between standard and robust accuracy, and measurable sensitivity to information noise that is absent from clean benchmark evaluations.
+This paper demonstrates that standard benchmark accuracy significantly overstates the financial reasoning ability of Large Language Models, and that this overstatement \textit{increases} with model capability. Our two-dimensional stress testing framework---combining counterfactual perturbation with noise injection---reveals a memorization paradox: GPT-5-mini achieves 91.8\% standard accuracy (+9.4~pp over GPT-4o-mini) but exhibits a 36.4~pp memorization gap (nearly double the 18.6~pp for GPT-4o-mini), while its noise sensitivity roughly halves. More capable models are simultaneously more memorization-dependent and more noise-robust, confirming that these stress tests probe orthogonal cognitive dimensions.
 
-We introduce Robust Accuracy as a more realistic metric for evaluating AI systems intended for financial deployment. Just as banks must demonstrate capital adequacy under stressed conditions, AI systems should demonstrate reasoning adequacy under cognitive stress tests. \textbf{The question is not whether AI can pass the CFA exam, but whether it can reason through problems it hasn't memorized.}
-
-Our stress testing framework provides financial institutions and regulators with practical tools for assessing AI deployment readiness. We recommend that any AI system used for financial analysis be evaluated using both standard accuracy and stress-tested metrics before deployment, with minimum robustness thresholds analogous to capital adequacy requirements.
+We introduce Robust Accuracy as a regulatory-relevant metric. The memorization paradox implies that robust accuracy should be mandatory in AI evaluation: headline accuracy improvements may mask stagnant or declining robustness. \textbf{The question is not whether AI can pass the CFA exam, but whether it can reason through problems it hasn't memorized---and our cross-model evidence suggests this question becomes more urgent, not less, as models improve.}
 
 %% ============================================
 %% DATA AVAILABILITY
