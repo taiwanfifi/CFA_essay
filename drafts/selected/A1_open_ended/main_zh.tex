@@ -1,0 +1,499 @@
+% Finance Research Letters — Elsevier Template
+% A1+A5: Beyond Multiple Choice（繁體中文版）
+\documentclass[preprint,12pt]{elsarticle}
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{multirow}
+\usepackage{threeparttable}
+\usepackage{float}
+\usepackage{xeCJK}
+\setCJKmainfont{Songti TC}
+\setCJKsansfont{Heiti TC}
+\setCJKmonofont{Heiti TC}
+
+\journal{Finance Research Letters（繁體中文版）}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{超越選擇題：答案選項如何膨脹大型語言模型之金融推理分數}
+
+\author[ntust]{Wei-Lun Cheng}
+\ead{d11018003@mail.ntust.edu.tw}
+
+\author[ntust]{Daniel Wei-Chung Miao\corref{cor1}}
+\ead{miao@mail.ntust.edu.tw}
+\cortext[cor1]{通訊作者}
+
+\author[ntust]{Guang-Di Chang}
+\ead{gchang@mail.ntust.edu.tw}
+
+\affiliation[ntust]{organization={國立臺灣科技大學 財務金融研究所},
+            city={臺北},
+            postcode={10607},
+            country={臺灣}}
+
+\begin{abstract}
+目前對於大型語言模型（LLMs）在金融基準測試上的評估，幾乎完全仰賴選擇題（MCQ）格式，然而選擇題選項本身可能洩漏資訊——數量級線索、正負號方向與刪去法機會——進而膨脹模型的感知推理能力。本研究透過 1{,}032 題 CFA（特許金融分析師）考試題目，提出兩項互補的實驗。首先，我們以 GPT-4o-mini 在相同的 1{,}032 題上分別測試有選項與無選項格式，量測\textit{選項偏差}，發現選擇題格式僅膨脹準確率 \textbf{1.9 個百分點}（有選項 82.6\% vs.\ 無選項 80.6\%）；McNemar 檢定顯示此差異\textit{不具}統計顯著性（$p = 0.251$）。其次，我們對開放式作答施以\textit{三階評估架構}——區分精確匹配、方向正確回答與真正錯誤——揭示在二元計分下被歸類為「錯誤」的回答中，有 \textbf{21.5\% 實為方向正確}（Level B），採用了有效的金融推理但基於不同假設。跨模型複製實驗以 GPT-5-mini 進行，揭示了一項顯著的逆轉：選項偏差擴大至 \textbf{+9.6 個百分點}（有選項 92.8\% vs.\ 無選項 83.2\%，McNemar $p < 0.001$），且嚴格開放式準確率幾乎翻倍達 \textbf{41.8\%}——暗示推理能力更強的模型\textit{不成比例地}受益於選擇題的鷹架效應，同時在開放式金融推理方面展現出真正的進步。本研究之發現挑戰了選項偏差為評估格式固有屬性的假設：它是模型相依的，且 AI 能力的提升可能放大而非縮小選擇題評估所引入的失真。
+\end{abstract}
+
+\begin{keyword}
+大型語言模型 \sep 金融推理 \sep 選擇題偏差 \sep 開放式評估 \sep CFA 考試 \sep 基準測試設計
+\end{keyword}
+
+\end{frontmatter}
+
+%% ============================================
+%% 1. 緒論
+%% ============================================
+\section{緒論}
+\label{sec:intro}
+
+大型語言模型（LLMs）在金融服務領域的快速部署，伴隨著大量基準評估的湧現。各模型現今常態性地接受專業證照考試的測試——CFA、CPA、律師資格考試——並以「AI 能『通過』這些考試」為標題廣為報導 \citep{callanan2023gpt, ke2025findap}。這些評估幾乎一致採用選擇題（MCQ）格式，以單一準確率數字作為部署決策的基礎。
+
+然而，選擇題格式本身引入了一項系統性的量測偽跡。在古典測驗理論中，此現象稱為\textit{答案空間限制偏差}：答案選項組限制了回答空間，提供了超出受測者實際知識的資訊 \citep{lord1980applications}。對於 LLMs 而言，此偏差透過三個具體機制顯現：
+\begin{enumerate}
+    \item \textbf{數量級線索}：選項揭示了答案的數量級（例如，選項為 \$1.2M、\$2.4M、\$4.8M、\$9.6M 時，即限制了答案的範圍）。
+    \item \textbf{正負號線索}：選項揭示答案為正或為負，縮小了計算搜尋範圍。
+    \item \textbf{刪去法機會}：LLMs 可以不經計算精確答案，直接透過啟發式策略排除不合理的選項，以捷思法取代推理。
+\end{enumerate}
+
+上述效應之綜合結果，是選擇題準確率高估了模型真正的金融推理能力。但\textit{高估了多少？}而當我們移除選項後，模型的推理實際表現如何？一個錯誤的答案是否必然代表「失敗」，還是模型可能運用了正確推理但基於不同（但同樣有效）的金融假設？
+
+本文透過兩項互補的實驗回應上述問題：
+\begin{enumerate}
+    \item \textbf{選項偏差量化（A5）}：我們以相同模型對相同 CFA 題目進行兩種格式的測試——選擇題（有選項）與開放式（無選項）——並量測因選項資訊洩漏所導致的準確率差距。
+    \item \textbf{三階開放式評估（A1）}：我們以三階架構評估開放式回答，區分精確匹配（Level A）、方向正確但假設不同之回答（Level B），以及真正錯誤的答案（Level C）。
+\end{enumerate}
+
+本研究之貢獻有四：
+\begin{enumerate}
+    \item 我們量化了金融 LLM 評估中的選擇題選項偏差，在 1{,}032 題的完整語料中為 +1.9 個百分點，顯示該效應雖存在但不具統計顯著性（$p = 0.251$），且遠小於小樣本估計所暗示的幅度。
+    \item 我們引入三階評估架構，以容納金融計算之固有模糊性，揭示 21.5\% 的「錯誤」實際上是有效的替代分析。
+    \item 我們將錯誤分解為結構化類別（公式錯誤、計算錯誤、概念錯誤），以實現金融推理弱點之標靶式診斷。
+    \item 我們主張金融 LLM 評估應有典範轉移：從二元選擇題準確率轉向更能反映真實金融分析情境的細緻化開放式評估。
+\end{enumerate}
+
+%% ============================================
+%% 2. 文獻回顧
+%% ============================================
+\section{文獻回顧}
+\label{sec:related}
+
+\subsection{LLM 於專業考試之評估}
+
+以專業考試評估 LLMs 已成為標準作法。\citet{callanan2023gpt} 以 GPT-4 測試 CFA Level I，發現其達到及格水準。\citet{ke2025findap} 開發了 FinDAP，達到 CFA 領域的最先進成績。然而，上述評估一律採用選擇題格式，遺留了多少表現為格式相依的未解問題。
+
+\subsection{AI 評估中的選擇題格式偏差}
+
+選擇題評估在 AI 系統上的侷限性已受到日益增加的關注。\citet{gao2024llms} 證明 LLMs 利用選擇題特有的策略（選項錨定、刪去法）來膨脹準確率，使其超越真實理解水準。\citet{robinson2023leveraging} 分析了訓練資料中答案選項統計如何促成捷徑學習。本研究將此文獻延伸至金融領域，而在該領域中，高估 AI 能力的後果尤為嚴重。
+
+\subsection{數學推理之開放式評估}
+
+開放式評估移除了答案選項的「拐杖」，要求模型從零開始生成答案。\citet{cobbe2021training} 將此方法應用於數學推理，發現與選擇題等效試題相比，準確率大幅下降。本研究之三階架構更進一步，承認金融計算涉及合理的模糊性（複利慣例、天數計算慣例、捨入政策），而二元計分未能捕捉此特性。
+
+%% ============================================
+%% 3. 研究方法
+%% ============================================
+\section{研究方法}
+\label{sec:method}
+
+\subsection{選項偏差量測}
+
+每道 CFA 題目以兩種格式呈現給同一模型：
+\begin{itemize}
+    \item \textbf{格式 A（選擇題）}：附答案選項（A、B、C）之標準格式。模型選擇一個選項字母。
+    \item \textbf{格式 B（開放式）}：移除選項；模型生成自由格式的答案。
+\end{itemize}
+
+\textit{選項偏差}定義如下：
+\begin{equation}
+    \text{Option Bias} = \text{Acc}_{\text{MCQ}} - \text{Acc}_{\text{open-ended}}
+    \label{eq:optbias}
+\end{equation}
+正值表示選項膨脹了準確率。我們對配對觀察值（同一題目、兩種格式）使用具有 Yates 連續性校正之 McNemar 檢定以評估統計顯著性。
+
+對於開放式答案，評估結合以下方法：
+\begin{itemize}
+    \item \textbf{數值容差匹配}：精確匹配條件為 $|a_{\text{model}} - a_{\text{gold}}| / |a_{\text{gold}}| \leq 0.02$
+    \item \textbf{語意匹配}：以 LLM 作為評審（GPT-4o-mini）處理概念性/文字性答案
+\end{itemize}
+
+\subsection{三階評估架構}
+
+我們以三階分類取代二元計分：
+
+\textbf{Level A——精確/可接受匹配。}答案落在標準答案 2\% 相對容差範圍內，或語意評審確認等價。此為「嚴格」正確。
+
+\textbf{Level B——方向正確。}答案展現正確的推理方法（正確公式、正確方向、正確數量級），但因替代假設（例如不同複利慣例、不同天數計算方法、不同捨入方式）而得出不同最終數值。在二元計分下，此答案會被判定為「錯誤」；在本架構下，其為合理的替代分析。
+
+\textbf{Level C——真正錯誤。}答案反映根本性錯誤：錯誤公式、錯誤概念、邏輯謬誤或計算失誤。
+
+我們同時報告\textit{嚴格準確率}（僅 Level A）與\textit{寬鬆準確率}（Level A + B），並主張兩者之差距衡量了金融評估之固有模糊性。
+
+\subsection{結構化錯誤歸因}
+
+針對 Level C 回答，我們以 LLM 作為評審將錯誤分類如下：
+\begin{itemize}
+    \item \texttt{formula\_error}：選擇了錯誤的公式或金融模型
+    \item \texttt{calculation\_error}：公式正確但算術錯誤
+    \item \texttt{conceptual\_error}：對金融概念有根本性誤解
+    \item \texttt{assumption\_mismatch}：使用了無效或不適當的假設
+    \item \texttt{extraction\_error}：誤讀或誤解題目資料
+    \item \texttt{incomplete\_reasoning}：方法正確但未完成所有步驟
+\end{itemize}
+
+%% ============================================
+%% 4. 資料與實驗設計
+%% ============================================
+\section{資料與實驗設計}
+\label{sec:experiments}
+
+本研究使用 CFA-Easy 資料集 \citep{ke2025findap} 之全部 1{,}032 題。模型為 GPT-4o-mini（OpenAI），溫度參數 $\tau = 0.0$。每道題目以選擇題與開放式兩種格式進行評估，選項偏差分析共產生 2{,}064 次推論，三階評估另產生 1{,}032 次推論。
+
+%% ============================================
+%% 5. 結果
+%% ============================================
+\section{結果}
+\label{sec:results}
+
+\subsection{選項偏差}
+
+表~\ref{tab:optbias} 呈現選項偏差之核心發現。
+
+\begin{table}[htbp]
+\centering
+\caption{選項偏差結果（GPT-4o-mini，$n = 1{,}032$）}
+\label{tab:optbias}
+\begin{threeparttable}
+\begin{tabular}{lcc}
+\toprule
+\textbf{指標} & \textbf{數值} & \textbf{解讀} \\
+\midrule
+有選項準確率（MCQ） & 82.6\% & 標準基準分數 \\
+無選項準確率 & 80.6\% & 真實推理能力 \\
+\textbf{選項偏差} & \textbf{+1.9 pp} & 格式膨脹之表現 \\
+\midrule
+偏差題目（MCQ $\checkmark$, Open $\times$） & 147/1{,}032 (14.2\%) & 選項為「拐杖」之題目 \\
+McNemar $p$ 值 & 0.251 & 於 $\alpha = 0.05$ 不顯著 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item 選項偏差 = 準確率$_{\text{MCQ}}$ $-$ 準確率$_{\text{open-ended}}$。偏差題目指有選項時答對但無選項時答錯之題目。
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig1_option_bias.pdf}
+\caption{選擇題選項偏差比較（$N = 1{,}032$）。選擇題格式（82.6\%）與開放式格式（80.6\%）之準確率差距僅 +1.9 個百分點，不具統計顯著性（McNemar $p = 0.251$）。}
+\label{fig:optbias}
+\end{figure}
+
+選擇題格式在完整 1{,}032 題語料中僅膨脹準確率 1.9 個百分點。在 14.2\% 的題目中，模型\textit{僅在}有選項時才答對——暗示選項衍生的資訊（數量級線索、刪去法策略）在部分回答中發揮了作用。然而，McNemar 檢定顯示選項偏差\textit{不具}統計顯著性（$p = 0.251$），表明在大規模下，GPT-4o-mini 的金融推理能力對於答案選項之有無大致上是穩健的。這與我們初步 $n = 100$ 先導研究中觀察到的 +12.0~pp 偏差形成鮮明對比，凸顯小樣本估計可能誇大格式效應之幅度。
+
+\subsection{三階評估}
+
+表~\ref{tab:threetier} 呈現開放式回答之三階評估結果。
+
+\begin{table}[htbp]
+\centering
+\caption{開放式回答之三階評估（$n = 1{,}032$）}
+\label{tab:threetier}
+\begin{threeparttable}
+\begin{tabular}{lccc}
+\toprule
+\textbf{等級} & \textbf{數量} & \textbf{百分比} & \textbf{說明} \\
+\midrule
+Level A（精確） & 253 & 24.5\% & 落在 2\% 容差範圍內 \\
+Level B（方向正確） & 222 & 21.5\% & 正確方法，不同假設 \\
+Level C（錯誤） & 557 & 54.0\% & 真正錯誤 \\
+\midrule
+\textbf{嚴格準確率}（僅 A） & & \textbf{24.5\%} & \\
+\textbf{寬鬆準確率}（A+B） & & \textbf{46.0\%} & \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item 嚴格準確率與寬鬆準確率之間 21.5 個百分點的差距，反映了金融計算之固有模糊性。
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig2_three_tier_evaluation.pdf}
+\caption{開放式回答之三階評估（$N = 1{,}032$）。超過半數回答為真正錯誤（Level~C），而 21.5\% 為方向正確但在二元評估下被判為「錯誤」。虛線標示嚴格準確率（24.5\%）。}
+\label{fig:threetier}
+\end{figure}
+
+結果揭示了一項顯著的落差：嚴格準確率（24.5\%）不到選擇題格式（82.6\%）所暗示之三分之一，而寬鬆準確率（46.0\%）部分縮小了差距。其意涵如下：
+\begin{itemize}
+    \item \textbf{24.5\% 的回答}完全正確——模型明確展現了對問題的理解。
+    \item \textbf{21.5\% 的回答}使用了有效推理但因替代金融慣例而得出不同答案——在有意義的層面上，這些並非「錯誤」。
+    \item \textbf{54.0\% 的回答}為真正錯誤——反映金融推理的實際限制。
+\end{itemize}
+
+\subsection{錯誤歸因}
+
+在 557 個 Level C 回答中，錯誤歸因結果如下：
+\begin{itemize}
+    \item \texttt{conceptual\_error}：383/557（68.8\%）——對金融概念有根本性誤解
+    \item \texttt{incomplete\_reasoning}：60/557（10.8\%）——方法正確但過早中斷
+    \item \texttt{assumption\_error}：59/557（10.6\%）——使用了無效或不適當的假設
+    \item \texttt{unknown}：35/557（6.3\%）——錯誤類型無法自動分類
+    \item \texttt{reading\_error}：12/557（2.2\%）——誤讀或誤解題目資料
+    \item \texttt{arithmetic\_error}：7/557（1.3\%）——公式正確，計算錯誤
+    \item \texttt{formula\_error}：1/557（0.2\%）——選擇了錯誤的金融模型
+\end{itemize}
+
+概念錯誤在大規模下更為主導，佔所有真正錯誤的三分之二以上（68.8\%）。這顯示主要瓶頸並非算術（僅佔錯誤的 1.3\%），而是\textit{針對給定問題選擇正確的金融概念或架構}。值得注意的是，推理不完整（10.8\%）與假設錯誤（10.6\%）在此規模下浮現為重要的次級類別，表明模型經常未能將分析完成到底，或採用了不適當的假設。公式錯誤率接近零（0.2\%）確認了當模型辨識出正確的概念領域時，幾乎總能應用正確的公式——但它經常誤判哪個領域適用。
+
+%% ============================================
+%% 5.5 跨模型比較
+%% ============================================
+\subsection{跨模型比較：GPT-5-mini}
+\label{sec:crossmodel}
+
+為評估所觀察到的模式是否為模型特定的，我們以同一供應商的下一代推理模型 GPT-5-mini 複製了兩項實驗。GPT-5-mini 在生成可見回答前採用延伸思考鏈推理（「思考 token」），代表了一種質性上不同的推論範式。
+
+\subsubsection{選項偏差：從不顯著到高度顯著}
+
+表~\ref{tab:optbias_cross} 呈現跨模型選項偏差比較。
+
+\begin{table}[htbp]
+\centering
+\caption{跨模型選項偏差比較（$N = 1{,}032$）}
+\label{tab:optbias_cross}
+\begin{threeparttable}
+\begin{tabular}{lcc}
+\toprule
+\textbf{指標} & \textbf{GPT-4o-mini} & \textbf{GPT-5-mini} \\
+\midrule
+有選項準確率 & 82.6\% & 92.8\% \\
+無選項準確率 & 80.6\% & 83.2\% \\
+\textbf{選項偏差} & \textbf{+1.9 pp} & \textbf{+9.6 pp} \\
+\midrule
+不一致對 $b$（有 $\checkmark$，無 $\times$） & 147 & 146 \\
+不一致對 $c$（有 $\times$，無 $\checkmark$） & 127 & 47 \\
+McNemar $\chi^2$（Yates） & 1.318 & 49.76 \\
+$p$ 值 & 0.251 & $< 0.001$*** \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item 採用 Yates 連續性校正之 McNemar 檢定。$p$ 值從 0.251 劇烈轉變為 $p < 0.001$，反映了模型與格式交互作用的質性變化。
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+圖~\ref{fig:cross_optbias} 視覺化呈現跨模型選項偏差比較。跨模型比較揭示了一項顯著的逆轉：對 GPT-4o-mini 不顯著的選項偏差（+1.9~pp，$p = 0.251$），在 GPT-5-mini 上變為高度顯著（+9.6~pp，$p < 0.001$）。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig3_cross_model_option_bias.pdf}
+\caption{跨模型選項偏差比較（$N = 1{,}032$）。GPT-4o-mini 呈現不顯著的 +1.9~pp 選項偏差（$p = 0.251$），而 GPT-5-mini 展現高度顯著的 +9.6~pp 偏差（$p < 0.001$）——表明推理能力更強的模型不成比例地受益於選擇題的鷹架效應。}
+\label{fig:cross_optbias}
+\end{figure} 這不僅是數量上的增加——而是從「格式無關緊要」到「格式實質上有影響」的質性轉變。不一致對的不對稱性尤其值得注意：GPT-5-mini 有 146 題因選項而受益（與 GPT-4o-mini 的 147 題幾乎相同），但僅有 47 題因移除選項而表現更好（相較於 GPT-4o-mini 的 127 題）。選項輔助率在代際間保持不變，但「反向拐杖」案例——即開放式格式迫使更深層推理而勝過選擇題輔助選擇的情況——急劇下降，導致淨偏差幾乎擴大為五倍。
+
+我們假設此矛盾反映了延伸思考鏈推理與答案空間限制之間的交互作用。GPT-5-mini 的推理軌跡顯著更長，在收斂前會探索多條求解路徑。當答案選項存在時，它們作為收斂錨點——模型可以將候選答案與提供的選項進行比對，提前修剪錯誤的推理分支。在無選項時，延伸推理過程可能發散至合理但錯誤的替代分析中，提高錯誤率。本質上，\textit{更強的推理能力放大了答案選項的錨定效益}。一個替代但互補的解釋是，進階模型發展出更為精巧的刪去法策略：選項的存在使模型能系統性地排除不合理的替代方案，而此策略在開放式格式中無法使用。兩種機制——收斂錨定與刪去法——可能共同運作，且更強的推理者能更有效地利用兩條路徑。
+
+\subsubsection{三階評估：真正的推理進步}
+
+表~\ref{tab:threetier_cross} 呈現跨模型三階評估結果。
+
+\begin{table}[htbp]
+\centering
+\caption{跨模型三階評估（$N = 1{,}032$）}
+\label{tab:threetier_cross}
+\begin{threeparttable}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{等級} & \multicolumn{2}{c}{\textbf{GPT-4o-mini}} & \multicolumn{2}{c}{\textbf{GPT-5-mini}} \\
+\cmidrule(lr){2-3} \cmidrule(lr){4-5}
+& 數量 & \% & 數量 & \% \\
+\midrule
+Level A（精確） & 253 & 24.5\% & 431 & 41.8\% \\
+Level B（方向正確） & 222 & 21.5\% & 230 & 22.3\% \\
+Level C（錯誤） & 557 & 54.0\% & 371 & 35.9\% \\
+\midrule
+\textbf{嚴格準確率}（A） & & 24.5\% & & 41.8\% \\
+\textbf{寬鬆準確率}（A+B） & & 46.0\% & & 64.1\% \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item GPT-5-mini 最初因推理 token 預算耗盡而產生 108 個空白回答（10.5\%）；這些已以增加的 token 配額重新執行。上述數據反映完整且校正後的資料集。
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+圖~\ref{fig:cross_threetier} 呈現跨模型三階比較。GPT-5-mini 幾乎將嚴格準確率翻倍（41.8\% vs.\ 24.5\%），展現了開放式金融推理的真正進步。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig4_cross_model_three_tier.pdf}
+\caption{跨模型三階評估（$N = 1{,}032$）。GPT-5-mini 將 Level~A（精確匹配）率從 24.5\% 提升至 41.8\%，而 Level~B 保持穩定（$\sim$22\%）。主要改善是將真正錯誤（Level~C）轉換為精確匹配，而非將答案推入模糊地帶。}
+\label{fig:cross_threetier}
+\end{figure}
+
+Level B 比率保持穩定（22.3\% vs.\ 21.5\%），確認了合理替代分析的「模糊地帶」是題目的屬性，而非模型的屬性。模型能力提升的主要效果是將 Level C 錯誤轉換為 Level A 精確匹配——而非僅將答案從「錯誤」推移至「大致正確」。
+
+GPT-5-mini 的寬鬆準確率 64.1\% 接近其選擇題準確率（92.8\%）的三分之二，大幅縮小了 GPT-4o-mini 所觀察到的格式差距（46.0\% vs.\ 82.6\%）。這顯示雖然生成與選擇的區別仍然有意義，但更有能力的模型正逐步縮小其能\textit{辨認}的與能\textit{產生}的之間的差距。
+
+%% ============================================
+%% 6. 討論
+%% ============================================
+\section{討論}
+\label{sec:discussion}
+
+\subsection{重新評估選項偏差效應}
+
+本研究之完整語料結果呈現了與小樣本估計截然不同的面貌。1.9 個百分點的選項偏差在統計上不顯著（$p = 0.251$），顯示 GPT-4o-mini 的金融推理能力在大規模下對格式大致不變。對於基於選擇題基準評估 AI 工具的機構而言：
+\begin{itemize}
+    \item 所報告之選擇題準確率 82.6\% 與開放式準確率 80.6\% 相當接近——格式效應可忽略不計。
+    \item 選項作為「拐杖」的 147 題偏差題目（14.2\%）被數量相當的、無選項時模型表現\textit{更佳}的題目所抵消。
+    \item 小樣本估計（我們的初步 $n = 100$ 先導研究顯示 +12.0~pp）可能大幅誇大真實效應，凸顯了完整語料評估的重要性。
+\end{itemize}
+
+從 +12.0~pp（$n = 100$，$p = 0.045$）至 +1.9~pp（$n = 1{,}032$，$p = 0.251$）的劇烈萎縮值得解釋。在小樣本中，少數碰巧以刪去法啟發式策略成功的題目可能主導估計值。在大規模下，此效應被稀釋：147 題「拐杖」題目（選項有助益者）被 127 題移除選項後表現\textit{改善}的題目所抵衡——後者很可能因為開放式格式迫使模型進行更深層的逐步推理，而非捷徑匹配。此發現帶來一項方法論啟示：關於選擇題偏差的先導研究應以極度審慎態度加以詮釋，在對格式效應下結論之前，完整語料評估不可或缺。
+
+\subsection{選擇題選項如何洩漏資訊}
+
+儘管總體選項偏差很小，理解資訊洩漏的\textit{機制}對於題目設計仍然重要。我們辨識出選擇題選項輔助模型的三條具體路徑：
+
+\begin{enumerate}
+    \item \textbf{數量級錨定}：在計算債券價格或投資組合報酬率時，模型可能對答案的數量級不確定。諸如「\$1{,}080、\$980、\$1{,}200」的選項立即限制了搜尋空間，使模型能選擇最接近其近似計算之值，而非推導出精確答案。
+    \item \textbf{正負號消歧}：對於涉及損益或增減的題目，選項揭示了答案的預期正負號。在無選項時，模型必須獨立判定變化為正或為負——這一步驟在概念上具模糊性的題目中經常出錯。
+    \item \textbf{不合理性刪去}：模型可利用表面層次的啟發式策略排除一至兩個選項（例如辨認出獲利基金不太可能有負的夏普比率），將三選一降為二選一猜測，而無需真正的推理。
+\end{enumerate}
+
+這些機制解釋了為何 14.2\% 的「拐杖」題目不成比例地集中在量化主題（固定收益、衍生性商品），因為數量級與正負號線索在這些主題中最具資訊量。相較之下，倫理題目——其中三個選項均為合理敘述——幾乎不呈現選項偏差。
+
+然而，這\textit{並不}表示選擇題基準是可靠的。關鍵議題並非格式膨脹，而是\textit{選擇題準確率與真正開放式能力之間的差距}：模型在選擇題中得到 82.6\%，但開放式嚴格準確率僅 24.5\%。真正的「選項偏差」並非選擇題與開放式\textit{二元計分}之間的 1.9~pp 差距，而是選擇題準確率與嚴格開放式準確率之間的 58.1~pp 差距——此差距主要來自二元選擇題計分所掩蓋的資訊。
+
+\subsection{隱藏的能力問題}
+
+三階架構揭示了一項互補的洞見：二元計分在某個維度上\textit{低估}了能力。21.5\% 的 Level B 比率意味著超過五分之一的「錯誤」答案實際上是使用有效金融推理但基於不同假設的合理替代分析。在實務上：
+
+\begin{itemize}
+    \item 以連續複利計算債券殖利率得出 6.32\%，而標準答案（半年複利）為 6.45\% 的 AI 並非「錯誤」——它使用了不同但合理的慣例。
+    \item 假設每日複利（365 天）計算有效年利率，而標準答案使用季複利的模型，產生了不同但在金融上可辯護的結果。
+    \item 採用直線折舊法而標準答案假設餘額遞減法的折舊計算：推理結構與公式應用是正確的，僅會計慣例不同。
+    \item 將這些標記為錯誤的合規審查者浪費了審查能量；將這些計為錯誤的 AI 評估低估了模型的金融能力。
+\end{itemize}
+
+因此，寬鬆準確率（46.0\%）比選擇題分數（82.6\%）或過度嚴格的開放式分數（24.5\%）更能真實衡量模型的金融理解力。選擇題準確率與寬鬆開放式準確率之間 36.6 個百分點的差距，代表選擇題格式所提供之資訊的真實幅度——非透過答案選項洩漏本身，而是透過將問題限縮為選擇任務而非生成任務。
+
+\subsection{對 CFA 考試設計之啟示}
+
+本研究之發現對 CFA 協會有直接啟示：
+\begin{enumerate}
+    \item \textbf{AI 脆弱性}：14.2\% 的偏差題率（1{,}032 題中的 147 題）辨識出 AI 可「投機取巧」選擇題格式的題目。這些項目應進行題目品質之檢視。
+    \item \textbf{格式創新}：隨著 AI 能力提升，CFA 協會應為未來考試版本探索部分給分制與開放式格式。選擇題準確率與嚴格開放式準確率之間 58.1~pp 的差距，凸顯了這兩種評估模式之根本性差異。
+    \item \textbf{慣例敏感性}：Level B 回答（語料的 21.5\%）突顯了在考題中更明確規定計算慣例以減少模糊性的需求。
+\end{enumerate}
+
+\subsection{選項偏差悖論：模型能力放大格式依賴性}
+
+第~\ref{sec:crossmodel} 節的跨模型比較引入了一項反直覺的發現，挑戰了格式效應隨模型改善而遞減的傳統假設。GPT-5-mini 儘管能力明顯更強（選擇題準確率 92.8\% vs.\ 82.6\%），卻展現出\textit{更大且統計顯著}的選項偏差（+9.6~pp，$p < 0.001$），對比 GPT-4o-mini 不顯著的偏差（+1.9~pp，$p = 0.251$）。
+
+此「選項偏差悖論」有三項意涵：
+\begin{enumerate}
+    \item \textbf{對基準設計而言}：選項偏差並非評估工具的固有屬性——而是模型與格式交互作用的湧現屬性。基準設計者不能假設在某一代模型上量測的格式效應可轉移至下一代。
+    \item \textbf{對 AI 部署而言}：基於選擇題基準評估 AI 工具的機構，隨著模型能力提升，面臨日益增加的高估風險。GPT-5-mini 的選擇題與開放式表現之間 9.6~pp 的差距意味著，大約十分之一的「正確」選擇題答案反映的是格式輔助表現而非真正推理。
+    \item \textbf{對訊號理論而言}：基於選擇題之專業認證篩選所隱含的格式不變性假設 \citep{lord1980applications}，隨著 AI 模型改善可能變得日益站不住腳，恰恰在 AI 表現看似最令人印象深刻之際，須要進行格式改革。
+\end{enumerate}
+
+\subsection{研究限制}
+
+本研究使用完整 CFA-Easy 語料（$n = 1{,}032$）及兩代模型（GPT-4o-mini 與 GPT-5-mini）。擴展至其他模型家族（包括開源金融 LLMs）將增強可推廣性。選項偏差結果從不顯著（$p = 0.251$）到高度顯著（$p < 0.001$）的跨代逆轉，暗示此效應對模型架構敏感，特別是延伸思考鏈推理的使用。LLM 作為評審之三階分類方法本身可能含有偏差，建議未來研究對分類子集進行人工驗證。GPT-5-mini 在開放式（A1）實驗中最初因推理階段 token 預算耗盡而產生 108 個空白回答（10.5\%）；這些已以增加的配額重新執行。在選項偏差（A5）實驗中，58 個無選項回答（5.6\%）為空白；這些在所報告的準確率中被視為錯誤，產生對真實無選項表現的保守估計。
+
+%% ============================================
+%% 7. 結論
+%% ============================================
+\section{結論}
+\label{sec:conclusion}
+
+本文證明，以選擇題格式評估金融 LLMs 與開放式評估有根本性差異，且此差異是\textit{模型相依的}。對於 GPT-4o-mini，選項偏差小且不顯著（+1.9~pp，$p = 0.251$）；對於 GPT-5-mini，則大且高度顯著（+9.6~pp，$p < 0.001$）——揭示了一種「選項偏差悖論」，即推理能力更強的模型不成比例地受益於選擇題的鷹架效應。三階評估顯示 GPT-5-mini 幾乎將嚴格開放式準確率翻倍（41.8\% vs.\ 24.5\%），展現了真正的推理進步，而 Level~B 比率保持穩定（$\sim$22\%），確認金融計算之模糊性為領域屬性而非模型屬性。
+
+我們提議金融 LLM 評估之轉向：從選擇題準確率轉向具有三階計分的開放式評估。此方法提供了 AI 金融能力更為真實的面貌，並揭示了單一格式基準所掩蓋的格式依賴性模式。跨模型比較進一步強調，基準的效度必須隨每一代模型重新評估。
+
+\textbf{問題不在於 AI 是否能選出正確的選項，而在於它是否能推理出正確的答案——而我們的跨模型證據顯示，這兩種能力之間的差距隨著模型能力提升而擴大，而非縮小。}
+
+%% ============================================
+%% 利益衝突聲明
+%% ============================================
+\section*{利益衝突聲明}
+
+作者聲明並無已知的可能影響本文所報告研究之競爭性財務利益或個人關係。
+
+%% ============================================
+%% CRediT 作者貢獻聲明
+%% ============================================
+\section*{CRediT 作者貢獻聲明}
+
+\textbf{Wei-Lun Cheng}：概念化、研究方法、軟體、正式分析、資料策展、撰寫——初稿、視覺化。
+\textbf{Daniel Wei-Chung Miao}：指導、撰寫——審閱與編修。
+\textbf{Guang-Di Chang}：指導、撰寫——審閱與編修。
+
+%% ============================================
+%% 致謝
+%% ============================================
+\section*{致謝}
+
+計算資源由國立臺灣科技大學（NTUST）提供。
+
+%% ============================================
+%% 資料可得性
+%% ============================================
+\section*{資料可得性}
+
+CFA-Easy 資料集可透過 HuggingFace 上的 FinEval 基準取得 \citep{ke2025findap}。實驗程式碼可向通訊作者合理請求後取得。
+
+%% ============================================
+%% 參考文獻
+%% ============================================
+\begin{thebibliography}{20}
+
+\bibitem[Callanan et al.(2023)]{callanan2023gpt}
+Callanan, E., Mbae, A., Selle, S., Gupta, V., \& Houlihan, R. (2023).
+\newblock Can GPT-4 pass the CFA exam?
+\newblock \textit{arXiv preprint arXiv:2310.09542}.
+
+\bibitem[Cobbe et al.(2021)]{cobbe2021training}
+Cobbe, K., Kosaraju, V., Bavarian, M., et al. (2021).
+\newblock Training verifiers to solve math word problems.
+\newblock \textit{arXiv preprint arXiv:2110.14168}.
+
+\bibitem[Gao et al.(2024)]{gao2024llms}
+Gao, J., Guo, C., Zhang, Y., et al. (2024).
+\newblock Are LLMs good at multiple choice questions? A benchmark for MCQ evaluation.
+\newblock \textit{arXiv preprint}.
+
+\bibitem[Ke et al.(2025)]{ke2025findap}
+Ke, Z., Ming, Y., Nguyen, X. P., Xiong, C., \& Joty, S. (2025).
+\newblock Demystifying domain-adaptive post-training for financial LLMs.
+\newblock In \textit{Proceedings of the 2025 Conference on Empirical Methods in Natural Language Processing (EMNLP)}.
+
+\bibitem[Lord(1980)]{lord1980applications}
+Lord, F. M. (1980).
+\newblock \textit{Applications of Item Response Theory to Practical Testing Problems}.
+\newblock Lawrence Erlbaum Associates.
+
+\bibitem[Robinson et al.(2023)]{robinson2023leveraging}
+Robinson, J., Sloane, C., Liang, P., \& Tenenbaum, J. (2023).
+\newblock Leveraging large language models for multiple choice question answering.
+\newblock \textit{arXiv preprint arXiv:2210.12353}.
+
+\end{thebibliography}
+
+\end{document}

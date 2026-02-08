@@ -1,0 +1,563 @@
+% Finance Research Letters — Elsevier Template
+% I1+I3: 金融大型語言模型壓力測試
+\documentclass[preprint,12pt]{elsarticle}
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{multirow}
+\usepackage{threeparttable}
+\usepackage{float}
+\usepackage{xeCJK}
+\setCJKmainfont{Songti TC}
+\setCJKsansfont{Heiti TC}
+\setCJKmonofont{Heiti TC}
+
+\journal{Finance Research Letters（繁體中文版）}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{金融大型語言模型壓力測試：CFA 考試之反事實擾動與雜訊敏感度分析}
+
+\author[ntust]{Wei-Lun Cheng}
+\ead{d11018003@mail.ntust.edu.tw}
+
+\author[ntust]{Daniel Wei-Chung Miao\corref{cor1}}
+\ead{miao@mail.ntust.edu.tw}
+\cortext[cor1]{通訊作者}
+
+\author[ntust]{Guang-Di Chang}
+\ead{gchang@mail.ntust.edu.tw}
+
+\affiliation[ntust]{organization={國立臺灣科技大學 財務金融研究所},
+            city={臺北},
+            postcode={10607},
+            country={臺灣}}
+
+\begin{abstract}
+大型語言模型（LLMs）在金融考試基準測試中表現出色，但這些分數可能因訓練資料的記憶效應而被高估，未必反映真正的金融推理能力。本文針對金融大型語言模型，利用 CFA（特許金融分析師）考試題目提出兩項互補的壓力測試。第一，\textit{反事實擾動}在保留底層金融邏輯的前提下修改數值參數與條件，衡量模型能否對新變體進行一致推理。第二，\textit{雜訊注入}引入無關資料、誤導性陳述、格式雜訊與矛盾資訊，衡量模型能否從雜訊中過濾有效訊號——這是現實金融分析中不可或缺的能力。以 GPT-4o-mini 對完整 CFA-Easy 語料庫（$N = 1{,}032$）進行測試，我們發現記憶落差達 \textbf{18.6 個百分點}，雜訊敏感指數範圍為 $-$0.072 至 0.032。透過 GPT-5-mini 的跨模型複製實驗，我們揭示了一項\textit{記憶悖論}：儘管標準準確率大幅提升（91.8\% 對比 82.4\%），記憶落差卻幾乎翻倍至 \textbf{36.4 個百分點}——顯示更強大的模型可能\textit{更加}依賴記憶模式，而非更少。相較之下，雜訊敏感度大幅降低（最大 NSI 0.017 對比 0.032），表明資訊過濾能力確有實質進步。本文提出\textit{穩健準確率}作為具有監管參考價值的指標，並主張隨著模型能力的提升，標準測試與壓力測試之間的表現差距可能持續擴大，使穩健性評估日益不可或缺。
+\end{abstract}
+
+\begin{keyword}
+大型語言模型 \sep 金融推理 \sep 壓力測試 \sep 穩健性 \sep CFA 考試 \sep 記憶效應
+\end{keyword}
+
+\end{frontmatter}
+
+%% ============================================
+%% 1. 緒論
+%% ============================================
+\section{緒論}
+\label{sec:intro}
+
+金融業正快速將大型語言模型（LLMs）應用於股票研究、風險分析、法規遵循及客戶諮詢等任務 \citep{wu2023bloomberggpt, ke2025findap}。基準評測顯示，最先進的模型在 CFA 考試中的得分已接近甚至超過人類及格率 \citep{callanan2023gpt}。這些亮眼成績加速了部署時程，企業日益依賴 LLM 產出的分析結果來進行重要金融決策。
+
+然而，一個根本性問題仍未被充分檢視：\textit{這些模型是否真正理解金融邏輯，抑或僅是記憶了大量可得的考試備考教材中的模式？}CFA 考試題目——主要來源於 SchweserNotes、Kaplan 及 AnalystPrep——廣泛散佈於網路上，很可能充分存在於 LLM 的訓練語料中。CFA 題目空間在結構上相當狹窄：有限的金融概念集合、固定的數值模式（例如 5\% 票息率、\$1,000 面額、10 年到期），以及固定的題型範本。這為死記硬背偽裝為真正推理創造了理想條件。
+
+區分記憶與推理對金融實務有深遠影響。考慮以下兩種情境：
+\begin{itemize}
+    \item \textbf{推理型 AI}：能對任意票息率、到期日與殖利率的組合正確計算債券存續期間——包括訓練資料中從未出現的組合。
+    \item \textbf{記憶型 AI}：在標準題目上達到高準確率，但當數值參數或問題條件改變時便會失敗，因為其「理解」實為針對記憶範本的模式匹配。
+\end{itemize}
+使用記憶型 AI 的投資組合經理面臨危險的能力假象：系統在熟悉的計算上表現良好，但在新穎計算上卻不可預測地失敗——而這些情境恰恰是 AI 輔助最具價值之處。
+
+本文提出金融大型語言模型的\textit{壓力測試框架}，直接借鑒成熟的風險管理方法論。正如銀行在不利情境下壓力測試資本充足率（Basel III、CCAR/DFAST），我們在對抗性擾動下壓力測試 AI 的認知充足率。本框架包含兩個互補維度：
+
+\begin{enumerate}
+    \item \textbf{反事實擾動（I1）}：我們在保留底層金融邏輯的前提下，修改 CFA 題目中的數值參數與問題條件。若模型真正具備推理能力，其準確率應在擾動下維持不變。\textit{記憶落差}——原始與擾動準確率之差——量化了模式匹配依賴的程度。
+
+    \item \textbf{雜訊注入（I3）}：我們在題目中注入無關資料、誤導性陳述、格式不一致及矛盾資訊。現實金融分析要求從雜訊中過濾訊號——這是乾淨基準題目未能測試的能力。\textit{雜訊敏感指數}（NSI）衡量雜訊對表現的降低程度。
+\end{enumerate}
+
+我們提出\textit{穩健準確率}——要求在原始題目及所有壓力測試變體上均回答正確——作為衡量 AI 金融能力更切合實際的指標。本文的核心發現是：標準基準準確率高估了金融大型語言模型的實際可靠性，且任何部署於金融場景的 AI 系統都應同時報告穩健性指標與準確率。
+
+本文做出三項貢獻：（1）設計一個結合反事實擾動與雜訊注入的雙維度壓力測試框架；（2）在母體規模（$N = 1{,}032$）下量化金融大型語言模型的記憶落差與雜訊敏感度分佈；（3）提出穩健準確率作為類似於壓力資本比率的監管相關指標。
+
+%% ============================================
+%% 2. 文獻回顧
+%% ============================================
+\section{文獻回顧}
+\label{sec:related}
+
+\subsection{金融應用中的大型語言模型}
+
+大型語言模型與金融的交會引起了大量研究關注。BloombergGPT \citep{wu2023bloomberggpt} 展現了在金融自然語言處理任務上的競爭力。\citet{ke2025findap} 提出 FinDAP，透過領域適應性後訓練在 CFA 基準測試上達到最先進的成果。\citet{callanan2023gpt} 評估 GPT-4 於 CFA Level I 的表現，發現其達到及格水準。然而，這些評測僅衡量標準題目上的準確率，未檢視表現是否反映真正的理解。
+
+\subsection{資料污染與基準測試有效性}
+
+LLM 評測中資料污染的威脅已有充分記載 \citep{shi2023detecting}。\citet{apple2024gsmsymbolic} 證明，當數學推理問題經過符號擾動——改變變數名稱和數值但保留邏輯結構——後，LLM 的準確率顯著下降，顯示高基準分數部分反映了記憶效應。本研究將此方法延伸至金融領域，由於 CFA 考試教材的狹窄性與廣泛散佈特性，污染風險可能更高。
+
+\subsection{穩健性與對抗性測試}
+
+\citet{jia2017adversarial} 率先提出閱讀理解的對抗性樣本，證明在段落中加入無關句子會大幅降低模型準確率。後續研究發展了 NLP 系統的綜合穩健性基準測試 \citep{wang2022adversarial}。在金融領域，\citet{black1986noise} 奠定了區分訊號與雜訊的理論基礎。我們的雜訊注入框架將此區分操作化為 AI 評測，建立金融領域特定的穩健性測試。
+
+\subsection{金融監管中的壓力測試}
+
+壓力測試是金融監管的基石。Basel III 框架要求銀行在不利總體經濟情境下證明資本充足性。美國聯準會的綜合資本分析與審查（CCAR）評估銀行能否在嚴重衰退期間持續放貸。我們提出一個直接類比：若金融機構必須壓力測試其資本模型，也應壓力測試其 AI 模型。本框架提供了相應方法論。
+
+%% ============================================
+%% 3. 研究方法
+%% ============================================
+\section{研究方法}
+\label{sec:method}
+
+\subsection{反事實擾動設計}
+
+我們採用受 \citet{apple2024gsmsymbolic} 啟發的多層級擾動方案：
+
+\textbf{層級 1——數值擾動。}我們修改題目中的一個數值參數（例如利率、面額、到期期間），同時保留求解程序。正確答案隨之改變，但所需公式與推理步驟維持不變。此測試檢驗模型能否以新輸入重新計算答案，抑或受限於記憶中的數值。
+
+以 GPT-4o-mini 作為擾動生成器，每道原始題目產生一個擾動變體，包含：
+\begin{itemize}
+    \item 明確標示的修改參數及其新數值
+    \item 擾動版本的正確答案
+    \item 驗證擾動保留了題目的邏輯結構
+\end{itemize}
+
+\textbf{層級 2——條件反轉。}我們改變問題的結構性條件（例如年複利 $\to$ 連續複利、買權 $\to$ 賣權、多頭 $\to$ 空頭部位）。這要求模型選擇不同的公式或調整推理方向——是對真正理解力更嚴格的測試。
+
+\subsection{雜訊注入設計}
+
+我們定義四種雜訊類型，模擬漸進式更具挑戰性的現實資訊環境：
+
+\begin{itemize}
+    \item \textbf{N1——無關資料注入：}插入與求解無關的數值資料點（例如在債券定價題目中加入公司成立年份、員工人數、ESG 評分）。模型必須識別並忽略這些資訊。
+
+    \item \textbf{N2——誤導性金融干擾項：}插入聽起來合理但實際無關的金融陳述（例如在歷史投資組合報酬計算中加入「根據市場共識估計，該產業預期成長率為 15\%」）。這些資訊與相關資訊競爭模型的注意力。
+
+    \item \textbf{N3——冗長語境：}在題目中填充冗長但實質空洞的背景段落，模擬現實金融文件的繁複性。模型必須在贅文中辨識出相關資訊。
+
+    \item \textbf{N4——矛盾提示：}插入引用常見錯誤答案的提示（例如「許多考生在此會誤選 [錯誤選項]，但請仔細思考」），測試此類線索是否會干擾模型，或矛盾地反而提供幫助。
+\end{itemize}
+
+雜訊透過精心策劃的金融領域專用範本注入，注入強度由添加的雜訊元素數量控制。
+
+\subsection{評估指標}
+
+\textbf{記憶落差。}用於反事實擾動：
+\begin{equation}
+    \text{Memorization Gap}_{\ell} = \text{Acc}_{\text{original}} - \text{Acc}_{\text{Level}~\ell}
+    \label{eq:memgap}
+\end{equation}
+正值表示在擾動層級 $\ell$ 下對記憶模式的依賴。
+
+\textbf{雜訊敏感指數。}用於雜訊注入：
+\begin{equation}
+    \text{NSI}_{t} = \frac{\text{Acc}_{\text{clean}} - \text{Acc}_{\text{noisy},t}}{\text{Acc}_{\text{clean}}}
+    \label{eq:nsi}
+\end{equation}
+其中 $t \in \{N1, N2, N3, N4\}$。正的 NSI 表示雜訊導致的效能下降（上限為 1 代表完全破壞），零表示雜訊免疫，負的 NSI 則表示雜訊矛盾地\textit{提升}了效能。
+
+\textbf{穩健準確率。}最保守的指標：
+\begin{equation}
+    \text{Robust Acc} = \frac{1}{n}\sum_{i=1}^{n} \mathbf{1}\left[\text{correct}_i^{\text{orig}} \;\land\; \bigwedge_{\ell} \text{correct}_i^{\text{Level}~\ell}\right]
+    \label{eq:robust}
+\end{equation}
+一道題目僅在模型同時正確回答原始題目及\textit{所有}擾動變體時，才計入穩健準確率。此指標類似於銀行監管中的「壓力」資本比率。
+
+\textbf{統計檢定。}我們使用具 Yates 連續性校正的 McNemar 檢定，將每道題目視為成對觀測值，評估原始與擾動/雜訊條件之間的準確率差異是否具統計顯著性。
+
+%% ============================================
+%% 4. 資料與實驗設計
+%% ============================================
+\section{資料與實驗設計}
+\label{sec:experiments}
+
+\subsection{資料集}
+
+我們從 FinEval 的 CFA-Easy 資料集 \citep{ke2025findap} 中抽取題目，該資料集包含 1,032 道涵蓋完整 CFA 課程的選擇題。兩個壓力測試維度——反事實擾動（I1）與雜訊注入（I3）——均評估完整語料庫（$N = 1{,}032$），消除抽樣偏誤，並在所有實驗條件下提供母體層級的估計值。
+
+\begin{table}[htbp]
+\centering
+\caption{實驗設計摘要}
+\label{tab:design}
+\begin{threeparttable}
+\begin{tabular}{llcc}
+\toprule
+\textbf{維度} & \textbf{變體} & \textbf{題數} & \textbf{推論次數} \\
+\midrule
+基線（I1） & 原始（乾淨） & 1,032 & 1,032 \\
+擾動（I1） & 層級 1（數值） & 1,032 & 702\textsuperscript{a} \\
+\midrule
+基線（I3） & 原始（乾淨） & 1,032 & 1,032 \\
+\multirow{4}{*}{雜訊（I3）} & N1（無關資料） & 1,032 & 1,032 \\
+ & N2（誤導性） & 1,032 & 1,032 \\
+ & N3（冗長語境） & 1,032 & 1,032 \\
+ & N4（矛盾提示） & 1,032 & 1,032 \\
+\midrule
+\textbf{合計} & & & \textbf{6,894} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item[\textsuperscript{a}] 1,032 個擾動中有 702 個通過有效性檢查，納入準確率計算。
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\subsection{模型}
+
+我們評估 GPT-4o-mini（OpenAI），這是一個廣泛使用的商業模型，代表日益部署於金融應用中的 LLM 類別。所有評估均使用溫度 $\tau = 0.0$ 以確保確定性輸出。答案透過五層正規表達式鏈搭配後備解析進行擷取。
+
+%% ============================================
+%% 5. 實驗結果
+%% ============================================
+\section{實驗結果}
+\label{sec:results}
+
+\subsection{反事實擾動結果}
+
+表~\ref{tab:perturbation} 呈現反事實擾動的核心發現。
+
+\begin{table}[htbp]
+\centering
+\caption{反事實擾動結果（GPT-4o-mini，$N = 1{,}032$）}
+\label{tab:perturbation}
+\begin{threeparttable}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{條件} & \textbf{有效數} & \textbf{準確率} & \textbf{記憶落差} & \textbf{$\Delta$} & \textbf{方向} \\
+\midrule
+原始 & 1,032 & 82.4\% & --- & --- & --- \\
+層級 1（數值） & 702 & 63.8\% & +18.6 pp & $\downarrow$ & 記憶效應 \\
+\midrule
+穩健準確率 & 1,032 & 63.5\% & --- & --- & --- \\
+記憶嫌疑 & --- & +18.9\% & --- & --- & --- \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item 記憶落差 = 準確率$_{\text{原始}}$ $-$ 準確率$_{\text{擾動}}$。穩健準確率要求在原始題目\textit{及}所有有效擾動上均回答正確。記憶嫌疑 = 原始答對但至少一個擾動答錯的題目比例。
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+在母體層級（$N = 1{,}032$），層級 1 的記憶落差 +18.6 pp 證實模型的標準準確率中有相當比例可歸因於數值模式匹配，而非真正的金融推理。有效擾動率為 68.0\%（1,032 中的 702），反映大規模生成有效反事實變體的固有難度；我們僅就具有有效擾動的題目報告準確率。
+
+穩健準確率為 63.5\%——相較於 82.4\% 的標準準確率——顯示在標準條件下答對的題目中，大約每五題就有一題在擾動下失敗。記憶嫌疑率 18.9\% 量化了模型表面能力中可歸因於模式匹配的比例：這些題目中模型答對原始版本但未能答對擾動版本，顯示其依賴記憶範本而非可遷移的推理能力。圖~\ref{fig:accuracy_degradation} 呈現從原始到擾動條件的準確率衰退，說明了標準基準分數中嵌入的記憶溢價幅度。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig1_accuracy_degradation.pdf}
+\caption{反事實擾動下的準確率衰退（$N = 1{,}032$）。原始題目的標準準確率（82.4\%）在層級 1 數值擾動下降至 63.8\%（$n = 702$ 有效），穩健準確率——要求在原始題目及所有擾動變體上均正確——為 63.5\%。18.6 pp 的記憶落差量化了標準基準分數中嵌入的記憶溢價。}
+\label{fig:accuracy_degradation}
+\end{figure}
+
+\subsection{雜訊敏感度結果}
+
+表~\ref{tab:noise} 呈現四種雜訊類型的注入結果。
+
+\begin{table}[htbp]
+\centering
+\caption{雜訊敏感度結果（GPT-4o-mini，$N = 1{,}032$）}
+\label{tab:noise}
+\begin{threeparttable}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{雜訊類型} & \textbf{雜訊準確率} & \textbf{翻轉數} & \textbf{NSI} & \textbf{解讀} \\
+\midrule
+乾淨（基線） & 81.6\% & --- & --- & --- \\
+N1（無關資料） & 79.0\% & 58/1,032 & 0.032 & 低度影響 \\
+N2（誤導性） & 80.3\% & 49/1,032 & 0.015 & 極微影響 \\
+N3（冗長語境） & 82.0\% & 32/1,032 & $-$0.005 & 無影響（反而有助） \\
+N4（矛盾提示） & 87.5\% & 21/1,032 & $-$0.072 & 負值（反而有助） \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item NSI = 雜訊敏感指數 = (準確率$_{\text{乾淨}}$ $-$ 準確率$_{\text{雜訊}}$) / 準確率$_{\text{乾淨}}$。翻轉數 = 乾淨條件下答對但加入雜訊後答錯的題數。
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+全語料庫結果（$N = 1{,}032$）揭示了一個細緻的雜訊敏感度分佈，並伴隨一項引人注目的發現：四種雜訊類型中有兩種實際上\textit{提升}了模型表現。N1（無關資料注入）產生最高敏感度（NSI = 0.032），顯示多餘的數值資料造成可衡量的混淆，但效果溫和。N2（誤導性金融干擾項）顯示極低敏感度（NSI = 0.015）。更令人意外的是，N3（冗長語境）產生略為負的 NSI（$-$0.005），顯示格式不一致的影響微乎其微，甚至可能稍微促進更仔細的解析。最引人注目的是，N4（矛盾提示）產生強烈的負 NSI 值 $-$0.072，將準確率從 81.6\% 提升至 87.5\%——提高了 5.9 個百分點。由於 N4 提示明確引用常見的錯誤答案，模型獲得了關於應避免哪些選項的有用資訊，有效地縮小了搜尋空間。此發現凸顯了一個重要的設計考量：指名特定錯誤答案的對抗性提示，可能無意中幫助了精密模型，而非混淆它們。
+
+整體模式——NSI 介於 $-$0.072 至 0.032——顯示 GPT-4o-mini 的雜訊穩健性遠高於反事實擾動結果所暗示的程度，且某些雜訊類型矛盾地反而能提升表現。這種不對稱性本身即為重要發現：模型的主要弱點在於記憶依賴的推理，而非對資訊雜訊的敏感性。最嚴重的雜訊降級（N1，NSI\,=\,0.032，對應 2.6 pp 的絕對準確率下降）遠低於反事實擾動的 18.6 pp 記憶落差。如圖~\ref{fig:noise_sensitivity} 所示，NSI 值橫跨正負區間，N1（無關資料）是唯一實質性的降級來源，而 N4（矛盾提示）則產生大幅正面效應。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig2_noise_sensitivity.pdf}
+\caption{各雜訊類型的雜訊敏感指數（NSI）（$N = 1{,}032$）。N1（無關資料注入）造成最大效能降級（NSI\,=\,0.032）。N2（誤導性干擾項）顯示極低敏感度（NSI\,=\,0.015）。N3（冗長語境）與 N4（矛盾提示）產生負 NSI 值（分別為 $-$0.005 與 $-$0.072），顯示這些雜訊類型實際上\textit{提升}了效能——尤其 N4 將準確率提高了 5.9 pp。整體而言，雜訊敏感度遠低於反事實擾動下觀察到的記憶落差，矛盾提示似乎觸發了更審慎的推理。}
+\label{fig:noise_sensitivity}
+\end{figure}
+
+\subsection{合併壓力測試框架}
+
+表~\ref{tab:combined} 呈現整合兩個維度的 2$\times$2 合併分析。
+
+\begin{table}[htbp]
+\centering
+\caption{合併壓力測試結果}
+\label{tab:combined}
+\begin{threeparttable}
+\begin{tabular}{lcc}
+\toprule
+ & \textbf{乾淨} & \textbf{最差雜訊\textsuperscript{a}} \\
+\midrule
+\textbf{原始} & 82.4\%（標準） & 79.0\%（雜訊降級） \\
+\textbf{擾動後} & 63.5\%（穩健） & ---（最差情境） \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item[\textsuperscript{a}] 所有數值均基於完整語料庫（$N = 1{,}032$）計算。I1 乾淨基線（82.4\%）與 I3 乾淨基線（81.6\%）因分別執行實驗而略有差異。雜訊降級準確率反映 I3 實驗中最差情況的 N1（無關資料）注入。
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+標準準確率（82.4\%）是目前所有金融 LLM 基準測試報告的指標。穩健準確率（63.5\%）考量了記憶效應。雜訊降級準確率（最差情況 N1 雜訊下為 79.0\%）考量了現實世界的資訊雜訊。由於兩個維度現已在完整語料庫（$N = 1{,}032$）上進行評估，比較是直接的：標準到穩健的落差（18.9 pp）遠大於雜訊降級（自 I3 乾淨基線 81.6\% 下降 2.6 pp），證實反事實擾動是更具區別力的壓力測試。\footnote{I1 與 I3 實驗各自獨立執行，產生略有差異的乾淨基線（分別為 82.4\% 和 81.6\%）。18.9 pp 數值為標準準確率減去穩健準確率；2.6 pp 數值為 I3 乾淨基線減去最差雜訊準確率。}圖~\ref{fig:stress_test_framework} 視覺化合併壓力測試結果，並排呈現評估條件，以凸顯各降級路徑的相對幅度。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig3_stress_test_framework.pdf}
+\caption{合併壓力測試框架結果。長條圖比較標準準確率（82.4\%）、最差雜訊降級準確率（79.0\%，N1 無關資料）與擾動下的穩健準確率（63.5\%）——均在完整語料庫（$N = 1{,}032$）上評估。效能損失的主要來源為記憶依賴推理（18.9 pp 標準至穩健落差），而非雜訊敏感性（自 I3 乾淨基線下降 2.6 pp），證實反事實擾動是更具區別力的壓力測試維度。}
+\label{fig:stress_test_framework}
+\end{figure}
+
+\subsection{統計顯著性}
+
+我們對成對觀測值（每道題目的原始與擾動）應用 McNemar 檢定：
+
+\begin{table}[htbp]
+\centering
+\caption{統計檢定}
+\label{tab:stats}
+\begin{tabular}{llcc}
+\toprule
+\textbf{比較} & \textbf{檢定方法} & \textbf{統計量} & \textbf{$p$ 值} \\
+\midrule
+原始 vs. 層級 1（$n = 702$） & McNemar 檢定 & $\chi^2 = 53.33$ & $< 0.001$*** \\
+乾淨 vs. N1（最差雜訊，$n = 1{,}032$） & McNemar 檢定 & $\chi^2 = 8.19$ & 0.004** \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+%% ============================================
+%% 5.5 跨模型比較
+%% ============================================
+\subsection{跨模型比較：記憶悖論}
+\label{sec:crossmodel}
+
+為評估壓力測試模式是否具模型特異性，我們在 GPT-5-mini 上複製了完整框架。GPT-5-mini 是新一代推理模型，在產出答案前採用延伸的思維鏈（「思考 token」）進行推理。
+
+\subsubsection{反事實擾動}
+
+表~\ref{tab:perturbation_cross} 呈現跨模型擾動比較。
+
+\begin{table}[htbp]
+\centering
+\caption{跨模型反事實擾動比較（$N = 1{,}032$）}
+\label{tab:perturbation_cross}
+\begin{threeparttable}
+\begin{tabular}{lcc}
+\toprule
+\textbf{指標} & \textbf{GPT-4o-mini} & \textbf{GPT-5-mini} \\
+\midrule
+標準準確率 & 82.4\% & 91.8\% \\
+層級 1 準確率（有效 $n$） & 63.8\%（$n = 702$） & 55.3\%（$n = 638$） \\
+\textbf{記憶落差} & \textbf{18.6 pp} & \textbf{36.4 pp} \\
+穩健準確率 & 63.5\% & 67.2\% \\
+記憶嫌疑 & 18.9\% & 24.5\% \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item GPT-5-mini 較低的有效擾動數（638 vs.\ 702）反映推理模型較長輸出對答案擷取的更嚴格要求。
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+圖~\ref{fig:mem_paradox} 視覺化記憶悖論。跨模型比較揭示了一項\textit{記憶悖論}：GPT-5-mini 達到顯著更高的標準準確率（+9.4~pp），但記憶落差幾乎翻倍（36.4~pp 對比 18.6~pp）。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig4_memorization_paradox.pdf}
+\caption{記憶悖論（$N = 1{,}032$）。GPT-5-mini 達到更高的標準準確率（91.8\% 對比 82.4\%），但擾動準確率更低（55.3\% 對比 63.8\%），導致記憶落差（36.4~pp）幾乎為 GPT-4o-mini（18.6~pp）的兩倍。更強大的模型可能更依賴記憶。}
+\label{fig:mem_paradox}
+\end{figure} 以絕對值計，GPT-5-mini 在擾動題目上的表現實際上\textit{更差}（55.3\% 對比 63.8\%），儘管在原始題目上佔優。穩健準確率僅微幅提升（67.2\% 對比 63.5\%），意味著 GPT-5-mini 的大部分表面進步在擾動壓力下消散。
+
+此結果有一個自然的解釋：GPT-5-mini 在更大的語料庫上訓練且具備更深層的推理能力，很可能在訓練中接觸了更多 CFA 題型範本，並發展出更強的範本匹配關聯。當原始題目與這些範本匹配時，模型同時利用記憶與推理，產生卓越的準確率。當擾動破壞了範本匹配時，模型必須回歸純粹推理——而 55.3\% 的擾動準確率揭示了這一推理基線雖尚可，但遠低於 91.8\% 的標題數字。
+
+\subsubsection{雜訊敏感度}
+
+表~\ref{tab:noise_cross} 呈現跨模型雜訊敏感度比較。
+
+\begin{table}[htbp]
+\centering
+\caption{跨模型雜訊敏感度比較（$N = 1{,}032$）}
+\label{tab:noise_cross}
+\begin{tabular}{lcccc}
+\toprule
+& \multicolumn{2}{c}{\textbf{GPT-4o-mini}} & \multicolumn{2}{c}{\textbf{GPT-5-mini}} \\
+\cmidrule(lr){2-3} \cmidrule(lr){4-5}
+\textbf{條件} & \textbf{準確率} & \textbf{NSI} & \textbf{準確率} & \textbf{NSI} \\
+\midrule
+乾淨（基線） & 81.6\% & --- & 92.3\% & --- \\
+N1（無關資料） & 79.0\% & 0.032 & 90.8\% & 0.017 \\
+N2（誤導性） & 80.3\% & 0.015 & 91.0\% & 0.015 \\
+N3（冗長語境） & 82.0\% & $-$0.005 & 92.4\% & $-$0.001 \\
+N4（矛盾提示） & 87.5\% & $-$0.072 & 96.1\% & $-$0.041 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+與記憶悖論形成對比，雜訊敏感度結果顯示明確的進步：GPT-5-mini 的最差 NSI（N1 的 0.017）大約是 GPT-4o-mini 最差情況（N1 的 0.032）的一半。該模型在過濾無關與誤導性資訊方面有顯著改善，可能因為延伸的思維鏈推理使其能明確辨識並排除雜訊。N4（矛盾提示）的助益效果也較小（$-$0.041 對比 $-$0.072），與一個較少依賴消去法啟發的模型一致。
+
+記憶-雜訊不對稱因此在跨代間被放大：GPT-5-mini 同時\textit{更}依賴記憶\textit{且更}具雜訊穩健性。此種分離證實反事實擾動與雜訊注入探測的是根本不同的認知維度（第~\ref{sec:discussion}~節）。
+
+%% ============================================
+%% 6. 討論
+%% ============================================
+\section{討論}
+\label{sec:discussion}
+
+\subsection{經濟顯著性：記憶溢價}
+
+我們的發現揭示了金融 LLM 基準測試中的「記憶溢價」：標準準確率與穩健準確率之間的差距代表因對已知題型範本的模式匹配而被人為膨脹的表現。對評估 AI 工具的金融機構而言：
+
+\begin{itemize}
+    \item \textbf{標準準確率}（82.4\%）暗示 AI 能正確處理大約每五道金融計算中的四道。
+    \item \textbf{穩健準確率}（63.5\%）揭示其僅能可靠處理大約每五道中的三道。
+    \item 標準與穩健準確率之間的 18.9 pp 差距代表一個「虛幻能力」區間——在這些題目中 AI 看似具備能力，但在現實變體上會失敗。
+\end{itemize}
+
+以資本配置角度而言：若 AI 輔助分析影響投資決策，記憶溢價意味著 AI「正確」輸出中有一部分源於記憶產物。這些結果在新穎金融情境下會不可預測地失敗——恰恰是 AI 輔助最具價值的情境。
+
+\subsection{雙重擾動分類：兩個認知維度}
+
+本文的核心貢獻之一是認識到我們的兩個壓力測試維度——反事實擾動與雜訊注入——探測的是根本不同的認知弱點。它們不應被視為同一測試的變體，而應被視為正交能力維度的評估。
+
+\textbf{數值擾動（I1）}測試的是\textit{記憶與計算}。透過改變單一數值參數（例如票息率從 5\% 改為 5.13\%，或面額從 \$1,000 改為 \$1,047），我們在保持金融邏輯不變的同時，使任何從記憶中檢索的答案失效。若模型真正學會了計算債券存續期間，無論具體數值如何，都應產出正確答案。擾動下的效能下降是模型正在檢索記憶答案而非執行底層數學程序的診斷性證據。
+
+\textbf{語意擾動（I3）}測試的是\textit{理解與注意力}。透過注入無關資料、誤導性語境或矛盾訊號，我們在保持數值內容不變的同時，增加資訊過濾的認知負荷。模型必須辨識哪些資訊與決策相關、哪些是雜訊——這是一種依賴對問題因果結構理解而非算術能力的技能。雜訊注入下的效能下降表明模型缺乏對於什麼資訊重要及其原因的穩健內部表徵。
+
+此區分對應至一個 $2 \times 2$ 能力框架：
+
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+& \textbf{通過 I1（擾動）} & \textbf{未通過 I1} \\
+\midrule
+\textbf{通過 I3（雜訊）} & 真正推理 & 記憶但注意力佳 \\
+\textbf{未通過 I3} & 能計算但易分心 & 皆不具備 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+我們的結果將 GPT-4o-mini 主要歸入「記憶但注意力佳」象限：它能良好處理雜訊（NSI 範圍 $-$0.072 至 0.032），但在數值擾動上有顯著困難（記憶落差 18.6 pp）。此模式與一個已發展出強大注意力機制以過濾無關資訊、但在數值計算上仍大量依賴模式匹配的模型一致。
+
+\subsection{數值擾動為何會擊破大型語言模型}
+
+CFA 考試題目廣泛散佈於網路上，幾乎可以確定在 LLM 訓練語料中有充分代表。一道具有典型參數（5\% 票息、\$1,000 面額、10 年到期）的債券定價題目已在備考指南和論壇中出現數千次。模型學習到這些特定模式與其答案之間的強關聯，透過精密的檢索而非計算達到高準確率。當我們將票息率擾動至 5.13\% 或面額擾動至 \$1,047——這些組合不太可能出現在訓練資料中——模型必須執行底層數學邏輯，而非檢索記憶答案。18.6~pp 的準確率下降精確衡量了此檢索到計算的轉換，呼應 \citet{apple2024gsmsymbolic} 在數學推理基準測試中發現的類似脆弱性。
+
+\subsection{提示公平性與可重現性}
+
+對抗性測試的一個潛在疑慮是提示可能被不公平地設計以誘發失敗。我們明確回應此疑慮。我們評估中的所有題目均使用 CFA-Easy 資料集 \citep{ke2025findap} 中分發的標準 CFA 選擇題格式；我們未更改題目結構、選項格式或措辭慣例。擾動僅施加於數值參數或透過明確定義的雜訊注入範本——從未變動題目的邏輯結構或選項版面。模型在所有條件（原始、擾動和雜訊）下接收相同的系統提示與回應格式，確保任何效能差異可歸因於擾動本身而非提示工程產物。所有擾動範本與評估程式碼可向通訊作者索取，以實現壓力測試結果的完整可重現性。
+
+\subsection{壓力測試作為監管盡職調查}
+
+借鑒計量金融學，我們的記憶落差類似於「delta」（對輸入擾動的一階敏感度），而 NSI 類似於「vega」（對資訊雜訊的敏感度）。此對映將 AI 穩健性定位於金融風險管理者熟悉的框架中。CFA 準則 V(A)——勤勉與合理基礎——要求建議須有「合理且充分的基礎」。僅基於標準準確率部署 AI 而未壓力測試其推理能力，可謂未達此準則要求。機構應在部署前計算穩健準確率與 NSI 分佈。
+
+\subsection{監管啟示}
+
+歐盟 AI 法案將金融服務中的 AI 歸類為「高風險」，要求提供者證明準確性與穩健性。我們的指標提供具體、可量化的標準：
+
+\begin{enumerate}
+    \item \textbf{記憶落差閾值}：金融 AI 系統應證明記憶落差 $< 10\%$，確保效能未因死記硬背而大幅膨脹。
+    \item \textbf{雜訊敏感度閾值}：所有雜訊類型的 NSI $< 0.15$，確保系統能容忍現實世界的資訊雜訊而不致顯著效能損失。
+    \item \textbf{穩健準確率報告}：監管機構應要求同時報告穩健準確率與標準準確率，類似於銀行同時報告未壓力與壓力資本比率。
+\end{enumerate}
+
+\subsection{記憶悖論：為何更強的模型可能更不穩健}
+
+第~\ref{sec:crossmodel}~節的跨模型比較提出了一項對 AI 治理具重要意涵的發現：GPT-5-mini 的記憶落差（36.4~pp）幾乎是 GPT-4o-mini（18.6~pp）的兩倍，儘管 GPT-5-mini 是更強大的模型。此「記憶悖論」顯示\textbf{標準準確率的提升可能大幅歸因於記憶能力的增強，而非推理能力的增強}。
+
+三種機制可能共同作用：（1）更大的訓練語料庫增加了特定題型範本——包括 CFA 備考教材——被充分代表的機率；（2）推理模型的延伸思考可能透過精密搜尋促進更有效的範本檢索；（3）更高的標準準確率本身為記憶依賴的表現創造了更高的上限。
+
+監管啟示是直接的：隨著 AI 模型的進步，標準準確率與穩健準確率之間的差距可能\textit{擴大}而非縮小。追蹤標準準確率作為 AI 能力代理指標的金融監管機構，可能觀察到穩定的進步，但底層穩健性停滯甚至惡化。強制壓力測試——類似於銀行資本壓力測試——隨著標題準確率的上升而變得更加重要，而非更不重要。
+
+\subsection{研究限制}
+
+應承認幾項限制。第一，擾動生成依賴 GPT-4o-mini，其本身可能在生成有效擾動時引入錯誤；GPT-4o-mini 的有效擾動率 68.0\%（702/1,032）與 GPT-5-mini 的 61.8\%（638/1,032）反映了此挑戰。第二，目前研究僅評估層級 1（數值）擾動；層級 2（條件反轉）擾動將提供更深層推理失敗的額外證據。第三，我們的雜訊類型雖基於領域知識設計，但仍屬合成性質；現實世界的金融雜訊可能更為細微或更為嚴重。第四，記憶悖論可能部分反映推理模型答案擷取率的差異，而非純粹的記憶效應。
+
+%% ============================================
+%% 7. 結論
+%% ============================================
+\section{結論}
+\label{sec:conclusion}
+
+本文證明標準基準準確率顯著高估了大型語言模型的金融推理能力，且此高估程度隨模型能力的提升而\textit{增加}。我們的雙維度壓力測試框架——結合反事實擾動與雜訊注入——揭示了一項記憶悖論：GPT-5-mini 達到 91.8\% 的標準準確率（較 GPT-4o-mini 高 +9.4~pp），但呈現 36.4~pp 的記憶落差（幾乎為 GPT-4o-mini 18.6~pp 的兩倍），同時其雜訊敏感度大幅降低。更強大的模型同時更依賴記憶且更具雜訊穩健性，證實這些壓力測試探測的是正交的認知維度。
+
+我們提出穩健準確率作為具監管參考價值的指標。記憶悖論意味著穩健準確率應在 AI 評估中成為必要項目：標題準確率的提升可能掩蓋停滯或下降的穩健性。\textbf{問題不在於 AI 能否通過 CFA 考試，而在於它能否推理解決未曾記憶的問題——而我們的跨模型證據顯示，隨著模型的進步，這個問題變得更加迫切，而非更不重要。}
+
+%% ============================================
+%% 資料可用性
+%% ============================================
+\section*{資料可用性}
+
+CFA-Easy 資料集可透過 HuggingFace 上的 FinEval 基準測試取得 \citep{ke2025findap}。實驗程式碼與原始結果可於合理要求下向通訊作者索取。
+
+%% ============================================
+%% 參考文獻
+%% ============================================
+\section*{利益衝突聲明}
+作者聲明無已知的競爭性財務利益或個人關係可能影響本文所報告的研究。
+
+\section*{CRediT 作者貢獻}
+\textbf{Wei-Lun Cheng}：概念化、方法論、軟體、形式分析、資料策展、撰寫——初稿、視覺化。
+\textbf{Daniel Wei-Chung Miao}：指導、撰寫——審閱與編輯。
+\textbf{Guang-Di Chang}：指導、撰寫——審閱與編輯。
+
+\section*{致謝}
+運算資源由國立臺灣科技大學（NTUST）提供。
+
+\begin{thebibliography}{20}
+
+\bibitem[Mirzadeh et~al.(2024)]{apple2024gsmsymbolic}
+Mirzadeh, I., Alizadeh, K., Shahrokhi, H., et al. (2024).
+\newblock GSM-Symbolic: Understanding the limitations of mathematical reasoning in large language models.
+\newblock \textit{arXiv preprint arXiv:2410.05229}.
+
+\bibitem[Black(1986)]{black1986noise}
+Black, F. (1986).
+\newblock Noise.
+\newblock \textit{The Journal of Finance}, 41(3), 528--543.
+
+\bibitem[Callanan et al.(2023)]{callanan2023gpt}
+Callanan, E., Mbae, A., Selle, S., Gupta, V., \& Houlihan, R. (2023).
+\newblock Can GPT-4 pass the CFA exam?
+\newblock \textit{arXiv preprint arXiv:2310.09542}.
+
+\bibitem[Jia \& Liang(2017)]{jia2017adversarial}
+Jia, R., \& Liang, P. (2017).
+\newblock Adversarial examples for evaluating reading comprehension systems.
+\newblock In \textit{Proceedings of the 2017 Conference on Empirical Methods in Natural Language Processing} (pp.~2021--2031).
+
+\bibitem[Ke et al.(2025)]{ke2025findap}
+Ke, Z., Ming, Y., Nguyen, X. P., Xiong, C., \& Joty, S. (2025).
+\newblock Demystifying domain-adaptive post-training for financial LLMs.
+\newblock In \textit{Proceedings of the 2025 Conference on Empirical Methods in Natural Language Processing (EMNLP)}.
+
+\bibitem[Shi et al.(2023)]{shi2023detecting}
+Shi, W., Ajith, A., Xia, M., et al. (2023).
+\newblock Detecting pretraining data from large language models.
+\newblock In \textit{Proceedings of the 12th International Conference on Learning Representations (ICLR)}.
+
+\bibitem[Wang et al.(2022)]{wang2022adversarial}
+Wang, B., Xu, C., Wang, S., et al. (2022).
+\newblock Adversarial GLUE: A multi-task benchmark for robustness evaluation of language models.
+\newblock In \textit{Proceedings of the 36th Conference on Neural Information Processing Systems (NeurIPS) Datasets and Benchmarks Track}.
+
+\bibitem[Wu et al.(2023)]{wu2023bloomberggpt}
+Wu, S., Irsoy, O., Lu, S., et al. (2023).
+\newblock BloombergGPT: A large language model for finance.
+\newblock \textit{arXiv preprint arXiv:2303.17564}.
+
+\end{thebibliography}
+
+\end{document}

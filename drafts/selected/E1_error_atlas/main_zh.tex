@@ -1,0 +1,427 @@
+% Finance Research Letters — Elsevier Template
+% E1: CFA 錯誤圖譜（繁體中文版）
+\documentclass[preprint,12pt]{elsarticle}
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{multirow}
+\usepackage{threeparttable}
+\usepackage{float}
+\usepackage{xeCJK}
+\setCJKmainfont{Songti TC}
+\setCJKsansfont{Heiti TC}
+\setCJKmonofont{Heiti TC}
+
+\journal{Finance Research Letters（繁體中文版）}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{CFA 錯誤圖譜：大型語言模型於財務推理中失敗模式之系統性映射}
+
+\author[ntust]{Wei-Lun Cheng}
+\ead{d11018003@mail.ntust.edu.tw}
+
+\author[ntust]{Daniel Wei-Chung Miao\corref{cor1}}
+\ead{miao@mail.ntust.edu.tw}
+\cortext[cor1]{通訊作者}
+
+\author[ntust]{Guang-Di Chang}
+\ead{gchang@mail.ntust.edu.tw}
+
+\affiliation[ntust]{organization={國立臺灣科技大學 財務金融研究所},
+            city={臺北},
+            postcode={10607},
+            country={臺灣}}
+
+\begin{abstract}
+當大型語言模型（LLMs）在財務推理任務中出錯時，這些錯誤並非隨機發生——而是呈現出反映特定認知局限的系統性模式。本文提出\textit{CFA 錯誤圖譜}，此一 LLM 錯誤分類體系源自 1,032 題 CFA（特許金融分析師）考試題目以開放式作答格式所產生的 557 筆錯誤回應。採用三級評分標準（精確匹配、方向正確、錯誤），我們發現 GPT-4o-mini 僅達到 24.5\% 的精確準確率，而 54.0\% 的回應完全錯誤。對 557 筆錯誤進行分類後發現，\textbf{概念錯誤}以壓倒性比例居首（68.8\%），其次為推理不完整（10.8\%）與假設錯誤（10.6\%），而純粹的計算錯誤僅佔 1.4\%。\textit{黃金上下文注入}（GCI）實驗——以正確的財務概念重新提示模型——揭示 82.4\% 的錯誤對概念提示有回應（屬於可透過檢索增強修補的知識缺口），而 17.6\% 即使提供正確上下文仍持續犯錯（屬於需要微調方能解決的真正推理缺口）。以 GPT-5-mini 進行的跨模型 GCI 複製實驗顯示，該推理模型的完全恢復率幾乎翻倍（\textbf{50.4\%} vs.\ 25.5\%），並將真正推理缺口降至\textbf{11.7\%}，表明延伸思維鏈推理在提供正確概念後，能顯著改善概念的\textit{執行}能力。這些發現挑戰了「金融 AI 需要更好的數學能力」此一敘事，並將注意力引導至更為根本的挑戰——概念選擇與問題建構。
+\end{abstract}
+
+\begin{keyword}
+大型語言模型 \sep 錯誤分析 \sep 財務推理 \sep CFA 考試 \sep 錯誤分類體系 \sep 失敗模式
+\end{keyword}
+
+\end{frontmatter}
+
+%% ============================================
+%% 1. 緒論
+%% ============================================
+\section{緒論}
+\label{sec:intro}
+
+大型語言模型（LLMs）在金融領域的日益廣泛應用，促使研究者以專業考試進行大量基準測試 \citep{callanan2023gpt, ke2025findap}。這些評估一律報告\textit{準確率}：答對題目的比例。然而，準確率無法告訴我們模型\textit{如何}失敗——而在金融應用中，失敗的性質與頻率同等重要。
+
+試考慮兩個模型，二者在 CFA 題目上的準確率皆為 60\%。模型 A 的錯誤以算術失誤為主（公式正確但計算錯誤），而模型 B 的錯誤以概念誤解為主（套用了錯誤的財務模型）。模型 A 的錯誤較易透過計算工具增強加以修正；模型 B 則需要根本性的知識改進。現行的基準報告完全掩蓋了此一區別。
+
+本文提出\textit{CFA 錯誤圖譜}：一套針對財務推理任務中 LLM 失敗模式的系統性分類體系。我們以開放式（非選擇題）格式評估 GPT-4o-mini 在 1,032 題 CFA-Easy 題目上的表現，採用三級評分標準（Level~A：精確匹配、Level~B：方向正確、Level~C：錯誤）。在 557 筆 Level~C 回應中，每個錯誤沿三個維度進行分類：
+\begin{enumerate}
+    \item \textbf{錯誤類型}：犯了什麼樣的錯誤？（7 個類別）
+    \item \textbf{CFA 主題}：屬於哪個金融領域？（8 個知識範疇）
+    \item \textbf{認知階段}：在推理過程的哪個環節出錯？（5 個階段）
+\end{enumerate}
+
+本研究有四項貢獻：
+\begin{enumerate}
+    \item 本文提供首個大規模（$N = 1{,}032$）財務 LLM 系統性錯誤分類體系，揭示概念錯誤（68.8\%）遠超計算錯誤（1.4\%）。
+    \item 我們展示了顯著的主題依賴性錯誤特徵：倫理類題目的失敗以推理為主，而衍生性商品類題目的失敗以計算為主。
+    \item 我們引入\textit{黃金上下文注入}以區分知識缺口（82.4\% 的錯誤，可透過 RAG 修補）與推理缺口（17.6\%，需要微調）。
+    \item 我們確認概念辨識為首要認知瓶頸，將金融 AI 改進方向從「更好的算術能力」重新定位為「更好的概念選擇」。
+\end{enumerate}
+
+%% ============================================
+%% 2. 研究方法
+%% ============================================
+\section{研究方法}
+\label{sec:method}
+
+\subsection{資料蒐集}
+
+我們使用 CFA-Easy 資料集 \citep{ke2025findap} 中全部 1,032 題。每題由選擇題轉換為開放式格式，移除答案選項，迫使 GPT-4o-mini 生成包含完整推理過程的自由格式回應。回應依三級標準評分：
+\begin{itemize}
+    \item \textbf{Level A（精確）}：答案在數值容許範圍（$\pm2\%$）內匹配或語義精確匹配——253 筆回應（24.5\%）。
+    \item \textbf{Level B（方向正確）}：方向或方法正確，但假設或量級不同——222 筆回應（21.5\%）。
+    \item \textbf{Level C（錯誤）}：答案錯誤——557 筆回應（54.0\%）。
+\end{itemize}
+所有 557 筆 Level~C 回應連同完整推理過程一併保留，以供錯誤分類。
+
+\subsection{三維錯誤分類體系}
+
+\textbf{維度一——錯誤類型（7 個類別）：}
+\begin{itemize}
+    \item \texttt{conceptual\_error}：誤解所測試的財務概念
+    \item \texttt{incomplete\_reasoning}：方法正確但未推導至最終答案
+    \item \texttt{assumption\_error}：對複利計算、時間點或其他參數做出錯誤假設
+    \item \texttt{reading\_error}：誤讀題幹或關鍵數值
+    \item \texttt{arithmetic\_error}：公式正確但計算失誤
+    \item \texttt{formula\_error}：選擇了錯誤的公式或財務模型
+    \item \texttt{unknown}：無法可靠地分類之錯誤
+\end{itemize}
+
+\textbf{維度二——CFA 主題：}倫理（Ethics）、固定收益（Fixed Income）、經濟學（Economics）、投資組合管理（Portfolio Management）、財富規劃（Wealth Planning）、衍生性商品（Derivatives）、另類投資（Alternative Investments）、權益（Equity）。
+
+\textbf{維度三——認知階段：}辨識（Identify，概念認知）、回憶（Recall，公式／規則檢索）、計算（Calculate，數值運算）、驗證（Verify，答案檢查）、未知（Unknown）。
+
+\subsection{自動化分類}
+
+GPT-4o-mini 擔任錯誤分類器，接收題目、模型的錯誤回應（含完整推理過程）及正確答案，然後輸出三維分類結果。
+
+%% ============================================
+%% 3. 結果
+%% ============================================
+\section{結果}
+\label{sec:results}
+
+\subsection{三級評分分布}
+
+在分析錯誤之前，表~\ref{tab:grading} 報告全部 1,032 題的整體評分分布。
+
+\begin{table}[htbp]
+\centering
+\caption{三級評分分布（$N = 1{,}032$）}
+\label{tab:grading}
+\begin{tabular}{llrr}
+\toprule
+\textbf{等級} & \textbf{說明} & \textbf{數量} & \textbf{百分比} \\
+\midrule
+Level A & 精確匹配 & 253 & 24.5\% \\
+Level B & 方向正確 & 222 & 21.5\% \\
+Level C & 錯誤 & 557 & 54.0\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+當移除選擇題的選項架構後，GPT-4o-mini 超過半數的回應完全錯誤。僅四分之一的回應能達到精確的數值或語義匹配，突顯了選擇題表現（選項辨認可替代真正推理）與開放式作答能力之間的巨大落差。
+
+\subsection{錯誤類型分布}
+
+表~\ref{tab:errortype} 呈現全部 557 筆 Level~C 錯誤的類型分布。
+
+\begin{table}[htbp]
+\centering
+\caption{錯誤類型分布（$N = 557$）}
+\label{tab:errortype}
+\begin{tabular}{lrrl}
+\toprule
+\textbf{錯誤類型} & \textbf{數量} & \textbf{百分比} & \textbf{大類} \\
+\midrule
+概念錯誤 & 383 & 68.8\% & 推理類 \\
+推理不完整 & 60 & 10.8\% & 推理類 \\
+假設錯誤 & 59 & 10.6\% & 推理類 \\
+未知 & 35 & 6.3\% & --- \\
+閱讀錯誤 & 12 & 2.2\% & 擷取類 \\
+算術錯誤 & 7 & 1.3\% & 計算類 \\
+公式錯誤 & 1 & 0.2\% & 計算類 \\
+\midrule
+\multicolumn{4}{l}{\textbf{彙總：}推理類 90.1\%、擷取類 2.2\%、計算類 1.4\%、未知 6.3\%} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig1_error_type_distribution.pdf}
+\caption{557 筆 LLM 錯誤在七種錯誤類型中的分布，依彙總類別（推理類、計算類、擷取類）以色彩區分。僅概念錯誤一項即佔所有失敗的三分之二以上，凸顯對財務概念的根本性誤解——而非計算失誤——才是主導的失敗模式。}
+\label{fig:errortype}
+\end{figure}
+
+\textbf{主要發現}：如圖~\ref{fig:errortype} 所示，推理錯誤以壓倒性比例居首（90.1\%），遠超計算錯誤（1.4\%）。主要失敗模式並非「無法計算」而是「不理解概念」。僅概念錯誤（68.8\%）即超過所有其他類別之總和。此結果對修補策略具有直接意涵：當根本的財務概念被誤解時，計算工具與公式檢索將無濟於事。
+
+\subsection{主題層級錯誤特徵}
+
+為檢視不同金融領域的錯誤特徵是否存在差異，我們進一步按 CFA 知識領域分類 557 筆錯誤。表~\ref{tab:topicerror} 呈現一個先導子樣本（$n = 229$）中三個維度的完整標註結果。\footnote{完整 $N = 557$ 樣本的主題層級標註正在進行中。先導子樣本取自 90 題 CFA-Challenge 題目、以五種推理方法評估之結果；關於其代表性之討論，請見第~\ref{sec:discussion}~節。}
+
+\begin{table}[htbp]
+\centering
+\caption{各 CFA 主題錯誤分布（先導子樣本，$n = 229$）}
+\label{tab:topicerror}
+\begin{threeparttable}
+\begin{tabular}{lrccc}
+\toprule
+\textbf{主題} & \textbf{n} & \textbf{推理類\%} & \textbf{計算類\%} & \textbf{其他\%} \\
+\midrule
+倫理 & 70 & 87.1\% & 0.0\% & 12.9\% \\
+投資組合管理 & 45 & 62.2\% & 17.8\% & 20.0\% \\
+固定收益 & 35 & 34.3\% & 25.7\% & 40.0\% \\
+財富規劃 & 27 & 81.5\% & 3.7\% & 14.8\% \\
+衍生性商品 & 24 & 41.7\% & 37.5\% & 20.8\% \\
+經濟學 & 17 & 35.3\% & 5.9\% & 58.8\% \\
+另類投資 & 7 & 100.0\% & 0.0\% & 0.0\% \\
+權益 & 4 & 25.0\% & 25.0\% & 50.0\% \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item 推理類 = 概念錯誤 + 假設錯誤 + 推理不完整；計算類 = 公式錯誤 + 算術錯誤；其他 = 閱讀錯誤、未知及選項錯誤。
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig2_topic_error_profile.pdf}
+\caption{八個 CFA 知識領域中推理類、計算類與其他類錯誤比例的分組長條圖。倫理（87.1\% 推理類）與衍生性商品（37.5\% 計算類）之間的鮮明對比表明，錯誤特徵具有主題依賴性，意味著不同金融領域需要根本不同的修補策略。}
+\label{fig:topicerror}
+\end{figure}
+
+即便在先導子樣本中，各領域的錯誤特徵已呈現顯著差異：
+\begin{itemize}
+    \item \textbf{倫理}（87.1\% 推理類錯誤）：模型的失敗源於錯誤的倫理前提——誤判適用的 CFA 準則或曲解倫理困境。計算與倫理無關。
+    \item \textbf{衍生性商品}（37.5\% 計算類錯誤）：所有主題中計算錯誤率最高，反映選擇權定價與避險計算的數學複雜性。
+    \item \textbf{經濟學}（58.8\% 其他類錯誤）：以閱讀與選擇型錯誤為主，顯示模型理解廣泛概念，但在擷取正確參數或區分相似結果時遭遇困難。
+    \item \textbf{固定收益}（均衡分布）：推理類、計算類與其他類錯誤近乎等分，反映該主題兼具概念理解與定量計算的特性。
+\end{itemize}
+
+\subsection{認知階段分析}
+
+全規模研究中的錯誤類型分布直接指示哪個認知階段失敗。透過錯誤類型與處理階段之間的對應關係（概念錯誤 $\to$ 辨識；假設錯誤與推理不完整 $\to$ 回憶／驗證；閱讀錯誤 $\to$ 擷取；算術與公式錯誤 $\to$ 計算），我們估計各階段的分布如表~\ref{tab:cognitive} 所示。
+
+\begin{table}[htbp]
+\centering
+\caption{估計認知階段分布（$N = 557$）}
+\label{tab:cognitive}
+\begin{tabular}{lrr}
+\toprule
+\textbf{認知階段} & \textbf{數量} & \textbf{百分比} \\
+\midrule
+辨識（概念認知） & 383 & 68.8\% \\
+回憶／驗證（推理鏈） & 119 & 21.4\% \\
+擷取（閱讀理解） & 12 & 2.2\% \\
+計算（數值運算） & 8 & 1.4\% \\
+未知 & 35 & 6.3\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig3_cognitive_stages.pdf}
+\caption{557 筆錯誤在各認知處理階段的估計分布。辨識階段（概念認知）佔所有錯誤的 68.8\%，揭示 LLM 財務推理的主要瓶頸發生在問題解決的最初階段——選擇適當的財務概念或分析架構——而非下游的計算或驗證階段。}
+\label{fig:cognitive}
+\end{figure}
+
+\textbf{主要發現}：如圖~\ref{fig:cognitive} 所示，辨識階段——模型必須辨認哪個財務概念、公式或分析架構適用於當前問題——佔所有錯誤的三分之二以上。此為「上游」階段：若概念辨識失敗，所有後續推理皆建立在錯誤基礎之上。計算階段僅佔 1.4\% 的錯誤，證實現代 LLM 在獲得正確公式的前提下，算術能力尚屬堪用。
+
+\subsection{黃金上下文注入：知識缺口與推理缺口之區分}
+
+為判定錯誤究竟代表\textit{知識缺口}（可透過檢索增強修補）或\textit{推理缺口}（需要架構層面的改進），我們施行\textit{黃金上下文注入}（GCI）：對 557 筆 Level~C 錯誤逐一以正確的財務概念或公式作為明確提示重新提問，然後評估模型是否能恢復正確答案。
+
+\begin{table}[htbp]
+\centering
+\caption{黃金上下文注入結果（$N = 557$ 筆錯誤）}
+\label{tab:gci}
+\begin{tabular}{lrr}
+\toprule
+\textbf{恢復等級} & \textbf{數量} & \textbf{百分比} \\
+\midrule
+完全恢復（Level A） & 142 & 25.5\% \\
+部分恢復（Level B） & 317 & 56.9\% \\
+仍然錯誤（Level C） & 98 & 17.6\% \\
+\midrule
+\textbf{任何恢復（A+B）} & \textbf{459} & \textbf{82.4\%} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+表~\ref{tab:gci} 揭示 82.4\% 的錯誤對黃金上下文注入有回應，顯示多數失敗為\textit{知識缺口}——模型之所以失敗，是因為選擇了錯誤的概念，而非缺乏推理能力。然而，僅 25.5\% 達到完全恢復；多數改善為部分恢復（56.9\%），指出即便提供了正確概念，模型在精確執行上仍常遭遇困難。
+
+\begin{table}[htbp]
+\centering
+\caption{各錯誤類別之 GCI 恢復率}
+\label{tab:gci_category}
+\begin{tabular}{lrccc}
+\toprule
+\textbf{錯誤類型} & \textbf{$n$} & \textbf{完全\%} & \textbf{部分\%} & \textbf{無恢復\%} \\
+\midrule
+概念錯誤 & 383 & 26.1\% & 58.2\% & 15.7\% \\
+推理不完整 & 60 & 20.0\% & 56.7\% & 23.3\% \\
+假設錯誤 & 59 & 20.3\% & 61.0\% & 18.6\% \\
+算術錯誤 & 7 & 57.1\% & 14.3\% & 28.6\% \\
+閱讀錯誤 & 12 & 16.7\% & 58.3\% & 25.0\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+表~\ref{tab:gci_category} 按錯誤類型細分恢復情況。算術錯誤展現最高的完全恢復率（57.1\%）——提供正確公式後，模型通常能正確計算。概念錯誤雖在數量上居首，但其任何程度的恢復率達 84.3\%，證實概念選擇為首要瓶頸：提供正確概念後，模型往往能據此推理。推理不完整類錯誤的完全恢復率最低（20.0\%），顯示被截斷的推理鏈反映的是更深層的處理能力限制，而非單純的知識不足。圖~\ref{fig:gci} 視覺化呈現各錯誤類別的恢復特徵。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig4_gci_recovery.pdf}
+\caption{各錯誤類別之黃金上下文注入恢復率（$N = 557$ 筆錯誤）。堆疊長條顯示完全恢復（正確答案）、部分恢復（方向正確）及仍然錯誤。算術錯誤有最高的完全恢復率（57.1\%），而概念錯誤——佔主導地位的錯誤類型——則展現最高的整體恢復率（84.3\%），證實多數失敗為知識缺口而非推理缺口。}
+\label{fig:gci}
+\end{figure}
+
+這些發現對修補策略有直接意涵。82.4\% 的恢復率為檢索增強生成（RAG）介入措施設定了上限：一個能可靠檢索正確財務概念的精心設計 RAG 系統，有可能恢復大多數錯誤。然而，17.6\% 的殘留率——即\textit{真正推理缺口}——則需要訓練階段的介入措施，例如以逐步財務推理過程進行微調。
+
+\subsection{跨模型 GCI：延伸推理放大恢復效果}
+\label{sec:crossmodel_gci}
+
+為評估知識缺口與推理缺口之區分是否因模型而異，我們使用 GPT-5-mini 複製了 GCI 實驗。GPT-5-mini 為新一代推理模型，在生成答案前會運用延伸思維鏈（「思考 token」）。GPT-5-mini 以相同的黃金上下文提示，針對 GPT-4o-mini 原始產生的同一批 557 筆錯誤進行測試。\footnote{我們刻意測試 GPT-5-mini 恢復 GPT-4o-mini 錯誤的能力，而非 GPT-5-mini 自身的錯誤，以保持跨模型間錯誤集合的一致性。此跨模型 GCI 設計旨在測試更強大的模型能否在相同概念提示下恢復較弱模型無法修正的錯誤。}
+
+\begin{table}[htbp]
+\centering
+\caption{跨模型 GCI 恢復比較（$N = 557$ 筆 GPT-4o-mini 錯誤）}
+\label{tab:gci_cross}
+\begin{tabular}{lccccc}
+\toprule
+& \multicolumn{2}{c}{\textbf{GPT-4o-mini}} & \multicolumn{2}{c}{\textbf{GPT-5-mini}} & \textbf{$\Delta$} \\
+\cmidrule(lr){2-3} \cmidrule(lr){4-5}
+\textbf{恢復等級} & 數量 & \% & 數量 & \% & pp \\
+\midrule
+完全恢復（A） & 142 & 25.5\% & 281 & 50.4\% & +24.9 \\
+部分恢復（B） & 317 & 56.9\% & 211 & 37.9\% & $-$19.0 \\
+仍然錯誤（C） & 98 & 17.6\% & 65 & 11.7\% & $-$5.9 \\
+\midrule
+\textbf{任何恢復（A+B）} & 459 & \textbf{82.4\%} & 492 & \textbf{88.3\%} & +5.9 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+圖~\ref{fig:gci_cross} 及表~\ref{tab:gci_cross} 揭示了一個引人注目的模式：GPT-5-mini 的完全恢復率幾乎翻倍（50.4\% vs.\ 25.5\%），而部分恢復率則下降（37.9\% vs.\ 56.9\%）。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig5_cross_model_gci.pdf}
+\caption{跨模型黃金上下文注入恢復情況（$N = 557$ 筆錯誤）。GPT-5-mini 的完全恢復率幾乎翻倍（50.4\% vs.\ 25.5\%），同時將真正推理缺口從 17.6\% 降至 11.7\%。延伸思維鏈推理改善的是概念的\textit{執行}，而不僅是概念的\textit{辨識}。}
+\label{fig:gci_cross}
+\end{figure} 整體恢復率僅小幅提升（88.3\% vs.\ 82.4\%）。這意味著 GPT-5-mini 的主要優勢並非恢復\textit{更多}錯誤，而是將錯誤恢復得\textit{更完整}——透過更精確的執行，將部分恢復轉換為完全恢復。延伸思維鏈推理使模型能夠依據所提供的概念徹底執行，減少計算上的失誤。
+
+真正推理缺口從 17.6\% 收窄至 11.7\%，顯示部分被 GPT-4o-mini 歸類為「推理缺口」的錯誤，實際上是更強大的推理能力可以克服的\textit{執行缺口}。儘管如此，65 筆錯誤（11.7\%）即使在黃金上下文與延伸推理的雙重條件下仍持續存在，代表一個頑固的核心——既非概念提供亦非增強推理能所能解決的真正推理能力限制。
+
+%% ============================================
+%% 4. 討論
+%% ============================================
+\section{討論}
+\label{sec:discussion}
+
+\subsection{經濟意涵：精準修補}
+
+錯誤圖譜使\textit{精準修補}成為可能——針對特定失敗模式而非泛泛的改進：
+
+\begin{itemize}
+    \item \textbf{倫理修補}：模型需要更好的倫理架構辨識能力，而非更好的計算。以 CFA 準則案例研究（涵蓋多元情境）進行微調，比通用知識增強更為有效。
+    \item \textbf{衍生性商品修補}：模型需要計算工具增強（外部計算器、符號數學），以減少算術錯誤。概念理解相對完整。
+    \item \textbf{經濟學修補}：模型需要更好的選項辨別訓練——它理解廣泛概念，但無法可靠地區分相似的答案選項。
+\end{itemize}
+
+此精準化方法可能比通用微調更有效率，因為它將訓練資源集中於各領域中最普遍的特定失敗模式。
+
+\subsection{對市場效率與顧問可靠性的意涵}
+
+LLM 錯誤的結構性特徵對金融市場理論具有直接意涵。在效率市場假說 \citep{fama1970efficient} 下，市場價格反映了理性主體所處理的可用資訊。當 AI 顧問系統成為邊際定價者時——隨著演算法交易與機器人顧問的普及——本文所記錄的系統性、\textit{非隨機}錯誤模式將威脅半強式市場效率：倫理領域的概念誤用（87.1\% 推理類錯誤）可能在顧問建議中產生系統性的合規違規，而衍生性商品定價失敗（37.5\% 計算類錯誤）可能在 AI 輔助投資組合中造成相關性避險錯誤。不同於可相互抵消的隨機雜訊，結構性錯誤會在整體市場行為中產生方向性偏誤。
+
+從投資人保護的觀點，68.8\% 的概念錯誤率揭示當前 LLM 在財務推理的\textit{辨識}階段即告失敗——在任何計算開始之前，便已誤判適用的分析架構。這正是終端使用者最難察覺的錯誤類型，因為他們收到的是語氣確信但方向根本錯誤的分析。黃金上下文注入結果（82.4\% 部分恢復）顯示檢索增強架構能緩解此風險，有效提供當前模型所缺乏的「概念辨識」層。此發現對 AI 輔助財務顧問系統的設計具有直接意涵：概念驗證應先於任何下游計算或建議。
+
+\subsection{風險加權錯誤評估}
+
+並非所有錯誤的代價相同。衍生性商品定價中的推理前提錯誤可能導致災難性的避險失敗；經濟學中的選擇接近失誤可能僅有微小影響。我們提出風險加權準確率指標：
+\begin{equation}
+    \text{Risk-Weighted Acc} = \frac{\sum_{i} \text{correct}_i \times w_{\text{topic},i}}{\sum_{i} w_{\text{topic},i}}
+\end{equation}
+其中風險權重反映各領域錯誤的財務後果（例如，衍生性商品 $>$ 倫理，就直接金錢影響而言）。
+
+\subsection{對人機協作的意涵}
+
+錯誤圖譜揭示了人類監督最為必要之處：
+\begin{itemize}
+    \item \textbf{高推理錯誤率}主題（倫理、財富規劃）：需要人類判斷審查——AI 的問題框架可能根本錯誤。
+    \item \textbf{高計算錯誤率}主題（衍生性商品）：可透過工具增強改善——以外部計算器驗證計算。
+    \item \textbf{高選擇錯誤率}主題（經濟學）：可受益於檢索增強——提供額外上下文以協助區分相似選項。
+\end{itemize}
+
+\subsection{研究限制}
+
+數項限制值得說明。首先，自動化錯誤分類使用 GPT-4o-mini 作為分類器，可能引入系統性偏誤；人工標註驗證研究已在規劃中。其次，主題層級錯誤特徵（表~\ref{tab:topicerror}）取自 CFA-Challenge 題目的先導子樣本（$n = 229$）；全規模主題標註正在進行。第三，雖然跨模型 GCI 實驗（第~\ref{sec:crossmodel_gci}~節）解決了恢復測試的單一模型限制，但錯誤分類體系本身衍生自 GPT-4o-mini 的失敗；GPT-5-mini 可能產生不同的錯誤分布，值得另行分析。最後，開放式格式移除了選擇題的選項架構，相較標準選擇題評估會放大錯誤率；此設計選擇是刻意的，旨在將真正推理從選項辨認捷思法中分離出來。
+
+%% ============================================
+%% 5. 結論
+%% ============================================
+\section{結論}
+\label{sec:conclusion}
+
+基於 1,032 題 CFA 開放式作答中 557 筆錯誤回應的 CFA 錯誤圖譜揭示，LLM 的財務推理失敗具有高度結構性而非隨機。概念錯誤——而非計算失誤——才是主導的失敗模式（68.8\% vs.\ 1.4\%），且錯誤特徵在不同金融領域間呈現劇烈差異。黃金上下文注入證實 82.4\% 的錯誤在提供正確概念後至少可部分恢復，為檢索增強修補設定了上限。以 GPT-5-mini 進行的跨模型 GCI 將真正推理缺口從 17.6\% 收窄至 11.7\%，並使完全恢復率幾乎翻倍（50.4\% vs.\ 25.5\%），揭示延伸思維鏈推理在提供正確概念後，能顯著改善概念的執行。
+
+\textbf{問題不在於 AI 計算得多準確，而在於它是否知道該進行哪種計算——而我們的跨模型證據顯示，雖然提供正確概念通常即已足夠，但恢復的完整性關鍵取決於模型的推理深度。}
+
+\section*{資料可用性}
+實驗資料與分析程式碼可向通訊作者合理請求取得。
+
+\section*{利益衝突聲明}
+作者聲明，就其所知，不存在可能影響本文所報告研究之競爭性財務利益或個人關係。
+
+\section*{CRediT 作者貢獻}
+\textbf{Wei-Lun Cheng}：概念化、研究方法、軟體、形式分析、資料整理、撰寫——初稿、視覺化。
+\textbf{Daniel Wei-Chung Miao}：指導、撰寫——審閱與編修。
+\textbf{Guang-Di Chang}：指導、撰寫——審閱與編修。
+
+\section*{致謝}
+計算資源由國立臺灣科技大學（NTUST）提供。
+
+%% ============================================
+%% 參考文獻
+%% ============================================
+\begin{thebibliography}{10}
+
+\bibitem[Callanan et al.(2023)]{callanan2023gpt}
+Callanan, E., Mbae, A., Selle, S., Gupta, V., \& Houlihan, R. (2023).
+\newblock Can GPT-4 pass the CFA exam?
+\newblock \textit{arXiv preprint arXiv:2310.09542}.
+
+\bibitem[Fama(1970)]{fama1970efficient}
+Fama, E. F. (1970).
+\newblock Efficient capital markets: A review of theory and empirical work.
+\newblock \textit{The Journal of Finance}, 25(2), 383--417.
+
+\bibitem[Ke et al.(2025)]{ke2025findap}
+Ke, Z., Ming, Y., Nguyen, X. P., Xiong, C., \& Joty, S. (2025).
+\newblock Demystifying domain-adaptive post-training for financial LLMs.
+\newblock In \textit{Proceedings of EMNLP 2025}.
+
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,494 @@
+% Finance Research Letters — Elsevier Template
+% D1+D4: 當 AI 信心十足卻答錯時
+\documentclass[preprint,12pt]{elsarticle}
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{multirow}
+\usepackage{threeparttable}
+\usepackage{float}
+\usepackage{xeCJK}
+\setCJKmainfont{Songti TC}
+\setCJKsansfont{Heiti TC}
+\setCJKmonofont{Heiti TC}
+
+\journal{Finance Research Letters（繁體中文版）}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{當 AI 信心十足卻答錯時：大型語言模型於金融決策中的校準與風險分析}
+
+\author[ntust]{Wei-Lun Cheng}
+\ead{d11018003@mail.ntust.edu.tw}
+
+\author[ntust]{Daniel Wei-Chung Miao\corref{cor1}}
+\ead{miao@mail.ntust.edu.tw}
+\cortext[cor1]{通訊作者}
+
+\author[ntust]{Guang-Di Chang}
+\ead{gchang@mail.ntust.edu.tw}
+
+\affiliation[ntust]{organization={國立臺灣科技大學 財務金融研究所},
+            city={臺北},
+            postcode={10607},
+            country={臺灣}}
+
+\begin{abstract}
+大型語言模型（LLMs）日益廣泛應用於金融領域，然而其在高風險決策情境中的可靠性仍缺乏充分研究。
+本研究針對 90 題 CFA（特許金融分析師）考試題目評估 LLM 的信賴度校準表現，使用兩個模型（GPT-4o-mini、Qwen3-32B）與兩種信賴度估計方法（語言化信賴度、自我一致性），於三種模型—方法組合下產生 257 個觀測值。
+研究發現普遍存在過度自信現象：模型表達的平均信賴度超出實際準確率 22--32 個百分點（$t = 9.70$，$p < 0.0001$）。
+關鍵發現是，\textbf{所有回答中有 30.0\% 為高信賴度錯誤}（信賴度 $\geq 80\%$），而在錯誤答案中，有 66.4\% 是以高信賴度呈現。
+這些過度自信的錯誤並非均勻分布：倫理與專業標準題目的過度自信錯誤率高達 43.5\%，而衍生性金融商品僅為 22.2\%（$\chi^2 = 12.37$，$p = 0.030$）。
+本文提出信心風險值（Confidence-at-Risk, CaR），將風險值（Value-at-Risk）方法論應用於 AI 信賴度評估，並將研究發現連結至 CFA 協會倫理準則，主張部署校準不良的 AI 可能違反受託人義務要求。
+研究結果建議金融監管機構應建立最低校準標準——具體而言，期望校準誤差（ECE）應低於 0.15——方可允許 AI 於顧問角色中部署。
+\end{abstract}
+
+\begin{keyword}
+大型語言模型 \sep 校準 \sep 金融 AI \sep 風險管理 \sep CFA 考試 \sep 過度自信
+\end{keyword}
+
+\end{frontmatter}
+
+%% ============================================
+%% 1. 緒論
+%% ============================================
+\section{緒論}
+\label{sec:intro}
+
+大型語言模型（LLMs）在金融服務領域的部署快速增長，應用涵蓋自動化金融諮詢、風險評估、股票研究及法規遵循等面向 \citep{wu2023bloomberggpt, ke2025findap}。越來越多研究評估 LLM 在金融基準測試上的\textit{準確率}——模型是否能通過 CFA 考試、正確定價衍生性商品、或解讀財務報表。然而，僅靠準確率並不足以衡量部署的安全性。
+
+試想兩個 AI 系統：模型 A 達到 70\% 的準確率，且信賴度校準良好（當它說「85\% 有信心」時，確實有 85\% 的機率答對）；而模型 B 達到 75\% 的準確率，卻系統性地高估信賴度。儘管模型 B 準確率較高，卻更為危險，因為其信賴度訊號無法被信任來識別錯誤。一位金融顧問若說「我有 95\% 的把握這檔債券的存續期間為 4.2 年」卻答錯了，其風險遠高於一位坦承不確定性的顧問。這種現象——\textit{過度自信錯誤}——代表 AI 系統在金融領域最危險的失敗模式。
+
+在行為金融學中，這種失敗模式有一個廣為人知的名稱：\textit{過度自信偏誤}——系統性高估自身知識精確度的傾向 \citep{debondt1995overconfidence}。數十年的研究記錄了人類投資者的過度自信偏誤，將其與過度交易、分散不足及不良風險評估聯繫起來。然而，人類的過度自信具有異質性：它因人而異，受經驗調節，且可透過回饋部分矯正。LLM 的過度自信在質性上更為危險，因為它是\textit{系統性的}——同一模型的每位使用者都會收到相同的錯誤校準信賴度訊號，且個人經驗的累積無法修正這一問題。當部署給數千名金融顧問的 AI 系統同時對某個答案表達 90\% 的信賴度，而該答案實際上有 40\% 的機率是錯的，由此產生的相關性錯誤可能造成系統性風險，其規模遠非個體人類的過度自信所能企及。
+
+然而，LLM 在金融情境下的信賴度校準研究仍幾乎是空白。先前的校準研究聚焦於通識知識 \citep{kadavath2022language}、醫療診斷 \citep{nori2023capabilities} 或科學推理 \citep{lin2022teaching}，在理解 LLM 於信賴度校準失誤可能直接導致金錢損失的領域中的行為表現方面，留下了關鍵的研究缺口。
+
+本文做出四項貢獻：
+\begin{enumerate}
+    \item 我們系統性地評估 LLM 在 CFA 考試題目上的校準表現——CFA 考試為金融專業能力的標準化基準——使用兩個模型與兩種信賴度估計方法產生 257 個觀測值。
+    \item 我們識別並量化\textit{過度自信錯誤}，發現所有回答中有 30.0\% 為高信賴度錯誤（信賴度 $\geq 80\%$），顯著超過 20\% 的基準線（$z = 3.99$，$p < 0.0001$）。
+    \item 我們提出\textit{信心風險值}（CaR），將風險值方法論應用於量化 AI 信賴度訊號在風險管理中的可靠性。
+    \item 我們將校準發現連結至 CFA 協會倫理準則，主張校準不良的 AI 部署可能違反受託人義務標準，並提出金融 AI 監管的最低校準門檻。
+\end{enumerate}
+
+%% ============================================
+%% 2. 文獻回顧
+%% ============================================
+\section{文獻回顧}
+\label{sec:related}
+
+\subsection{LLM 校準}
+
+校準是指模型表達的信賴度與其實際準確率之間的一致性 \citep{guo2017calibration}。一個校準良好的模型在表達 80\% 信賴度時，應約有 80\% 的機率答對。\citet{kadavath2022language} 指出大型語言模型「大致知道自己知道什麼」，但這種自我認知在分布外任務上會退化。\citet{lin2022teaching} 證明可以透過提示引導模型語言化表達不確定性，但由此產生的信賴度估計往往呈現系統性偏差。\citet{xiong2024llms} 綜述了 LLM 信賴度估計方法，將語言化信賴度、一致性基礎方法及 logit 基礎方法列為三大主要典範。
+
+\subsection{金融應用中的 AI}
+
+領域特定的金融 LLM 迅速崛起。BloombergGPT \citep{wu2023bloomberggpt} 在金融 NLP 任務上展現了具競爭力的表現。\citet{ke2025findap} 提出 FinDAP，一個三階段訓練管線，透過持續預訓練、監督式微調與偏好對齊將 Llama-3 適應至金融領域，在 CFA 考試基準上達到最先進的結果。\citet{callanan2023gpt} 在 CFA Level I 上評估 GPT-4，發現其達到及格水準的表現，但未檢驗信賴度校準。
+
+\subsection{AI 輔助金融決策中的風險與信任}
+
+關於演算法建議信任度的文獻揭示了一個矛盾：使用者會依據情境過度依賴或不足依賴演算法推薦 \citep{dietvorst2015algorithm}。\citet{green2019principles} 主張 AI 的透明度本身並不足夠——重要的是使用者是否能正確評估 AI 何時是可靠的。本研究透過證明 LLM 的信賴度訊號（作為主要透明度機制）在金融領域本身就不可靠，為此一辯論做出貢獻。
+
+%% ============================================
+%% 3. 研究方法
+%% ============================================
+\section{研究方法}
+\label{sec:method}
+
+\subsection{信賴度估計方法}
+
+我們採用兩種互補的信賴度估計方法：
+
+\textbf{語言化信賴度。}依循 \citet{lin2022teaching}，我們提示模型在回答旁以百分比表達信賴度：
+\begin{quote}
+\textit{「請回答以下 CFA 題目。回答後，請以百分比（0--100\%）表達你的信賴度。請誠實表達——若你不確定，請給出較低的百分比。」}
+\end{quote}
+
+\textbf{自我一致性。}依循 \citet{wang2023selfconsistency}，我們對每道題目在溫度 $\tau = 0.7$ 下抽樣 $k = 10$ 次回答。信賴度定義為一致性比率：$c = n_{\text{majority}} / k$，其中 $n_{\text{majority}}$ 為最常出現答案的次數。
+
+\subsection{校準指標}
+
+我們的主要指標為\textit{期望校準誤差}（ECE）\citep{guo2017calibration}：
+\begin{equation}
+    \text{ECE} = \sum_{m=1}^{M} \frac{|B_m|}{n} \left| \text{acc}(B_m) - \text{conf}(B_m) \right|
+    \label{eq:ece}
+\end{equation}
+其中 $B_m$ 表示信賴度區間 $m$ 中的預測集合，$\text{acc}(B_m)$ 為該區間內的準確率，$\text{conf}(B_m)$ 為平均信賴度。我們使用 $M = 10$ 個等寬區間。
+
+我們另外報告 \textit{Brier 分數} $= \frac{1}{n}\sum_{i=1}^{n}(c_i - y_i)^2$，其中 $c_i$ 為表達的信賴度，$y_i \in \{0, 1\}$ 為正確性指標；AUROC 衡量信賴度分數能否區分正確與錯誤答案；以及\textit{過度自信差距} $= \overline{c} - \overline{y}$，當模型系統性過度自信時為正值。
+
+\subsection{過度自信錯誤之識別}
+
+我們將\textit{過度自信錯誤}定義為滿足以下條件之案例：
+\begin{equation}
+    \text{過度自信錯誤} = \mathbf{1}\left[\text{信賴度} \geq \theta \;\land\; \text{答案錯誤}\right]
+    \label{eq:overconf}
+\end{equation}
+門檻值設定為 $\theta = 0.80$。此門檻的設定基於決策情境之考量：金融專業人士在收到信賴度 $\geq 80\%$ 的訊號時，通常會直接依此行動而不進行大量額外驗證。
+
+\subsection{信心風險值（CaR）}
+
+借鑑風險值（VaR）方法論，我們提出\textit{信心風險值}：
+\begin{equation}
+    \text{CaR}(\alpha) = \inf\{c^* : P(\text{錯誤} \mid \text{信賴度} \geq c^*) \leq \alpha\}
+    \label{eq:car}
+\end{equation}
+CaR 回答的問題是：「信賴度至少要達到多少，錯誤率才能降至 $\alpha$ 以下？」若 CaR 無定義（即無論何種門檻皆無法達到目標錯誤率），則該模型的信賴度訊號在風險預算管理上根本不可靠。
+
+%% ============================================
+%% 4. 資料與實驗設計
+%% ============================================
+\section{資料與實驗設計}
+\label{sec:experiments}
+
+\subsection{資料集}
+
+表~\ref{tab:dataset} 總結我們的資料集：來自 FinEval \citep{ke2025findap} 的 CFA-Challenge 語料庫，包含 90 道取自 CFA Level III 課程教材（SchweserNotes）的題目。所有題目均為三選一（A、B、C）的選擇題，涵蓋完整的 CFA 課程範圍。CFA Level III 題目強調應用與分析，代表 CFA 考試中認知要求最高的層級。
+
+\begin{table}[htbp]
+\centering
+\caption{資料集摘要}
+\label{tab:dataset}
+\begin{tabular}{lccc}
+\toprule
+\textbf{資料集} & \textbf{題數} & \textbf{選項} & \textbf{來源} \\
+\midrule
+CFA-Challenge & 90 & 3（A/B/C） & SchweserNotes Level III \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{模型}
+
+我們評估兩個代表不同架構與規模的 LLM：
+\begin{itemize}
+    \item \textbf{GPT-4o-mini}（OpenAI）：一個專有的雲端模型，針對高效推理進行最佳化。使用語言化信賴度（$n = 95$）和 $k = 10$ 次抽樣的自我一致性（$n = 90$）兩種方式評估。\footnote{語言化信賴度的實驗包含來自擴展版 SchweserNotes 題組的額外 5 題。自我一致性及 Qwen3-32B 的結果均基於標準 90 題 CFA-Challenge 語料庫。}
+    \item \textbf{Qwen3-32B}（阿里巴巴）：一個開放權重、320 億參數的模型，透過 Ollama 在本機執行。使用語言化信賴度評估（$n = 72$；18 個回答未能成功提取信賴度）。
+\end{itemize}
+
+總資料集包含 257 個模型—題目—方法觀測值。兩個模型在單次推理方法中以溫度 $\tau = 0.0$ 評估，自我一致性抽樣則以 $\tau = 0.7$ 評估。答案與信賴度數值透過五層正規表達式鏈結合回退解析進行提取。
+
+%% ============================================
+%% 5. 實證結果
+%% ============================================
+\section{實證結果}
+\label{sec:results}
+
+\subsection{整體校準表現}
+
+表~\ref{tab:calibration} 呈現所有模型—方法組合的校準指標。所有組合皆呈現顯著的過度自信，過度自信差距介於 +22.5\%（Qwen3-32B）至 +31.5\%（GPT-4o-mini 語言化信賴度）之間。
+
+\begin{table}[htbp]
+\centering
+\caption{各模型與信賴度估計方法之校準指標}
+\label{tab:calibration}
+\begin{threeparttable}
+\small
+\begin{tabular}{@{}llccccccc@{}}
+\toprule
+\textbf{模型} & \textbf{方法} & \textbf{N} & \textbf{準確率} & \textbf{信賴度} & \textbf{ECE} & \textbf{Brier} & \textbf{AUC} & \textbf{OC 差距} \\
+\midrule
+GPT-4o-mini & 自我一致性 & 90 & .522 & .829 & .307 & .334 & .639 & +.307 \\
+GPT-4o-mini & 語言化 & 95 & .526 & .841 & .315 & .340 & .586 & +.315 \\
+Qwen3-32B & 語言化 & 72 & .611 & .836 & .247 & .226 & .787 & +.225 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\footnotesize
+\item ECE = 期望校準誤差；Brier = Brier 分數；AUC = ROC 曲線下面積；OC 差距 = 平均信賴度 $-$ 準確率。
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+以具體數字來看：在所有組合中，模型表達的平均信賴度為 84\%，但實際準確率僅 52--61\%——相差 22--32 個百分點。AI 的信賴度訊號系統性地將其可靠性高估了超過一半。依據這些訊號行事的金融專業人士，會以為模型六次中有五次是對的，但實際上幾乎每隔一次就會答錯。
+
+對逐觀測值的過度自信差距（信賴度減去正確性指標）進行單樣本 $t$ 檢定，結果為 $t = 9.70$（$p < 0.0001$），證實 LLM 在 CFA 題目上的過度自信具有高度統計顯著性（H1）。
+
+圖~\ref{fig:reliability} 呈現可靠性圖。所有模型皆呈現一致的型態：校準曲線遠低於對角線（完美校準線），表示模型在幾乎所有信賴度水準上都比實際準確率更有信心。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{figures/fig1_reliability_diagrams.pdf}
+\caption{三種模型—方法組合在 CFA-Challenge 題目上的可靠性圖。虛線對角線代表完美校準。紅色陰影區域表示過度自信：表達信賴度與實際準確率之間的差距。所有組合皆呈現系統性過度自信，尤其在大多數預測集中的 0.8--1.0 信賴度範圍內。}
+\label{fig:reliability}
+\end{figure}
+
+Qwen3-32B 達到最佳校準表現（ECE = 0.247）與最高鑑別力（AUROC = 0.787），而 GPT-4o-mini 無論使用何種估計方法，校準表現皆最差。自我一致性方法相較於語言化信賴度在 GPT-4o-mini 上略微改善 ECE（0.307 vs.\ 0.315），但大幅提升 AUROC（0.639 vs.\ 0.586），顯示其提供更具鑑別力的信賴度估計。
+
+圖~\ref{fig:overconf_gap} 視覺化呈現所有組合的過度自信差距。在每個案例中，表達的信賴度均大幅超過實際準確率，證實過度自信是一種普遍而非個別的現象。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig4_overconfidence_gap.pdf}
+\caption{各模型與方法之過度自信差距。藍色長條代表實際準確率；紅色長條代表平均表達信賴度。兩者之間的差距——介於 +22.5\% 至 +31.5\%——量化了系統性過度自信的程度。}
+\label{fig:overconf_gap}
+\end{figure}
+
+\subsection{過度自信錯誤分析}
+
+表~\ref{tab:overconf} 詳列過度自信錯誤的樣貌。在全部 257 個觀測值中，有 77 個為過度自信錯誤（30.0\%），顯著超過 20\% 的基準線（二項式檢定，$z = 3.99$，$p < 0.0001$；H2）。在 116 個錯誤答案中，有 66.4\% 以信賴度 $\geq 80\%$ 呈現（$z = 3.53$，$p = 0.0002$），意味著\textit{大多數錯誤都是高信賴度錯誤}。過度自信錯誤的平均信賴度為 89.0\%。
+
+\begin{table}[htbp]
+\centering
+\caption{過度自信錯誤分析（信賴度 $\geq$ 80\%）}
+\label{tab:overconf}
+\small
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{模型／方法} & \textbf{總數} & \textbf{錯誤} & \textbf{OC 錯誤} & \textbf{OC 比率} \\
+\midrule
+GPT-4o-mini／自我一致性 & 90 & 43 & 25 & 27.8\% \\
+GPT-4o-mini／語言化 & 95 & 45 & 38 & 40.0\% \\
+Qwen3-32B／語言化 & 72 & 28 & 14 & 19.4\% \\
+\midrule
+\textbf{整體} & \textbf{257} & \textbf{116} & \textbf{77} & \textbf{30.0\%} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{主題層級之校準偏差}
+
+表~\ref{tab:topic} 揭示 CFA 各知識領域的過度自信錯誤率存在顯著差異（$\chi^2 = 12.37$，$p = 0.030$；H3）。
+
+\begin{table}[htbp]
+\centering
+\caption{各 CFA 主題之校準指標（$N \geq 10$ 之主題）}
+\label{tab:topic}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{CFA 主題} & \textbf{N} & \textbf{準確率} & \textbf{ECE} & \textbf{OC 錯誤} & \textbf{OC 比率} \\
+\midrule
+倫理與專業標準 & 46 & .478 & .360 & 20 & 43.5\% \\
+投資組合管理 & 14 & .500 & .357 & 6 & 42.9\% \\
+經濟學 & 10 & .600 & .340 & 4 & 40.0\% \\
+固定收益 & 20 & .650 & .223 & 6 & 30.0\% \\
+衍生性金融商品 & 27 & .593 & .291 & 6 & 22.2\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+倫理與專業標準——CFA 課程的基礎核心領域——呈現最高的過度自信錯誤率（43.5\%）與最低的準確率（47.8\%）。這尤其令人擔憂：倫理題目需要細膩的專業判斷，恰好是過度自信 AI 對受託人義務造成最大風險的領域。衍生性金融商品雖涉及複雜的量化推理，其過度自信錯誤率卻較低（22.2\%），顯示模型在以計算為主的主題上可能校準較佳，因為信賴度可部分建立在數學一致性之上。
+
+\subsection{覆蓋率—準確率權衡}
+
+圖~\ref{fig:coverage} 呈現選擇性預測分析。若金融機構限制 AI 僅回答信賴度超過某門檻的題目，能達到什麼準確率？
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig3_coverage_accuracy.pdf}
+\caption{選擇性預測下的覆蓋率—準確率權衡。隨著信賴度門檻提高（從右向左移動），回答的題數減少（覆蓋率降低），但準確率提高。水平虛線標示 CFA 及格門檻（70\%）。Qwen3-32B 在 69\% 覆蓋率下達到 81.3\% 準確率，而 GPT-4o-mini 在任何覆蓋率水準下皆無法達到 70\% 準確率。}
+\label{fig:coverage}
+\end{figure}
+
+對 Qwen3-32B 而言，限制為信賴度 $\geq 90\%$ 的預測可在 69\% 覆蓋率下達到 81.3\% 準確率——超過 CFA 及格門檻。然而，GPT-4o-mini 在\textit{任何}信賴度門檻下皆無法達到 70\% 準確率，即使限制至最高信賴度的預測（41\% 覆蓋率），也僅達 67.6\%。這證明選擇性預測的可行性高度取決於模型。
+
+\subsection{信心風險值}
+
+將我們的 CaR 框架應用於資料：對 GPT-4o-mini 而言，CaR(5\%) \textit{無定義}——沒有任何信賴度門檻能達到 5\% 的錯誤率。即使在最高信賴度（自我一致性 = 1.0）下，錯誤率仍為 41.7\%。對 Qwen3-32B 而言，信賴度 $\geq 95\%$ 時的錯誤率為 19.6\%，仍遠超 5\% 的風險容忍度。這些結果表明，當前 LLM 的信賴度訊號在金融風險管理用途上根本不夠充分。
+
+\subsection{統計摘要}
+
+表~\ref{tab:hypotheses} 彙整所有假說檢定結果：
+
+\begin{table}[htbp]
+\centering
+\caption{研究假說之統計檢定}
+\label{tab:hypotheses}
+\small
+\begin{tabular}{@{}p{2.8cm}p{4.5cm}lc@{}}
+\toprule
+\textbf{假說} & \textbf{檢定方法} & \textbf{統計量} & \textbf{$p$ 值} \\
+\midrule
+H1：系統性過度自信 & 差距之單樣本 $t$ 檢定 & $t = 9.70$ & $< 0.0001$*** \\
+H2：OC 錯誤 $> 20\%$ & 二項式檢定，$\hat{p} = 0.300$ & $z = 3.99$ & $< 0.0001$*** \\
+H2b：多數錯誤為 OC & 二項式檢定，$\hat{p} = 0.664$ & $z = 3.53$ & 0.0002*** \\
+H3：依主題而異 & 卡方檢定 & $\chi^2 = 12.37$ & 0.030* \\
+\bottomrule
+\multicolumn{4}{@{}l}{\footnotesize $^{***}p<0.001$；$^{*}p<0.05$。OC = 過度自信。}
+\end{tabular}
+\end{table}
+
+%% ============================================
+%% 6. 討論
+%% ============================================
+\section{討論}
+\label{sec:discussion}
+
+\subsection{經濟意涵}
+
+30\% 的 AI 回答為高信賴度錯誤這一發現具有具體的經濟影響。在投資組合管理中，一個過度自信的存續期間估計可能直接影響投資組合價值：
+\begin{equation}
+    \Delta V \approx -D_{\text{error}} \times \Delta y \times V
+\end{equation}
+若 AI 系統報告「存續期間 = 4.2 年，信賴度 = 95\%」，但實際存續期間為 6.8 年，則一個 100 個基點的利率衝擊作用於 1,000 萬美元的投資組合部位，將產生約 260,000 美元的非預期損失——相當於投資組合層級 2.6\% 的損失，而此損失對風險模型而言是「不可見的」。
+
+更廣泛地看，我們的信心風險值分析揭示，沒有任何信賴度門檻能將最佳模型（Qwen3-32B）的錯誤率降至 19.6\% 以下，GPT-4o-mini 則為 41.7\%。在傳統風險管理中，一個超限率達 41.7\% 的 VaR 模型會立即被否決。我們的 CaR 指標將此類比形式化，為風險管理者提供一個以評估金融風險模型相同嚴謹度來評估 AI 信賴度訊號的框架。
+
+22--32 個百分點的過度自信差距對資訊經濟學具有啟示意義。在理性預期模型中，資訊價值與訊號精度 $\tau = 1/\sigma^2$ 成正比。一個 ECE = 0.05 且校準良好的模型提供的訊號精度為 $\tau \approx 400$，而我們觀察到的 ECE 值為 0.25--0.32，對應的精度僅 $\tau \approx 10$--16——比使用者依據「85\% 有信心」的建議行事時所隱含假設的精度\textit{低 40 倍}。
+
+\subsection{CFA 倫理框架}
+
+我們將過度自信錯誤對應至 CFA 協會專業行為準則的三項標準：
+
+\textbf{準則 I(C)——不實陳述。}CFA 準則禁止對績效或分析做出不實陳述。一個 AI 系統對答錯率達 30\% 的答案表達平均 89\% 的信賴度，系統性地不實陳述了其分析可靠性。這是否構成不實陳述取決於公司是否將 AI 的信賴度呈現為經校準的機率——若是，我們的證據顯示此種呈現具有重大誤導性。
+
+\textbf{準則 V(A)——盡職調查與合理依據。}CFA 持證人對投資建議必須具備「合理且充分的依據」。當 AI 系統表達高信賴度時，人類的自然反應是減少驗證力度。我們發現 66.4\% 的錯誤為高信賴度錯誤，這意味著將 AI 信賴度訊號作為驗證替代手段未能符合「合理依據」標準——最需要驗證的案例恰恰是 AI 最不鼓勵驗證的案例。
+
+\textbf{準則 III(C)——適合性。}我們的主題層級分析揭示，直接測試專業判斷的倫理與專業標準題目呈現最高的過度自信錯誤率（43.5\%）。一個自信滿滿地推薦違反受託人標準行為的 AI 系統，損害了適合性要求。
+
+\subsection{LLM 信賴度中的達克效應}
+
+我們的主題層級結果揭示了一個與達克效應（Dunning-Kruger effect）\citep{kruger1999dunning} 極為相似的型態：模型在最不擅長的領域恰恰最為過度自信。倫理與專業標準——模型表現最差的領域（47.8\% 準確率）——同時呈現最高的過度自信錯誤率（43.5\%）。這正是達克效應的典型特徵：在某個領域缺乏能力的個體同時也缺乏認識自身無能的後設認知能力，導致膨脹的自我評估。
+
+在人類認知中，達克效應的成因在於產出正確答案所需的技能與辨識正確答案的技能是相同的。LLM 中可能存在類似機制：倫理題目需要對相互競爭的義務與情境細微差異做出精細的專業判斷——恰好是模型缺乏可靠內部訊號來衡量自身不確定性的推理類型。相比之下，衍生性金融商品題目（22.2\% 過度自信錯誤率，59.3\% 準確率）涉及更具結構性、以計算為基礎的推理，模型可以部分驗證自身邏輯，從而產生校準較佳的信賴度。
+
+此達克效應的平行現象對金融 AI 治理具有實務啟示。它顯示校準失敗並非均勻分布，而是與\textit{任務難度呈反比}——最困難的題目恰好獲得最危險的過度自信答案。因此，監管校準標準應依各領域分別評估，而非僅以整體 ECE 衡量，因為整體 ECE 可能掩蓋在最重要領域中的災難性校準偏差。
+
+\subsection{監管意涵與政策建議}
+
+我們的發現對新興的 AI 金融監管具有直接意涵。表~\ref{tab:regulatory} 將我們的發現對應至具體的監管框架：
+
+\begin{table}[htbp]
+\centering
+\caption{研究發現與監管框架之對應}
+\label{tab:regulatory}
+\begin{tabular}{p{3cm}p{4.5cm}p{4.5cm}}
+\toprule
+\textbf{框架} & \textbf{相關條款} & \textbf{本研究發現} \\
+\midrule
+歐盟 AI 法（2024） & 金融服務中的高風險 AI 需進行準確性評估 & ECE $>$ 0.30 未通過準確性透明要求 \\
+美國 SEC AI 指引 & AI 驅動的建議需具備「合理依據」 & 30\% 過度自信錯誤率損害此標準 \\
+新加坡 MAS FEAT 原則 & AI 須公平、合乎倫理、可問責、透明 & 校準不良的信賴度違反透明性 \\
+CFA 協會 & AI 應輔助而非取代判斷 & 過度自信的 AI 抑制專業懷疑精神 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+我們提出金融 AI 部署的分級最低校準標準：
+\begin{itemize}
+    \item \textbf{第一級（顧問／執行）}：ECE $< 0.15$，過度自信錯誤率 $< 15\%$
+    \item \textbf{第二級（篩選／研究）}：ECE $< 0.25$，過度自信錯誤率 $< 25\%$
+    \item \textbf{第三級（內部工具）}：ECE $< 0.35$，並附帶強制性信賴度免責聲明
+\end{itemize}
+
+在此框架下，所有受測模型均無法達到第一級或第二級部署資格。Qwen3-32B（ECE = 0.247）僅勉強達到第二級資格，而 GPT-4o-mini（ECE $> 0.30$）僅限於第三級部署。
+
+\subsection{研究限制}
+
+本研究有數項限制應予說明。第一，我們的資料集包含 90 道 CFA 獨立題目，在模型—方法組合下產生 257 個觀測值。雖對所呈現的統計檢定已足夠，但在完整 CFA-Easy 語料庫（1,032 題）及更多模型上進行大規模驗證將有助於提升普遍性。第二，主題分類基於題目文本的關鍵字比對，可能引入雜訊。第三，我們的 CFA 題目基準雖已標準化，但可能無法完全代表實務中遇到的金融推理任務類型。第四，語言化信賴度可能受提示敏感性影響；我們僅使用單一提示模板，並承認替代提示可能產生不同的校準特徵。第五，新一代推理模型（如 GPT-5-mini）為校準分析帶來方法論上的挑戰：其使用的內部「思考 token」改變了信賴度生成機制，且其 API 對 logprobs 和溫度控制的限制降低了自我一致性方法的適用性。跨世代的校準比較是未來研究的重要方向，尤其考慮到我們的姊妹研究觀察到標準模型與推理模型在金融任務上存在顯著的行為差異。
+
+%% ============================================
+%% 7. 結論
+%% ============================================
+\section{結論}
+\label{sec:conclusion}
+
+本文證明大型語言模型在金融推理任務上存在顯著的校準失敗。我們的核心發現非常鮮明：30\% 的 AI 對 CFA 題目的回答為高信賴度錯誤——即模型信心十足卻答錯。在所有錯誤答案中，三分之二以高信賴度呈現，意味著對於依賴表達信賴度的使用者而言，\textit{錯誤訊號幾乎是不可見的}。
+
+我們提出信心風險值（CaR），將風險值方法論應用於評估 AI 信賴度訊號的可靠性。CaR 分析揭示，即使是表現最佳的模型，也沒有任何信賴度門檻能將錯誤率降至金融風險管理可接受的水準。
+
+我們的分析將技術性校準指標連結至 CFA 協會倫理框架，證明三項專業行為準則——不實陳述、盡職調查及適合性——均受到過度自信 AI 部署的牽連。我們提出金融 AI 的分級最低校準標準，從顧問角色的 ECE $< 0.15$ 到內部工具的 ECE $< 0.35$。
+
+\textbf{問題不在於 AI 能否通過 CFA 考試，而在於它是否知道自己何時無法通過。}我們的證據表明它並不知道。
+
+%% ============================================
+%% 資料可用性
+%% ============================================
+\section*{資料可用性}
+
+CFA-Challenge 資料集可透過 HuggingFace 上的 FinEval 基準取得 \citep{ke2025findap}。實驗程式碼與原始結果可向通訊作者合理申請取得。
+
+%% ============================================
+%% 聲明
+%% ============================================
+\section*{利益衝突聲明}
+作者聲明無已知之可能影響本文所報告研究之競爭性財務利益或個人關係。
+
+\section*{CRediT 作者貢獻}
+\textbf{Wei-Lun Cheng}：概念化、方法論、軟體、正式分析、資料整理、撰寫——初稿、視覺化。
+\textbf{Daniel Wei-Chung Miao}：指導、撰寫——審閱與編輯。
+\textbf{Guang-Di Chang}：指導、撰寫——審閱與編輯。
+
+\section*{致謝}
+計算資源由國立臺灣科技大學（NTUST）提供。
+
+%% ============================================
+%% 參考文獻
+%% ============================================
+
+\begin{thebibliography}{20}
+
+\bibitem[De~Bondt and Thaler(1995)]{debondt1995overconfidence}
+De~Bondt, W. F.~M. and Thaler, R. H. (1995).
+\newblock Financial decision-making in markets and firms: A behavioral perspective.
+\newblock In \textit{Handbooks in Operations Research and Management Science}, Vol.~9 (pp.~385--410). Elsevier.
+
+\bibitem[Callanan et al.(2023)]{callanan2023gpt}
+Callanan, E., Mbae, A., Selle, S., Gupta, V., \& Houlihan, R. (2023).
+\newblock Can GPT-4 pass the CFA exam?
+\newblock \textit{arXiv preprint arXiv:2310.09542}.
+
+\bibitem[Dietvorst et al.(2015)]{dietvorst2015algorithm}
+Dietvorst, B. J., Simmons, J. P., \& Massey, C. (2015).
+\newblock Algorithm aversion: People erroneously avoid algorithms after seeing them err.
+\newblock \textit{Journal of Experimental Psychology: General}, 144(1), 114--126.
+
+\bibitem[Green \& Chen(2019)]{green2019principles}
+Green, B., \& Chen, Y. (2019).
+\newblock The principles and limits of algorithm-in-the-loop decision making.
+\newblock \textit{Proceedings of the ACM on Human-Computer Interaction}, 3(CSCW), 1--24.
+
+\bibitem[Guo et al.(2017)]{guo2017calibration}
+Guo, C., Pleiss, G., Sun, Y., \& Weinberger, K. Q. (2017).
+\newblock On calibration of modern neural networks.
+\newblock In \textit{Proceedings of the 34th International Conference on Machine Learning} (pp.~1321--1330).
+
+\bibitem[Kadavath et al.(2022)]{kadavath2022language}
+Kadavath, S., Conerly, T., Askell, A., et al. (2022).
+\newblock Language models (mostly) know what they know.
+\newblock \textit{arXiv preprint arXiv:2207.05221}.
+
+\bibitem[Kruger and Dunning(1999)]{kruger1999dunning}
+Kruger, J. and Dunning, D. (1999).
+\newblock Unskilled and unaware of it: How difficulties in recognizing one's own incompetence lead to inflated self-assessments.
+\newblock \textit{Journal of Personality and Social Psychology}, 77(6), 1121--1134.
+
+\bibitem[Ke et al.(2025)]{ke2025findap}
+Ke, Z., Ming, Y., Nguyen, X. P., Xiong, C., \& Joty, S. (2025).
+\newblock Demystifying domain-adaptive post-training for financial LLMs.
+\newblock In \textit{Proceedings of the 2025 Conference on Empirical Methods in Natural Language Processing (EMNLP)}.
+
+\bibitem[Lin et al.(2022)]{lin2022teaching}
+Lin, S., Hilton, J., \& Evans, O. (2022).
+\newblock Teaching models to express their uncertainty in words.
+\newblock \textit{Transactions on Machine Learning Research}.
+
+\bibitem[Nori et al.(2023)]{nori2023capabilities}
+Nori, H., King, N., McKinney, S. M., Carignan, D., \& Horvitz, E. (2023).
+\newblock Capabilities of GPT-4 on medical competence examinations.
+\newblock \textit{arXiv preprint arXiv:2303.13375}.
+
+\bibitem[Wang et al.(2023)]{wang2023selfconsistency}
+Wang, X., Wei, J., Schuurmans, D., et al. (2023).
+\newblock Self-consistency improves chain of thought reasoning in language models.
+\newblock In \textit{Proceedings of the 11th International Conference on Learning Representations (ICLR)}.
+
+\bibitem[Wu et al.(2023)]{wu2023bloomberggpt}
+Wu, S., Irsoy, O., Lu, S., et al. (2023).
+\newblock BloombergGPT: A large language model for finance.
+\newblock \textit{arXiv preprint arXiv:2303.17564}.
+
+\bibitem[Xiong et al.(2024)]{xiong2024llms}
+Xiong, M., Hu, Z., Lu, X., et al. (2024).
+\newblock Can LLMs express their uncertainty? An empirical evaluation of confidence elicitation in LLMs.
+\newblock In \textit{Proceedings of the 12th International Conference on Learning Representations (ICLR)}.
+
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,614 @@
+\documentclass[preprint,12pt]{elsarticle}
+
+%% Packages
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{natbib}
+\usepackage{enumitem}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{xcolor}
+\usepackage{caption}
+\usepackage{xeCJK}
+\setCJKmainfont{Songti TC}
+\setCJKsansfont{Heiti TC}
+\setCJKmonofont{Heiti TC}
+
+%% Theorem environments
+\newtheorem{proposition}{命題}
+\newtheorem{corollary}{推論}
+\newtheorem{definition}{定義}
+\newtheorem{lemma}{引理}
+\newtheorem{assumption}{假設}
+\newtheorem{remark}{備註}
+
+%% Custom commands
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\cAI}{c_{\text{AI}}}
+\newcommand{\sbar}{\bar{s}}
+
+\journal{Finance Research Letters（繁體中文版）}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{當機器通過考試：AI 衝擊下專業證照訊號侵蝕之研究}
+
+\author[ntust]{Wei-Lun Cheng}
+\ead{d11018003@mail.ntust.edu.tw}
+
+\author[ntust]{Daniel Wei-Chung Miao\corref{cor1}}
+\ead{miao@mail.ntust.edu.tw}
+\cortext[cor1]{通訊作者}
+
+\author[ntust]{Guang-Di Chang}
+\ead{gchang@mail.ntust.edu.tw}
+
+\affiliation[ntust]{organization={國立臺灣科技大學 財務金融研究所},
+            city={臺北},
+            postcode={10607},
+            country={臺灣}}
+
+\begin{abstract}
+特許金融分析師（CFA）等專業證照長期以來在金融勞動市場中扮演可信訊號的角色，使雇主得以篩選稀缺的認知能力。本研究建構一個融入 AI 複製成本參數的修正 Spence 訊號模型，分析大型語言模型（LLMs）如何侵蝕證照的訊號價值。我們的核心理論成果——部分訊號崩潰定理——證明訊號侵蝕具有\emph{選擇性}而非全面性：證照在可形式化能力（公式記憶、規則應用、演算法計算）方面喪失篩選功能，因為 AI 的複製成本趨近於零；但在隱性能力（倫理判斷、利害關係人推理、受託責任決策）方面仍保有訊號價值，因為這些能力難以被 AI 低成本複製。本研究整合 \citet{autor2003skill} 的任務導向架構與 \citet{becker1964human} 的人力資本理論，將 CFA 課程對應至六維能力分類法，並推導出臨界點條件：當 AI 可複製能力的比重超過臨界門檻 $\alpha^*$ 時，分離均衡將崩潰為混同均衡。我們透過一項控制選項偏差實驗（$N = 1{,}032$ 道 CFA 風格題目），跨越兩個模型世代提供實證支持：GPT-4o-mini 在有選項時準確率為 82.6\%，無選項時為 80.6\%（$+1.9$ 百分點，$p = 0.251$，未達顯著）；而 GPT-5-mini 在有選項時準確率為 92.8\%，無選項時為 83.2\%（$+9.6$ 百分點，$p < 0.001$，高度顯著）。此跨模型反轉結果揭示，格式不變性具有\emph{世代依賴性}：推理能力更強的模型從選擇題架構中獲益更多，然而其無選項準確率仍超越前一世代的有選項準確率。此結果意味著評量格式改革或可延緩但無法逆轉訊號侵蝕。我們的分析提出具體的政策意涵：證照機構必須重新調整評量\emph{內容}——而非僅調整格式——朝向 AI 抗性能力傾斜，以在人工智慧時代維護機構公信力。
+\end{abstract}
+
+\begin{keyword}
+訊號理論 \sep 專業證照 \sep 人工智慧 \sep 人力資本 \sep CFA \sep 勞動市場篩選 \sep 大型語言模型
+\end{keyword}
+
+\end{frontmatter}
+
+%% ============================================================
+%% 1. 緒論
+%% ============================================================
+\section{緒論}
+\label{sec:intro}
+
+特許金融分析師（CFA）資格認證在全球金融界擔任最廣為認可的專業證照之一，已逾六十年。其歷來偏低的通過率——Level I 平均約 43\%，Level III 降至約 50\%——對考生施加了可觀的時間、心力及機會成本 \citep{cfainstitute2023}。在 \citet{spence1973job} 的經典勞動經濟學架構中，正是這些成本使 CFA 證照成為一個可信的訊號：因為高能力的勞工取得證照的成本相對較低，CFA 特許狀得以維持一個分離均衡，使雇主能夠區分不同能力類型。
+
+大型語言模型（LLMs）的快速進步對此訊號機制構成根本性的挑戰。近期研究顯示，前沿 AI 系統在標準化金融考試上的表現已能匹敵甚至超越人類考生的中位數。\citet{callanan2023gpt} 指出 GPT-4 通過了 CFA Level I 與 Level II 考試，而經過領域適配的模型如 BloombergGPT \citep{wu2023bloomberggpt} 及 FinDAP 的 Llama-Fin \citep{ke2025findap} 在金融知識基準上展現出強勁的表現。當一個 AI 系統能以接近零的邊際成本複製證照旨在衡量的認知技能時，訊號傳遞的根本經濟邏輯便遭到動搖。
+
+本文提出一個精確的研究問題：\emph{AI 複製受認證的認知能力是否會摧毀專業證照的訊號價值？若會，其機制為何？}我們主張答案既非單純的肯定也非單純的否定。相反地，我們發展出一個理論架構，證明訊號侵蝕是\emph{部分且具選擇性的}——集中於可形式化能力，同時保留抵抗低成本 AI 複製的隱性能力。
+
+本研究有三方面貢獻。第一，我們延伸 \citet{spence1973job} 的訊號模型，引入多維能力空間與 AI 複製成本函數，推導出部分訊號崩潰定理。第二，我們整合 \citet{autor2003skill} 的任務導向架構與 \citet{becker1964human} 的人力資本理論，將 CFA 課程對應至六維能力分類法，並推導出均衡崩潰的臨界點條件。第三，我們透過一項控制選項偏差實驗（$N = 1{,}032$ 道 CFA 風格題目）提供實證證據，證明 AI 在可形式化任務上的表現具有格式不變性——支持我們關於訊號侵蝕反映的是真實知識複製而非評量格式利用的預測。
+
+
+%% ============================================================
+%% 2. 理論基礎
+%% ============================================================
+\section{理論基礎}
+\label{sec:literature}
+
+本研究架構整合三條理論脈絡。第一，\citet{spence1973job} 的經典訊號模型確立了專業證照維持分離均衡的條件：唯有當取得訊號的成本與能力呈負相關時，訊號方能有效運作。訊號理論文獻 \citep{riley2001silver,tyler2000does,bedard2001human} 的一致發現是：當不同類型之間的成本差異縮小時，訊號便會喪失價值——而這正是 AI 複製所引發的動態。
+
+第二，\citet{becker1964human} 區分了一般性人力資本與特殊性人力資本。專業證照主要認證的是一般性人力資本——可編碼化且可跨雇主攜帶的知識——這使其本質上容易受到 AI 複製的影響。人力資本架構預測了一種結構性轉變：隨著 AI 以低成本提供一般性認知技能，這些技能將貶值，而隱性技能則相對升值 \citep{deming2017growing}。
+
+第三，\citet{autor2003skill} 的任務導向架構將工作場所活動分類為例行認知、例行手動、非例行分析和非例行互動任務，顯示電腦化替代了例行任務，同時補充了非例行任務。\citet{acemoglu2019automation} 將此延伸至一般均衡分析。關鍵在於，LLMs 代表了一次質性跳躍：不同於早期的自動化，LLMs 能夠執行某些先前被認為具電腦化抗性的\emph{非例行分析任務}，拓展了可自動化邊界，為證照訊號帶來嶄新的意涵。
+
+在實證方面，\citet{callanan2023gpt} 顯示 GPT-4 在 CFA Level I 和 Level II 達到通過水準的表現，而經領域適配的模型如 BloombergGPT \citep{wu2023bloomberggpt} 及 FinDAP 的 Llama-Fin \citep{ke2025findap} 則透過定向後訓練進一步縮小差距。這些結果引出我們的核心問題：當 AI 以低成本複製受認證的認知能力時，證照在勞動市場角色的均衡意涵為何？
+
+
+%% ============================================================
+%% 3. 模型
+%% ============================================================
+\section{融入 AI 複製之修正 Spence 訊號模型}
+\label{sec:model}
+
+\subsection{模型設定}
+
+考慮一個具有資訊不對稱的勞動市場。市場中存在連續的勞工，每位勞工以不可觀察的能力類型 $\theta \in \{\theta_L, \theta_H\}$ 為特徵，其中 $\theta_H > \theta_L > 0$。勞工為高能力類型的先驗機率為 $\lambda \in (0,1)$。勞工可投資取得專業證照 $e \in \{0,1\}$（如 CFA 特許狀），其成本為 $c(\theta)$，且滿足單交叉性質：$c(\theta_H) < c(\theta_L)$。
+
+我們與標準模型的區別在於引入\emph{多維能力空間}。令證照 $e$ 認證 $K$ 個不同技能維度的向量：
+\begin{equation}
+    \mathbf{s} = (s_1, s_2, \ldots, s_K) \in \R^K_+
+    \label{eq:skill_vector}
+\end{equation}
+其中每個 $s_k$ 代表證照所欲衡量與傳遞訊號的一項特定認知能力。就 CFA 而言，這些維度包括陳述性知識（$s_1$）、演算法計算（$s_2$）、分析拆解（$s_3$）、整合性判斷（$s_4$）、規範性/倫理推理（$s_5$）以及利害關係人推理（$s_6$）。
+
+\begin{assumption}[雇主評價]
+\label{as:valuation}
+雇主對持有證照之勞工的評價為各技能維度的加權總和：
+\begin{equation}
+    V(\mathbf{s}) = \sum_{k=1}^{K} w_k \cdot s_k, \quad \text{其中 } \sum_{k=1}^{K} w_k = 1, \; w_k > 0 \;\forall k.
+    \label{eq:valuation}
+\end{equation}
+\end{assumption}
+
+權重 $w_k$ 反映市場對每項技能對勞工生產力貢獻的評估。在 AI 出現前的均衡中，這些權重相對穩定，由生產技術決定。
+
+\subsection{AI 複製成本函數}
+
+本模型的核心創新在於引入一個\emph{AI 複製成本函數}，以捕捉人工智慧系統複製各技能維度的成本。
+
+\begin{definition}[AI 複製成本]
+\label{def:ai_cost}
+對每個技能維度 $s_k$，定義 AI 複製成本 $\cAI(s_k) \geq 0$ 為 AI 系統產出與具備能力 $s_k$ 之人類勞工同等品質產出的邊際成本。AI 複製成本向量為：
+\begin{equation}
+    \mathbf{c}_{\text{AI}} = \bigl(\cAI(s_1), \cAI(s_2), \ldots, \cAI(s_K)\bigr).
+    \label{eq:ai_cost_vector}
+\end{equation}
+\end{definition}
+
+\begin{assumption}[異質可複製性]
+\label{as:heterogeneous}
+AI 複製成本在不同技能維度間具異質性。具體而言，對 CFA 能力空間，存在一個劃分 $\{1,\ldots,K\} = \mathcal{F} \cup \mathcal{T}$，將能力分為\emph{可形式化能力}（$\mathcal{F}$）與\emph{隱性能力}（$\mathcal{T}$），滿足：
+\begin{equation}
+    \cAI(s_k) \to 0 \;\; \forall k \in \mathcal{F}, \qquad \cAI(s_k) \gg 0 \;\; \forall k \in \mathcal{T}.
+    \label{eq:partition}
+\end{equation}
+\end{assumption}
+
+此劃分直接源自 \citet{autor2003skill} 的任務導向架構。可形式化能力（$\mathcal{F}$）對應例行認知任務以及可被 LLMs 以模式識別方式複製的非例行分析任務子集。隱性能力（$\mathcal{T}$）對應需要具身判斷、倫理審議及脈絡推理的非例行互動任務，這些任務抵抗低成本 AI 複製。
+
+\subsection{AI 可複製性指標}
+
+為形式化各技能維度的 AI 脆弱程度，我們定義：
+
+\begin{definition}[AI 可複製性]
+\label{def:replicability}
+技能維度 $s_k$ 的 AI 可複製性為：
+\begin{equation}
+    \rho_k = 1 - \frac{\cAI(s_k)}{\bar{c}_k}
+    \label{eq:replicability}
+\end{equation}
+其中 $\bar{c}_k$ 為人類習得技能 $s_k$ 的成本（即人類透過訓練與教育發展此能力所需的投資）。當 $\rho_k \to 1$ 時，該技能完全可被 AI 複製；當 $\rho_k \to 0$ 時，該技能仍為人類的比較優勢。
+\end{definition}
+
+\subsection{AI 複製下的訊號價值}
+
+在經典 Spence 模型中，證照產生訊號價值是因為它能可信地傳達不可觀察的能力。AI 複製透過提供替代性的低成本認證等效產出來破壞此機制。我們將此形式化如下。
+
+\begin{definition}[有效訊號價值]
+\label{def:signal_value}
+AI 複製下證照 $e$ 的有效訊號價值為：
+\begin{equation}
+    \Sigma(\mathbf{s}, \mathbf{c}_{\text{AI}}) = \sum_{k=1}^{K} w_k \cdot s_k \cdot \bigl(1 - \rho_k\bigr) = \sum_{k=1}^{K} w_k \cdot s_k \cdot \frac{\cAI(s_k)}{\bar{c}_k}
+    \label{eq:signal_value}
+\end{equation}
+\end{definition}
+
+其直覺十分直接：技能 $s_k$ 的訊號貢獻以因子 $(1 - \rho_k)$ 折減，該因子捕捉扣除 AI 複製後該技能的殘餘稀缺性。當 $\rho_k = 1$ 時，該技能對訊號價值的貢獻為零，因為 AI 以可忽略的成本即可提供；當 $\rho_k = 0$ 時，完整的訊號價值得以保留。
+
+\subsection{修正後的雇主信念}
+
+在 AI 衝擊下，雇主必須考量受認證技能是否\emph{繼續區分}該勞工與受 AI 強化之未認證勞工。雇主觀察到 $e=1$ 後的\emph{殘餘資訊增益}為：
+
+\begin{equation}
+    \Delta I(e) = \sum_{k=1}^{K} w_k \cdot \bigl[\E[s_k \mid e=1, \theta_H] - \E[s_k \mid \text{AI}]\bigr] \cdot (1 - \rho_k)
+    \label{eq:info_gain}
+\end{equation}
+
+當技能 $k$ 的 $\rho_k \to 1$ 時，$(1 - \rho_k) \to 0$，該技能維度不再對雇主的資訊增益有所貢獻。證照在該維度上在資訊層面\emph{等同於雜訊}。
+
+
+%% ============================================================
+%% 4. 均衡分析
+%% ============================================================
+\section{均衡分析：部分訊號崩潰}
+\label{sec:equilibrium}
+
+\subsection{AI 前的分離均衡}
+
+在標準的 \citet{spence1973job} 架構中，分離均衡在以下誘因相容約束條件被滿足時存在：
+
+\begin{align}
+    \text{高類型：} \quad & V(\mathbf{s}) - c(\theta_H) \geq V_0 \label{eq:ic_high} \\
+    \text{低類型：} \quad & V_0 \geq V(\mathbf{s}) - c(\theta_L) \label{eq:ic_low}
+\end{align}
+
+其中 $V_0$ 為未持有證照勞工的市場工資。分離均衡要求 $c(\theta_H) < V(\mathbf{s}) - V_0 < c(\theta_L)$：證照帶來的工資溢酬超過高類型的成本，但不超過低類型的成本。
+
+\subsection{AI 修正後的均衡條件}
+
+在 AI 複製下，雇主對受認證技能的支付意願發生變化。證照的有效工資溢酬變為：
+
+\begin{equation}
+    \Pi_{\text{AI}} = \Sigma(\mathbf{s}, \mathbf{c}_{\text{AI}}) - V_0 = \sum_{k=1}^{K} w_k \cdot s_k \cdot (1-\rho_k) - V_0
+    \label{eq:wage_premium}
+\end{equation}
+
+修正後的誘因相容約束為：
+
+\begin{align}
+    \text{高類型：} \quad & \Pi_{\text{AI}} \geq c(\theta_H) \label{eq:ic_high_ai} \\
+    \text{低類型：} \quad & c(\theta_L) \geq \Pi_{\text{AI}} \label{eq:ic_low_ai}
+\end{align}
+
+\begin{remark}
+隨著越來越多技能維度的 $\rho_k \to 1$，$\Pi_{\text{AI}}$ 單調遞減。分離均衡僅在 $\Pi_{\text{AI}} > c(\theta_H)$ 時得以維持。當 AI 複製成本在足夠多的維度上下降到足夠低時，工資溢酬將降至低於即使是高類型取得證照的成本，分離均衡便崩潰。
+\end{remark}
+
+\subsection{部分訊號崩潰定理}
+
+我們現在陳述本文的核心理論成果。
+
+\begin{proposition}[部分訊號崩潰]
+\label{prop:partial_collapse}
+令 $\mathcal{F}$ 與 $\mathcal{T}$ 分別代表可形式化與隱性技能維度集合，且 $|\mathcal{F}| + |\mathcal{T}| = K$。假設 AI 複製成本滿足假設~\ref{as:heterogeneous}：對所有 $k \in \mathcal{F}$，$\rho_k \to 1$；對所有 $k \in \mathcal{T}$，$\rho_k \approx 0$。則有效訊號價值收斂至：
+\begin{equation}
+    \Sigma(\mathbf{s}, \mathbf{c}_{\text{AI}}) \;\to\; \Sigma_{\mathcal{T}} \equiv \sum_{k \in \mathcal{T}} w_k \cdot s_k
+    \label{eq:partial_collapse}
+\end{equation}
+亦即，證照的訊號價值崩潰為僅隱性能力的加權總和。訊號侵蝕是\emph{部分的}：它消除了可形式化技能的資訊內容，同時保留了隱性技能的訊號價值。
+\end{proposition}
+
+\begin{proof}
+由定義~\ref{def:signal_value}，有效訊號價值為：
+\[
+\Sigma(\mathbf{s}, \mathbf{c}_{\text{AI}}) = \sum_{k \in \mathcal{F}} w_k s_k (1-\rho_k) + \sum_{k \in \mathcal{T}} w_k s_k (1-\rho_k).
+\]
+根據假設~\ref{as:heterogeneous}，對 $k \in \mathcal{F}$，$\rho_k \to 1$，故這些維度的 $(1-\rho_k) \to 0$。同時，對 $k \in \mathcal{T}$，$\rho_k \approx 0$，故 $(1-\rho_k) \approx 1$。取極限：
+\[
+\lim_{\rho_k \to 1,\, k \in \mathcal{F}} \Sigma(\mathbf{s}, \mathbf{c}_{\text{AI}}) = 0 + \sum_{k \in \mathcal{T}} w_k s_k = \Sigma_{\mathcal{T}}.
+\]
+訊號價值從 $\sum_{k=1}^K w_k s_k$ 降至 $\Sigma_{\mathcal{T}} = \sum_{k \in \mathcal{T}} w_k s_k$，代表一次部分（非全面）的崩潰，其幅度與可形式化技能在雇主評價中的權重成比例。
+\end{proof}
+
+\begin{corollary}[訊號留存率]
+\label{cor:retention}
+AI 衝擊前訊號價值中得以存續的比例為：
+\begin{equation}
+    R = \frac{\Sigma_{\mathcal{T}}}{\Sigma_0} = \frac{\sum_{k \in \mathcal{T}} w_k s_k}{\sum_{k=1}^{K} w_k s_k}
+    \label{eq:retention}
+\end{equation}
+若證照課程高度偏重可形式化技能（即 $\sum_{k \in \mathcal{F}} w_k \gg \sum_{k \in \mathcal{T}} w_k$），則 $R \to 0$，證照趨近完全的訊號失效。
+\end{corollary}
+
+\subsection{臨界點分析}
+
+我們現在刻畫分離均衡完全崩潰的條件。
+
+\begin{definition}[AI 可複製比例]
+\label{def:alpha}
+令 $\alpha$ 為 AI 可複製性超過門檻 $\bar{\rho}$（設為 0.9，代表近乎完全複製）之證照能力的加權比例：
+\begin{equation}
+    \alpha = \frac{\sum_{k:\,\rho_k > \bar{\rho}} w_k}{\sum_{k=1}^K w_k} = \sum_{k:\,\rho_k > \bar{\rho}} w_k
+    \label{eq:alpha}
+\end{equation}
+\end{definition}
+
+\begin{proposition}[臨界點]
+\label{prop:tipping}
+存在一個臨界門檻 $\alpha^* \in (0,1)$ 使得：
+\begin{enumerate}[nosep]
+    \item 若 $\alpha < \alpha^*$，分離均衡得以維持：證照仍為可信的訊號，但資訊內容已減弱。
+    \item 若 $\alpha \geq \alpha^*$，分離均衡崩潰為混同均衡：證照不再能可信地區分能力類型。
+\end{enumerate}
+臨界門檻由下式決定：
+\begin{equation}
+    \alpha^* = 1 - \frac{c(\theta_H) + V_0}{\sum_{k=1}^K w_k s_k}
+    \label{eq:tipping_point}
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+分離均衡要求 $\Pi_{\text{AI}} \geq c(\theta_H)$。將 $\Pi_{\text{AI}}$ 寫為：
+\[
+\Pi_{\text{AI}} = \sum_{k=1}^{K} w_k s_k (1-\rho_k) - V_0.
+\]
+在對訊號最不利的情況下，所有 $\rho_k > \bar\rho$ 的維度對總和的貢獻 $(1-\rho_k) \approx 0$，而 $\rho_k \leq \bar\rho$ 的維度貢獻其完整價值。因此：
+\[
+\Pi_{\text{AI}} \approx (1-\alpha) \sum_{k=1}^{K} w_k s_k - V_0
+\]
+其中我們採用近似：高可複製性維度貢獻可忽略，不可複製維度貢獻與 $(1-\alpha)$ 成比例。分離均衡成立的充要條件為：
+\[
+(1-\alpha)\sum_{k=1}^K w_k s_k - V_0 \geq c(\theta_H)
+\]
+解出臨界 $\alpha$：
+\[
+\alpha \leq 1 - \frac{c(\theta_H) + V_0}{\sum_{k=1}^K w_k s_k} \equiv \alpha^*.
+\]
+當 $\alpha > \alpha^*$ 時，高類型的誘因相容約束被違反，不存在分離均衡。
+\end{proof}
+
+\begin{corollary}[均衡動態]
+\label{cor:dynamics}
+隨著 AI 能力隨時間提升，$\alpha$ 弱遞增（新的技能維度跨越 $\bar{\rho}$ 門檻）。若證照機構不調整課程，$\alpha$ 最終將超過 $\alpha^*$，導致均衡崩潰。崩潰速度取決於 AI 能力提升的速率以及課程中可形式化技能所佔的比例。
+\end{corollary}
+
+
+%% ============================================================
+%% 5. CFA 證照之應用
+%% ============================================================
+\section{CFA 證照之應用}
+\label{sec:cfa}
+
+\subsection{將 CFA 能力對應至理論架構}
+
+我們現在將理論架構應用於 CFA 計畫，將其三級課程對應至我們的六維能力分類法。表~\ref{tab:ability_matrix} 呈現此對應關係，參考 CFA Institute 公布的能力架構及 \citet{autor2003skill} 的任務導向分類法。
+
+\begin{table}[htbp]
+\centering
+\caption{CFA 能力分類法：任務架構與 AI 可複製性對應}
+\label{tab:ability_matrix}
+\footnotesize
+\begin{tabularx}{\textwidth}{@{}lXlXcc@{}}
+\toprule
+\textbf{技能} & \textbf{能力類型} & \textbf{CFA} & \textbf{Autor (2003)} & \textbf{AI} & \textbf{訊號} \\
+\textbf{代碼} & & \textbf{等級} & \textbf{任務類別} & $\rho_k$ & \textbf{留存} \\
+\midrule
+$s_1$ & 陳述性知識 & I & 例行認知 & $\sim$0.95 & 低 \\
+$s_2$ & 演算法計算 & I--II & 例行認知 & $\sim$0.92 & 低 \\
+$s_3$ & 分析拆解 & II & 非例行分析 & $\sim$0.70 & 中 \\
+$s_4$ & 整合性判斷 & III & 非例行分析 & $\sim$0.45 & 中高 \\
+$s_5$ & 倫理推理 & II--III & 非例行互動 & $\sim$0.30 & 高 \\
+$s_6$ & 利害關係人推理 & III & 非例行互動 & $\sim$0.15 & 高 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+圖~\ref{fig:ability_taxonomy} 以視覺化方式比較六個能力維度，對照 CFA 持證專業人員與前沿 AI 系統的能力輪廓。雷達圖清楚呈現其不對稱性：AI 在陳述性知識（$s_1$）與演算法計算（$s_2$）方面與人類表現不相上下甚至超越，但在倫理推理（$s_5$）與利害關係人推理（$s_6$）方面則大幅落後。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig1_ability_taxonomy.pdf}
+\caption{雷達圖比較 CFA 持證專業人員與 AI 在六維能力分類法上的能力輪廓。每個軸代表一個能力維度（$s_1$--$s_6$）。AI 可複製性在陳述性知識與演算法計算方面接近完全，但在倫理推理與利害關係人推理方面急遽下降，反映了部分訊號崩潰定理核心的可形式化--隱性劃分。}
+\label{fig:ability_taxonomy}
+\end{figure}
+
+AI 可複製性數值反映新興的實證文獻：\citet{callanan2023gpt} 記錄 GPT-4 在 CFA Level I（以 $s_1$/$s_2$ 題目為主）上達到約 70\% 的準確率，而經領域適配的模型進一步縮小此差距 \citep{ke2025findap}。從 $s_1$--$s_2$ 到 $s_5$--$s_6$ 的急遽下降，正好呼應 \citet{autor2003skill} 的例行/非例行邊界。關鍵在於，CFA 計畫的課程權重分配造成了結構性脆弱。表~\ref{tab:weight_distribution} 呈現估計的課程權重分布。
+
+\begin{table}[htbp]
+\centering
+\caption{CFA 課程各能力維度之估計權重分布}
+\label{tab:weight_distribution}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{能力維度} & \textbf{權重 $w_k$} & \textbf{類別} & $\rho_k$ & $w_k(1-\rho_k)$ \\
+\midrule
+$s_1$：陳述性知識 & 0.25 & $\mathcal{F}$ & 0.95 & 0.013 \\
+$s_2$：演算法計算 & 0.25 & $\mathcal{F}$ & 0.92 & 0.020 \\
+$s_3$：分析拆解 & 0.20 & $\mathcal{F}/\mathcal{T}$ & 0.70 & 0.060 \\
+$s_4$：整合性判斷 & 0.15 & $\mathcal{T}$ & 0.45 & 0.083 \\
+$s_5$：倫理推理 & 0.10 & $\mathcal{T}$ & 0.30 & 0.070 \\
+$s_6$：利害關係人推理 & 0.05 & $\mathcal{T}$ & 0.15 & 0.043 \\
+\midrule
+\textbf{合計} & 1.00 & & & \textbf{0.288} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{計算訊號留存率}
+
+根據表~\ref{tab:weight_distribution} 中的數值，我們計算訊號留存率（推論~\ref{cor:retention}）：
+
+\begin{equation}
+    R = \frac{\sum_{k=1}^{K} w_k s_k (1-\rho_k)}{\sum_{k=1}^{K} w_k s_k} = \frac{0.288}{1.000} = 0.288
+    \label{eq:retention_cfa}
+\end{equation}
+
+假設所有 $k$ 的 $s_k = 1$（即標準化的能力水準）。此結果意味著\textbf{在當前 AI 能力水準下，CFA 證照僅保留其 AI 前訊號價值的約 28.8\%}。證照過去向雇主傳達的資訊內容中，有超過 70\% 現已可被 AI 系統以低成本複製。
+
+圖~\ref{fig:signal_erosion} 呈現訊號侵蝕曲線——繪製訊號留存率 $R$ 相對於所有維度加權 AI 可複製性的函數。CFA 當前位置（$R = 0.288$）已標示，顯示證照深處於侵蝕區內。該曲線凸顯了侵蝕的非線性本質：一旦可形式化維度（承載最大課程權重者）變為 AI 可複製，訊號價值便急遽下降，然後隨著僅剩隱性能力而趨於平坦。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig2_signal_erosion.pdf}
+\caption{訊號侵蝕曲線，顯示訊號留存率 $R$ 隨 AI 可複製性增加的變化。CFA 當前位置標示於 $R = 28.8\%$，表示證照 AI 前訊號價值的 70\% 以上已遭侵蝕。臨界點 $\alpha^*$——超過此值分離均衡將崩潰為混同均衡——以垂直門檻線表示。}
+\label{fig:signal_erosion}
+\end{figure}
+
+\subsection{臨界點評估}
+
+以門檻 $\bar\rho = 0.9$ 計算，目前僅 $s_1$ 與 $s_2$ 符合資格，故 $\alpha = 0.50$。若 $s_3$ 在 LLMs 持續進步下跨越 $\bar\rho = 0.9$，$\alpha$ 將升至 0.70。表~\ref{tab:tipping} 刻畫所得之情境分析。
+
+\begin{table}[htbp]
+\centering
+\caption{CFA 訊號均衡之臨界點情境}
+\label{tab:tipping}
+\begin{tabular}{@{}lccl@{}}
+\toprule
+\textbf{情境} & $\alpha$ & \textbf{相對於 $\alpha^*$} & \textbf{均衡狀態} \\
+\midrule
+當前狀態 & 0.50 & 取決於 $\alpha^*$ & 分離均衡（已弱化） \\
+$s_3$ 跨越 $\bar\rho$ & 0.70 & 可能 $>\alpha^*$ & 崩潰風險 \\
+$s_3$ + $s_4$ 跨越 $\bar\rho$ & 0.85 & 幾乎確定 $>\alpha^*$ & 混同均衡 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+CFA 當前課程將約 50\% 的權重配置於已高度 AI 可複製的能力上，使其處於\emph{脆弱區域}，在缺乏干預的情況下逐步接近均衡崩潰。
+
+
+%% ============================================================
+%% 6. 實證證據：選項偏差實驗
+%% ============================================================
+\section{實證證據：選擇題選項作為資訊訊號}
+\label{sec:empirical}
+
+我們透過一項控制實驗提供直接的實證支持，測試選擇題的選項結構是否作為差異性地輔助 AI 表現的資訊訊號。
+
+\subsection{實驗設計}
+
+識別策略十分直觀：若選項作為輔助 AI 的資訊訊號（例如透過排除法），移除選項應導致表現下降；若 AI 表現反映真實的知識複製，選項的存在與否應不影響表現。我們以 CFA-Easy 基準 \citep{ke2025findap} 中的 $N = 1{,}032$ 道 CFA 風格題目測試 GPT-4o-mini，在兩種條件下進行：
+\begin{itemize}[nosep]
+    \item \textbf{有選項}：標準的選擇題格式，呈現所有答案選項。
+    \item \textbf{無選項}：相同的題幹，但移除所有答案選項。模型必須生成自由回答，再由 LLM 評審對照標準答案判定語意正確性。
+\end{itemize}
+
+此配對設計允許題目內比較，消除題目難度差異的干擾因素。關鍵檢定統計量為 McNemar 檢定（含 Yates 連續校正），用於配對名目資料，評估正確/不正確回答的邊際分布在兩種條件間是否存在差異。
+
+\subsection{結果}
+
+表~\ref{tab:option_bias} 呈現跨兩個模型世代之選項偏差實驗的整體結果。
+
+\begin{table}[htbp]
+\centering
+\caption{選項偏差實驗結果（$N = 1{,}032$）}
+\label{tab:option_bias}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{指標} & \textbf{GPT-4o-mini} & \textbf{GPT-5-mini} \\
+\midrule
+有選項準確率 & 82.6\% (852/1,032) & 92.8\% (958/1,032) \\
+無選項準確率 & 80.6\% (832/1,032) & 83.2\% (859/1,032) \\
+選項偏差（$\Delta$） & $+1.9$ 百分點 & $+9.6$ 百分點 \\
+\midrule
+不一致對 $b$（有$\checkmark$，無$\times$） & 147 & 146 \\
+不一致對 $c$（有$\times$，無$\checkmark$） & 127 & 47 \\
+$\chi^2$（Yates 校正） & 1.318 & 49.76 \\
+$p$ 值 & 0.251 & $< 0.001$*** \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+就 GPT-4o-mini 而言，選項偏差未達統計顯著（$p = 0.251$），不一致對大致對稱（$b = 147$ vs.\ $c = 127$），顯示對稱性的變異。然而，GPT-5-mini——下一世代的推理模型——呈現截然不同的模式：選項偏差擴大至 +9.6 百分點且高度顯著（$p < 0.001$），不一致對強烈不對稱（$b = 146$ vs.\ $c = 47$）。推理模型從選項存在中獲益明顯更大。
+
+\subsection{對訊號理論的意涵}
+
+跨模型的比較為格式不變性假說帶來細緻的圖像。就 GPT-4o-mini 而言：
+\begin{equation}
+    \rho_k^{\text{MC}} \approx \rho_k^{\text{free-response}} \quad \text{對 } k \in \mathcal{F}
+    \label{eq:format_invariance}
+\end{equation}
+可形式化技能的 AI 可複製性近似\emph{格式不變}，支持命題~\ref{prop:partial_collapse}：訊號侵蝕反映的是真實知識複製，而非格式利用。
+
+然而，GPT-5-mini 的顯著選項偏差（$p < 0.001$）揭示格式不變性可能具有\emph{世代依賴性}。隨著模型從模式匹配演進至延伸思維鏈推理，選擇題選項日益作為多路徑審議的收斂錨點。這帶來兩個相互競爭的意涵：
+
+\begin{enumerate}[nosep]
+    \item \textbf{樂觀（對證照有利）}：若更強的模型更依賴格式，則開放式評量格式可能部分恢復對未來 AI 系統的訊號價值。選擇題格式膨脹了 AI 可複製性；改為自由回答將降低推理模型所測得的 $\rho_k$。
+    \item \textbf{悲觀（對證照不利）}：GPT-5-mini 的無選項準確率（83.2\%）仍超越 GPT-4o-mini 的有選項準確率（82.6\%）。無論格式如何，AI 可複製性的絕對水準持續跨世代上升，意味著格式改革僅能延緩而非逆轉訊號侵蝕。
+\end{enumerate}
+
+對訊號留存率 $R$ 的淨效果取決於何種動態占主導。在悲觀詮釋下——我們的數據更有力地支持此詮釋——政策處方仍為內容改革而非格式改革，然而跨模型證據顯示格式改革可提供有意義的\emph{互補性}干預措施，特別是針對選項偏差顯著的推理模型。
+
+\subsection{穩健性與適用範圍}
+
+本實驗涵蓋兩個模型世代（GPT-4o-mini 與 GPT-5-mini），題庫以可形式化能力（$s_1$, $s_2$）為主。顯著性的跨模型反轉（從 $p = 0.251$ 到 $p < 0.001$）證明格式效應非評量工具的靜態屬性，而是模型--格式交互作用的動態屬性。延伸至其他模型家族以及針對整合性判斷與倫理推理的 CFA Level III 申論題目，將進一步釐清格式不變性的邊界。
+
+
+%% ============================================================
+%% 7. 意涵與政策建議
+%% ============================================================
+\section{意涵與政策建議}
+\label{sec:implications}
+
+\subsection{可檢驗的預測}
+
+本模型產生三項關鍵的可檢驗預測：
+
+\begin{enumerate}[label=\textbf{P\arabic*.}, nosep, leftmargin=*]
+    \item \textbf{差異性工資溢酬侵蝕。} CFA 工資溢酬在以可形式化技能為主的職能（如量化分析）中應侵蝕得更快，而在需要隱性技能的職能（如客戶諮詢）中侵蝕較慢。溢酬變動量 $|\Delta w_j|$ 應與所需技能的平均 AI 可複製性 $\bar\rho_j$ 呈正相關。
+
+    \item \textbf{雇主行為轉變。} 理性雇主應以針對隱性能力的方法（行為面試、案例模擬）補充證照篩選，採用率應隨證照核心內容的 AI 可複製性增加而上升。
+
+    \item \textbf{格式不變性（部分獲支持）。} 可形式化技能的 AI 可複製性應近似格式不變。GPT-4o-mini 支持此預測（$+1.9$ 百分點，$p = 0.251$），但 GPT-5-mini 顯示顯著的格式依賴性（$+9.6$ 百分點，$p < 0.001$），暗示格式不變性可能在推理模型上瓦解，而絕對可複製性則持續上升。
+\end{enumerate}
+
+\subsection{證照設計的政策意涵}
+
+命題~\ref{prop:partial_collapse} 與命題~\ref{prop:tipping} 為證照機構提出三項處方。
+
+\textbf{課程重新平衡。} 降低 $s_1$（陳述性知識）與 $s_2$（演算法計算）的權重，這些能力具高度 AI 可複製性（$\rho > 0.9$）且對殘餘訊號價值貢獻微小。增加 $s_5$（倫理推理）與 $s_6$（利害關係人推理）的權重，這些能力具低 AI 可複製性（$\rho < 0.3$）且為訊號價值留存的主要來源。CFA Level III 的申論式 IPS 題目方向正確，但在整體課程仍偏重可形式化技能的情況下仍屬不足。
+
+\textbf{格式創新搭配內容改革。} 我們的實證證據顯示，單純的格式變革不足以降低 AI 表現（$p = 0.251$）。格式改革必須針對隱性技能維度（$s_4$--$s_6$），透過互動式案例模擬、無唯一正確答案的倫理兩難審議，以及候選人必須批判性地評估並修正 AI 建議的 AI 輔助評量等方式進行。
+
+\textbf{動態重新校準。} 隨著 AI 能力拓展可複製的邊界（推論~\ref{cor:dynamics}），證照機構應建立明確連結至 AI 能力基準的定期審查機制 \citep{callanan2023gpt,ke2025findap}。
+
+
+%% ============================================================
+%% 8. 討論
+%% ============================================================
+\section{討論}
+\label{sec:discussion}
+
+\subsection{延伸與可推廣性}
+
+本模型與 \citet{acemoglu2019automation} 的一般均衡方法互為補充，聚焦於 AI 對特定市場制度的\emph{資訊}層面影響。核心洞見在於：即便 AI 並未消滅工作，它仍可能瓦解組織勞動市場的篩選制度——其社會成本在於人才錯配而非取代。
+
+我們的可形式化--隱性區分與「Polanyi 悖論」\citep{autor2015there} 相呼應：LLMs 複製了隱性推理的\emph{表層結構}，但未及其\emph{深層結構}（規範性承諾、法律責任、聲譽風險承擔）。此架構可推廣至任何作為勞動市場訊號的證照：偏重可形式化內容的證照（FRM、基礎精算考試）應經歷更快的侵蝕，而強調隱性能力的證照（醫學委員會臨床考試、口試式律師資格考試）則侵蝕較慢。
+
+\subsection{研究限制}
+
+本模型將 AI 可複製性視為外生且單調遞增；實際上能力發展並非均勻。二類型模型為簡化形式；連續類型的延伸將產生更豐富的動態。$\rho_k$ 值為校準後的假設——將所有值擾動 $\pm 0.10$ 會使 $R$ 移至約 $[0.19, 0.39]$，顯示中等程度的敏感性但不改變定性結論。我們抽象化了 CFA 會員資格的聲譽效應與人脈效應。跨世代的實證（兩個 OpenAI 模型）強化了實證基礎，但仍侷限於單一供應商家族；延伸至開源模型（如 Llama-Fin）及專門推理架構將進一步檢驗本架構的一般性。世代依賴的格式不變性結果為政策處方增添了複雜性：模型架構與評量格式之間的交互作用可能要求證照機構隨 AI 演進同時監測內容與格式敏感性。儘管有這些限制，核心結論——集中於可形式化能力的部分、選擇性訊號侵蝕——是穩健的，並提供了清晰的定性預測，使本架構與當前論述中的極端立場有所區隔。
+
+
+%% ============================================================
+%% 9. 結論
+%% ============================================================
+\section{結論}
+\label{sec:conclusion}
+
+本研究發展了一個修正 Spence 訊號模型，證明 AI 驅動的訊號侵蝕是\emph{部分且具選擇性的}：證照在可形式化能力方面喪失資訊內容，同時在隱性能力方面保留訊號價值。一項跨世代的選項偏差實驗（$N = 1{,}032$）揭示格式不變性具世代依賴性——GPT-4o-mini 不顯著（$p = 0.251$）但 GPT-5-mini 高度顯著（$p < 0.001$）——然而 AI 可複製性的絕對水準無論格式如何均持續上升，支持內容改革優先於格式改革的政策處方。
+
+以 CFA 為例，約 50\% 的課程權重已高度 AI 可複製，證照僅保留其 AI 前訊號價值的約 29\%。跨模型證據引入了時間維度：每個模型世代同時提升基線可複製性\emph{並}可能改變格式敏感性的格局，要求持續重新校準 AI 可複製性指標 $\rho_k$。政策處方明確：證照機構必須將評量內容重新平衡至倫理推理、整合性判斷與利害關係人審議——並必須建立連結至 AI 能力基準的動態審查機制，因為訊號格局隨著每一個模型世代而變遷。
+
+更廣泛而言，本研究架構證明 AI 重塑的不僅是生產過程，更包括組織經濟活動的\emph{制度}。跨世代的證據強調，此重塑並非一次性事件，而是一個持續的過程，需要制度以 AI 進步的步調進行調適。
+
+
+\section*{資料可用性}
+選項偏差實驗所使用的 CFA-Easy 基準（$N = 1{,}032$）可透過 FinDAP 架構取得 \citep{ke2025findap}。實驗程式碼與完整結果（JSON 格式）可向通訊作者索取。
+
+\section*{利益衝突聲明}
+作者聲明，據其所知不存在可能影響本文所報告研究之已知競爭性財務利益或個人關係。
+
+\section*{CRediT 作者貢獻}
+\textbf{Wei-Lun Cheng}：概念化、方法論、形式分析、軟體、調查研究、撰寫——初稿。
+\textbf{Daniel Wei-Chung Miao}：指導、撰寫——審閱與編輯。
+\textbf{Guang-Di Chang}：指導、撰寫——審閱與編輯。
+
+\section*{致謝}
+計算資源由國立臺灣科技大學（NTUST）提供。
+
+
+%% ============================================================
+%% 參考文獻
+%% ============================================================
+\section*{參考文獻}
+
+\begingroup
+\renewcommand{\section}[2]{}
+\begin{thebibliography}{99}
+
+\bibitem[Acemoglu and Restrepo(2019)]{acemoglu2019automation}
+Acemoglu, D., Restrepo, P., 2019. Automation and new tasks: How technology displaces and reinstates labor. \emph{Journal of Economic Perspectives} 33(2), 3--30.
+
+\bibitem[Autor(2015)]{autor2015there}
+Autor, D.H., 2015. Why are there still so many jobs? The history and future of workplace automation. \emph{Journal of Economic Perspectives} 29(3), 3--30.
+
+\bibitem[Autor et~al.(2003)]{autor2003skill}
+Autor, D.H., Levy, F., Murnane, R.J., 2003. The skill content of recent technological change: An empirical exploration. \emph{Quarterly Journal of Economics} 118(4), 1279--1333.
+
+\bibitem[Becker(1964)]{becker1964human}
+Becker, G.S., 1964. \emph{Human Capital: A Theoretical and Empirical Analysis, with Special Reference to Education}. University of Chicago Press, Chicago.
+
+\bibitem[Bedard(2001)]{bedard2001human}
+Bedard, K., 2001. Human capital versus signaling models: University access and high school dropouts. \emph{Journal of Political Economy} 109(4), 749--775.
+
+\bibitem[Callanan et~al.(2023)]{callanan2023gpt}
+Callanan, E., Mbae, A., Tew, S., Patel, Y., Fontana, A., Vishwanath, S., Alcantara, J., Memari, A., 2023. Can {GPT}-4 pass the {CFA} exam? Working paper.
+
+\bibitem[CFA Institute(2023)]{cfainstitute2023}
+{CFA Institute}, 2023. CFA Program Candidate Body of Knowledge. CFA Institute, Charlottesville, VA.
+
+\bibitem[Deming(2017)]{deming2017growing}
+Deming, D.J., 2017. The growing importance of social skills in the labor market. \emph{Quarterly Journal of Economics} 132(4), 1593--1640.
+
+\bibitem[Ke et~al.(2025)]{ke2025findap}
+Ke, Z., Ming, Y., Nguyen, X.-P., Xiong, C., Joty, S., 2025. {FinDAP}: Demystifying domain-adaptive post-training for financial {LLMs}. In: \emph{Proceedings of the 2025 Conference on Empirical Methods in Natural Language Processing (EMNLP)}. Association for Computational Linguistics.
+
+\bibitem[Riley(2001)]{riley2001silver}
+Riley, J.G., 2001. Silver signals: Twenty-five years of screening and signaling. \emph{Journal of Economic Literature} 39(2), 432--478.
+
+\bibitem[Spence(1973)]{spence1973job}
+Spence, M., 1973. Job market signaling. \emph{Quarterly Journal of Economics} 87(3), 355--374.
+
+\bibitem[Tyler et~al.(2000)]{tyler2000does}
+Tyler, J.H., Murnane, R.J., Willett, J.B., 2000. Estimating the labor market signaling value of the {GED}. \emph{Quarterly Journal of Economics} 115(2), 431--468.
+
+\bibitem[Wu et~al.(2023)]{wu2023bloomberggpt}
+Wu, S., Irsoy, O., Lu, S., Daber\-ius, V., Dredze, M., Gehrmann, S., Kambadur, P., Rosenberg, D., Mann, G., 2023. {BloombergGPT}: A large language model for finance. \emph{arXiv preprint arXiv:2303.17564}.
+
+\end{thebibliography}
+\endgroup
+
+
+
+\end{document}
