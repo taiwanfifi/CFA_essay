@@ -347,6 +347,12 @@ The Error Atlas enables \textit{precision remediation}---addressing specific fai
 
 This targeted approach is potentially more efficient than generic fine-tuning, as it focuses training resources on the specific failure modes most prevalent in each domain.
 
+\subsection{Implications for Market Efficiency and Advisory Reliability}
+
+The structured nature of LLM errors has direct implications for financial market theory. Under the Efficient Market Hypothesis \citep{fama1970efficient}, market prices reflect available information processed by rational agents. When AI advisory systems become marginal price-setters---as algorithmic trading and robo-advisory adoption grows---the systematic, \textit{non-random} error patterns documented here threaten semi-strong market efficiency: conceptual misapplication in Ethics (87.1\% reasoning errors) could generate systematic compliance violations in advisory recommendations, while Derivatives pricing failures (37.5\% calculation errors) could produce correlated hedging errors across AI-assisted portfolios. Unlike random noise, which averages out, structured errors create directional bias in aggregate market behavior.
+
+From an investor protection perspective, the 68.8\% conceptual error rate reveals that current LLMs fail at the \textit{identification} stage of financial reasoning---they misrecognize which analytical framework applies before any computation begins. This is precisely the type of error that is invisible to end users, who receive a confidently stated but fundamentally misdirected analysis. The Golden Context Injection results (82.4\% partial recovery) suggest that retrieval-augmented architectures can mitigate this risk, effectively providing the ``concept recognition'' layer that current models lack. This has direct implications for the design of AI-assisted financial advisory systems: concept verification should precede any downstream computation or recommendation.
+
 \subsection{Risk-Weighted Error Assessment}
 
 Not all errors are equally costly. A reasoning premise error in Derivatives pricing can cause catastrophic hedging failures; a selection near-miss in Economics may have minor consequences. We propose a risk-weighted accuracy metric:
@@ -401,6 +407,11 @@ Computational resources were provided by National Taiwan University of Science a
 Callanan, E., Mbae, A., Selle, S., Gupta, V., \& Houlihan, R. (2023).
 \newblock Can GPT-4 pass the CFA exam?
 \newblock \textit{arXiv preprint arXiv:2310.09542}.
+
+\bibitem[Fama(1970)]{fama1970efficient}
+Fama, E. F. (1970).
+\newblock Efficient capital markets: A review of theory and empirical work.
+\newblock \textit{The Journal of Finance}, 25(2), 383--417.
 
 \bibitem[Ke et al.(2025)]{ke2025findap}
 Ke, Z., Ming, Y., Nguyen, X. P., Xiong, C., \& Joty, S. (2025).
