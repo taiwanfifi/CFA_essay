@@ -1,22 +1,110 @@
-# Large dataset files (exceed GitHub 100MB limit)
+# ============================================================
+# CFA + LLM Research — .gitignore
+# Keep only: paper code, final results, shared infra, datasets metadata
+# ============================================================
+
+# === Secrets & credentials ===
+.env
+apikey.md
+.claude/
+
+# === OS / editor artifacts ===
+.DS_Store
+__pycache__/
+*.pyc
+.vscode/
+.idea/
+
+# === LaTeX build artifacts ===
+*.aux
+*.log
+*.out
+*.spl
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.bbl
+*.blg
+*.toc
+*.lof
+*.lot
+
+# === Compiled paper packages (regenerable) ===
+drafts/selected/*.zip
+
+# === Large dataset files (exceed GitHub 100MB) ===
 datasets/FinTrain/apex_instruct/data.json
 datasets/FinTrain/book_fineweb/data.json
 datasets/FinTrain/cfa_exercise/data.json
 datasets/CFA_Extracted/sft/data.json
 datasets/CFA_Extracted/chunk_0/data.json
 
-# FinDAP training framework (Salesforce nested git repo)
+# === FinDAP training framework (nested git repo) ===
 datasets/FinDap/
 
-# Secrets
-.env
-apikey.md
-.claude/
-
-# Nested git repos
+# === Exploratory experiments (not used in any of the 7 papers) ===
+experiments/B1_multistep_agent/
+experiments/C1_hybrid_retrieval/
 experiments/swe-agent-cfa/
 
-# Caches
-__pycache__/
-*.pyc
-.DS_Store
+# === One-off utility scripts ===
+experiments/fixup_empty_responses.py
+
+# === Empty placeholder dirs ===
+findings/
+
+# === Personal / non-publication files ===
+Professor.md
+ralph.md
+drafts/selected/review_discuss.md
+drafts/selected/給老師的信-研究進度報告.md
+drafts/selected/presentations/
+
+# === Titled PDF copies (duplicates of main.pdf) ===
+drafts/selected/**/*.pdf
+!drafts/selected/**/main.pdf
+
+# -------------------------------------------------------
+# Test / pilot experiment runs (keep only final full runs)
+# -------------------------------------------------------
+
+# A1: keep run_20260206_173445 (4o-mini N=1032), run_20260207_174118 (5-mini N=1032)
+experiments/A1_open_ended/results/run_20260205_010122/
+experiments/A1_open_ended/results/run_20260206_044146/
+experiments/A1_open_ended/results/run_20260206_112613/
+
+# A5: keep run_20260206_171904 (4o-mini N=1032), run_20260207_174114 (5-mini N=1032)
+experiments/A5_option_bias/results/run_20260204_045830/
+experiments/A5_option_bias/results/run_20260206_044311/
+experiments/A5_option_bias/results/run_20260206_112714/
+
+# I1: keep run_20260206_170129 (4o-mini N=1032), run_20260207_174116 (5-mini N=1032)
+experiments/I1_counterfactual/results/run_20260205_010209/
+experiments/I1_counterfactual/results/run_20260206_044809/
+experiments/I1_counterfactual/results/run_20260206_053445/
+
+# I2: keep run_20260206_140527 (4o-mini 60 scenarios); 5-mini removed from paper
+experiments/I2_behavioral_biases/results/run_20260205_010409/
+experiments/I2_behavioral_biases/results/run_20260206_052135/
+experiments/I2_behavioral_biases/results/run_20260207_024534/
+
+# I3: keep run_20260206_203913 (4o-mini N=1032), run_20260207_174115 (5-mini N=1032)
+experiments/I3_noise_red_herrings/results/run_20260204_115339/
+experiments/I3_noise_red_herrings/results/run_20260206_045209/
+experiments/I3_noise_red_herrings/results/run_20260206_054039/
+
+# D1: keep run_20260202_034237 (4o-mini + qwen3 N=90, 4 methods)
+experiments/D1_confidence_calibration/results/run_20260202_031947/
+experiments/D1_confidence_calibration/results/run_20260202_175051/
+
+# D6: keep run_20260206_112341 (4o-mini N=47), run_20260207_023637 (5-mini N=47)
+experiments/D6_adversarial_ethics/results/run_20260206_051053/
+experiments/D6_adversarial_ethics/results/run_20260207_014719/
+
+# E1: keep error_analysis_all_methods_*230751, golden_context_*032341, golden_context_*220440
+experiments/E1_error_analysis/results/error_analysis_cot_20260203_211734.json
+experiments/E1_error_analysis/results/error_analysis_cot_20260203_211957.json
+experiments/E1_error_analysis/results/error_analysis_all_methods_20260203_213338.json
+experiments/E1_error_analysis/results/golden_context_gpt-4o-mini_20260207_015240.json
+experiments/E1_error_analysis/results/golden_context_gpt-5-mini_20260207_041248.json
+experiments/E1_error_analysis/results/checkpoint_gpt-5-mini_20260207_174124.jsonl
