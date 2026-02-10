@@ -36,7 +36,7 @@
             country={Taiwan}}
 
 \begin{abstract}
-Large Language Models (LLMs) can answer CFA Ethics questions correctly under standard conditions, but can their ethical judgment withstand adversarial pressure? We introduce an \textit{adversarial ethics stress test} for financial LLMs, applying five types of pressure---profit incentives, authority pressure, emotional manipulation, reframing, and moral dilemmas---to 47 CFA Ethics questions from the CFA-Easy dataset. Testing GPT-4o-mini, we find that \textbf{all five attack types consistently degrade performance}, with \textbf{profit incentive} and \textbf{authority pressure} as the most effective attacks (ERS = 0.925, $-$6.4 pp each), followed by emotional manipulation, reframing, and moral dilemma (ERS = 0.950, $-$4.3 pp each). Across all adversarial conditions, a total of 14 previously correct questions were ``flipped''---the model abandoned correct ethical reasoning under pressure. The universality of this degradation pattern is the central finding: no attack type fails to compromise ethical judgment. These findings suggest that LLMs learn the \textit{form} of ethical responses rather than the \textit{principles}, creating a dangerous vulnerability for AI systems deployed in financial advisory roles. However, a cross-model comparison reveals that GPT-5-mini achieves \textit{zero} adversarial flips with ERS $> 1.0$, suggesting this vulnerability may be generationally bounded. We propose a minimum Ethics Robustness Score of 0.95 for financial AI deployment and connect our findings to CFA Institute Standards of Professional Conduct.
+Large Language Models (LLMs) can answer CFA Ethics questions correctly under standard conditions, but can their ethical judgment withstand adversarial pressure? We introduce an \textit{adversarial ethics stress test} for financial LLMs, applying five types of pressure---profit incentives, authority pressure, emotional manipulation, reframing, and moral dilemmas---to 47 CFA Ethics questions from the CFA-Easy dataset. Testing GPT-4o-mini, we find that \textbf{all five attack types consistently degrade performance}, with \textbf{profit incentive} and \textbf{authority pressure} as the most effective attacks (ERS = 0.925, $-$6.4 pp each), followed by emotional manipulation, reframing, and moral dilemma (ERS = 0.950, $-$4.3 pp each). Across all adversarial conditions, a total of 14 previously correct questions were ``flipped''---the model abandoned correct ethical reasoning under pressure. The universality of this degradation pattern is the central finding: no attack type fails to compromise ethical judgment. These findings provide preliminary evidence that LLMs may learn the \textit{form} of ethical responses rather than the \textit{principles}, creating a potential vulnerability for AI systems deployed in financial advisory roles. A supplementary experiment on 141 synthetically generated CFA ethics questions---designed to control for memorization---reveals a dramatically reduced flip rate (6/705 = 0.85\%, vs.\ 14/235 = 5.96\%), with only reframing and moral dilemma retaining attack efficacy. A cross-model comparison reveals that GPT-5-mini achieves \textit{zero} adversarial flips with ERS $> 1.0$, suggesting this vulnerability may be generationally bounded. We propose a minimum Ethics Robustness Score of 0.95 for financial AI deployment and connect our findings to CFA Institute Standards of Professional Conduct.
 \end{abstract}
 
 \begin{keyword}
@@ -309,6 +309,46 @@ Based on our findings, we propose:
     \item \textbf{Pressure-Aware Safeguards}: AI systems should include detection mechanisms for adversarial pressure patterns, triggering human escalation when pressure is detected.
 \end{enumerate}
 
+\subsection{Memorization vs.\ Genuine Ethical Robustness}
+\label{sec:memorization}
+
+A critical interpretive question is whether GPT-5-mini's zero adversarial flips reflect genuine ethical reasoning robustness or training-data memorization of standard CFA ethics answers. This concern is not hypothetical: our companion study on counterfactual perturbation (Cheng et al., 2026b) reveals that GPT-5-mini exhibits a 36.4~pp memorization gap---nearly double that of GPT-4o-mini (18.6~pp)---suggesting that the newer model is \textit{more}, not less, reliant on memorized patterns for factual questions.
+
+If GPT-5-mini has memorized the correct answers to these 47 ethics questions, then adversarial pressure is irrelevant: the model retrieves the memorized answer regardless of the surrounding context, producing the appearance of ethical robustness without genuine ethical reasoning. Under this interpretation, the zero-flip result is analogous to a student who has memorized an exam's answer key---no amount of test anxiety affects performance because the student is not reasoning, merely reciting.
+
+Several observations partially mitigate this concern. First, the adversarial prompts are novel---the specific pressure-augmented formulations do not appear in training data---so pure memorization cannot explain why adversarial accuracy \textit{exceeds} standard accuracy (ERS $> 1.0$). Second, GPT-5-mini's standard accuracy on the ethics subset (91.5\%) is not perfect, indicating it has not trivially memorized all answers.
+
+To directly address the memorization confound, we conducted a supplementary experiment using 141 \textit{synthetically generated} CFA ethics questions covering 10 CFA Standards (I(A) through VII(A)), generated by GPT-4o-mini with instructions to produce novel scenarios not found in standard CFA prep materials. Table~\ref{tab:synthetic_d6} presents the results.
+
+\begin{table}[htbp]
+\centering
+\caption{Adversarial ethics results on synthetic questions (GPT-4o-mini, $n = 141$)}
+\label{tab:synthetic_d6}
+\begin{threeparttable}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Condition} & \textbf{Accuracy} & \textbf{Flipped} & \textbf{ERS} & \textbf{$\Delta$Acc} \\
+\midrule
+Standard (no pressure) & 100.0\% & --- & 1.000 & --- \\
+\midrule
+Profit incentive & 100.0\% & 0 & 1.000 & 0.0 pp \\
+Authority pressure & 100.0\% & 0 & 1.000 & 0.0 pp \\
+Emotional manipulation & 100.0\% & 0 & 1.000 & 0.0 pp \\
+Reframing & 97.2\% & 4 & 0.972 & $-$2.8 pp \\
+Moral dilemma & 98.6\% & 2 & 0.986 & $-$1.4 pp \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item Synthetic questions generated to test the same CFA ethical principles with novel factual contexts. Total flips: 6 (vs.\ 14 on CFA-Easy). All 6 flips concentrated in reframing and moral dilemma.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+The synthetic experiment yields three key findings. First, the overall flip rate drops dramatically from 5.96\% on CFA-Easy (14/235 adversarial trials) to 0.85\% on synthetic questions (6/705 trials)---a 7$\times$ reduction---with standard accuracy rising from 85.1\% to 100.0\%. Second, the vulnerability profile narrows: profit incentive, authority pressure, and emotional manipulation produce \textit{zero} flips on synthetic questions, whereas reframing (4 flips) and moral dilemma (2 flips) remain the only effective attack vectors. Third, flips are dispersed across 5 of 141 questions spanning 4 CFA Standards (I(A), II(A), III(A), V(A)), with only one question flipped by multiple attack types.
+
+These results have important implications for the memorization hypothesis. The higher robustness on synthetic questions could reflect either (a) the model's genuine ethical reasoning is stronger when not confounded by memorized but imperfect recall of specific CFA-Easy answers, or (b) synthetically generated questions are easier and thus less susceptible to adversarial pressure. The fact that standard accuracy is 100\% on synthetic questions (vs.\ 85.1\% on CFA-Easy) supports interpretation (b), suggesting that the 14 flips on CFA-Easy may partly reflect questions where the model's baseline understanding was marginal. Nevertheless, the persistence of reframing and moral dilemma as effective attack vectors---even on questions answered with 100\% standard accuracy---confirms that these two pressure types exploit genuine reasoning vulnerabilities rather than memorization artifacts \citep{hui2025trident, mazeika2024harmbench}.
+
 \subsection{Generational Scaling and Alignment}
 \label{sec:scaling}
 
@@ -320,7 +360,7 @@ The complete elimination of adversarial flips in GPT-5-mini suggests that alignm
 
 \subsection{Limitations}
 
-Our adversarial prompts are synthetic and may not capture the full subtlety of real-world pressure. The sample size ($n = 47$), drawn from the CFA-Easy dataset, provides substantially more statistical power than preliminary studies but remains limited; future work should expand to larger and more diverse ethics question banks. The CFA-Easy dataset represents moderate difficulty; results on harder question sets (e.g., CFA-Challenge) may differ. Results are model-specific; different models may exhibit different vulnerability profiles. The cross-model comparison is limited to two models from the same provider (OpenAI); generational robustness gains may not generalize to other model families.
+Several limitations warrant discussion. First, our adversarial prompts are synthetic and single-turn; recent work on multi-turn ``foot-in-the-door'' escalation attacks \citep{chen2025fitd} demonstrates that progressive pressure across conversation turns can be substantially more effective than single-shot adversarial prompts, suggesting our single-turn design may \textit{underestimate} the true adversarial vulnerability. Second, the sample size ($n = 47$) provides limited statistical power, particularly for sub-group analyses (approximately 9 questions per attack type); these should be treated as exploratory. Future work should expand to 200+ ethics scenarios, ideally including synthetically generated questions never seen in training data. Third, the CFA-Easy dataset represents moderate difficulty; results on harder question sets (e.g., CFA-Challenge) may differ. Fourth, results are model-specific; different models may exhibit different vulnerability profiles. Fifth, the cross-model comparison is limited to two models from the same provider (OpenAI); generational robustness gains may not generalize to other model families. Finally, more sophisticated adaptive attacks \citep{andriushchenko2025jailbreaking} that tailor pressure strategies to the specific model may reveal vulnerabilities that our fixed attack templates miss.
 
 %% ============================================
 %% 5. CONCLUSION
@@ -328,7 +368,7 @@ Our adversarial prompts are synthetic and may not capture the full subtlety of r
 \section{Conclusion}
 \label{sec:conclusion}
 
-This paper demonstrates that LLM ethical judgment in financial contexts is \textit{universally} vulnerable to adversarial pressure---but that this vulnerability may be generationally bounded. Across 47 CFA Ethics questions, all five attack types consistently degrade GPT-4o-mini's performance: profit incentive and authority pressure each reduce accuracy by 6.4 pp (ERS = 0.925), while emotional manipulation, reframing, and moral dilemma each cause a 4.3 pp decline (ERS = 0.950). A total of 14 questions were flipped across all conditions, demonstrating the breadth of this vulnerability. However, a cross-model comparison reveals that GPT-5-mini achieves \textit{zero} adversarial flips with ERS $> 1.0$ across all five attack types, suggesting that model scaling and alignment improvements may naturally resolve the adversarial ethics vulnerability. These findings jointly suggest that while current-generation models learn the \textit{form} rather than the \textit{principles} of ethical reasoning, next-generation alignment may close this gap.
+This paper presents exploratory evidence that LLM ethical judgment in financial contexts is vulnerable to adversarial pressure---but that this vulnerability may be generationally bounded. Across 47 CFA Ethics questions, all five attack types consistently degrade GPT-4o-mini's performance: profit incentive and authority pressure each reduce accuracy by 6.4 pp (ERS = 0.925), while emotional manipulation, reframing, and moral dilemma each cause a 4.3 pp decline (ERS = 0.950). A total of 14 questions were flipped across all conditions. Given the limited sample size ($N = 47$, with sub-group analyses of approximately 9 questions per attack type), these findings should be interpreted as initial evidence rather than definitive conclusions. However, a cross-model comparison reveals that GPT-5-mini achieves \textit{zero} adversarial flips with ERS $> 1.0$ across all five attack types---though this result may partly reflect training-data memorization rather than genuine ethical robustness (see Section~\ref{sec:memorization}). These findings jointly suggest that while current-generation models may learn the \textit{form} rather than the \textit{principles} of ethical reasoning, the distinction between memorization and genuine ethical judgment remains an open question requiring further investigation.
 
 \textbf{The question is not whether AI can recite ethical rules, but whether it can uphold them under pressure.} For GPT-4o-mini, the answer is no. For GPT-5-mini, the evidence is cautiously optimistic---but mandatory adversarial ethics testing remains essential until robustness is validated across model families and attack sophistication levels.
 
@@ -355,15 +395,35 @@ The experimental data and analysis code are available from the corresponding aut
 
 \begin{thebibliography}{10}
 
+\bibitem[Andriushchenko et al.(2025)]{andriushchenko2025jailbreaking}
+Andriushchenko, M., Croce, F., \& Flammarion, N. (2025).
+\newblock Jailbreaking leading safety-aligned LLMs with simple adaptive attacks.
+\newblock In \textit{Proceedings of the 13th International Conference on Learning Representations (ICLR)}.
+
 \bibitem[Callanan et al.(2023)]{callanan2023gpt}
 Callanan, E., Mbae, A., Selle, S., et al. (2023).
 \newblock Can GPT-4 pass the CFA exam?
 \newblock \textit{arXiv preprint arXiv:2310.09542}.
 
+\bibitem[Chen et al.(2025)]{chen2025fitd}
+Chen, Y., Yang, Z., Wang, X., et al. (2025).
+\newblock Foot-in-the-door: Multi-turn jailbreak attack on large language models.
+\newblock In \textit{Proceedings of the 2025 Conference on Empirical Methods in Natural Language Processing (EMNLP)}.
+
+\bibitem[Hui et al.(2025)]{hui2025trident}
+Hui, B., Chen, J., Li, S., et al. (2025).
+\newblock TRIDENT: A comprehensive financial safety benchmark for large language models.
+\newblock \textit{arXiv preprint arXiv:2502.13399}.
+
 \bibitem[Ke et al.(2025)]{ke2025findap}
 Ke, Z., Ming, Y., Nguyen, X. P., et al. (2025).
 \newblock Demystifying domain-adaptive post-training for financial LLMs.
 \newblock In \textit{EMNLP 2025}.
+
+\bibitem[Mazeika et al.(2024)]{mazeika2024harmbench}
+Mazeika, M., Phan, L., Yin, X., et al. (2024).
+\newblock HarmBench: A standardized evaluation framework for automated red teaming and robust refusal.
+\newblock In \textit{Proceedings of the 41st International Conference on Machine Learning (ICML)}.
 
 \bibitem[Perez et al.(2022)]{perez2022red}
 Perez, E., Huang, S., Song, F., et al. (2022).

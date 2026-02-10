@@ -88,7 +88,7 @@ Evaluating LLMs on professional examinations has become standard practice. \cite
 
 \subsection{MCQ Format Bias in AI Evaluation}
 
-The limitations of MCQ evaluation for AI systems have received growing attention. \citet{gao2024llms} demonstrate that LLMs exploit MCQ-specific strategies (option anchoring, elimination) that inflate accuracy beyond genuine understanding. \citet{robinson2023leveraging} analyze how answer option statistics in training data enable shortcut learning. Our work extends this literature to the financial domain, where the consequences of overestimated AI competence are particularly severe.
+The limitations of MCQ evaluation for AI systems have received growing attention. \citet{gao2024llms} demonstrate that LLMs exploit MCQ-specific strategies (option anchoring, elimination) that inflate accuracy beyond genuine understanding. \citet{robinson2023leveraging} analyze how answer option statistics in training data enable shortcut learning. \citet{zheng2024llms} show that LLMs are not robust multiple-choice selectors, with answer distributions sensitive to option ordering. \citet{myrzakhan2024openllm} systematically convert MMLU-style benchmarks from MCQ to open-style questions, demonstrating significant accuracy drops across general domains. \citet{sanchezsalido2025none} further explore the ``none of the above'' paradigm, revealing that LLMs perform substantially worse when forced to reason beyond provided options. However, these studies focus on general knowledge benchmarks (MMLU, ARC, HellaSwag); no prior work has conducted MCQ-to-open-ended conversion at scale in a professional financial domain. Our work fills this gap, extending the format bias literature to CFA-level financial reasoning where the consequences of overestimated AI competence are particularly severe.
 
 \subsection{Open-Ended Evaluation of Mathematical Reasoning}
 
@@ -411,7 +411,11 @@ This ``option bias paradox'' has three implications:
 
 \subsection{Limitations}
 
-Our study uses the full CFA-Easy corpus ($n = 1{,}032$) and two model generations (GPT-4o-mini and GPT-5-mini). Extension to additional model families (including open-source financial LLMs) would strengthen generalizability. The reversal of the option bias result from non-significant ($p = 0.251$) to highly significant ($p < 0.001$) across model generations suggests that the effect is sensitive to model architecture, particularly the use of extended chain-of-thought reasoning. The LLM-as-judge approach for three-tier classification may itself contain biases, and human validation of a subset of classifications is recommended for future work. GPT-5-mini initially produced 108 empty responses (10.5\%) in the open-ended (A1) experiment due to token budget exhaustion in the reasoning phase; these were subsequently re-run with increased allocation. In the option bias (A5) experiment, 58 without-options responses (5.6\%) were empty; these are treated as incorrect in the reported accuracy, yielding a conservative estimate of true without-options performance.
+Our study uses the full CFA-Easy corpus ($n = 1{,}032$) and two model generations (GPT-4o-mini and GPT-5-mini). Extension to additional model families (including open-source financial LLMs) would strengthen generalizability. The reversal of the option bias result from non-significant ($p = 0.251$) to highly significant ($p < 0.001$) across model generations suggests that the effect is sensitive to model architecture, particularly the use of extended chain-of-thought reasoning.
+
+A methodological consideration is the \textit{evaluation asymmetry} between the two experimental conditions. With-options accuracy uses deterministic letter matching (the model selects A, B, or C), while without-options accuracy employs a hybrid pipeline combining numerical tolerance matching ($\pm 2\%$) with LLM-as-judge semantic evaluation. This asymmetry is inherent to the research design---open-ended responses cannot be evaluated by letter matching---but raises the question of whether the evaluation pipeline itself introduces systematic bias. Two observations mitigate this concern: first, the same evaluation pipeline applied to GPT-4o-mini yields a non-significant option bias ($p = 0.251$) while applied to GPT-5-mini yields a highly significant bias ($p < 0.001$)---if the evaluation method introduced systematic bias, both models should be affected in the same direction and magnitude. Second, the without-options evaluation pipeline, if anything, is more lenient than strict letter matching (it accepts numerical approximations and semantically equivalent answers), which would \textit{reduce} rather than inflate the measured option bias.
+
+The LLM-as-judge approach for three-tier classification may itself contain biases, and human validation of a subset of classifications is recommended for future work. GPT-5-mini initially produced 108 empty responses (10.5\%) in the open-ended (A1) experiment due to token budget exhaustion in the reasoning phase; these were subsequently re-run with increased allocation. In the option bias (A5) experiment, 58 without-options responses (5.6\%) from GPT-5-mini were empty and are treated as incorrect in the reported accuracy (83.2\%), yielding a conservative estimate of true without-options performance.\footnote{The 58 empty responses resulted from reasoning token budget exhaustion. Treating all as incorrect is conservative; if even half contained valid reasoning that was truncated, the true without-options accuracy would be higher and the option bias correspondingly larger.}
 
 %% ============================================
 %% 7. CONCLUSION
@@ -485,10 +489,25 @@ Lord, F. M. (1980).
 \newblock \textit{Applications of Item Response Theory to Practical Testing Problems}.
 \newblock Lawrence Erlbaum Associates.
 
+\bibitem[Myrzakhan et al.(2024)]{myrzakhan2024openllm}
+Myrzakhan, A., Shen, X., et al. (2024).
+\newblock Open-LLM-Leaderboard: From multi-choice to open-style questions for LLMs evaluation, benchmark, and arena.
+\newblock \textit{arXiv preprint arXiv:2406.07545}.
+
 \bibitem[Robinson et al.(2023)]{robinson2023leveraging}
 Robinson, J., Sloane, C., Liang, P., \& Tenenbaum, J. (2023).
 \newblock Leveraging large language models for multiple choice question answering.
 \newblock \textit{arXiv preprint arXiv:2210.12353}.
+
+\bibitem[Sanchez Salido et al.(2025)]{sanchezsalido2025none}
+Sanchez Salido, G., G\'{o}mez, P., \& Vidal, E. (2025).
+\newblock None of the others: Evaluating LLMs beyond multiple-choice constraints.
+\newblock \textit{arXiv preprint arXiv:2502.06111}.
+
+\bibitem[Zheng et al.(2024)]{zheng2024llms}
+Zheng, C., Zhou, H., Meng, F., Zhou, J., \& Huang, M. (2024).
+\newblock Large language models are not robust multiple choice selectors.
+\newblock In \textit{Proceedings of the 12th International Conference on Learning Representations (ICLR)}.
 
 \end{thebibliography}
 

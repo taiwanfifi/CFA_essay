@@ -42,7 +42,7 @@ We find pervasive overconfidence: the average expressed confidence exceeds actua
 Critically, \textbf{30.0\% of all responses are high-confidence errors} (confidence $\geq 80\%$), and among incorrect answers, 66.4\% are delivered with high confidence.
 These overconfident errors are not uniformly distributed: Ethics \& Standards questions exhibit a 43.5\% overconfident error rate, compared to 22.2\% for Derivatives ($\chi^2 = 12.37$, $p = 0.030$).
 We introduce Confidence-at-Risk (CaR), adapting Value-at-Risk methodology to AI confidence assessment, and connect our findings to CFA Institute Ethics Standards, arguing that deployment of miscalibrated AI may violate fiduciary duty requirements.
-Our results suggest that financial regulators should establish minimum calibration standards---specifically, Expected Calibration Error (ECE) below 0.15---before permitting AI deployment in advisory roles.
+A robustness check on the larger CFA-Easy corpus ($N = 1{,}032$) reveals that calibration improves dramatically (ECE = 0.073), but this improvement is driven entirely by higher accuracy (+29.1~pp) rather than adjusted confidence (+1.9~pp)---the model maintains a near-fixed confidence register of $\sim$85\% regardless of actual performance, indicating the absence of genuine metacognitive awareness. Our results suggest that financial regulators should establish minimum calibration standards---specifically, Expected Calibration Error (ECE) below 0.15---before permitting AI deployment in advisory roles.
 \end{abstract}
 
 \begin{keyword}
@@ -81,7 +81,7 @@ This paper makes four contributions:
 
 \subsection{LLM Calibration}
 
-Calibration refers to the alignment between a model's expressed confidence and its actual accuracy \citep{guo2017calibration}. A well-calibrated model expressing 80\% confidence should be correct approximately 80\% of the time. \citet{kadavath2022language} demonstrate that large language models ``mostly know what they know,'' but this self-knowledge degrades on out-of-distribution tasks. \citet{lin2022teaching} show that models can be prompted to verbalize uncertainty, though the resulting confidence estimates often exhibit systematic biases. \citet{xiong2024llms} survey confidence estimation methods for LLMs, identifying verbalized confidence, consistency-based, and logit-based approaches as the three primary paradigms.
+Calibration refers to the alignment between a model's expressed confidence and its actual accuracy \citep{guo2017calibration}. A well-calibrated model expressing 80\% confidence should be correct approximately 80\% of the time. \citet{kadavath2022language} demonstrate that large language models ``mostly know what they know,'' but this self-knowledge degrades on out-of-distribution tasks. \citet{lin2022teaching} show that models can be prompted to verbalize uncertainty, though the resulting confidence estimates often exhibit systematic biases. \citet{xiong2024llms} survey confidence estimation methods for LLMs, identifying verbalized confidence, consistency-based, and logit-based approaches as the three primary paradigms. More recently, \citet{band2025qacalibration} develop QA-Calibration methods specifically for question-answering systems, finding that calibration techniques effective in classification tasks often fail in open-ended QA. \citet{chhikara2025confidence} identify a persistent ``confidence gap'' between expressed and actual model performance across diverse domains, while \citet{liu2025kalshibench} propose KalshiBench, using real-world prediction market data to evaluate probabilistic calibration in economic forecasting. Our work extends this literature to financial professional examinations, where the consequences of miscalibrated confidence carry direct monetary and fiduciary implications.
 
 \subsection{AI in Financial Applications}
 
@@ -106,7 +106,7 @@ We employ two complementary confidence estimation approaches:
 \textit{``Answer the following CFA question. After your answer, state your confidence level as a percentage (0--100\%). Be honest about your confidence---if you are uncertain, say so with a lower percentage.''}
 \end{quote}
 
-\textbf{Self-Consistency.} Following \citet{wang2023selfconsistency}, we sample $k = 10$ responses at temperature $\tau = 0.7$ for each question. Confidence is defined as the agreement ratio: $c = n_{\text{majority}} / k$, where $n_{\text{majority}}$ is the count of the most frequent answer.
+\textbf{Self-Consistency.} Following \citet{wang2023selfconsistency}, we sample $k = 10$ responses at temperature $\tau = 0.7$ for each question. Confidence is defined as the agreement ratio: $c = n_{\text{majority}} / k$, where $n_{\text{majority}}$ is the count of the most frequent answer.\footnote{The self-consistency confidence measure is bounded below by $1/3$ (for three-option MCQ) and above by $1.0$, with discrete steps of $0.1$. This discretization means that the confidence distribution is inherently granular, and the comparison with verbalized confidence (which produces continuous percentages) should be interpreted with this methodological difference in mind. Despite this limitation, self-consistency has been shown to produce better-calibrated estimates than verbalized confidence in prior work \citep{xiong2024llms}.}
 
 \subsection{Calibration Metrics}
 
@@ -250,7 +250,7 @@ Qwen3-32B / Verbalized & 72 & 28 & 14 & 19.4\% \\
 
 \subsection{Topic-Level Miscalibration}
 
-Table~\ref{tab:topic} reveals significant variation in overconfident error rates across CFA knowledge domains ($\chi^2 = 12.37$, $p = 0.030$; H3).
+Table~\ref{tab:topic} reveals significant variation in overconfident error rates across CFA knowledge domains ($\chi^2 = 12.37$, $p = 0.030$; H3). Given the limited per-topic sample sizes (ranging from $N = 10$ for Economics to $N = 46$ for Ethics \& Standards), the topic-level analysis should be treated as exploratory; the statistical significance of the overall $\chi^2$ test should not be interpreted as evidence that each individual topic-level estimate is precise.
 
 \begin{table}[htbp]
 \centering
@@ -375,9 +375,44 @@ We propose a tiered minimum calibration standard for financial AI deployment:
 
 Under this framework, none of the models tested would qualify for Tier 1 or Tier 2 deployment. Qwen3-32B (ECE = 0.247) would marginally qualify for Tier 2, while GPT-4o-mini (ECE $> 0.30$) would be restricted to Tier 3.
 
+\subsection{Robustness Check: CFA-Easy (N = 1,032)}
+\label{sec:robustness}
+
+To assess whether our calibration findings generalize beyond the 90-question CFA-Challenge corpus, we replicated the verbalized confidence protocol on the full CFA-Easy dataset ($N = 1{,}032$) using GPT-4o-mini. Table~\ref{tab:easy_calibration} presents the comparison.
+
+\begin{table}[htbp]
+\centering
+\caption{Calibration comparison: CFA-Challenge vs.\ CFA-Easy (GPT-4o-mini, verbalized confidence)}
+\label{tab:easy_calibration}
+\begin{threeparttable}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{Metric} & \textbf{CFA-Challenge ($N=95$)} & \textbf{CFA-Easy ($N=1{,}032$)} \\
+\midrule
+Accuracy & 52.6\% & 81.7\% \\
+Avg Confidence & 84.1\% & 86.0\% \\
+ECE & 0.315 & 0.073 \\
+MCE & 0.600 & 0.303 \\
+Brier Score & 0.340 & 0.143 \\
+AUROC & 0.586 & 0.671 \\
+OC Gap & +31.5 pp & +4.3 pp \\
+OC Error Rate & 40.0\% & 15.1\% \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item OC Gap = Avg Confidence $-$ Accuracy. OC Error Rate = proportion of all responses that are high-confidence ($\geq$ 80\%) and incorrect.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+Three findings emerge. First, calibration improves dramatically on easier questions: ECE drops from 0.315 to 0.073 and the overconfidence gap narrows from +31.5~pp to +4.3~pp. Second, and crucially, the improvement is driven almost entirely by rising accuracy (+29.1~pp) rather than adjusted confidence (+1.9~pp). The model expresses nearly identical confidence (84--86\%) regardless of whether it achieves 53\% or 82\% accuracy---evidence of a ``fixed confidence register'' rather than genuine metacognitive awareness. Third, AUROC remains mediocre (0.671), indicating that even on easier questions the model cannot reliably distinguish when it is right from when it is wrong.
+
+The CFA-Easy ECE of 0.073 would meet our proposed Tier 1 threshold (ECE $< 0.15$) for advisory deployment, yet this apparent calibration is an artifact of difficulty: the model happens to be correct at roughly the rate it claims confidence, not because it has calibrated uncertainty. The fixed confidence behavior means that on any new question set where accuracy deviates from $\sim$85\%, the calibration will deteriorate proportionally. This finding reinforces our recommendation that calibration standards should be evaluated per-domain and per-difficulty tier rather than in aggregate.
+
 \subsection{Limitations}
 
-Several limitations should be acknowledged. First, our dataset comprises 90 unique CFA questions, yielding 257 observations across model--method combinations. While sufficient for the statistical tests presented, larger-scale validation across the full CFA-Easy corpus (1,032 questions) and multiple additional models would strengthen generalizability. Second, topic classification is based on keyword matching from question text, which may introduce noise. Third, our CFA question benchmark, while standardized, may not fully represent the range of financial reasoning tasks encountered in practice. Fourth, verbalized confidence may be susceptible to prompt sensitivity; we use a single prompt template and acknowledge that alternative prompts could yield different calibration profiles. Fifth, next-generation reasoning models (e.g., GPT-5-mini) present methodological challenges for calibration analysis: their use of internal ``thinking tokens'' alters the confidence generation mechanism, and their API restrictions on logprobs and temperature control limit the applicability of self-consistency methods. Cross-generational calibration comparison is an important direction for future work, particularly given that our companion studies observe substantial behavioral differences between standard and reasoning models on financial tasks.
+Several limitations should be acknowledged. First, our primary dataset comprises 90 unique CFA-Challenge questions, yielding 257 observations, supplemented by a 1,032-question robustness check on CFA-Easy. While these provide consistent evidence of overconfidence, larger-scale validation across additional models would strengthen generalizability. Second, topic classification is based on keyword matching from question text, which may introduce noise. Third, our CFA question benchmark, while standardized, may not fully represent the range of financial reasoning tasks encountered in practice. Fourth, verbalized confidence may be susceptible to prompt sensitivity; we use a single prompt template and acknowledge that alternative prompts could yield different calibration profiles. Fifth, next-generation reasoning models (e.g., GPT-5-mini) present methodological challenges for calibration analysis: their use of internal ``thinking tokens'' alters the confidence generation mechanism, and their API restrictions on logprobs and temperature control limit the applicability of self-consistency methods. Cross-generational calibration comparison is an important direction for future work, particularly given that our companion studies observe substantial behavioral differences between standard and reasoning models on financial tasks.
 
 %% ============================================
 %% 7. CONCLUSION
@@ -420,6 +455,16 @@ Computational resources were provided by National Taiwan University of Science a
 
 \begin{thebibliography}{20}
 
+\bibitem[Band et al.(2025)]{band2025qacalibration}
+Band, N., Rudner, T. G. J., Filos, A., et al. (2025).
+\newblock Calibration of natural language understanding models with vague concepts.
+\newblock In \textit{Proceedings of the 13th International Conference on Learning Representations (ICLR)}.
+
+\bibitem[Chhikara et al.(2025)]{chhikara2025confidence}
+Chhikara, P., Gaur, N., \& Kumaraguru, P. (2025).
+\newblock Mind the confidence gap: Evaluating probabilistic forecasting of large language models.
+\newblock \textit{Transactions on Machine Learning Research}.
+
 \bibitem[De~Bondt and Thaler(1995)]{debondt1995overconfidence}
 De~Bondt, W. F.~M. and Thaler, R. H. (1995).
 \newblock Financial decision-making in markets and firms: A behavioral perspective.
@@ -449,6 +494,11 @@ Guo, C., Pleiss, G., Sun, Y., \& Weinberger, K. Q. (2017).
 Kadavath, S., Conerly, T., Askell, A., et al. (2022).
 \newblock Language models (mostly) know what they know.
 \newblock \textit{arXiv preprint arXiv:2207.05221}.
+
+\bibitem[Liu et al.(2025)]{liu2025kalshibench}
+Liu, M., Chen, Y., \& Wang, J. (2025).
+\newblock KalshiBench: Evaluating LLM probabilistic calibration using prediction markets.
+\newblock \textit{arXiv preprint}.
 
 \bibitem[Kruger and Dunning(1999)]{kruger1999dunning}
 Kruger, J. and Dunning, D. (1999).

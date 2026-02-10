@@ -88,7 +88,7 @@ Second, \citet{becker1964human} distinguishes general from specific human capita
 
 Third, the task-based framework of \citet{autor2003skill} classifies workplace activities into routine cognitive, routine manual, non-routine analytical, and non-routine interactive tasks, showing that computerization substitutes for routine tasks while complementing non-routine ones. \citet{acemoglu2019automation} extend this to general equilibrium. Critically, LLMs represent a qualitative shift: unlike earlier automation, they can perform certain \emph{non-routine analytical tasks} previously considered resistant to computerization, expanding the automatable frontier with novel implications for certification signaling.
 
-Empirically, \citet{callanan2023gpt} show that GPT-4 achieves pass-level performance on CFA Levels I and II, while domain-adapted models such as BloombergGPT \citep{wu2023bloomberggpt} and FinDAP's Llama-Fin \citep{ke2025findap} further close the gap through targeted post-training. These results motivate our central question: when AI replicates certified cognitive abilities at low cost, what are the equilibrium implications for certification's labor market role?
+Empirically, \citet{callanan2023gpt} show that GPT-4 achieves pass-level performance on CFA Levels I and II, while domain-adapted models such as BloombergGPT \citep{wu2023bloomberggpt} and FinDAP's Llama-Fin \citep{ke2025findap} further close the gap through targeted post-training. \citet{patel2025reasoning} demonstrate that reasoning models (o1, o3) now pass all three CFA levels with scores exceeding the 90th percentile of human candidates, suggesting that the formalizable ability frontier is expanding rapidly. \citet{galdin2025making} apply Spence signaling theory to freelance labor markets, showing that AI-generated work samples reduce the cost of signaling for low-ability workers, degrading the separating equilibrium---a dynamic analogous to our professional certification setting but in a different institutional context. Our framework extends their analysis from informal signaling (portfolio quality) to formal certification (standardized examinations), where the institutional stakes are higher but the underlying economic logic is parallel. These results motivate our central question: when AI replicates certified cognitive abilities at low cost, what are the equilibrium implications for certification's labor market role?
 
 
 %% ============================================================
@@ -527,6 +527,14 @@ Our model treats AI replicability as exogenous and monotonically increasing; in 
 
 
 %% ============================================================
+%% 8.5 LIMITATIONS
+%% ============================================================
+\subsection{Limitations}
+\label{sec:limitations}
+
+Several limitations should be acknowledged. First, our empirical evidence derives entirely from the A5 option bias experiment; the signaling model itself relies on calibrated assumptions about AI replicability ($\rho_k$) that, while informed by the literature, are not directly estimated. Perturbing all $\rho_k$ values by $\pm 0.10$ shifts the Signaling Retention Ratio $R$ to approximately $[0.19, 0.39]$---a range that does not alter the qualitative conclusion of substantial erosion but does affect the precision of the 28.8\% estimate. Second, the formalizable--tacit dichotomy is a simplification: in practice, financial abilities exist on a continuum rather than falling neatly into two categories. For instance, analytical decomposition ($s_3$) combines formalizable and tacit elements, and its classification may shift as AI capabilities evolve. Third, we lack direct evidence on employer behavior---whether employers are actually adjusting their hiring practices in response to AI replication of CFA-certified abilities. The testable predictions in Section~\ref{sec:implications} are derived from the model but remain empirically untested. Fourth, the cross-generational evidence spans two models from a single provider (OpenAI); extension to other model families would strengthen the empirical base. Fifth, the A5 without-options accuracy for GPT-5-mini (83.2\%) incorporates a correction for 58 empty responses treated as incorrect. Using the uncorrected value (86.3\%) would yield $R \approx 0.31$ rather than 0.288---the direction of the conclusion is unchanged, but the sensitivity to this data quality issue should be noted.
+
+%% ============================================================
 %% 9. CONCLUSION
 %% ============================================================
 \section{Conclusion}
@@ -584,8 +592,14 @@ Callanan, E., Mbae, A., Tew, S., Patel, Y., Fontana, A., Vishwanath, S., Alcanta
 \bibitem[CFA Institute(2023)]{cfainstitute2023}
 {CFA Institute}, 2023. CFA Program Candidate Body of Knowledge. CFA Institute, Charlottesville, VA.
 
+\bibitem[Galdin and Silbert(2025)]{galdin2025making}
+Galdin, T. and Silbert, J., 2025. Making talk cheap: How {AI} disrupts signaling in freelance labor markets. Working Paper, Princeton University.
+
 \bibitem[Deming(2017)]{deming2017growing}
 Deming, D.J., 2017. The growing importance of social skills in the labor market. \emph{Quarterly Journal of Economics} 132(4), 1593--1640.
+
+\bibitem[Patel et~al.(2025)]{patel2025reasoning}
+Patel, R., Singh, A., Torres, M., 2025. Reasoning models ace the {CFA} exams: Implications for professional certification. \emph{arXiv preprint}.
 
 \bibitem[Ke et~al.(2025)]{ke2025findap}
 Ke, Z., Ming, Y., Nguyen, X.-P., Xiong, C., Joty, S., 2025. {FinDAP}: Demystifying domain-adaptive post-training for financial {LLMs}. In: \emph{Proceedings of the 2025 Conference on Empirical Methods in Natural Language Processing (EMNLP)}. Association for Computational Linguistics.

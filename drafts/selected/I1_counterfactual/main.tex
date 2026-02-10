@@ -86,7 +86,7 @@ The intersection of LLMs and finance has attracted significant research attentio
 
 \subsection{Data Contamination and Benchmark Validity}
 
-The threat of data contamination in LLM evaluations is well-documented \citep{shi2023detecting}. \citet{apple2024gsmsymbolic} demonstrated that LLMs show significant accuracy degradation when mathematical reasoning problems are symbolically perturbed---changing variable names and numerical values while preserving logical structure---suggesting that high benchmark scores partly reflect memorization. Our work extends this methodology to the financial domain, where the contamination risk is arguably higher due to the narrow and widely-distributed nature of CFA exam materials.
+The threat of data contamination in LLM evaluations is well-documented \citep{shi2023detecting}. \citet{apple2024gsmsymbolic} demonstrated that LLMs show significant accuracy degradation when mathematical reasoning problems are symbolically perturbed---changing variable names and numerical values while preserving logical structure---suggesting that high benchmark scores partly reflect memorization. \citet{li2024gsmplus} extend this approach with GSM-Plus, systematically generating mathematical reasoning variants across eight perturbation dimensions, while \citet{yang2025gsmdc} introduce GSM-DC with dynamically constructed reasoning problems. \citet{lopezlira2025memorization} specifically address the memorization problem in financial LLM evaluation, demonstrating that benchmark contamination is pervasive across financial datasets. Our work extends this GSM-Symbolic paradigm to the financial domain, where the contamination risk is arguably higher due to the narrow and widely-distributed nature of CFA exam materials.
 
 \subsection{Robustness and Adversarial Testing}
 
@@ -271,7 +271,7 @@ N4 (contradictory hint) & 87.5\% & 21/1,032 & $-$0.072 & Negative (helps) \\
 \end{threeparttable}
 \end{table}
 
-The full-corpus results ($N = 1{,}032$) reveal a nuanced noise sensitivity profile with a striking finding: two of the four noise types actually \textit{improve} model performance. N1 (irrelevant data injection) produces the highest sensitivity (NSI = 0.032), indicating that extraneous numerical data causes measurable confusion, though the effect is modest. N2 (misleading financial distractors) shows minimal sensitivity (NSI = 0.015). More surprisingly, N3 (verbose context) yields a slightly negative NSI ($-$0.005), suggesting that formatting inconsistencies have negligible impact and may marginally encourage more careful parsing. Most strikingly, N4 (contradictory hints) produces a strongly negative NSI of $-$0.072, boosting accuracy from 81.6\% to 87.5\%---a 5.9 percentage point improvement. Because N4 hints explicitly reference common incorrect answers, the model receives useful information about which options to avoid, effectively narrowing the search space. This finding highlights an important design consideration: adversarial prompts that name specific wrong answers may inadvertently aid sophisticated models rather than confuse them.
+The full-corpus results ($N = 1{,}032$) reveal a nuanced noise sensitivity profile with a striking finding: two of the four noise types actually \textit{improve} model performance. N1 (irrelevant data injection) produces the highest sensitivity (NSI = 0.032), indicating that extraneous numerical data causes measurable confusion, though the effect is modest. N2 (misleading financial distractors) shows minimal sensitivity (NSI = 0.015). More surprisingly, N3 (verbose context) yields a slightly negative NSI ($-$0.005), suggesting that formatting inconsistencies have negligible impact and may marginally encourage more careful parsing. Most strikingly, N4 (contradictory hints) produces a strongly negative NSI of $-$0.072, boosting accuracy from 81.6\% to 87.5\%---a 5.9 percentage point improvement. Because N4 hints explicitly reference common incorrect answers, the model receives useful information about which options to avoid, effectively narrowing the search space. We hypothesize that N4's paradoxical benefit operates through two complementary mechanisms: (1) an \textit{elimination channel}, where naming specific wrong answers provides process-of-elimination information; and (2) a \textit{metacognitive trigger channel}, where contradictory hints signal the presence of a ``trick question'' and prompt more careful, step-by-step verification---functionally resembling an implicit chain-of-thought prompt. The second mechanism is consistent with findings that adversarial contexts can trigger deeper reasoning in language models. This finding highlights an important design consideration: adversarial prompts that name specific wrong answers may inadvertently aid sophisticated models rather than confuse them, and noise injection experiments must carefully consider whether ``noise'' inadvertently provides useful signal.
 
 The overall pattern---NSI ranging from $-$0.072 to 0.032---reveals that GPT-4o-mini is substantially more noise-robust than the counterfactual perturbation results would suggest, and that certain noise types can paradoxically enhance performance. This asymmetry is itself an important finding: the model's primary vulnerability lies in memorization-dependent reasoning rather than susceptibility to information noise. The worst-case noise degradation (N1, NSI\,=\,0.032, corresponding to a 2.6 pp absolute accuracy drop) is far less than the 18.6 pp memorization gap from counterfactual perturbation. As shown in Figure~\ref{fig:noise_sensitivity}, the NSI values span both positive and negative territory, with N1 (irrelevant data) as the only substantial degradation source and N4 (contradictory hints) producing a large beneficial effect.
 
@@ -479,7 +479,7 @@ The regulatory implication is direct: as AI models improve, the gap between stan
 
 \subsection{Limitations}
 
-Several limitations should be acknowledged. First, perturbation generation relies on GPT-4o-mini, which may introduce its own errors in generating valid perturbations; the valid perturbation rate of 68.0\% for GPT-4o-mini (702/1,032) and 61.8\% for GPT-5-mini (638/1,032) reflects this challenge. Second, the current study evaluates only Level 1 (numerical) perturbation; Level 2 (conditional inversion) perturbation would provide additional evidence on deeper reasoning failures. Third, our noise types, while domain-informed, are synthetic; real-world financial noise may be more subtle or more severe. Fourth, the memorization paradox could partly reflect differences in the reasoning model's answer extraction rate rather than pure memorization effects.
+Several limitations should be acknowledged. First, perturbation generation relies on GPT-4o-mini, which may introduce its own errors in generating valid perturbations; the valid perturbation rate of 68.0\% for GPT-4o-mini (702/1,032) and 61.8\% for GPT-5-mini (638/1,032) reflects this challenge. Among rejected perturbations, some may have altered the question's mathematical structure rather than merely changing numerical parameters, and others may have produced perturbations with incorrect gold answers. Both failure modes would bias the memorization gap estimate: invalid perturbations with incorrect gold answers would overstate the gap (by marking correct model answers as wrong), while perturbations that inadvertently simplify the problem would understate it. Second, the current study evaluates only Level 1 (numerical) perturbation; Level 2 (conditional inversion) perturbation would provide additional evidence on deeper reasoning failures. Third, our noise types, while domain-informed, are synthetic; real-world financial noise may be more subtle or more severe. Fourth, the memorization paradox could partly reflect differences in the reasoning model's answer extraction rate rather than pure memorization effects.
 
 %% ============================================
 %% 7. CONCLUSION
@@ -539,6 +539,16 @@ Ke, Z., Ming, Y., Nguyen, X. P., Xiong, C., \& Joty, S. (2025).
 \newblock Demystifying domain-adaptive post-training for financial LLMs.
 \newblock In \textit{Proceedings of the 2025 Conference on Empirical Methods in Natural Language Processing (EMNLP)}.
 
+\bibitem[Li et al.(2024)]{li2024gsmplus}
+Li, Q., Zhu, Z., Wang, Z., et al. (2024).
+\newblock GSM-Plus: A comprehensive benchmark for evaluating the robustness of {LLMs} as mathematical problem solvers.
+\newblock In \textit{Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics (ACL)}.
+
+\bibitem[Lopez-Lira et al.(2025)]{lopezlira2025memorization}
+Lopez-Lira, A., Kirtac, K., \& Tang, Y. (2025).
+\newblock The memorization problem: When can we trust financial {LLM} benchmarks?
+\newblock \textit{arXiv preprint}.
+
 \bibitem[Shi et al.(2023)]{shi2023detecting}
 Shi, W., Ajith, A., Xia, M., et al. (2023).
 \newblock Detecting pretraining data from large language models.
@@ -553,6 +563,11 @@ Wang, B., Xu, C., Wang, S., et al. (2022).
 Wu, S., Irsoy, O., Lu, S., et al. (2023).
 \newblock BloombergGPT: A large language model for finance.
 \newblock \textit{arXiv preprint arXiv:2303.17564}.
+
+\bibitem[Yang et al.(2025)]{yang2025gsmdc}
+Yang, R., Ding, Z., Zhang, J., et al. (2025).
+\newblock GSM-DC: Benchmarking mathematical reasoning with dynamically constructed problems.
+\newblock In \textit{Proceedings of the 2025 Conference on Empirical Methods in Natural Language Processing (EMNLP)}.
 
 \end{thebibliography}
 

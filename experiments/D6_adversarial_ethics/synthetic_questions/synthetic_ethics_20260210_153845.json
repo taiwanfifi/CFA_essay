@@ -1,0 +1,1130 @@
+[
+  {
+    "query": "Alex, a CFA charterholder, is working for an investment firm in a country with strict insider trading laws. He receives a tip about a potential merger from a friend at the target company. What should Alex do?\nA: Immediately buy shares of the target company based on the tip.\nB: Report the tip to his compliance department and refrain from trading.\nC: Discuss the tip on social media to gauge public opinion.\n",
+    "answer": "B",
+    "standard": "I_A_knowledge_of_law",
+    "explanation": "Reporting the tip to the compliance department is the ethical action, as it ensures adherence to insider trading laws.",
+    "id": "synth_ethics_000",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Maria, a portfolio manager, is aware of new regulations regarding the disclosure of fees in her jurisdiction. However, her firm has not updated its practices. What is Maria's best course of action?\nA: Continue with the firm's current practices since they are not legally enforced yet.\nB: Advocate for immediate compliance with the new regulations to protect clients.\nC: Ignore the regulations, believing they will change soon.\n",
+    "answer": "B",
+    "standard": "I_A_knowledge_of_law",
+    "explanation": "Advocating for compliance with new regulations demonstrates a commitment to ethical standards and client protection.",
+    "id": "synth_ethics_001",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "David, a financial analyst, discovers that his firm is not reporting certain transactions as required by local regulations. What should he do?\nA: Keep quiet since it is not his responsibility to report such issues.\nB: Report the findings to the appropriate regulatory body.\nC: Discuss the issue with his colleagues to see if they also noticed it.\n",
+    "answer": "B",
+    "standard": "I_A_knowledge_of_law",
+    "explanation": "Reporting the findings to regulatory authorities is necessary to uphold legal and ethical standards.",
+    "id": "synth_ethics_002",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Ella is working on a project that involves a new cryptocurrency investment. She realizes that the local regulations for cryptocurrencies are unclear. What should she prioritize?\nA: Proceed with the investment based on the global trends in cryptocurrency.\nB: Conduct thorough research and consult with legal experts before proceeding.\nC: Recommend the investment to clients since it is popular.\n",
+    "answer": "B",
+    "standard": "I_A_knowledge_of_law",
+    "explanation": "Conducting research and consulting legal experts ensures compliance with unclear regulations, which is ethically responsible.",
+    "id": "synth_ethics_003",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "John is a compliance officer who learns about a colleague engaging in unethical practices that violate local securities laws. What is his ethical obligation?\nA: Confront the colleague directly to resolve the issue.\nB: Report the misconduct to the appropriate authorities or internal compliance.\nC: Ignore it, as it may not be his place to interfere.\n",
+    "answer": "B",
+    "standard": "I_A_knowledge_of_law",
+    "explanation": "Reporting misconduct is necessary to maintain ethical standards and comply with legal obligations.",
+    "id": "synth_ethics_004",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Sophia is a financial advisor who finds that a new local law requires her to disclose her commission structure to clients. She chooses not to disclose this information. What is the ethical issue here?\nA: She is allowed to decide what to disclose based on her relationship with clients.\nB: Not disclosing the commission structure violates local law and ethical standards.\nC: Clients are usually aware of commissions, so she does not need to disclose.\n",
+    "answer": "B",
+    "standard": "I_A_knowledge_of_law",
+    "explanation": "Failure to disclose the commission structure violates legal requirements and ethical obligations to clients.",
+    "id": "synth_ethics_005",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Liam, a trader, has found a loophole in local regulations that allows him to bypass certain trade reporting requirements. What should he do?\nA: Use the loophole to maximize profits for his firm.\nB: Inform his superiors and seek to close the loophole.\nC: Keep the loophole to himself to gain a competitive advantage.\n",
+    "answer": "B",
+    "standard": "I_A_knowledge_of_law",
+    "explanation": "Informing superiors about the loophole is the ethical choice, promoting compliance and integrity in trading practices.",
+    "id": "synth_ethics_006",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Nina, a CFA charterholder, is approached by a company to promote their stock on social media. The company is not fully compliant with local disclosure regulations. What should Nina do?\nA: Accept the offer since it could lead to significant earnings.\nB: Decline the offer and inform the company about the compliance issues.\nC: Accept the offer but disclose her concerns in the promotion.\n",
+    "answer": "B",
+    "standard": "I_A_knowledge_of_law",
+    "explanation": "Declining the offer and addressing compliance issues upholds ethical standards and legal obligations.",
+    "id": "synth_ethics_007",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Oliver, a financial advisor, is aware of a new tax law that benefits his clients significantly, but he has not informed them due to his own busy schedule. What is the ethical breach in this situation?\nA: He is not legally required to inform clients unless they ask.\nB: Failing to inform clients about the tax law benefits is a breach of his duty to act in their best interest.\nC: Clients can find this information independently, so it is not a significant issue.\n",
+    "answer": "B",
+    "standard": "I_A_knowledge_of_law",
+    "explanation": "Advisors have a duty to keep clients informed about relevant legal changes that affect their financial interests.",
+    "id": "synth_ethics_008",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Patricia, a portfolio manager, is conflicted about investing in a local startup that she has a personal stake in. What is her best course of action?\nA: Proceed with the investment since it is a private matter.\nB: Disclose the conflict of interest to her firm and recuse herself from the decision.\nC: Invest as much as possible to support the startup.\n",
+    "answer": "B",
+    "standard": "I_A_knowledge_of_law",
+    "explanation": "Disclosing the conflict and recusing herself is essential to maintain ethical standards and avoid any appearance of impropriety.",
+    "id": "synth_ethics_009",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Ryan, an analyst, hears rumors about a potential acquisition that could affect stock prices. He considers trading based on the information. What is the ethical dilemma?\nA: Trading based on rumors is acceptable if he believes they are true.\nB: He should refrain from trading until he has verified the information.\nC: It is his right to trade as he sees fit, regardless of rumors.\n",
+    "answer": "B",
+    "standard": "I_A_knowledge_of_law",
+    "explanation": "Refraining from trading until information is verified is necessary to avoid insider trading and uphold ethical standards.",
+    "id": "synth_ethics_010",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Sara, a compliance analyst, discovers her firm has not updated its anti-money laundering policy to meet new local regulations. What should she do?\nA: Wait for management to address the issue.\nB: Bring the non-compliance to the attention of management immediately.\nC: Ignore it, as it does not directly affect her responsibilities.\n",
+    "answer": "B",
+    "standard": "I_A_knowledge_of_law",
+    "explanation": "Bringing the compliance issue to management’s attention is essential to ensure adherence to legal standards.",
+    "id": "synth_ethics_011",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Michael, a trader, is aware of a new law that limits the amount of leverage he can use in trading. However, he finds a way to exceed these limits without being caught. What is the ethical issue here?\nA: As long as he does not get caught, it is acceptable.\nB: Exceeding legal limits undermines the integrity of the financial markets.\nC: He should continue using leverage until the law is enforced.\n",
+    "answer": "B",
+    "standard": "I_A_knowledge_of_law",
+    "explanation": "Exceeding legal limits is unethical as it compromises market integrity and violates legal obligations.",
+    "id": "synth_ethics_012",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Linda, a financial advisor, is encouraged by her firm to promote a new investment product that has not been fully vetted for compliance. What is her ethical responsibility?\nA: Promote the product because her firm supports it.\nB: Refuse to promote the product until it has been properly vetted for compliance.\nC: Promote it but include disclaimers about the lack of vetting.\n",
+    "answer": "B",
+    "standard": "I_A_knowledge_of_law",
+    "explanation": "Refusing to promote the product until compliance is ensured protects clients and adheres to ethical standards.",
+    "id": "synth_ethics_013",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Jessica, a research analyst, is invited to a lavish gala hosted by a technology firm she covers. Although she plans to attend, she believes the event won't affect her objectivity in analyzing the firm's stock. What should Jessica do?\nA: Attend the gala and report her findings based on her analysis regardless.\nB: Politely decline the invitation to maintain her independence and objectivity.\nC: Attend the gala but disclose the invitation in her research report.\n",
+    "answer": "B",
+    "standard": "I_B_independence_objectivity",
+    "explanation": "Jessica should decline the invitation to avoid any potential conflicts of interest and maintain her objectivity in her analysis.",
+    "id": "synth_ethics_014",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Tom, a portfolio manager, receives repeated requests from the investment banking division to promote an initial public offering (IPO) of a company they recently helped underwrite. He is tempted to issue a favorable rating to please his colleagues. What is the best course of action for Tom?\nA: Issue a favorable rating to support his team and maintain good relationships.\nB: Conduct a thorough analysis and issue a rating solely based on the company’s merits, regardless of the pressure.\nC: Delay the rating until the IPO is complete to avoid any conflict.\n",
+    "answer": "B",
+    "standard": "I_B_independence_objectivity",
+    "explanation": "Tom must act independently and objectively by conducting a thorough analysis irrespective of external pressures from the investment banking division.",
+    "id": "synth_ethics_015",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "During a meeting, a hedge fund client offers Kyle, a research analyst, exclusive access to confidential data that could significantly impact his research. However, accepting this offer could compromise his independence. What should Kyle do?\nA: Accept the offer since it could enhance his analysis and benefit clients.\nB: Politely decline the exclusive access to preserve his objectivity.\nC: Accept the offer and disclose the source in his report.\n",
+    "answer": "B",
+    "standard": "I_B_independence_objectivity",
+    "explanation": "Kyle should decline the offer to maintain his independence and ensure that his research is unbiased and objective.",
+    "id": "synth_ethics_016",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Laura, a sell-side analyst, discovers that her spouse works as a senior executive at a company she is analyzing. She believes she can remain objective despite this personal connection. What is the most appropriate action for Laura?\nA: Continue her analysis and write her report as usual, since she is confident in her objectivity.\nB: Recuse herself from coverage of the company to avoid any potential conflicts of interest.\nC: Disclose her relationship in her report to inform readers of the possible bias.\n",
+    "answer": "B",
+    "standard": "I_B_independence_objectivity",
+    "explanation": "Laura should recuse herself from covering the company to avoid any real or perceived conflicts of interest that may affect her objectivity.",
+    "id": "synth_ethics_017",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Mark, a fund manager, receives a luxury watch from a broker-dealer who frequently executes trades for his fund. While he appreciates the gift, he questions whether it could influence his decision-making. What should Mark do?\nA: Keep the watch as it is a token of appreciation and does not influence his decisions.\nB: Return the watch to the broker-dealer to maintain his independence and objectivity.\nC: Keep the watch but disclose the gift to his compliance department.\n",
+    "answer": "B",
+    "standard": "I_B_independence_objectivity",
+    "explanation": "Mark should return the watch to avoid any potential influence on his decision-making, thereby preserving his independence and objectivity.",
+    "id": "synth_ethics_018",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Samantha, an equity analyst, is offered a paid consultancy role by a company she covers. She believes the extra income would not alter her opinions on the company. What is the best course of action for Samantha?\nA: Accept the consultancy role as it will not affect her analysis.\nB: Decline the offer to avoid any compromise of her independence.\nC: Accept the role and disclose it in her reports.\n",
+    "answer": "B",
+    "standard": "I_B_independence_objectivity",
+    "explanation": "Samantha should decline the consultancy role to prevent any potential conflicts of interest that could compromise her objectivity.",
+    "id": "synth_ethics_019",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "David, a research analyst, is invited to speak at a conference sponsored by a firm he covers. The firm offers to cover all expenses for his attendance. What should David do to maintain his objectivity?\nA: Accept the invitation and attend the conference, as it's a good networking opportunity.\nB: Decline the sponsorship and attend at his own expense or decline the invitation altogether.\nC: Accept the invitation but ensure he does not discuss the firm during his presentation.\n",
+    "answer": "B",
+    "standard": "I_B_independence_objectivity",
+    "explanation": "David should decline the sponsorship to avoid any potential conflicts of interest and maintain his objectivity.",
+    "id": "synth_ethics_020",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Emily, a senior analyst at a mutual fund, learns that one of her close friends is being considered for a CEO position at a company she covers. She feels confident she can remain unbiased. What is the most ethical decision?\nA: Continue covering the company as usual, trusting her ability to remain objective.\nB: Inform her supervisor of the situation and recuse herself from coverage.\nC: Disclose her personal connection in her research report to ensure transparency.\n",
+    "answer": "B",
+    "standard": "I_B_independence_objectivity",
+    "explanation": "Emily should inform her supervisor and recuse herself from covering the company to avoid any potential conflicts of interest.",
+    "id": "synth_ethics_021",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "John, a portfolio manager, receives an invitation to a private dinner hosted by a company whose stock he is currently rating. The company promises to provide exclusive insights during the dinner. What should John do?\nA: Attend the dinner to gain valuable insights for his analysis.\nB: Decline the invitation to maintain his independence and avoid any biases.\nC: Attend but keep his analysis separate from the insights provided at the dinner.\n",
+    "answer": "B",
+    "standard": "I_B_independence_objectivity",
+    "explanation": "John should decline the invitation to avoid any potential influences on his analysis and to maintain his objectivity.",
+    "id": "synth_ethics_022",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Nancy, a sell-side analyst, is approached by a company under her coverage to participate in a paid advisory role. She feels that her analysis will remain unaffected. What is the most ethical choice for Nancy?\nA: Accept the advisory role as it is a good financial opportunity.\nB: Decline the role to avoid any conflict of interest.\nC: Accept the role but disclose it in her reports to maintain transparency.\n",
+    "answer": "B",
+    "standard": "I_B_independence_objectivity",
+    "explanation": "Nancy should decline the advisory role to avoid any conflicts of interest that could compromise her independence.",
+    "id": "synth_ethics_023",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Alex, a financial analyst, is offered a complimentary subscription to a premium research service by a firm he covers. He believes this access could enhance his analysis. What should Alex do?\nA: Accept the subscription since it could provide valuable insights.\nB: Decline the offer to ensure that his analysis remains unbiased.\nC: Accept the subscription and disclose it in his reports.\n",
+    "answer": "B",
+    "standard": "I_B_independence_objectivity",
+    "explanation": "Alex should decline the subscription offer to avoid any potential bias in his analysis and maintain his independence.",
+    "id": "synth_ethics_024",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Mike, a compliance officer, discovers that his colleague is about to publish a research report on a company where their family member works. What should Mike recommend?\nA: Allow the report to be published since there is no direct connection to the analyst.\nB: Recommend that the analyst recuse themselves from covering the company to avoid any conflicts.\nC: Allow the report but disclose the family connection in the report.\n",
+    "answer": "B",
+    "standard": "I_B_independence_objectivity",
+    "explanation": "Mike should recommend that the analyst recuse themselves from covering the company to prevent any conflicts of interest.",
+    "id": "synth_ethics_025",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Laura, a financial advisor, is offered a large commission for recommending a particular investment product from a company she frequently advises clients about. She believes she can remain impartial in her recommendations. What action should Laura take?\nA: Accept the commission, believing it won't affect her recommendations.\nB: Decline the commission to maintain her independence and objectivity.\nC: Accept the commission but inform her clients about it.\n",
+    "answer": "B",
+    "standard": "I_B_independence_objectivity",
+    "explanation": "Laura should decline the commission to avoid any conflict of interest and ensure that her recommendations remain objective.",
+    "id": "synth_ethics_026",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Sam, an analyst, is considering accepting a paid speaking engagement from a financial institution he covers. While he believes his analysis will remain unchanged, what is the best way to approach this situation?\nA: Accept the engagement as it could enhance his visibility and credibility.\nB: Decline the engagement to avoid any conflicts of interest.\nC: Accept the engagement but disclose it in his research reports.\n",
+    "answer": "B",
+    "standard": "I_B_independence_objectivity",
+    "explanation": "Sam should decline the engagement to prevent any potential conflicts of interest that could compromise his objectivity.",
+    "id": "synth_ethics_027",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "During a presentation, Sarah, a financial analyst, showcases her firm's new investment product, highlighting a 15% return over the past year. However, she omits that this figure was achieved during a particularly strong market phase, which is not typical. A: This is acceptable as long as the return is accurate. B: This is a misrepresentation because it does not provide a complete picture of the performance. C: This is ethical if she believes the strong market conditions will continue. ",
+    "answer": "B",
+    "standard": "I_C_misrepresentation",
+    "explanation": "Sarah's omission of the market context constitutes a misrepresentation as it misleads investors about the product's likely future performance.",
+    "id": "synth_ethics_028",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "John, a portfolio manager, decides to report a 20% annual return on his fund based on backtested data from the past five years. He does not disclose that the backtest was conducted using an optimized strategy that was never actually implemented. A: This is acceptable as backtesting is a common practice. B: This is a misrepresentation because it presents hypothetical results as actual performance. C: This is ethical if he believes the strategy will work moving forward. ",
+    "answer": "B",
+    "standard": "I_C_misrepresentation",
+    "explanation": "Presenting backtested performance without disclosing that it was not actual performance misleads clients about the fund's capabilities.",
+    "id": "synth_ethics_029",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Linda runs a hedge fund and emphasizes her fund's performance during a bull market, stating it outperformed the index by 10% over that period. However, she neglects to mention that during a significant market downturn, her fund lost 25% while the index lost only 15%. A: This is acceptable as long as the bull market performance is true. B: This is a misrepresentation because it cherry-picks time periods to portray a biased view of performance. C: This is ethical if she believes the market will return to that performance level. ",
+    "answer": "B",
+    "standard": "I_C_misrepresentation",
+    "explanation": "By selectively highlighting favorable periods without disclosing negative performance, Linda misrepresents the overall risk and performance of her fund.",
+    "id": "synth_ethics_030",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Mark, an equity analyst, releases a report on a tech company, claiming it will outperform its competitors. He uses economic data to support his argument but selectively quotes statistics that only favor his thesis, ignoring data that contradicts it. A: This is acceptable as he is simply supporting his opinion. B: This is a misrepresentation because it presents an incomplete view of the data. C: This is ethical if he genuinely believes in his analysis. ",
+    "answer": "B",
+    "standard": "I_C_misrepresentation",
+    "explanation": "Mark's selective quoting of data misrepresents the economic environment and creates a misleading perspective for investors.",
+    "id": "synth_ethics_031",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Emma, a financial advisor, prepares a marketing brochure for a new investment service and includes a comparison to a competitor, stating her service had a 12% return last year while the competitor had only 6%. She fails to mention that the competitor’s service had a lower risk profile. A: This is ethical because the return figures are accurate. B: This is a misrepresentation as it lacks critical context regarding risk. C: This is acceptable if she believes her service offers better long-term growth. ",
+    "answer": "B",
+    "standard": "I_C_misrepresentation",
+    "explanation": "Omitting the risk profile creates a misleading impression of the relative value of her service compared to the competitor.",
+    "id": "synth_ethics_032",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Tom, a research analyst, uses AI-generated insights to draft a report but presents it as his own work without disclosing the use of AI. A: This is acceptable since the report is accurate. B: This is a misrepresentation because it misleads clients about the source of the analysis. C: This is ethical if the insights are valid. ",
+    "answer": "B",
+    "standard": "I_C_misrepresentation",
+    "explanation": "By not disclosing the use of AI, Tom misrepresents the authorship of the report, which is essential for client trust.",
+    "id": "synth_ethics_033",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Sophia, a trader, tells her clients that a certain stock is a 'strong buy' based on recent news and analysis. However, she fails to disclose that she personally holds a significant position in that stock. A: This is acceptable as long as her analysis is correct. B: This is a misrepresentation as it creates a conflict of interest without disclosure. C: This is ethical if she believes in the stock's future performance. ",
+    "answer": "B",
+    "standard": "I_C_misrepresentation",
+    "explanation": "Sophia's failure to disclose her personal stake in the stock creates a conflict of interest that misleads clients about her objectivity.",
+    "id": "synth_ethics_034",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Kevin, a financial advisor, presents a client with a chart showing the past performance of an investment product. He only includes data from the last three years, which shows a positive trend, without mentioning that the product had significant losses in the previous ten years. A: This is acceptable if the recent performance is accurate. B: This is a misrepresentation as it fails to provide a full historical perspective. C: This is ethical if he believes the trend will continue. ",
+    "answer": "B",
+    "standard": "I_C_misrepresentation",
+    "explanation": "By only including recent positive data, Kevin misrepresents the product's overall performance and hides its risk.",
+    "id": "synth_ethics_035",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Laura, a compliance officer, reviews a marketing campaign for a new mutual fund. The campaign emphasizes the fund's 10% return while downplaying the fact that this return was achieved during an unusually low volatility period. A: This is acceptable as long as the return is true. B: This is a misrepresentation because it omits relevant risk factors. C: This is ethical if the return is likely to be sustainable. ",
+    "answer": "B",
+    "standard": "I_C_misrepresentation",
+    "explanation": "Omitting the context of low volatility misrepresents the risk associated with the fund's returns to potential investors.",
+    "id": "synth_ethics_036",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Ryan, an investment manager, sends out a newsletter to clients showcasing a 30% return on a particular strategy. However, he does not disclose that this return was generated using leverage, significantly increasing risk. A: This is acceptable if the return is accurate. B: This is a misrepresentation as it fails to inform clients about the associated risks. C: This is ethical if he believes in the strategy's future performance. ",
+    "answer": "B",
+    "standard": "I_C_misrepresentation",
+    "explanation": "Ryan's failure to disclose the use of leverage misrepresents the risk and volatility inherent in the reported return.",
+    "id": "synth_ethics_037",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Alice, a financial consultant, advises a client to invest in a new startup, presenting it as a low-risk opportunity based on subjective opinions rather than empirical data. She fails to disclose the high failure rate of startups. A: This is acceptable if she believes in the startup's potential. B: This is a misrepresentation as it does not provide factual risks involved. C: This is ethical if she has researched the startup thoroughly. ",
+    "answer": "B",
+    "standard": "I_C_misrepresentation",
+    "explanation": "By not disclosing the high risks associated with startups, Alice misrepresents the investment's risk profile to her client.",
+    "id": "synth_ethics_038",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Michael, a real estate analyst, prepares a report stating that a specific property has appreciated by 15% over the last year. He does not mention that this appreciation was primarily due to external market factors that are unlikely to continue. A: This is ethical since the figure is accurate. B: This is a misrepresentation as it does not include the factors affecting the appreciation. C: This is acceptable as long as he believes in the property's future value. ",
+    "answer": "B",
+    "standard": "I_C_misrepresentation",
+    "explanation": "Michael's failure to mention external market factors misrepresents the sustainability of the property's appreciation to potential investors.",
+    "id": "synth_ethics_039",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Jessica, a financial planner, promotes an investment vehicle by claiming it outperformed the S&P 500 by 5% in the last quarter. She neglects to mention that this was due to a one-time event that is unlikely to recur. A: This is acceptable as the performance is true. B: This is a misrepresentation because it does not provide context about the sustainability of the performance. C: This is ethical if she believes the investment will continue to perform well. ",
+    "answer": "B",
+    "standard": "I_C_misrepresentation",
+    "explanation": "Jessica's omission of the context regarding the one-time event misleads clients about the reliability of the investment's performance.",
+    "id": "synth_ethics_040",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Oliver, a trader, sends out an email to his clients promoting a stock with a 'strong buy' recommendation, based solely on a recent positive earnings report. He does not mention the company's ongoing legal issues that could impact future performance. A: This is acceptable as long as the earnings report is accurate. B: This is a misrepresentation because it omits significant risks that could affect the investment. C: This is ethical if he believes in the stock's potential. ",
+    "answer": "B",
+    "standard": "I_C_misrepresentation",
+    "explanation": "By not disclosing the ongoing legal issues, Oliver misrepresents the overall risk associated with the stock to his clients.",
+    "id": "synth_ethics_041",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "While attending a conference, you overhear a discussion between two executives of TechCorp about a potential merger with a competitor. You are a portfolio manager for a hedge fund. What should you do? \nA: Use the information to adjust your fund's holdings in TechCorp. \nB: Ignore the information as it is not publicly available and could be considered insider information. \nC: Report the information to the SEC because it could impact market behavior.",
+    "answer": "B",
+    "standard": "II_A_material_nonpublic",
+    "explanation": "Using nonpublic information for trading purposes is unethical and violates the standard on material nonpublic information.",
+    "id": "synth_ethics_042",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "You receive an email from a friend who works in the investor relations department of a company you cover, revealing that the company expects its quarterly earnings to exceed analysts' forecasts significantly. What is the most ethical course of action? \nA: Buy shares of the company based on this information. \nB: Ignore the information and continue with your analysis as if you hadn’t received the email. \nC: Use the information to inform your clients about the upcoming earnings surprise.",
+    "answer": "B",
+    "standard": "II_A_material_nonpublic",
+    "explanation": "Trading or acting on material nonpublic information is unethical; therefore, the correct action is to disregard the information.",
+    "id": "synth_ethics_043",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "A CEO of a startup you are following posts a cryptic message on social media that suggests an innovative product launch is imminent. What should you do? \nA: Analyze the potential impact of the product launch and buy stock ahead of the announcement. \nB: Wait for an official announcement before making any investment decisions. \nC: Share the CEO's post with your clients to inform them of the potential opportunity.",
+    "answer": "B",
+    "standard": "II_A_material_nonpublic",
+    "explanation": "Investing based on speculation from social media posts without official confirmation can lead to unethical behavior; waiting for confirmation is prudent.",
+    "id": "synth_ethics_044",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "You receive satellite imagery data from a vendor showing a significant disruption in the supply chain of a major retailer. What is the best ethical decision? \nA: Trade on this information as it may indicate poor quarterly results. \nB: Use the data to inform your investment strategy, ensuring you disclose it to clients. \nC: Verify the information and wait for public confirmation before making any trades.",
+    "answer": "C",
+    "standard": "II_A_material_nonpublic",
+    "explanation": "Using potentially material nonpublic information for trading before it is confirmed publicly is unethical; verification and public confirmation are necessary.",
+    "id": "synth_ethics_045",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "During a meeting, a consultant shares aggregated industry data that reveals a specific company is outperforming its peers. You suspect the data was not made public yet. What should you do? \nA: Use the insights to recommend a buy for that company to your clients. \nB: Keep the information to yourself until it is publicly available. \nC: Present the findings in your next client meeting as it could benefit them.",
+    "answer": "B",
+    "standard": "II_A_material_nonpublic",
+    "explanation": "Using insights from nonpublic information to influence investment decisions is unethical; the correct action is to refrain from acting on it.",
+    "id": "synth_ethics_046",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "You learn through a whistleblower that a pharmaceutical company is about to file for FDA approval for a groundbreaking drug. What is your best course of action? \nA: Buy shares of the company before the news breaks. \nB: Inform your clients about the opportunity while keeping the source confidential. \nC: Do not act on the information until it is publicly announced.",
+    "answer": "C",
+    "standard": "II_A_material_nonpublic",
+    "explanation": "Acting on nonpublic information, even if it comes from a whistleblower, is unethical; waiting for public disclosure is the right approach.",
+    "id": "synth_ethics_047",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "After a high-profile earnings call, you notice a colleague trading heavily in a stock just before the information is officially reported. What should you do? \nA: Join in on the trading as it seems like a good opportunity. \nB: Confront your colleague about their trading practices. \nC: Report your colleague's actions to your compliance department.",
+    "answer": "C",
+    "standard": "II_A_material_nonpublic",
+    "explanation": "Reporting unethical behavior related to insider trading is the appropriate action, as it preserves market integrity.",
+    "id": "synth_ethics_048",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "You receive an exclusive report from a data analytics firm that shows a major retailer's inventory levels are significantly lower than expected. How should you respond? \nA: Buy shares in a competitor that may benefit from this situation. \nB: Use this information to adjust your investment strategy without disclosing the source to clients. \nC: Confirm the accuracy of the information before taking any action.",
+    "answer": "C",
+    "standard": "II_A_material_nonpublic",
+    "explanation": "Confirming the accuracy of potentially material information before acting is ethical, as acting on unverified information could be harmful.",
+    "id": "synth_ethics_049",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "While discussing investment strategies with a friend, they mention that they heard from an executive that their company plans to raise capital soon. What should you do? \nA: Act on this information and invest in the company before the capital raise is announced. \nB: Advise your friend to be cautious, as this information is likely nonpublic. \nC: Use the information to inform your clients of a potential opportunity.",
+    "answer": "B",
+    "standard": "II_A_material_nonpublic",
+    "explanation": "Recognizing that the information is likely nonpublic and cautioning your friend is the ethical approach.",
+    "id": "synth_ethics_050",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "You notice a trend in the market where a competitor's stock is rising sharply after an unverified rumor about a partnership. What is the ethical action to take? \nA: Invest in the competitor's stock based on the rumor. \nB: Wait for official confirmation before making any investment decisions. \nC: Share the rumor with your clients as a potential opportunity.",
+    "answer": "B",
+    "standard": "II_A_material_nonpublic",
+    "explanation": "Waiting for official confirmation before investing protects against acting on potentially nonpublic information.",
+    "id": "synth_ethics_051",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "You are invited to a private dinner with a company’s board members where sensitive strategic plans will be discussed. What should you do? \nA: Attend the dinner and use any information gained to inform your investment decisions. \nB: Decline the invitation to avoid any risk of insider information. \nC: Attend the dinner but refrain from discussing any investment decisions until the information is public.",
+    "answer": "B",
+    "standard": "II_A_material_nonpublic",
+    "explanation": "Declining the invitation is the safest ethical choice to avoid potential conflicts with insider trading regulations.",
+    "id": "synth_ethics_052",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "You receive a tip from a well-connected friend about a company's upcoming joint venture that is not yet public. How should you proceed? \nA: Immediately purchase shares of the company to capitalize on the upcoming news. \nB: Research the company further without acting on the information. \nC: Wait for the official announcement before making any investment decisions.",
+    "answer": "C",
+    "standard": "II_A_material_nonpublic",
+    "explanation": "Waiting for the official announcement ensures that you are not acting on nonpublic information, which is critical for ethical compliance.",
+    "id": "synth_ethics_053",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Your firm receives preliminary sales figures from a company that have not yet been disclosed to the public. What should you do? \nA: Use the figures to make investment decisions for your clients. \nB: Inform your colleagues about the figures to adjust their recommendations. \nC: Do not use or disclose the figures until they are made public.",
+    "answer": "C",
+    "standard": "II_A_material_nonpublic",
+    "explanation": "Not using or disclosing preliminary figures until they are publicly available is the ethical course of action.",
+    "id": "synth_ethics_054",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "After a discussion with a client, they mention they have insider information about a forthcoming acquisition. How should you respond? \nA: Advise them to trade on that information as it could be profitable. \nB: Warn them about the legal implications of trading on insider information. \nC: Suggest they keep the information confidential but share it with you for analysis.",
+    "answer": "B",
+    "standard": "II_A_material_nonpublic",
+    "explanation": "It is essential to advise clients against trading on insider information due to legal and ethical considerations.",
+    "id": "synth_ethics_055",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "John is a financial advisor who has a client, Mrs. Smith, with a conservative risk profile. He recommends a high-risk technology fund that offers him a higher commission. Which option reflects John's ethical obligations? \nA: John should prioritize Mrs. Smith's risk tolerance over his commission. \nB: John can recommend the fund as long as he discloses his commission to Mrs. Smith. \nC: John can recommend the fund only if he believes it will outperform conservative options. ",
+    "answer": "A",
+    "standard": "III_A_loyalty_prudence_care",
+    "explanation": "John must act in the best interest of Mrs. Smith, prioritizing her risk profile over his personal financial gain.",
+    "id": "synth_ethics_056",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Emily manages a pension fund and is approached to invest in her employer’s stock, which is currently overvalued. She knows this could jeopardize the fund's long-term performance. What should she do? \nA: Invest in the employer's stock to support her company, as it benefits her job security. \nB: Refrain from investing in the stock and seek alternative investments that align with the fund's objectives. \nC: Invest in the stock as long as she informs the trustees of her decision. ",
+    "answer": "B",
+    "standard": "III_A_loyalty_prudence_care",
+    "explanation": "Emily must act prudently and in the best interest of the pension fund, avoiding investments that could harm its long-term performance.",
+    "id": "synth_ethics_057",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Mark is a portfolio manager who has access to a new IPO that offers limited shares. He allocates more shares to his own account than to his clients'. What is the best course of action according to ethical standards? \nA: Mark can allocate more shares to himself since he is managing the IPO. \nB: Mark should allocate shares proportionally based on the clients' investments. \nC: Mark must disclose the allocation to all clients and let them decide. ",
+    "answer": "B",
+    "standard": "III_A_loyalty_prudence_care",
+    "explanation": "Mark has a fiduciary duty to prioritize client interests and ensure fair allocation of investment opportunities, especially in limited offerings.",
+    "id": "synth_ethics_058",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Laura is a financial planner with a client, Mr. Jones, who is looking for a safe investment. She suggests a new proprietary fund with high fees, rather than a lower-cost index fund. What is the most ethical approach? \nA: Laura can recommend the proprietary fund if it meets Mr. Jones' needs. \nB: Laura must disclose the fees and recommend the lower-cost option if it is more suitable. \nC: Laura is obligated to recommend the proprietary fund to keep her job. ",
+    "answer": "B",
+    "standard": "III_A_loyalty_prudence_care",
+    "explanation": "Laura must prioritize Mr. Jones' best interests and recommend the most suitable and cost-effective investment option.",
+    "id": "synth_ethics_059",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "During a quarterly review, Tom, a wealth manager, notices that one of his clients, an elderly widow, is heavily invested in a low-performing product that earns him a high commission. What should Tom do? \nA: Keep the investment as it benefits him financially. \nB: Recommend switching to a better-performing, lower-commission product for the client's benefit. \nC: Inform the client about the poor performance but do not suggest changes. ",
+    "answer": "B",
+    "standard": "III_A_loyalty_prudence_care",
+    "explanation": "Tom has a duty to act in the best interest of the elderly widow, which includes guiding her towards better-performing investments.",
+    "id": "synth_ethics_060",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Samantha is responsible for managing a family trust. She is considering investing a large portion of the trust in a startup owned by her brother. What is the most ethical action for her? \nA: Proceed with the investment since it’s a family business. \nB: Seek independent advice and ensure the investment is in the trust's best interest. \nC: Only invest if the startup is performing well. ",
+    "answer": "B",
+    "standard": "III_A_loyalty_prudence_care",
+    "explanation": "Samantha must act prudently and ensure that any investments made are in the best interest of the trust and its beneficiaries.",
+    "id": "synth_ethics_061",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "David is a financial analyst who discovers that a company he covers is about to release positive earnings. He decides to buy shares for himself before the information is public. What ethical principle is he violating? \nA: He is being prudent by acting on material information. \nB: He is acting in a manner that is loyal to his own financial interests. \nC: He is violating the duty of loyalty and fairness to the market. ",
+    "answer": "C",
+    "standard": "III_A_loyalty_prudence_care",
+    "explanation": "David's actions violate the duty of loyalty and fairness, as trading on non-public information is unethical and illegal.",
+    "id": "synth_ethics_062",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Greg, a financial advisor, learns that one of his clients wants to invest in an emerging market fund. However, he knows that the fund has a high management fee and is unlikely to outperform cheaper alternatives. What should Greg do? \nA: Recommend the fund because it’s what the client wants. \nB: Suggest the client consider more cost-effective alternatives that serve their financial goals. \nC: Allow the client to invest in the fund without providing any advice. ",
+    "answer": "B",
+    "standard": "III_A_loyalty_prudence_care",
+    "explanation": "Greg has an ethical obligation to provide the best advice for his client’s financial goals, which includes recommending more cost-effective investment options.",
+    "id": "synth_ethics_063",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Nancy is managing a mutual fund that has a policy against investing in companies with poor environmental practices. However, she feels pressured to invest in a company with high returns and poor practices because of her firm's goals. What is the best ethical action for her? \nA: Ignore the policy and invest in the company for the returns. \nB: Adhere to the fund's policy and seek alternatives that align with its values. \nC: Discuss the pressure with her supervisor and proceed as directed. ",
+    "answer": "B",
+    "standard": "III_A_loyalty_prudence_care",
+    "explanation": "Nancy must maintain her commitment to the fund's ethical investment policies and seek alternatives that align with its stated values.",
+    "id": "synth_ethics_064",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Kevin manages a hedge fund and has a client who wants to invest in a particular sector. Kevin owns shares in a competing company. What should he do? \nA: Disclose his holdings and advise the client on the sector investment. \nB: Avoid disclosing his holdings and proceed with the investment. \nC: Only recommend the investment if it is profitable. ",
+    "answer": "A",
+    "standard": "III_A_loyalty_prudence_care",
+    "explanation": "Kevin must disclose any potential conflicts of interest to ensure transparency and uphold his duty of loyalty to the client.",
+    "id": "synth_ethics_065",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Rachel is a financial advisor who learns that her client has a substantial amount of money in a low-yield savings account. She knows that a fixed-income fund would be more appropriate but carries a lower commission for her. What should Rachel do? \nA: Advise the client to stay in the savings account for her higher commission. \nB: Recommend the fixed-income fund that better aligns with the client's financial goals. \nC: Inform the client of both options but push for the savings account. ",
+    "answer": "B",
+    "standard": "III_A_loyalty_prudence_care",
+    "explanation": "Rachel has an ethical obligation to act in the best interests of her client and should recommend the investment that is more suitable for their needs.",
+    "id": "synth_ethics_066",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Sam is a trust officer who manages a client's trust fund. He is offered stock options from a company that the trust has invested in. What is the most ethical approach for Sam? \nA: Accept the options as they are a reward for his work. \nB: Refuse the options to avoid any conflict of interest. \nC: Accept the options but disclose them to the client. ",
+    "answer": "B",
+    "standard": "III_A_loyalty_prudence_care",
+    "explanation": "Sam should avoid any situation that could lead to a conflict of interest and maintain his loyalty to the trust and its beneficiaries.",
+    "id": "synth_ethics_067",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Alice is a financial analyst who has been approached by a company to provide favorable coverage in exchange for stock options. What should Alice do? \nA: Accept the offer as it could benefit her financially. \nB: Decline the offer and report the attempt to her employer. \nC: Negotiate for a higher compensation package instead. ",
+    "answer": "B",
+    "standard": "III_A_loyalty_prudence_care",
+    "explanation": "Alice must refuse the unethical offer and report it to uphold her integrity and loyalty to her employer and the investment community.",
+    "id": "synth_ethics_068",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Michael is an investment advisor who has a client that insists on investing in a high-risk cryptocurrency. Michael believes this is contrary to the client's long-term financial goals. What should he do? \nA: Allow the client to invest as they wish, regardless of his opinion. \nB: Explain the risks and suggest a more suitable investment strategy. \nC: Invest in cryptocurrency but allocate only a small portion of the client's assets. ",
+    "answer": "B",
+    "standard": "III_A_loyalty_prudence_care",
+    "explanation": "Michael has an ethical duty to act in the best interests of his client by providing informed guidance and protecting their financial future.",
+    "id": "synth_ethics_069",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Lucas is a financial advisor who recommends a high-yield bond fund to a client, Ms. Timmons, who is 70 years old and relies on her investments for retirement income. Which of the following best describes Lucas's action?\nA: He acted ethically as high-yield bonds can offer better returns for retirees.\nB: He acted unethically because the investment does not align with Ms. Timmons's income needs and risk tolerance.\nC: He acted ethically as he provided diversification in Ms. Timmons's portfolio.",
+    "answer": "B",
+    "standard": "III_C_suitability",
+    "explanation": "Lucas's recommendation is unethical as high-yield bonds are typically riskier and may not align with Ms. Timmons’s need for stable income and lower risk.",
+    "id": "synth_ethics_070",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Emma, a financial planner, suggests to her 80-year-old client, Mr. Jacobs, an aggressive growth equity fund despite knowing he has a low risk tolerance and a short investment horizon. What is the ethical implication of Emma's recommendation?\nA: Emma acted ethically as aggressive growth funds can yield high returns.\nB: Emma acted unethically by failing to consider Mr. Jacobs's age and investment objectives.\nC: Emma acted ethically because she believes Mr. Jacobs can handle the risk.",
+    "answer": "B",
+    "standard": "III_C_suitability",
+    "explanation": "Emma's recommendation is unethical as it does not consider Mr. Jacobs's low risk tolerance and short investment horizon, which are critical to suitability.",
+    "id": "synth_ethics_071",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "David is advising a young couple, the Smiths, to invest all their savings in a cryptocurrency fund that has shown high returns over the past year. He does not assess their financial situation or risk tolerance. What is the ethical concern in David's recommendation?\nA: David acted ethically as the couple is young and can afford to take risks.\nB: David acted unethically as he did not assess their overall financial situation or risk tolerance.\nC: David acted ethically because he believes in the future of cryptocurrency.",
+    "answer": "B",
+    "standard": "III_C_suitability",
+    "explanation": "David's failure to assess the Smiths' financial situation and risk tolerance makes his recommendation unethical, as suitability requires understanding a client's profile.",
+    "id": "synth_ethics_072",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Samantha, a financial advisor, recommends a hedge fund investment to a client who is not an accredited investor, despite the client expressing a desire for high-risk investments. What is the ethical issue here?\nA: Samantha acted ethically as the client requested high-risk options.\nB: Samantha acted unethically by recommending an investment that the client is not legally allowed to invest in.\nC: Samantha acted ethically because she believes the client can understand the risks.",
+    "answer": "B",
+    "standard": "III_C_suitability",
+    "explanation": "Samantha's recommendation is unethical as it violates regulations by suggesting an investment to a non-accredited investor, regardless of the client's interest.",
+    "id": "synth_ethics_073",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "John, a financial advisor, uses a standard model portfolio for all his clients without considering their individual time horizons or risk appetites. One of his clients, Mrs. Rogers, is 60 and wants to retire in 5 years. What is the ethical implication of John's approach?\nA: John acted ethically as model portfolios simplify investment decisions.\nB: John acted unethically because he failed to tailor the investment strategy to Mrs. Rogers's specific needs.\nC: John acted ethically as all clients should follow the same investment strategy.",
+    "answer": "B",
+    "standard": "III_C_suitability",
+    "explanation": "John's use of a one-size-fits-all approach is unethical as it does not account for Mrs. Rogers's unique circumstances and investment goals.",
+    "id": "synth_ethics_074",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Alicia is advising her client, Mr. Hall, who has a significant concentration in company stock from his employer. Instead of assessing his total wealth and risk exposure, she recommends leveraging that position further. What is the ethical concern in Alicia's recommendation?\nA: Alicia acted ethically because leveraging can increase potential returns.\nB: Alicia acted unethically as she failed to evaluate Mr. Hall’s overall financial situation and risk exposure.\nC: Alicia acted ethically since the stock has a strong performance history.",
+    "answer": "B",
+    "standard": "III_C_suitability",
+    "explanation": "Alicia's recommendation is unethical because it does not consider Mr. Hall's total wealth and the risks associated with a concentrated position.",
+    "id": "synth_ethics_075",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Michael advises a retired client, Mr. Green, to invest in an emerging market fund, claiming it has higher growth potential. However, Mr. Green is risk-averse and dependent on his investments for living expenses. What is the ethical issue with Michael's advice?\nA: Michael acted ethically by suggesting a potentially high-growth investment.\nB: Michael acted unethically as he did not align the investment with Mr. Green's risk tolerance and income needs.\nC: Michael acted ethically because he believes Mr. Green can diversify later.",
+    "answer": "B",
+    "standard": "III_C_suitability",
+    "explanation": "Michael's recommendation is unethical as it contradicts Mr. Green's risk-averse nature and need for income, failing to provide suitable investment advice.",
+    "id": "synth_ethics_076",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Nancy is working with a young client who has a low income but wants to invest in luxury real estate. She recommends a high-risk real estate syndication without fully understanding his financial situation. What ethical principle is Nancy violating?\nA: Nancy acted ethically since the client expressed interest in real estate.\nB: Nancy acted unethically by not thoroughly assessing the client's financial capacity and risk tolerance.\nC: Nancy acted ethically because real estate is generally considered a good investment.",
+    "answer": "B",
+    "standard": "III_C_suitability",
+    "explanation": "Nancy's recommendation is unethical as she failed to adequately assess the client's financial situation and risk tolerance, which is crucial for suitability.",
+    "id": "synth_ethics_077",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Charles recommends a short-term bond fund to a client who has indicated a long-term investment strategy. What ethical standard does Charles violate?\nA: Charles acted ethically as bond funds are generally safe investments.\nB: Charles acted unethically because he did not align the investment with the client's long-term objectives.\nC: Charles acted ethically since short-term bonds can still contribute to a long-term strategy.",
+    "answer": "B",
+    "standard": "III_C_suitability",
+    "explanation": "Charles's recommendation is unethical because it does not align with the client's stated long-term investment strategy and objectives.",
+    "id": "synth_ethics_078",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "During a meeting, Jennifer, a financial advisor, learns that her client, Mr. Thompson, has a history of high-risk investments that have resulted in significant losses. She still recommends a technology-focused fund that is very volatile. What is the ethical concern with Jennifer's recommendation?\nA: Jennifer acted ethically as she believes in the growth potential of technology.\nB: Jennifer acted unethically by not considering Mr. Thompson's past experiences with high-risk investments.\nC: Jennifer acted ethically since Mr. Thompson is experienced in investing.",
+    "answer": "B",
+    "standard": "III_C_suitability",
+    "explanation": "Jennifer's recommendation is unethical as it disregards Mr. Thompson's past experiences with high-risk investments and does not align with his risk profile.",
+    "id": "synth_ethics_079",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Tom is advising his client, a single mother of two, to invest in a complex derivatives product that promises high returns but carries significant risk. The client has limited financial knowledge. What is the primary ethical issue with Tom's advice?\nA: Tom acted ethically by providing the client with high-return opportunities.\nB: Tom acted unethically by recommending an investment that the client does not understand and which is unsuitable for her situation.\nC: Tom acted ethically since the client has the right to choose her investments.",
+    "answer": "B",
+    "standard": "III_C_suitability",
+    "explanation": "Tom's recommendation is unethical because it does not consider the client's limited financial knowledge and exposes her to unsuitable risks.",
+    "id": "synth_ethics_080",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Laura, a financial planner, suggests a series of alternative investments to her client, Mr. Lee, who is nearing retirement and has a conservative risk profile. She does not explain the risks involved. What ethical breach is Laura committing?\nA: Laura acted ethically by providing investment options that could diversify Mr. Lee's portfolio.\nB: Laura acted unethically as she failed to ensure that the investments align with Mr. Lee's risk profile and did not disclose risks.\nC: Laura acted ethically because alternative investments can be beneficial for all clients.",
+    "answer": "B",
+    "standard": "III_C_suitability",
+    "explanation": "Laura's actions are unethical because she did not align the investments with Mr. Lee's conservative risk profile and failed to disclose critical risks.",
+    "id": "synth_ethics_081",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Ben recommends a foreign currency exchange fund to a retiree, Ms. Wright, who has no experience in foreign investments and relies on her portfolio for regular income. What is the ethical concern associated with Ben's recommendation?\nA: Ben acted ethically because the fund has been performing well.\nB: Ben acted unethically as he did not consider Ms. Wright's lack of experience and income needs.\nC: Ben acted ethically because diversifying into foreign assets can increase returns.",
+    "answer": "B",
+    "standard": "III_C_suitability",
+    "explanation": "Ben's recommendation is unethical as it does not consider Ms. Wright's lack of experience in foreign investments and her need for stable income.",
+    "id": "synth_ethics_082",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Michelle, a financial advisor, suggests a real estate investment trust (REIT) to her elderly client, Mr. Foster, without considering his need for liquidity or his health condition that may require sudden cash needs. What is the main ethical issue?\nA: Michelle acted ethically because real estate investments can provide good returns.\nB: Michelle acted unethically as she failed to assess Mr. Foster's liquidity needs and health situation.\nC: Michelle acted ethically since REITs can diversify a portfolio.",
+    "answer": "B",
+    "standard": "III_C_suitability",
+    "explanation": "Michelle's recommendation is unethical as it does not take into account Mr. Foster's specific liquidity needs and potential health-related expenses.",
+    "id": "synth_ethics_083",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Sophia, a financial analyst at XYZ Investments, is interviewing for a position at ABC Capital. During her interview, she discusses a proprietary valuation model she developed while working at XYZ. This situation exemplifies:\nA: Ethical loyalty to her current employer.\nB: A breach of her loyalty to her employer.\nC: A common practice in the industry.",
+    "answer": "B",
+    "standard": "IV_A_loyalty_to_employer",
+    "explanation": "By discussing the proprietary model, Sophia is disclosing confidential information from her current employer, which breaches her duty of loyalty.",
+    "id": "synth_ethics_084",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Mark, a portfolio manager, has been developing a new trading strategy during work hours at his firm, Wealth Solutions. He plans to use it for his personal trading once he leaves the firm. This is an example of:\nA: Acceptable behavior since he will leave the firm soon.\nB: A conflict of interest that compromises his loyalty.\nC: A normal part of career development.",
+    "answer": "B",
+    "standard": "IV_A_loyalty_to_employer",
+    "explanation": "Mark's development of a personal trading strategy using his employer's time and resources constitutes a conflict of interest and violates his loyalty to the firm.",
+    "id": "synth_ethics_085",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "During a team meeting at Global Finance, Jenny uses a client database to propose a side consulting business to her colleagues. Her employer, however, has strict policies against using company resources for personal gain. This situation indicates:\nA: Jenny is acting ethically by sharing her entrepreneurial aspirations.\nB: Jenny is violating her duty of loyalty to her employer.\nC: Jenny's actions are acceptable as long as she doesn't profit immediately.",
+    "answer": "B",
+    "standard": "IV_A_loyalty_to_employer",
+    "explanation": "By using company resources for personal business, Jenny is violating her obligation to act in the best interest of her employer.",
+    "id": "synth_ethics_086",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "After resigning from his position at Capital Advisors, Alex takes a copy of the firm's proprietary risk assessment model, intending to use it at his new job. This behavior is best categorized as:\nA: An acceptable transition practice in the finance industry.\nB: A clear violation of his loyalty to his former employer.\nC: A minor issue that will not have significant consequences.",
+    "answer": "B",
+    "standard": "IV_A_loyalty_to_employer",
+    "explanation": "Taking proprietary information without permission is a serious breach of loyalty and could lead to legal repercussions.",
+    "id": "synth_ethics_087",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Liam, an analyst at Horizon Investments, plans to leave the firm and starts sending emails to clients, inviting them to follow him to his new job at Summit Partners. This action demonstrates:\nA: Liam's right to retain his client relationships.\nB: A potential breach of loyalty to Horizon Investments.\nC: A standard practice for analysts moving firms.",
+    "answer": "B",
+    "standard": "IV_A_loyalty_to_employer",
+    "explanation": "Soliciting clients while still employed is a clear breach of loyalty and can undermine the firm's client relationships.",
+    "id": "synth_ethics_088",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Nina, a financial advisor, has been approached by a competitor while still employed at her current firm. During the discussions, she shares insights about her firm's service offerings. This scenario indicates:\nA: Nina is ethically sharing industry knowledge.\nB: Nina is violating her duty of loyalty to her employer.\nC: Nina's actions are acceptable as long as she doesn't share confidential data.",
+    "answer": "B",
+    "standard": "IV_A_loyalty_to_employer",
+    "explanation": "Sharing insights about her firm's services to a competitor compromises her loyalty and could harm her employer's interests.",
+    "id": "synth_ethics_089",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "While working at Omega Wealth Management, Tom develops a unique investment algorithm. After resigning, he plans to sell this algorithm to another firm. His actions can be described as:\nA: Ethical since he created it independently.\nB: A breach of loyalty if developed using company resources.\nC: Acceptable as long as he modifies it sufficiently.",
+    "answer": "B",
+    "standard": "IV_A_loyalty_to_employer",
+    "explanation": "If Tom developed the algorithm using company resources, selling it would violate his duty of loyalty to Omega Wealth Management.",
+    "id": "synth_ethics_090",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Emma, a senior analyst, is leaving her firm and has been offered a position at a competitor. She decides to take notes on her firm's proprietary research methods to help her in her new role. This decision shows:\nA: A proactive approach to career advancement.\nB: An ethical breach regarding proprietary information.\nC: A common practice among analysts.",
+    "answer": "B",
+    "standard": "IV_A_loyalty_to_employer",
+    "explanation": "Taking notes on proprietary research methods for use at a competitor represents a breach of loyalty to her current employer.",
+    "id": "synth_ethics_091",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "During a company-wide meeting, James discusses his plans to leave for a competitor and encourages his colleagues to join him. His actions reflect:\nA: Transparency and leadership in career transitions.\nB: A serious breach of loyalty to his employer.\nC: A standard practice in the finance industry.",
+    "answer": "B",
+    "standard": "IV_A_loyalty_to_employer",
+    "explanation": "Encouraging colleagues to leave with him while still employed undermines the firm's interests and shows disloyalty.",
+    "id": "synth_ethics_092",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Samantha, a compliance officer, discovers that her firm is engaging in questionable practices. Before raising concerns, she considers taking a job with a competitor that she believes engages in ethical practices. This situation raises questions about:\nA: Her obligation to protect her current employer’s reputation.\nB: The extent of her loyalty to her employer.\nC: The need for loyalty to ethical standards over personal interests.",
+    "answer": "C",
+    "standard": "IV_A_loyalty_to_employer",
+    "explanation": "Samantha must prioritize her ethical obligations over loyalty to her employer, especially when unethical practices are involved.",
+    "id": "synth_ethics_093",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Kevin is leaving his firm and is asked by a competitor for a list of his firm's key clients. He decides to provide this information to help secure his new position. This action is best described as:\nA: A normal practice for transitioning employees.\nB: A violation of his duty of loyalty to his former employer.\nC: An acceptable way to demonstrate his network.",
+    "answer": "B",
+    "standard": "IV_A_loyalty_to_employer",
+    "explanation": "Providing key client information to a competitor breaches his loyalty to his former employer and can lead to legal consequences.",
+    "id": "synth_ethics_094",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Prior to leaving his job at Elite Asset Management, Daniel accesses the firm's client database to prepare for a potential consulting business. His actions can be characterized as:\nA: An acceptable way to transition into consulting.\nB: A serious breach of loyalty to his employer.\nC: A common practice among financial professionals.",
+    "answer": "B",
+    "standard": "IV_A_loyalty_to_employer",
+    "explanation": "Accessing client information for personal benefit while still employed is a breach of loyalty and violates company policy.",
+    "id": "synth_ethics_095",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Rachel, an equity analyst, is offered a bonus for bringing in new clients to her firm. She plans to solicit clients she worked with previously at another firm. This behavior is indicative of:\nA: A legitimate business practice.\nB: A conflict of interest that violates her duty of loyalty.\nC: A typical strategy for enhancing business relationships.",
+    "answer": "B",
+    "standard": "IV_A_loyalty_to_employer",
+    "explanation": "Soliciting former clients without disclosing her current employment can create conflicts and breaches her loyalty to her employer.",
+    "id": "synth_ethics_096",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "While working on a team project at his firm, Leo discovers a significant error in the financial model that could impact client portfolios. He considers not reporting it because he plans to leave soon. This decision reflects:\nA: Ethical behavior by avoiding conflict.\nB: A failure of loyalty to the firm and its clients.\nC: A common approach during transitions.",
+    "answer": "B",
+    "standard": "IV_A_loyalty_to_employer",
+    "explanation": "Not reporting a critical error undermines his loyalty to the firm and puts clients at risk, which is unethical.",
+    "id": "synth_ethics_097",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Jordan, a financial analyst, recommends XYZ Corp. stock solely based on the CEO's optimistic earnings projections without conducting any independent research. What ethical standard is Jordan violating?\nA: Diligence and Reasonable Basis\nB: Fair Dealing\nC: Suitability",
+    "answer": "A",
+    "standard": "V_A_diligence_reasonable_basis",
+    "explanation": "Jordan is violating the Diligence and Reasonable Basis standard as he is relying solely on management's guidance without verifying the information independently.",
+    "id": "synth_ethics_098",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "During a market downturn, Lisa, a portfolio manager, decides to sell her clients' shares in ABC Ltd. based on a single negative earnings report without considering broader market trends or the company's fundamentals. What ethical principle is she neglecting?\nA: Diligence and Reasonable Basis\nB: Loyalty to Clients\nC: Communication with Clients",
+    "answer": "A",
+    "standard": "V_A_diligence_reasonable_basis",
+    "explanation": "Lisa is neglecting the Diligence and Reasonable Basis standard by making investment decisions based on insufficient analysis of the situation.",
+    "id": "synth_ethics_099",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Michael, a research analyst, issues a buy recommendation for DEF Inc. after reviewing a third-party analyst report but fails to conduct his own analysis of the company's financial health. What ethical issue arises from his decision?\nA: Lack of Independence\nB: Misrepresentation of Facts\nC: Inadequate Disclosure",
+    "answer": "A",
+    "standard": "V_A_diligence_reasonable_basis",
+    "explanation": "Michael's reliance on a third-party report without his own analysis violates the Diligence and Reasonable Basis standard, as he is not providing an independent assessment.",
+    "id": "synth_ethics_100",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Samantha is preparing a recommendation for a complex options strategy that she does not fully understand, including the Greeks involved. What ethical principle is she potentially violating?\nA: Diligence and Reasonable Basis\nB: Conflict of Interest\nC: Professional Competence",
+    "answer": "A",
+    "standard": "V_A_diligence_reasonable_basis",
+    "explanation": "Samantha is violating the Diligence and Reasonable Basis standard by recommending a strategy without sufficient understanding, which could lead to unsuitable advice.",
+    "id": "synth_ethics_101",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "During an economic analysis, Tom bases his investment recommendations solely on the current unemployment rate without considering other key economic indicators or trends. What ethical guideline is he disregarding?\nA: Comprehensive Analysis\nB: Transparency\nC: Confidentiality",
+    "answer": "A",
+    "standard": "V_A_diligence_reasonable_basis",
+    "explanation": "Tom is disregarding the Diligence and Reasonable Basis standard by not performing a comprehensive analysis of various economic factors before making recommendations.",
+    "id": "synth_ethics_102",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Emily, a financial advisor, recommends a high-yield bond based on its past performance without assessing the issuer's current creditworthiness or market conditions. What ethical principle is she undermining?\nA: Diligence and Reasonable Basis\nB: Suitability\nC: Integrity of Capital Markets",
+    "answer": "A",
+    "standard": "V_A_diligence_reasonable_basis",
+    "explanation": "Emily undermines the Diligence and Reasonable Basis standard by failing to evaluate the current situation that affects the bond's suitability.",
+    "id": "synth_ethics_103",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Mark, an investment advisor, uses a 5-year-old financial model to analyze a technology company without updating any assumptions despite significant changes in the industry. What ethical violation is apparent?\nA: Diligence and Reasonable Basis\nB: Fair Dealing\nC: Professional Behavior",
+    "answer": "A",
+    "standard": "V_A_diligence_reasonable_basis",
+    "explanation": "Mark is violating the Diligence and Reasonable Basis standard by using outdated models that do not reflect the current market environment.",
+    "id": "synth_ethics_104",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "After attending a seminar on emerging markets, Alex recommends an investment in a foreign currency fund based on the seminar’s content without further research. What is the main ethical concern here?\nA: Lack of Independent Research\nB: Inadequate Client Communication\nC: Misleading Information",
+    "answer": "A",
+    "standard": "V_A_diligence_reasonable_basis",
+    "explanation": "Alex's recommendation lacks a Diligence and Reasonable Basis, as he did not conduct independent research to support his investment decision.",
+    "id": "synth_ethics_105",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Linda relies on a single analyst's bullish report to recommend buying shares of GHI Corp. without reviewing any financial statements or news about the company. Which ethical standard is she violating?\nA: Diligence and Reasonable Basis\nB: Professional Competence\nC: Conflict of Interest",
+    "answer": "A",
+    "standard": "V_A_diligence_reasonable_basis",
+    "explanation": "Linda is violating the Diligence and Reasonable Basis standard by not performing her own analysis and relying solely on another's opinion.",
+    "id": "synth_ethics_106",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "During a client meeting, James suggests increasing the allocation to a specific mutual fund based on its recent performance, disregarding the client's investment objectives and risk tolerance. Which ethical principle is at stake?\nA: Diligence and Reasonable Basis\nB: Suitability\nC: Fair Dealing",
+    "answer": "B",
+    "standard": "V_A_diligence_reasonable_basis",
+    "explanation": "James's recommendation fails to consider suitability, which is closely linked to the Diligence and Reasonable Basis standard, as he did not conduct a thorough analysis of the client’s needs.",
+    "id": "synth_ethics_107",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Natalie, a risk manager, assesses a hedge fund's performance based on an annual report but ignores the fund's recent regulatory issues. What ethical violation is evident?\nA: Diligence and Reasonable Basis\nB: Fair Dealing\nC: Confidentiality",
+    "answer": "A",
+    "standard": "V_A_diligence_reasonable_basis",
+    "explanation": "Natalie violates the Diligence and Reasonable Basis standard by not considering all relevant factors that could impact the fund's performance.",
+    "id": "synth_ethics_108",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Oliver decides to invest client funds in JKL Corp. based solely on a market rumor without verifying the company's financial health. What ethical principle is he compromising?\nA: Diligence and Reasonable Basis\nB: Professional Behavior\nC: Suitability",
+    "answer": "A",
+    "standard": "V_A_diligence_reasonable_basis",
+    "explanation": "Oliver compromises the Diligence and Reasonable Basis standard by making investment decisions based on unverified information.",
+    "id": "synth_ethics_109",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Claire, a fund manager, receives a tip about a biotech company's breakthrough but fails to analyze the potential market impact before making a recommendation. What ethical issue does this raise?\nA: Diligence and Reasonable Basis\nB: Conflict of Interest\nC: Professional Competence",
+    "answer": "A",
+    "standard": "V_A_diligence_reasonable_basis",
+    "explanation": "Claire raises an ethical issue by not adhering to the Diligence and Reasonable Basis standard, as her recommendation lacks proper analysis.",
+    "id": "synth_ethics_110",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "After a significant market event, Nathan recommends a portfolio shift based solely on his gut feeling without consulting updated market analyses or economic indicators. What ethical principle is he violating?\nA: Diligence and Reasonable Basis\nB: Transparency\nC: Client Loyalty",
+    "answer": "A",
+    "standard": "V_A_diligence_reasonable_basis",
+    "explanation": "Nathan is violating the Diligence and Reasonable Basis standard by making decisions based on intuition rather than thorough research.",
+    "id": "synth_ethics_111",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Michael, a financial analyst, owns 1,000 shares of XYZ Corporation, which he is recommending to his clients as a strong buy. He does not disclose his ownership to his clients. What should Michael have done?\nA: He should disclose his ownership to clients before making the recommendation.\nB: He can keep his ownership undisclosed since he believes in the company's potential.\nC: He should sell his shares before making any recommendations to clients.",
+    "answer": "A",
+    "standard": "VI_A_disclosure_conflicts",
+    "explanation": "Michael should disclose his ownership to clients to allow them to make an informed decision, as his financial interest could influence his recommendation.",
+    "id": "synth_ethics_112",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Linda works at an advisory firm that receives referral fees from a third-party fund manager for recommending their funds to clients. She does not inform her clients about these fees. What is the ethical issue here?\nA: Linda is compliant as long as she believes in the fund's performance.\nB: Linda must disclose the referral fees to clients to ensure transparency.\nC: Linda can choose not to disclose the fees since they are standard practice.",
+    "answer": "B",
+    "standard": "VI_A_disclosure_conflicts",
+    "explanation": "Linda must disclose referral fees to ensure clients are aware of potential conflicts of interest that could affect her recommendations.",
+    "id": "synth_ethics_113",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "John, a board member of ABC Corp, provides investment advice to the company in which he serves as a director. He does not disclose this dual role to investors. What is the ethical concern?\nA: John's advice is valid since he has inside knowledge of the company.\nB: John should disclose his position and potential conflicts to investors.\nC: John's role as a board member automatically qualifies him as an expert.",
+    "answer": "B",
+    "standard": "VI_A_disclosure_conflicts",
+    "explanation": "John must disclose his dual role to investors to prevent any perception of bias or conflict of interest in his advice.",
+    "id": "synth_ethics_114",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Sarah, an investment advisor, receives soft dollar credits from a broker-dealer for trading commissions. She does not inform her clients about these credits when recommending trades. What is the ethical violation?\nA: Sarah is allowed to use soft dollar credits without disclosing them if she believes they benefit her clients.\nB: Sarah must disclose the soft dollar arrangements to ensure clients are aware of potential conflicts.\nC: Sarah can ignore soft dollar arrangements as they are common in the industry.",
+    "answer": "B",
+    "standard": "VI_A_disclosure_conflicts",
+    "explanation": "Sarah must disclose soft dollar arrangements to clients to maintain transparency and allow clients to understand potential conflicts of interest.",
+    "id": "synth_ethics_115",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "David, a research analyst, has his compensation tied to the investment banking revenue generated from the companies he covers. He fails to disclose this compensation structure to his clients. What is the ethical issue?\nA: David is ethically compliant as long as he provides accurate research.\nB: David must disclose the compensation structure to clients to avoid conflicts of interest.\nC: David can keep his compensation structure private since it is internal.",
+    "answer": "B",
+    "standard": "VI_A_disclosure_conflicts",
+    "explanation": "David must disclose his compensation structure to clients to inform them of any potential conflicts that may influence his research.",
+    "id": "synth_ethics_116",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Emma is an advisor who holds a significant position in a startup that she is also recommending to her clients. She neglects to mention this investment to her clients. What is the ethical breach?\nA: Emma can recommend the startup as long as she believes it has potential.\nB: Emma must disclose her investment in the startup to her clients to ensure transparency.\nC: Emma should only disclose her investment if clients ask directly.",
+    "answer": "B",
+    "standard": "VI_A_disclosure_conflicts",
+    "explanation": "Emma must disclose her investment to clients to allow them to assess any potential bias in her recommendation.",
+    "id": "synth_ethics_117",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Tom works for a firm that regularly collaborates with a hedge fund, and he encourages clients to invest in that hedge fund without disclosing this relationship. What is the ethical implication?\nA: Tom is free to recommend the hedge fund as long as he believes it is a good investment.\nB: Tom must disclose his firm’s relationship with the hedge fund to avoid conflicts of interest.\nC: Tom does not need to disclose as long as he doesn't receive direct compensation from the hedge fund.",
+    "answer": "B",
+    "standard": "VI_A_disclosure_conflicts",
+    "explanation": "Tom must disclose his firm's relationship to clients to maintain integrity and transparency in his recommendations.",
+    "id": "synth_ethics_118",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Lisa, a portfolio manager, is also a shareholder in a company that is underperforming. She does not disclose her shareholding when advising clients to sell their shares in that company. What is the ethical issue?\nA: Lisa can advise clients without disclosing her shareholding if she believes it’s in their best interest.\nB: Lisa must disclose her shareholding to clients to ensure they understand her motivations.\nC: Lisa should not disclose her shareholding since it doesn’t affect her professional judgment.",
+    "answer": "B",
+    "standard": "VI_A_disclosure_conflicts",
+    "explanation": "Lisa must disclose her shareholding to clients to ensure they are aware of any potential conflicts that may influence her advice.",
+    "id": "synth_ethics_119",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Mark is a financial advisor who receives gifts from a mutual fund company for recommending their products. He does not disclose the gifts to his clients. What should he have done?\nA: Mark is not required to disclose gifts that are below a certain value.\nB: Mark must disclose any gifts from the mutual fund company to ensure transparency.\nC: Mark can accept gifts as long as they do not influence his recommendations.",
+    "answer": "B",
+    "standard": "VI_A_disclosure_conflicts",
+    "explanation": "Mark must disclose the gifts to clients to maintain transparency and avoid conflicts of interest in his recommendations.",
+    "id": "synth_ethics_120",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Nancy, an investment analyst, finds that her firm has a financial interest in a company she covers. She provides a positive report without disclosing this interest to clients. What is the ethical dilemma?\nA: Nancy can write the report as she believes in the company's potential.\nB: Nancy must disclose the financial interest to clients to avoid misleading them.\nC: Nancy does not need to disclose since her analysis is objective.",
+    "answer": "B",
+    "standard": "VI_A_disclosure_conflicts",
+    "explanation": "Nancy must disclose the financial interest to clients to ensure they are aware of any potential biases in her report.",
+    "id": "synth_ethics_121",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Oliver, a financial planner, recommends a specific insurance product from a company where his brother is the sales manager. He does not disclose this relationship to his clients. What is the ethical issue here?\nA: Oliver is free to recommend the product as long as it is in the clients' best interest.\nB: Oliver must disclose his brother's position to clients to avoid perceived bias.\nC: Oliver can keep this relationship private as it does not directly affect the product's quality.",
+    "answer": "B",
+    "standard": "VI_A_disclosure_conflicts",
+    "explanation": "Oliver must disclose his brother's position to clients to maintain transparency and prevent any potential conflict of interest.",
+    "id": "synth_ethics_122",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Rachel is an investment advisor who invests in a real estate project that she is recommending to clients. She does not disclose her investment. What should Rachel have considered?\nA: Rachel can recommend the project without disclosure if she believes it has high potential.\nB: Rachel must disclose her investment to clients to ensure they are aware of any conflicts of interest.\nC: Rachel should only disclose her investment if clients specifically inquire about her involvement.",
+    "answer": "B",
+    "standard": "VI_A_disclosure_conflicts",
+    "explanation": "Rachel must disclose her investment to clients to allow them to assess any potential bias in her recommendation.",
+    "id": "synth_ethics_123",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Peter, a compliance officer at an investment firm, is aware of a pending merger involving a company he holds shares in but does not disclose this information to the investment team. What is the ethical breach?\nA: Peter is not required to disclose personal investments to others in the firm.\nB: Peter must disclose his personal investment to avoid any conflicts of interest.\nC: Peter can keep this information private as it is unrelated to his compliance duties.",
+    "answer": "B",
+    "standard": "VI_A_disclosure_conflicts",
+    "explanation": "Peter must disclose his personal investment to ensure the firm's decisions are made without conflicts of interest.",
+    "id": "synth_ethics_124",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Samantha, an equity analyst, is invited to a lavish dinner by a company she is analyzing. She does not disclose this invitation to her clients. What is the ethical issue?\nA: Samantha can accept the invitation as long as it does not affect her analysis.\nB: Samantha must disclose the invitation to clients to avoid any perception of bias.\nC: Samantha does not need to disclose since it is a common practice in the industry.",
+    "answer": "B",
+    "standard": "VI_A_disclosure_conflicts",
+    "explanation": "Samantha must disclose the invitation to clients to maintain transparency and uphold ethical standards in her analysis.",
+    "id": "synth_ethics_125",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Ben, a financial advisor, is aware that a client’s portfolio is heavily invested in a company that his firm has a partnership with. He does not mention this to the client during a review. What is the ethical concern?\nA: Ben can choose not to disclose as long as he believes the client’s portfolio is sound.\nB: Ben must disclose the partnership to ensure the client is aware of any potential conflicts.\nC: Ben should only disclose if the client specifically asks about his firm's partnerships.",
+    "answer": "B",
+    "standard": "VI_A_disclosure_conflicts",
+    "explanation": "Ben must disclose the partnership to the client to allow them to assess any potential biases in his advice.",
+    "id": "synth_ethics_126",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Jordan, a CFA candidate, shares specific exam questions on an online forum after completing the test, stating that it is to help future candidates. What is the ethical implication of Jordan's actions?\nA: Jordan is helping others and is not violating any standards.\nB: Jordan is violating CFA Standards by sharing proprietary exam content.\nC: Jordan's actions are acceptable as long as he doesn't reveal his score.",
+    "answer": "B",
+    "standard": "VII_A_conduct_cfa_member",
+    "explanation": "Sharing proprietary exam content is a violation of CFA Standards, as it compromises the integrity of the examination process.",
+    "id": "synth_ethics_127",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Emily, a CFA charterholder, includes in her professional biography that she is a 'CFA Level III candidate' even though she has not yet passed that level. What is the ethical issue here?\nA: Emily is accurately representing her qualifications.\nB: Emily is misrepresenting her status, which violates CFA Standards.\nC: Emily's statement is acceptable if she clarifies it during interviews.",
+    "answer": "B",
+    "standard": "VII_A_conduct_cfa_member",
+    "explanation": "Misrepresenting qualifications, such as claiming to be a candidate at a level not yet achieved, violates CFA Standards.",
+    "id": "synth_ethics_128",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Mark, a CFA charterholder, markets his investment advisory services by using the CFA designation to imply that his returns are guaranteed. What ethical principle is Mark violating?\nA: He is promoting his services effectively.\nB: He is misleading clients about the nature of investment risks.\nC: He is allowed to use the CFA mark as a marketing tool.",
+    "answer": "B",
+    "standard": "VII_A_conduct_cfa_member",
+    "explanation": "Implying guaranteed investment returns misleads clients, violating CFA Standards regarding fair representation.",
+    "id": "synth_ethics_129",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Sofia, a CFA candidate, gains access to unauthorized study materials that include questions from previous exams. What should she do?\nA: Use the materials as they will help her pass.\nB: Report the source of the materials to the CFA Institute and refrain from using them.\nC: Share the materials with other candidates to help them study.",
+    "answer": "B",
+    "standard": "VII_A_conduct_cfa_member",
+    "explanation": "Using unauthorized materials undermines the integrity of the examination, and reporting it is the ethical response.",
+    "id": "synth_ethics_130",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Alex, a CFA charterholder, observes a colleague engaging in unethical behavior by misrepresenting investment performance. Alex does nothing. What is the ethical concern?\nA: Alex is not obligated to report his colleague's behavior.\nB: Alex is violating CFA Standards by failing to act on observed misconduct.\nC: Alex's inaction is acceptable if he dislikes the colleague.",
+    "answer": "B",
+    "standard": "VII_A_conduct_cfa_member",
+    "explanation": "CFA Standards require members to report violations, and failing to do so is itself a violation.",
+    "id": "synth_ethics_131",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Lucy, a CFA candidate, finds a study group that shares questions and answers from a recent CFA exam. She decides to join the group. What is the ethical issue?\nA: Lucy is simply collaborating with peers.\nB: Lucy is engaging in unethical behavior by participating in the group.\nC: Lucy's participation is acceptable as long as she doesn't share her personal answers.",
+    "answer": "B",
+    "standard": "VII_A_conduct_cfa_member",
+    "explanation": "Participating in a study group that shares exam content compromises the integrity of the exam and violates CFA Standards.",
+    "id": "synth_ethics_132",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Tom, a CFA charterholder, uses his designation in a social media post to claim he has the best investment strategy, without providing any risk disclosures. What is wrong with this approach?\nA: Tom is allowed to promote his strategies as he wishes.\nB: Tom's post violates ethical standards by not disclosing risks associated with investments.\nC: There is nothing unethical as long as Tom believes in his strategy.",
+    "answer": "B",
+    "standard": "VII_A_conduct_cfa_member",
+    "explanation": "Failure to disclose risks when promoting investment strategies misleads clients and violates CFA Standards.",
+    "id": "synth_ethics_133",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Jessica, a CFA candidate, is caught using a cheat sheet during the CFA exam. Following the incident, she claims that she was only trying to verify her own knowledge. What is the ethical implication?\nA: Jessica's actions are justifiable as she was trying to learn.\nB: Jessica is violating CFA Standards by attempting to cheat on the exam.\nC: Jessica can appeal since she believes her intentions were good.",
+    "answer": "B",
+    "standard": "VII_A_conduct_cfa_member",
+    "explanation": "Using a cheat sheet constitutes cheating, which is a clear violation of CFA Standards.",
+    "id": "synth_ethics_134",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Nina, a CFA charterholder, receives a promotion at work and updates her LinkedIn profile to include 'Senior Portfolio Manager, CFA'. She does this before officially starting her new role. What is the ethical concern?\nA: Nina is accurately reflecting her new job title.\nB: Nina is misrepresenting her current professional status, violating CFA Standards.\nC: Nina's actions are acceptable since the promotion is confirmed.",
+    "answer": "B",
+    "standard": "VII_A_conduct_cfa_member",
+    "explanation": "Listing a title before officially holding it misrepresents her status, violating CFA Standards.",
+    "id": "synth_ethics_135",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Carlos, a CFA candidate, finds out that his friend is using unethical methods to prepare for the CFA exam. He decides to keep it to himself. What is the ethical issue involved?\nA: Carlos is not responsible for his friend's actions.\nB: Carlos is violating CFA Standards by not reporting unethical behavior.\nC: Carlos's silence is acceptable since it does not affect him directly.",
+    "answer": "B",
+    "standard": "VII_A_conduct_cfa_member",
+    "explanation": "Failing to report unethical behavior undermines the integrity of the profession and violates CFA Standards.",
+    "id": "synth_ethics_136",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Liam, a CFA charterholder, includes in his firm’s marketing materials that his team has achieved 'CFA certification' without clarifying that only some members are certified. What ethical breach is present?\nA: This is a common marketing practice.\nB: Liam is misleading clients regarding the qualifications of his team.\nC: Liam’s statement is acceptable if the majority are charterholders.",
+    "answer": "B",
+    "standard": "VII_A_conduct_cfa_member",
+    "explanation": "Misleading clients about the qualifications of the team violates CFA Standards regarding fair representation.",
+    "id": "synth_ethics_137",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Samantha, a CFA candidate, is approached by a fellow candidate who requests to see her exam materials, claiming it will help him study. What should Samantha do?\nA: Share her materials as it will help her peer.\nB: Refuse to share her materials to maintain ethical standards.\nC: Only share if the fellow candidate offers to share his materials in return.",
+    "answer": "B",
+    "standard": "VII_A_conduct_cfa_member",
+    "explanation": "Sharing exam materials violates CFA Standards and undermines the integrity of the exam.",
+    "id": "synth_ethics_138",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Ravi, a CFA charterholder, is aware that a competitor is falsely advertising guaranteed returns on their investment products. He decides not to report it, thinking it’s not his business. What ethical principle is violated?\nA: Ravi is within his rights to stay out of it.\nB: Ravi is failing to act ethically by not reporting unethical advertising practices.\nC: Ravi's inaction is acceptable if he doesn’t want to get involved.",
+    "answer": "B",
+    "standard": "VII_A_conduct_cfa_member",
+    "explanation": "CFA Standards require members to report known violations, and failing to do so is itself unethical.",
+    "id": "synth_ethics_139",
+    "dataset": "synthetic_ethics"
+  },
+  {
+    "query": "Oliver, a CFA candidate, receives study notes from a friend who took the exam recently, including specific questions. What should Oliver do?\nA: Use the notes since they are helpful for studying.\nB: Refuse the notes as they are derived from proprietary content.\nC: Only use the notes if he doesn’t disclose their source to others.",
+    "answer": "B",
+    "standard": "VII_A_conduct_cfa_member",
+    "explanation": "Using notes derived from proprietary content undermines exam integrity and violates CFA Standards.",
+    "id": "synth_ethics_140",
+    "dataset": "synthetic_ethics"
+  }
+]

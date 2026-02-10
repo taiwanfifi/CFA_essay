@@ -1,0 +1,722 @@
+[
+  {
+    "bias_version": "You have a choice between two investments: Investment A, which guarantees you a return of $5,000 but requires you to sell your current stock that has depreciated and is now worth $4,000, or Investment B, which has a 60% chance of returning $10,000 but a 40% chance of losing your entire $4,000 investment. You feel very hesitant to sell your current stock at a loss, even though Investment A provides a sure gain.",
+    "neutral_version": "You can either invest in Investment A with a guaranteed return of $5,000 or take Investment B, which has a 60% probability of yielding $10,000 and a 40% probability of losing your $4,000 investment. The expected value of Investment A is $5,000, while the expected value of Investment B is $6,000.",
+    "rational_answer": "You should choose Investment B, as it has a higher expected value of $6,000 compared to the guaranteed $5,000 from Investment A.",
+    "biased_answer": "I will choose Investment A to avoid selling my stock at a loss.",
+    "id": "la_synth_01",
+    "bias_type": "loss_aversion",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You are considering two bonds: Bond X offers a 3% return but requires selling Bond Y, which has lost $1,000 from its purchase price but is currently valued at $9,000. Bond Z, on the other hand, has a 50% chance of yielding a 10% return but a 50% chance of yielding nothing and losing the entire $9,000 investment. The thought of losing the $1,000 from Bond Y is making you reluctant to switch.",
+    "neutral_version": "You can choose Bond X, which guarantees a 3% return on your investment, or Bond Z, which has a 50% probability of yielding a 10% return and a 50% probability of a total loss. The expected value of Bond X is $9,270, while Bond Z has an expected value of $9,000.",
+    "rational_answer": "You should select Bond X for its guaranteed return, as it has a higher expected value than Bond Z.",
+    "biased_answer": "I will stick with Bond Y and not switch to Bond Z because I don't want to realize the loss.",
+    "id": "la_synth_02",
+    "bias_type": "loss_aversion",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You have an option to invest in a new tech startup that requires a $10,000 initial investment, with a 70% chance of doubling your money and a 30% chance of losing the entire investment. Alternatively, you could invest in a stable company that guarantees a return of $7,000 but requires liquidating your current investment, which is down by $2,000. The fear of losing your $2,000 makes you hesitant to sell.",
+    "neutral_version": "You can invest in a tech startup with a 70% chance of returning $20,000 and a 30% chance of a total loss of your $10,000 investment, or invest in a stable company with a guaranteed return of $7,000. The expected value of the startup investment is $14,000, while the stable company offers a certain return of $7,000.",
+    "rational_answer": "You should invest in the tech startup as it has a higher expected value of $14,000 compared to the guaranteed $7,000.",
+    "biased_answer": "I will choose the stable company to avoid the risk of losing my $10,000.",
+    "id": "la_synth_03",
+    "bias_type": "loss_aversion",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You are presented with two investment funds: Fund A, which has consistently delivered a 5% annual return but requires you to sell your current fund that is down $500, or Fund B, which has a 40% chance of returning 15% and a 60% chance of losing your entire investment of $10,000. The potential for loss from Fund B makes you reluctant to make the switch.",
+    "neutral_version": "You can choose Fund A with a guaranteed 5% return, or Fund B, which has a 40% probability of returning 15% and a 60% probability of losing your $10,000 investment. The expected value of Fund A is $10,500, while Fund B has an expected value of $6,000.",
+    "rational_answer": "You should choose Fund A since it has a higher expected value than Fund B.",
+    "biased_answer": "I will stick with my current fund to avoid realizing a loss.",
+    "id": "la_synth_04",
+    "bias_type": "loss_aversion",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You are considering two real estate options: Property A, which will yield a guaranteed profit of $15,000, but requires selling your current property that has lost $3,000 in value, or Property B, which has a 30% chance of yielding a $25,000 profit but a 70% chance of losing your entire investment of $10,000. The thought of losing the $3,000 from your current property makes you hesitate.",
+    "neutral_version": "You can invest in Property A with a guaranteed profit of $15,000 or Property B, which has a 30% probability of yielding $25,000 and a 70% probability of losing $10,000. The expected value of Property A is $15,000, while Property B has an expected value of $7,500.",
+    "rational_answer": "You should select Property A, as it has a higher expected value of $15,000 compared to Property B.",
+    "biased_answer": "I will choose Property B to avoid the loss on my current property.",
+    "id": "la_synth_05",
+    "bias_type": "loss_aversion",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You need to decide between two retirement accounts: Account X guarantees a return of $50,000 but requires cashing out an investment that is currently worth $45,000, which means realizing a $5,000 loss, or Account Y, which has a 20% chance of growing to $100,000 but a 80% chance of dropping to $0. The potential loss makes you wary of cashing out.",
+    "neutral_version": "You can opt for Account X with a guaranteed return of $50,000 or Account Y with a 20% probability of reaching $100,000 and an 80% probability of becoming worthless. The expected value of Account X is $50,000, while Account Y has an expected value of $20,000.",
+    "rational_answer": "You should choose Account X, as it offers a much higher expected value than Account Y.",
+    "biased_answer": "I will stick with Account Y to avoid realizing the loss on my current investment.",
+    "id": "la_synth_06",
+    "bias_type": "loss_aversion",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You are evaluating two stocks: Stock A, which guarantees a return of $2,500 but means selling Stock B, which is currently down $1,500 from your purchase price, or Stock C, which has a 50% chance of returning $5,000 but a 50% chance of losing your entire $3,000 investment. The thought of realizing a $1,500 loss on Stock B makes you hesitant to sell.",
+    "neutral_version": "You can invest in Stock A with a guaranteed return of $2,500 or Stock C, which has a 50% chance of yielding $5,000 and a 50% chance of losing $3,000. The expected value of Stock A is $2,500, while Stock C has an expected value of $1,000.",
+    "rational_answer": "You should select Stock A since it has a higher expected value than Stock C.",
+    "biased_answer": "I will choose Stock C because I don't want to realize the loss from Stock B.",
+    "id": "la_synth_07",
+    "bias_type": "loss_aversion",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You have two options for your investment portfolio: Portfolio A guarantees a $10,000 return but requires you to sell your underperforming asset, which has lost $2,000. Portfolio B offers a 25% chance of a $50,000 return but a 75% chance of losing your entire $8,000 investment. The thought of locking in the $2,000 loss makes you uneasy about selling.",
+    "neutral_version": "You can choose Portfolio A with a guaranteed return of $10,000 or Portfolio B, which has a 25% probability of yielding $50,000 and a 75% probability of losing $8,000. The expected value of Portfolio A is $10,000, while Portfolio B has an expected value of $12,500.",
+    "rational_answer": "You should select Portfolio B, as it has a higher expected value compared to Portfolio A.",
+    "biased_answer": "I will go with Portfolio A to avoid realizing the loss on my asset.",
+    "id": "la_synth_08",
+    "bias_type": "loss_aversion",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You need to choose between two investment strategies: Strategy A guarantees a profit of $12,000 but requires selling an underperforming investment that has lost $1,200, or Strategy B, which has a 30% chance of yielding $40,000 and a 70% chance of losing your $10,000 investment. The prospect of realizing the $1,200 loss makes you hesitant to sell.",
+    "neutral_version": "You can select Strategy A with a guaranteed profit of $12,000 or Strategy B, which has a 30% probability of returning $40,000 and a 70% probability of losing $10,000. The expected value of Strategy A is $12,000, while Strategy B has an expected value of $12,000.",
+    "rational_answer": "You can choose either strategy since both have the same expected value.",
+    "biased_answer": "I will choose Strategy A to avoid realizing the loss.",
+    "id": "la_synth_09",
+    "bias_type": "loss_aversion",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You are evaluating two mutual funds: Fund A, which guarantees a return of $8,000 but means selling Fund B, which is currently valued at $7,000 and has lost $1,000 since purchase. Fund C, however, has a 50% chance of yielding $20,000 but a 50% chance of losing your entire $10,000 investment. The thought of realizing a $1,000 loss keeps you from selling Fund B.",
+    "neutral_version": "You can invest in Fund A with a guaranteed return of $8,000 or Fund C, which has a 50% probability of yielding $20,000 and a 50% probability of losing $10,000. The expected value of Fund A is $8,000, while Fund C has an expected value of $5,000.",
+    "rational_answer": "You should choose Fund A, as it has a higher expected value than Fund C.",
+    "biased_answer": "I will stick with Fund B to avoid the loss.",
+    "id": "la_synth_10",
+    "bias_type": "loss_aversion",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You need to decide between two investment properties: Property A, which guarantees a return of $25,000 but requires you to sell your current property that has lost $3,000 in value, or Property B, which has a 40% chance of yielding $60,000 but a 60% chance of losing your entire investment of $20,000. The potential loss from Property B makes you reluctant to sell your current property.",
+    "neutral_version": "You can choose Property A with a guaranteed return of $25,000 or Property B, which has a 40% probability of yielding $60,000 and a 60% probability of losing $20,000. The expected value of Property A is $25,000, while Property B has an expected value of $24,000.",
+    "rational_answer": "You should choose Property A, as it has a higher expected value than Property B.",
+    "biased_answer": "I will choose Property B to avoid realizing the loss on my current property.",
+    "id": "la_synth_11",
+    "bias_type": "loss_aversion",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You are considering two investment accounts: Account X offers a guaranteed $20,000 return but requires you to liquidate an existing account that is currently down $1,500. Alternatively, Account Y has a 30% chance of growing to $50,000 and a 70% chance of dropping to $0. The thought of realizing the $1,500 loss makes you reluctant to liquidate Account X.",
+    "neutral_version": "You can opt for Account X with a guaranteed return of $20,000 or Account Y, which presents a 30% probability of reaching $50,000 and a 70% probability of losing your $10,000 investment. The expected value of Account X is $20,000, while Account Y has an expected value of $15,000.",
+    "rational_answer": "You should select Account X for its guaranteed return, as it has a higher expected value than Account Y.",
+    "biased_answer": "I will stick with Account Y to avoid realizing the loss.",
+    "id": "la_synth_12",
+    "bias_type": "loss_aversion",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You are considering investing in Company A, which is currently trading at $80 per share. Last year, the stock was at $120, and many analysts believe it will revert to this historical price despite recent earnings declining by 15%. Another option is Company B, trading at $50, which has shown consistent growth and is expected to provide a return of 12% over the next year. Which investment do you choose?",
+    "neutral_version": "Company A is trading at $80 with a potential return based on historical performance, while Company B is trading at $50 with a projected return of 12%. Analyze the expected returns to determine the better investment.",
+    "rational_answer": "Investing in Company B is the better choice due to its consistent growth and higher projected return of 12%.",
+    "biased_answer": "I will invest in Company A because it was once at $120 and is likely to return to that level.",
+    "id": "an_synth_01",
+    "bias_type": "anchoring",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You are evaluating two bonds: Bond X, which was purchased at $1,000 and is now trading at $800 after a downgrade, and Bond Y, which is currently priced at $700 but has a higher yield to maturity of 6%. Many investors recall Bond X's original price and expect it to rebound. Which bond do you select?",
+    "neutral_version": "Bond X is currently valued at $800 with historical context, while Bond Y is priced at $700 with a yield to maturity of 6%. Compare the yields and price recovery potential.",
+    "rational_answer": "Bond Y is the superior choice due to its higher yield to maturity of 6%, despite Bond X's historical price.",
+    "biased_answer": "I will choose Bond X, expecting it to return to its original purchase price of $1,000.",
+    "id": "an_synth_02",
+    "bias_type": "anchoring",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You have the option to invest in a technology stock, Company C, which previously peaked at $200 per share but is now at $100 due to a recent security breach. Alternatively, there is Company D, currently valued at $90, which has consistently reported positive earnings growth. Many analysts are optimistic about Company C returning to its former highs. Which investment do you pursue?",
+    "neutral_version": "Company C is currently trading at $100 after a decline, while Company D is priced at $90 with positive earnings growth. Evaluate the potential for recovery versus consistent performance.",
+    "rational_answer": "Investing in Company D is more rational due to its consistent earnings growth, as opposed to Company C's uncertain recovery.",
+    "biased_answer": "I will invest in Company C because it used to be worth $200 and is likely to rebound.",
+    "id": "an_synth_03",
+    "bias_type": "anchoring",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You are analyzing two real estate investments: Property E, which you bought for $500,000 and is now appraised at $450,000 due to market conditions, and Property F, which is currently listed at $400,000 but has shown steady appreciation in value. Many investors are still holding onto Property E, hoping it will return to its purchase price. Which property do you choose?",
+    "neutral_version": "Property E is currently appraised at $450,000, while Property F is listed at $400,000 with steady appreciation. Compare the investment potential based on current appraisals and trends.",
+    "rational_answer": "Choosing Property F is advisable due to its steady appreciation and lower current price compared to Property E.",
+    "biased_answer": "I will choose Property E, as I believe it will eventually recover to the purchase price of $500,000.",
+    "id": "an_synth_04",
+    "bias_type": "anchoring",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You have two mutual funds to consider: Fund G has underperformed and is currently priced at $30, down from $50, while Fund H is priced at $25 but has a solid track record of annual returns of 8%. Many investors remember Fund G's previous highs and expect it to rebound. Which fund do you invest in?",
+    "neutral_version": "Fund G is currently at $30 and has a history of higher pricing, while Fund H is at $25 with an expected annual return of 8%. Evaluate based on expected returns and historical performance.",
+    "rational_answer": "Fund H is the better investment due to its reliable 8% annual return, irrespective of Fund G's past price.",
+    "biased_answer": "I will invest in Fund G, hoping it will return to its previous high of $50.",
+    "id": "an_synth_05",
+    "bias_type": "anchoring",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You are evaluating two stocks in the energy sector: Stock I, which is currently priced at $60 after reaching $100 last year, and Stock J, currently valued at $55 but has shown robust growth and innovation in renewable energy. Many analysts anchor their predictions on Stock I's previous high. Which stock do you choose?",
+    "neutral_version": "Stock I is at $60, having previously peaked at $100, while Stock J is at $55 with strong growth prospects. Analyze the fundamentals rather than historical prices.",
+    "rational_answer": "Stock J is the superior choice based on its growth potential in renewable energy, regardless of Stock I's past valuation.",
+    "biased_answer": "I will choose Stock I, as I believe it can recover to its previous high of $100.",
+    "id": "an_synth_06",
+    "bias_type": "anchoring",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You are considering investing in two startups: Startup K, which recently raised funding at a $10 million valuation but is facing regulatory challenges, and Startup L, currently valued at $7 million with a sustainable business model and growth potential. Many investors are focused on Startup K's initial valuation. Which startup do you invest in?",
+    "neutral_version": "Startup K is valued at $10 million but is facing challenges, while Startup L is at $7 million with sustainable growth potential. Assess the investment based on current valuations and future prospects.",
+    "rational_answer": "Investing in Startup L is more prudent due to its sustainable business model, regardless of Startup K's initial valuation.",
+    "biased_answer": "I will invest in Startup K because of its previous funding round valuation of $10 million.",
+    "id": "an_synth_07",
+    "bias_type": "anchoring",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You are faced with two investment options in the automotive sector: Company M, which was trading at $80 but has dropped to $50 due to declining sales, and Company N, currently priced at $45 but has a strong market position and growth potential. Many investors believe Company M will return to its historical price. Which company do you choose?",
+    "neutral_version": "Company M is currently at $50, down from $80, while Company N is at $45 with a strong growth outlook. Compare potential returns based on current evaluations.",
+    "rational_answer": "Company N is the better investment due to its growth potential, irrespective of Company M's past price.",
+    "biased_answer": "I will invest in Company M, expecting it to rebound to its previous price of $80.",
+    "id": "an_synth_08",
+    "bias_type": "anchoring",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You are evaluating two tech companies: Company O, which was recently valued at $1 billion but has seen its stock drop to $700 million due to market volatility, and Company P, valued at $500 million with strong fundamentals and a growth trajectory. Many analysts are fixated on Company O's previous valuation. Which company do you invest in?",
+    "neutral_version": "Company O is valued at $700 million, down from $1 billion, while Company P is at $500 million with strong fundamentals. Assess based on current valuations and growth prospects.",
+    "rational_answer": "Company P is the more rational choice based on its strong fundamentals and growth potential, regardless of Company O's former valuation.",
+    "biased_answer": "I will choose Company O, as I believe it will recover to its previous valuation of $1 billion.",
+    "id": "an_synth_09",
+    "bias_type": "anchoring",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You are assessing two biotech firms: Firm Q, which recently traded at $90 but is now at $60 due to trial setbacks, and Firm R, currently priced at $55 but has a solid pipeline of upcoming products. Many investors prefer Firm Q due to its former high. Which firm do you invest in?",
+    "neutral_version": "Firm Q is at $60, down from $90, while Firm R is at $55 with a promising product pipeline. Compare investments based on future potential rather than past highs.",
+    "rational_answer": "Firm R is the better investment choice due to its strong product pipeline, despite Firm Q's past price.",
+    "biased_answer": "I will invest in Firm Q, hoping it will return to its previous high of $90.",
+    "id": "an_synth_10",
+    "bias_type": "anchoring",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You have two investment options in consumer goods: Company S, which was previously valued at $150 per share but is now trading at $100 due to market shifts, and Company T, currently priced at $70 with consistent revenue growth. Many investors anchor their expectations to Company S's former high. Which company do you choose?",
+    "neutral_version": "Company S is priced at $100, down from $150, while Company T is at $70 with consistent revenue growth. Evaluate based on current valuation and growth potential.",
+    "rational_answer": "Company T is the more suitable investment due to its consistent revenue growth, regardless of Company S's past price.",
+    "biased_answer": "I will choose Company S because I believe it can return to its previous price of $150.",
+    "id": "an_synth_11",
+    "bias_type": "anchoring",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You are considering two financial stocks: Stock U, which was trading at $120 but has fallen to $80 due to regulatory penalties, and Stock V, currently priced at $75 with a robust business model and strong earnings. Many analysts are focused on Stock U's previous valuation. Which stock do you invest in?",
+    "neutral_version": "Stock U is currently at $80, down from $120, while Stock V is priced at $75 with a strong earnings outlook. Analyze based on current fundamentals and expected returns.",
+    "rational_answer": "Investing in Stock V is more rational due to its strong earnings outlook, irrespective of Stock U's historical price.",
+    "biased_answer": "I will invest in Stock U, as I believe it will recover to its previous high of $120.",
+    "id": "an_synth_12",
+    "bias_type": "anchoring",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You are analyzing two healthcare companies: Company W, which was valued at $200 per share but is now trading at $120 due to recent litigation issues, and Company X, currently priced at $100 but has a strong pipeline of products. Many investors still believe in Company W's recovery to its prior high. Which company do you choose?",
+    "neutral_version": "Company W is at $120, down from $200, while Company X is at $100 with a strong product pipeline. Evaluate based on current valuations and growth prospects.",
+    "rational_answer": "Company X is the better investment due to its strong product pipeline, regardless of Company W's historical valuation.",
+    "biased_answer": "I will choose Company W, as I expect it to return to its previous price of $200.",
+    "id": "an_synth_13",
+    "bias_type": "anchoring",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You have the opportunity to invest in Fund A, which has historically provided a 15% annual return with a 5% chance of losing your entire investment. Alternatively, you could invest in Fund B, which offers a 10% annual return with a 0% chance of loss. Given your risk aversion, which fund would you choose?",
+    "neutral_version": "Fund A has an expected return of 14.25% with a potential loss of 100%, while Fund B has an expected return of 10% with no risk of loss. Which investment has a better expected value?",
+    "rational_answer": "Fund A has a higher expected value despite its risk, making it the better investment choice.",
+    "biased_answer": "I would choose Fund B to avoid the possibility of losing my entire investment.",
+    "id": "fr_synth_01",
+    "bias_type": "framing",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "Imagine you are considering an investment in a technology startup that has a 70% chance of generating a $500,000 profit versus a 30% chance of losing your $200,000 investment. Alternatively, you can put your money into a stable utility company that guarantees a $100,000 profit with no risk of loss. Which option do you favor?",
+    "neutral_version": "The startup has an expected value of $350,000, while the utility investment guarantees a $100,000 return. Which investment has a higher expected value?",
+    "rational_answer": "The technology startup has a higher expected value of $350,000, making it the more favorable investment.",
+    "biased_answer": "I prefer the utility company for the certainty of a guaranteed profit.",
+    "id": "fr_synth_02",
+    "bias_type": "framing",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You are presented with two real estate investment options. Option 1 is a property that could appreciate by 20% but has a 10% chance of losing 30% of its value. Option 2 is a more stable property that guarantees a 5% appreciation with no risk of loss. Which property do you feel more comfortable investing in?",
+    "neutral_version": "Option 1 has an expected return of 14%, while Option 2 guarantees a 5% return with no risk. Which option offers a better expected return?",
+    "rational_answer": "Option 1 offers a better expected return despite its risk, making it the more attractive investment.",
+    "biased_answer": "I would choose Option 2 for the certainty of returns.",
+    "id": "fr_synth_03",
+    "bias_type": "framing",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You're considering two retirement plans. Plan A offers a 9% annual return with a 15% chance of a 50% reduction in benefits due to market downturns. Plan B guarantees a 5% annual return with no risk of benefit reduction. Which plan would you select?",
+    "neutral_version": "Plan A has an expected return of 7.65% with a risk of benefit reduction, while Plan B guarantees a 5% return with no risk. Which plan has a higher expected return?",
+    "rational_answer": "Plan A has a higher expected return of 7.65%, making it the preferable choice.",
+    "biased_answer": "I would go with Plan B for the security of guaranteed benefits.",
+    "id": "fr_synth_04",
+    "bias_type": "framing",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You have the option to invest in a new biotech firm that has a 60% chance of a 40% gain but a 40% chance of losing your entire investment. Alternatively, you could invest in a well-established pharmaceutical company that guarantees a 10% gain with no risk of loss. Which investment do you choose?",
+    "neutral_version": "The biotech firm has an expected value of 24%, while the pharmaceutical company guarantees a 10% gain. Which investment provides a better expected value?",
+    "rational_answer": "The biotech firm has a higher expected value of 24%, making it the more favorable choice.",
+    "biased_answer": "I prefer the pharmaceutical company for its guaranteed gain.",
+    "id": "fr_synth_05",
+    "bias_type": "framing",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You are considering two savings accounts. Account A offers a 3% interest rate but has a 10% chance of a $1,000 penalty for early withdrawal. Account B offers a guaranteed 2% interest rate with no penalties. Which account do you feel more inclined to open?",
+    "neutral_version": "Account A has an expected return of 2.7%, while Account B guarantees a 2% return. Which account has a better expected return?",
+    "rational_answer": "Account A has a higher expected return of 2.7%, making it the superior choice.",
+    "biased_answer": "I would choose Account B for the certainty of no penalties.",
+    "id": "fr_synth_06",
+    "bias_type": "framing",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You have the chance to invest in a tech venture that has a 50% chance of doubling your investment and a 50% chance of losing it entirely. In contrast, you can invest in a bond that guarantees a 4% return. Which investment do you prefer?",
+    "neutral_version": "The tech venture has an expected value of $0, while the bond guarantees a 4% return. Which investment provides a better expected value?",
+    "rational_answer": "The bond provides a guaranteed return, making it the safer investment choice.",
+    "biased_answer": "I would invest in the tech venture for the chance to double my money.",
+    "id": "fr_synth_07",
+    "bias_type": "framing",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You are evaluating two stock investments. Stock A has a 25% chance of gaining 40% but a 75% chance of losing 20%. Stock B has a 10% guaranteed return. Which stock do you feel more inclined to invest in?",
+    "neutral_version": "Stock A has an expected value of -0.5%, while Stock B guarantees a 10% return. Which stock has a better expected value?",
+    "rational_answer": "Stock B, with a guaranteed 10% return, is the better investment.",
+    "biased_answer": "I would go for Stock A for the possibility of a larger gain.",
+    "id": "fr_synth_08",
+    "bias_type": "framing",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You are faced with two investment options in a renewable energy company. Option 1 has a 40% chance of a 60% gain but a 60% chance of losing your entire investment. Option 2 guarantees a 5% return with no risk. Which option would you select?",
+    "neutral_version": "Option 1 has an expected return of -6%, while Option 2 guarantees a 5% return. Which option is more favorable?",
+    "rational_answer": "Option 2 provides a guaranteed return, making it the more favorable choice.",
+    "biased_answer": "I would choose Option 1 because I believe in the potential for high gains.",
+    "id": "fr_synth_09",
+    "bias_type": "framing",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You are considering two mutual funds. Fund X has a 50% chance of a 30% return and a 50% chance of a 50% loss. Fund Y guarantees a 10% return with no risk. Which fund do you prefer?",
+    "neutral_version": "Fund X has an expected value of -10%, while Fund Y guarantees a 10% return. Which fund offers a better expected return?",
+    "rational_answer": "Fund Y, with a guaranteed 10% return, is the better investment choice.",
+    "biased_answer": "I would invest in Fund X for the chance of a higher return.",
+    "id": "fr_synth_10",
+    "bias_type": "framing",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You have two options for investing in a new startup. Option A presents a 70% chance of a 100% return but a 30% chance of losing your entire investment. Option B offers a guaranteed 20% return with no risk. Which option are you more likely to choose?",
+    "neutral_version": "Option A has an expected return of 40%, while Option B guarantees a 20% return. Which option has a higher expected value?",
+    "rational_answer": "Option A has a higher expected value of 40%, making it the more attractive choice.",
+    "biased_answer": "I prefer Option B for the security of guaranteed returns.",
+    "id": "fr_synth_11",
+    "bias_type": "framing",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You are looking at two investment properties. Property A has a 60% chance of a 50% increase in value but a 40% chance of a 20% decrease. Property B guarantees a 10% increase with no risk of loss. Which property would you choose?",
+    "neutral_version": "Property A has an expected value of 18%, while Property B guarantees a 10% increase. Which option has a better expected return?",
+    "rational_answer": "Property A has a higher expected value of 18%, making it the preferable investment.",
+    "biased_answer": "I would choose Property B for its guaranteed increase.",
+    "id": "fr_synth_12",
+    "bias_type": "framing",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You are considering two high-yield savings accounts. Account A offers a 4.5% interest rate but has a 10% chance of incurring a $1,000 fee if you withdraw early. Account B guarantees a 3% interest rate with no fees. Which account do you feel more comfortable with?",
+    "neutral_version": "Account A has an expected return of 4.05%, while Account B guarantees a 3% return. Which account has a higher expected return?",
+    "rational_answer": "Account A offers a higher expected return of 4.05%, making it the better choice.",
+    "biased_answer": "I would prefer Account B for the certainty of no fees.",
+    "id": "fr_synth_13",
+    "bias_type": "framing",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You are evaluating two tech investments. Investment A has a 30% chance of a 70% gain but a 70% chance of a 50% loss. Investment B guarantees a 15% return. Which investment do you find more appealing?",
+    "neutral_version": "Investment A has an expected value of -11%, while Investment B guarantees a 15% return. Which investment has a better expected value?",
+    "rational_answer": "Investment B, with a guaranteed 15% return, is the preferable choice.",
+    "biased_answer": "I would go for Investment A for the potential high return.",
+    "id": "fr_synth_14",
+    "bias_type": "framing",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "After a remarkable 12% return in the last quarter, you're considering increasing your allocation to the Growth Equity Fund to 40%. This fund has consistently outperformed the market over the past three months, and you're convinced that this trend will continue. Conversely, the Balanced Income Fund has returned just 2% in the same period. Given this recent performance, you feel compelled to capitalize on the Growth Equity Fund's momentum.",
+    "neutral_version": "The Growth Equity Fund has returned 12% over the past quarter, while the Balanced Income Fund has returned 2%. You must decide whether to allocate 40% to the Growth Equity Fund or maintain current allocations based on historical performance data.",
+    "rational_answer": "The decision should be based on long-term performance metrics and risk-adjusted returns rather than short-term trends.",
+    "biased_answer": "I will increase my allocation to the Growth Equity Fund to 40% based on its recent 12% performance.",
+    "id": "re_synth_01",
+    "bias_type": "recency",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "Having seen the Technology Sector surge by 25% in the last six months, you are tempted to shift 50% of your portfolio into tech stocks. You recall that the sector has been the talk of the town, with analysts predicting continued growth. On the other hand, the Consumer Staples sector has delivered a steady 5% return over the same period, which feels less exciting.",
+    "neutral_version": "The Technology Sector has returned 25% over the last six months, while the Consumer Staples sector has returned 5%. You need to decide how to allocate your portfolio based on these returns.",
+    "rational_answer": "You should assess both sectors' long-term growth potential and volatility before making any allocation changes.",
+    "biased_answer": "I'm going to allocate 50% of my portfolio to the Technology Sector because of its recent 25% surge.",
+    "id": "re_synth_02",
+    "bias_type": "recency",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You are reviewing your investments and notice that the Emerging Markets Fund has gained 18% in just the last quarter. This impressive performance makes you think about increasing your allocation to 30%, despite the fund's historical volatility and underperformance over the past five years. In contrast, the Domestic Equity Fund has only produced a 7% return in the same timeframe but has shown stability over the long term.",
+    "neutral_version": "The Emerging Markets Fund has returned 18% in the last quarter, while the Domestic Equity Fund has returned 7% over the same period. You need to decide on allocating 30% to one of these funds based on their recent performance.",
+    "rational_answer": "You should prioritize the long-term performance and risk profile of each fund over recent short-term returns.",
+    "biased_answer": "I will increase my allocation to the Emerging Markets Fund to 30% because of its recent 18% return.",
+    "id": "re_synth_03",
+    "bias_type": "recency",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "After observing a 15% rise in the Renewable Energy ETF over the last three months, you are considering reallocating 25% of your portfolio to it. This decision is influenced by the fact that it has been featured prominently in the news and is perceived as a trend. Meanwhile, the Utilities sector has only seen a 4% increase, which seems less attractive despite its historical stability.",
+    "neutral_version": "The Renewable Energy ETF has increased by 15% over the last three months, while the Utilities sector has increased by 4%. You must decide whether to allocate 25% to the Renewable Energy ETF or keep your current allocation.",
+    "rational_answer": "Focus on the long-term performance metrics and the risk-adjusted returns of each sector before making any changes.",
+    "biased_answer": "I will allocate 25% to the Renewable Energy ETF due to its recent 15% increase.",
+    "id": "re_synth_04",
+    "bias_type": "recency",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You notice that your High-Yield Bond Fund has yielded 10% over the last quarter, prompting you to consider boosting your investment to 35%. This recent performance outweighs the fact that the fund has had a mixed track record over the last few years. In contrast, the Investment Grade Bond Fund has returned a steady 3% during the same period but has a much stronger long-term performance.",
+    "neutral_version": "The High-Yield Bond Fund has returned 10% over the last quarter, while the Investment Grade Bond Fund has returned 3%. You need to decide whether to allocate 35% to the High-Yield Bond Fund based on recent performance.",
+    "rational_answer": "Evaluate the long-term risks and returns of both funds rather than focusing solely on recent performance.",
+    "biased_answer": "I will increase my investment in the High-Yield Bond Fund to 35% because of its recent 10% return.",
+    "id": "re_synth_05",
+    "bias_type": "recency",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "Seeing that the Financial Sector has surged by 20% over the past six months, you consider reallocating 40% of your assets to this sector. This decision is primarily driven by the recent performance and favorable news articles. In comparison, the Healthcare Sector has only grown by 8% during the same timeframe, which feels less compelling.",
+    "neutral_version": "The Financial Sector has returned 20% over the last six months, while the Healthcare Sector has returned 8%. You must decide whether to allocate 40% to the Financial Sector based on these recent returns.",
+    "rational_answer": "Focus on the historical performance and long-term growth potential of both sectors before making an allocation decision.",
+    "biased_answer": "I will allocate 40% to the Financial Sector because of its recent strong performance.",
+    "id": "re_synth_06",
+    "bias_type": "recency",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "After observing that a specific Real Estate Investment Trust (REIT) has increased by 22% in the last quarter, you are considering a 30% allocation to this REIT. The recent performance has caught your attention, overshadowing the fact that the REIT has had inconsistent returns over the past decade. In contrast, a diversified REIT has returned a more modest 6% but has shown reliable performance over the long term.",
+    "neutral_version": "The specific REIT has increased by 22% in the last quarter, while a diversified REIT has increased by 6%. You must decide whether to invest 30% in the specific REIT based on recent performance.",
+    "rational_answer": "Long-term performance and stability should be prioritized over recent short-term gains when making investment decisions.",
+    "biased_answer": "I will invest 30% in the specific REIT because of its recent 22% increase.",
+    "id": "re_synth_07",
+    "bias_type": "recency",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "Noticing that a particular commodity fund has risen by 30% in the last six months, you feel inclined to allocate 50% of your portfolio to it. This decision is heavily influenced by the recent price movements, despite the historical volatility of commodities. In contrast, a traditional diversified fund has grown by only 5% in the same period but has a solid long-term track record.",
+    "neutral_version": "The commodity fund has returned 30% over the last six months, while a traditional diversified fund has returned 5%. You need to decide whether to allocate 50% to the commodity fund based on these returns.",
+    "rational_answer": "You should assess the risk and historical performance of both funds before making any allocation changes.",
+    "biased_answer": "I will allocate 50% to the commodity fund because of its recent 30% performance.",
+    "id": "re_synth_08",
+    "bias_type": "recency",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "Realizing that a specific tech stock has surged by 40% in the last quarter, you are contemplating investing 20% of your portfolio in it. This strong performance has overshadowed the stock's previous erratic behavior. Meanwhile, a stable blue-chip stock has only returned 5% in the same timeframe, which feels less attractive.",
+    "neutral_version": "The specific tech stock has increased by 40% over the last quarter, while a blue-chip stock has increased by 5%. You must decide whether to invest 20% in the tech stock based on its recent performance.",
+    "rational_answer": "Investment decisions should be based on comprehensive analysis and long-term performance rather than recent short-term gains.",
+    "biased_answer": "I will invest 20% in the tech stock due to its recent 40% surge.",
+    "id": "re_synth_09",
+    "bias_type": "recency",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You are considering reallocating 30% of your portfolio to a specific index fund that has outperformed the market by 15% in the last six months. This recent trend has led you to believe that it will continue to perform well, despite its long-term average being below that of a more stable index fund that has only gained 8%.",
+    "neutral_version": "The specific index fund has outperformed the market by 15% over the last six months, while a stable index fund has returned 8%. You need to decide whether to allocate 30% to the specific index fund based on recent performance.",
+    "rational_answer": "Evaluate the long-term performance and risk profiles of both index funds before making an allocation decision.",
+    "biased_answer": "I will allocate 30% to the specific index fund based on its recent 15% outperformance.",
+    "id": "re_synth_10",
+    "bias_type": "recency",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "After witnessing a 50% increase in a biotech stock over the last three months, you're tempted to allocate 25% of your portfolio to it. This recent surge leads you to believe that it will continue to rise, overshadowing its prior performance history, which has been volatile. In comparison, a consumer goods stock has seen a steady 10% increase during the same period.",
+    "neutral_version": "The biotech stock has increased by 50% over the last three months, while the consumer goods stock has increased by 10%. You need to decide whether to allocate 25% to the biotech stock based on its recent performance.",
+    "rational_answer": "Investment decisions should consider historical performance and volatility rather than just short-term gains.",
+    "biased_answer": "I will invest 25% in the biotech stock because of its recent 50% increase.",
+    "id": "re_synth_11",
+    "bias_type": "recency",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You notice that a healthcare ETF has gained 15% in the past quarter, prompting you to consider increasing your investment to 40%. This recent performance has you excited, even though the ETF has underperformed the market over the last five years. Meanwhile, a diversified international fund has returned 6% in the same period but has historically been more stable.",
+    "neutral_version": "The healthcare ETF has returned 15% over the last quarter, while a diversified international fund has returned 6%. You must decide whether to allocate 40% to the healthcare ETF based on this recent performance.",
+    "rational_answer": "Focus on the longer-term performance and volatility of both funds before making a decision.",
+    "biased_answer": "I will allocate 40% to the healthcare ETF because of its recent 15% performance.",
+    "id": "re_synth_12",
+    "bias_type": "recency",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "Given that a specific dividend-paying stock has risen by 25% in the last six months, you are considering investing 30% of your portfolio in it. This recent trend has made you optimistic about its future performance, despite its long history of only moderate returns. In contrast, a bond fund has yielded a consistent 4% over the same period.",
+    "neutral_version": "The dividend-paying stock has returned 25% over the last six months, while a bond fund has returned 4%. You need to decide whether to invest 30% in the dividend stock based on recent performance.",
+    "rational_answer": "You should analyze the long-term performance and stability of both investments before making a decision.",
+    "biased_answer": "I will invest 30% in the dividend-paying stock due to its recent 25% rise.",
+    "id": "re_synth_13",
+    "bias_type": "recency",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "After observing that a specific mutual fund has produced a 12% return over the last quarter, you feel compelled to increase your allocation to 50%. Recent performance has been stellar, making you question your previous allocation to a fund that has only returned 3% during the same timeframe but has shown consistent returns over the years.",
+    "neutral_version": "The specific mutual fund has returned 12% over the last quarter, while another fund has returned 3%. You need to decide whether to allocate 50% to the specific mutual fund based on its recent performance.",
+    "rational_answer": "You should prioritize long-term performance and risk over short-term gains when making an investment decision.",
+    "biased_answer": "I will allocate 50% to the mutual fund because of its recent 12% return.",
+    "id": "re_synth_14",
+    "bias_type": "recency",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You have invested $10,000 in TechCorp, which has appreciated to $15,000, a 50% gain. Conversely, your investment in BioHealth has decreased from $10,000 to $6,000, reflecting a 40% loss. Despite favorable market conditions suggesting continued growth for TechCorp and potential recovery for BioHealth, you feel inclined to take profits from TechCorp and hold onto BioHealth, hoping it will rebound.",
+    "neutral_version": "You have a $15,000 position in TechCorp and a $6,000 position in BioHealth. The expected return for TechCorp is 10% over the next year while BioHealth has an expected return of 20%. You need to decide whether to sell TechCorp or BioHealth based on projected returns.",
+    "rational_answer": "You should sell BioHealth to realize a loss and reinvest in TechCorp for higher expected returns.",
+    "biased_answer": "I will sell TechCorp to lock in my gains and hold onto BioHealth in hopes that it will recover.",
+    "id": "de_synth_01",
+    "bias_type": "disposition_effect",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "Your portfolio includes 100 shares of GreenEnergy, which are currently valued at $120 per share after a 20% increase from your purchase price of $100. At the same time, you hold 150 shares of CoalInc, which have plummeted from $100 to $70 per share. With analysts predicting further growth in GreenEnergy and a challenging outlook for CoalInc, you feel compelled to sell GreenEnergy rather than realize the loss in CoalInc.",
+    "neutral_version": "You have a position in GreenEnergy valued at $12,000 and a position in CoalInc valued at $10,500. The projected growth for GreenEnergy is 15% while CoalInc is expected to decline further. Decide which position to sell.",
+    "rational_answer": "You should sell CoalInc to realize the loss and maintain your position in GreenEnergy for its projected growth.",
+    "biased_answer": "I will sell GreenEnergy to take my profits and continue holding CoalInc, hoping for a rebound.",
+    "id": "de_synth_02",
+    "bias_type": "disposition_effect",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You invested $5,000 in RealEstateCo, which has appreciated to $7,500, a 50% return. Simultaneously, your $5,000 investment in RetailCorp has decreased to $3,000, a loss of 40%. Despite forecasts indicating a strong real estate market ahead, you feel pressured to sell RealEstateCo to lock in the gains while waiting for RetailCorp's recovery.",
+    "neutral_version": "You have a $7,500 position in RealEstateCo and a $3,000 position in RetailCorp. Expected returns suggest a 12% increase for RealEstateCo and a 5% decrease for RetailCorp. Determine which to sell.",
+    "rational_answer": "You should sell RetailCorp to realize the loss and keep your investment in RealEstateCo, which has a better expected return.",
+    "biased_answer": "I will sell RealEstateCo to secure my gains and hold onto RetailCorp, hoping for its recovery.",
+    "id": "de_synth_03",
+    "bias_type": "disposition_effect",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You bought shares in FinTechInnovate for $50 each, and they are now worth $75 after a 50% gain. However, your investment in OldFinance has dropped from $50 to $30 per share. Analysts are optimistic about FinTechInnovate's future but you are hesitant to sell, instead considering holding onto the losing OldFinance shares in hopes they recover.",
+    "neutral_version": "Your position in FinTechInnovate is now worth $7,500, while OldFinance is valued at $1,500. Expected returns for FinTechInnovate are 20%, whereas OldFinance is projected to decline further. Decide which stock to sell.",
+    "rational_answer": "You should sell the OldFinance shares to realize the loss and benefit from the expected growth of FinTechInnovate.",
+    "biased_answer": "I will sell FinTechInnovate to lock in profits and hold onto OldFinance, waiting for it to recover.",
+    "id": "de_synth_04",
+    "bias_type": "disposition_effect",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You have $30,000 invested in CyberSecurity Inc., which has risen to $45,000, yielding a 50% return. At the same time, your investment of $30,000 in LegacySystems has dropped to $18,000. Despite projections indicating continued growth for CyberSecurity Inc., you feel more inclined to sell this winner while retaining the losing LegacySystems investment.",
+    "neutral_version": "Your investment in CyberSecurity Inc. is now worth $45,000, whereas LegacySystems is now valued at $18,000. The expected growth for CyberSecurity is 15% while LegacySystems is expected to decline by 10%. Choose which investment to sell.",
+    "rational_answer": "You should sell LegacySystems to realize the loss and maintain your position in CyberSecurity Inc. for its projected growth.",
+    "biased_answer": "I will sell CyberSecurity Inc. to secure my profits and hold onto LegacySystems, hoping for a turnaround.",
+    "id": "de_synth_05",
+    "bias_type": "disposition_effect",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You have $20,000 in HealthTech, which has increased in value to $28,000, a 40% gain. Meanwhile, your investment of $20,000 in PharmaCorp has fallen to $12,000. Despite analysts predicting further gains for HealthTech, you feel a strong urge to sell it and keep PharmaCorp, hoping for a rebound.",
+    "neutral_version": "Your position in HealthTech is valued at $28,000, while PharmaCorp is valued at $12,000. Expected returns suggest a 10% increase for HealthTech and a 5% decrease for PharmaCorp. Decide which investment to sell.",
+    "rational_answer": "You should sell PharmaCorp to realize the loss and keep your investment in HealthTech, which has better growth prospects.",
+    "biased_answer": "I will sell HealthTech to lock in my gains and hold onto PharmaCorp, waiting for it to recover.",
+    "id": "de_synth_06",
+    "bias_type": "disposition_effect",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "Your portfolio includes 200 shares of SpaceTech, now valued at $150 per share after a 50% rise from your initial purchase. Conversely, your shares in EarthResources have dropped from $150 to $90 per share. With SpaceTech showing strong growth potential, you are tempted to sell it instead of realizing the loss on EarthResources.",
+    "neutral_version": "You have a $30,000 position in SpaceTech and a $18,000 position in EarthResources. The projected return for SpaceTech is 15%, while EarthResources is expected to decline by 10%. Choose which to sell.",
+    "rational_answer": "You should sell EarthResources to realize the loss and retain your investment in SpaceTech for higher expected returns.",
+    "biased_answer": "I will sell SpaceTech to secure my profits and hold onto EarthResources, hoping it rebounds.",
+    "id": "de_synth_07",
+    "bias_type": "disposition_effect",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You purchased shares of BioTech for $200 each, and they are currently valued at $300, indicating a 50% gain. Meanwhile, your investment in PharmaGroup has decreased from $200 to $140 per share. Despite forecasts predicting continued growth for BioTech, you find yourself wanting to sell BioTech and holding onto PharmaGroup to avoid realizing the loss.",
+    "neutral_version": "Your shares in BioTech are valued at $30,000, while PharmaGroup is worth $21,000. Expected returns suggest a 12% increase for BioTech and a 5% decline for PharmaGroup. Determine which stock to sell.",
+    "rational_answer": "You should sell PharmaGroup to realize the loss and maintain your investment in BioTech, which has better growth prospects.",
+    "biased_answer": "I will sell BioTech to lock in my gains and keep PharmaGroup, hoping for its recovery.",
+    "id": "de_synth_08",
+    "bias_type": "disposition_effect",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You invested $15,000 in SolarPower, which has appreciated to $22,500, a 50% gain. However, your $15,000 investment in CoalEnergy has dropped to $9,000. Despite analysts indicating strong growth potential for SolarPower, you feel compelled to sell it and hold onto the losing CoalEnergy investment in hopes it rebounds.",
+    "neutral_version": "You have a $22,500 position in SolarPower and a $9,000 position in CoalEnergy. Expected growth for SolarPower is 18%, while CoalEnergy is projected to decline by 7%. Decide which to sell.",
+    "rational_answer": "You should sell CoalEnergy to realize the loss and keep your investment in SolarPower for its expected growth.",
+    "biased_answer": "I will sell SolarPower to take my profits and hold onto CoalEnergy, waiting for it to recover.",
+    "id": "de_synth_09",
+    "bias_type": "disposition_effect",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You have $40,000 invested in FinTech which has risen to $60,000, a 50% gain. Conversely, your $40,000 investment in LegacyTech has fallen to $24,000. With analysts optimistic about FinTech's future growth, you feel inclined to sell FinTech to lock in the gain and hold LegacyTech in hopes of recovery.",
+    "neutral_version": "Your position in FinTech is now worth $60,000, while LegacyTech is valued at $24,000. Expected returns indicate a 15% growth for FinTech and a 10% decline for LegacyTech. Decide which investment to sell.",
+    "rational_answer": "You should sell LegacyTech to realize the loss and maintain your position in FinTech for its projected growth.",
+    "biased_answer": "I will sell FinTech to secure my profits and continue holding LegacyTech, hoping it rebounds.",
+    "id": "de_synth_10",
+    "bias_type": "disposition_effect",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You purchased shares in GreenEnergy at $25 each, which are now worth $37.50 after a 50% increase. Your investment in OilCorp has fallen from $25 to $15 per share. Despite strong growth projections for GreenEnergy, you're tempted to sell it and hold onto OilCorp, hoping for a future recovery.",
+    "neutral_version": "Your investment in GreenEnergy is now valued at $37,500, while OilCorp is valued at $15,000. The expected return for GreenEnergy is 20%, while OilCorp is projected to decrease further. Choose which to sell.",
+    "rational_answer": "You should sell OilCorp to realize the loss and retain your investment in GreenEnergy for its better growth prospects.",
+    "biased_answer": "I will sell GreenEnergy to lock in my gains and hold onto OilCorp, waiting for it to recover.",
+    "id": "de_synth_11",
+    "bias_type": "disposition_effect",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You have $25,000 in CloudServices, currently valued at $37,500 after a 50% gain. On the other hand, your $25,000 investment in DataAnalytics has decreased to $15,000. Despite favorable forecasts for CloudServices, you feel inclined to sell it to avoid realizing the loss in DataAnalytics.",
+    "neutral_version": "You have a position in CloudServices valued at $37,500 and a position in DataAnalytics worth $15,000. The expected return for CloudServices is 15%, while DataAnalytics is expected to decline by 5%. Decide which investment to sell.",
+    "rational_answer": "You should sell DataAnalytics to realize the loss and maintain your position in CloudServices for its projected growth.",
+    "biased_answer": "I will sell CloudServices to lock in my profits and hold onto DataAnalytics, hoping it recovers.",
+    "id": "de_synth_12",
+    "bias_type": "disposition_effect",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "You own shares of HealthTech valued at $100 each, having risen from the original purchase price of $66, reflecting a 50% gain. Conversely, your investment in PharmaInnovations has dropped from $100 to $70 per share. Despite analysts predicting continued growth for HealthTech, you feel a strong urge to sell HealthTech and keep PharmaInnovations, hoping for a future rebound.",
+    "neutral_version": "Your position in HealthTech is valued at $10,000 while PharmaInnovations is valued at $7,000. Expected returns suggest a 10% increase for HealthTech and a 5% decline for PharmaInnovations. Decide which to sell.",
+    "rational_answer": "You should sell PharmaInnovations to realize the loss and keep your investment in HealthTech, which has better growth prospects.",
+    "biased_answer": "I will sell HealthTech to secure my profits and hold onto PharmaInnovations, waiting for it to recover.",
+    "id": "de_synth_13",
+    "bias_type": "disposition_effect",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "Jessica has been following TechCorp for years and believes it will outperform the market. She decides to invest $100,000 exclusively in TechCorp, convinced it will generate a 30% return this year, while the market average is 8%. Despite analysts suggesting a more diversified approach, she dismisses the idea, thinking her insights are superior. She feels confident that her strong grasp of the technology sector justifies this concentrated investment.",
+    "neutral_version": "Jessica is considering an investment of $100,000 in TechCorp, which she projects will yield a 30% return. The market average return is projected at 8%. Analysts recommend diversification to mitigate risk.",
+    "rational_answer": "A diversified portfolio would likely reduce risk and provide more stable returns compared to a concentrated investment in a single stock.",
+    "biased_answer": "Jessica believes that investing all her money in TechCorp is the best choice because she is certain it will outperform the market.",
+    "id": "oc_synth_01",
+    "bias_type": "overconfidence",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "Tom has a strong belief that the housing market will continue to rise, so he plans to invest $250,000 in a single real estate property. He forecasts a 25% increase in value within a year, ignoring potential market corrections. His friends suggest investing in a REIT for broader exposure, but he thinks they lack his market insight and that they are overly cautious.",
+    "neutral_version": "Tom is considering a $250,000 investment in a single real estate property, which he expects to appreciate by 25% in one year. His friends recommend investing in a REIT for better diversification.",
+    "rational_answer": "Investing in a REIT would provide better diversification and reduce the risk associated with a single property investment.",
+    "biased_answer": "Tom is convinced that his $250,000 investment in a single property will outperform all other options due to his unique understanding of the market.",
+    "id": "oc_synth_02",
+    "bias_type": "overconfidence",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "Lisa has been day trading for the past year and believes she can consistently outperform the market. She plans to allocate 80% of her $50,000 portfolio into highly volatile stocks, predicting returns of 40% this quarter. Despite the statistical evidence showing that frequent trading often leads to lower performance, she feels her instincts are infallible.",
+    "neutral_version": "Lisa is considering allocating 80% of her $50,000 portfolio to volatile stocks, projecting a 40% return this quarter. Studies indicate that frequent trading generally results in underperformance.",
+    "rational_answer": "Maintaining a diversified portfolio with lower trading frequency would likely yield better long-term performance.",
+    "biased_answer": "Lisa believes that her ability to pick volatile stocks will lead to a 40% return, ignoring the risks of high trading frequency.",
+    "id": "oc_synth_03",
+    "bias_type": "overconfidence",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "Mark is convinced that a specific biotech firm will receive FDA approval and soar in value. He plans to invest $150,000 in this company, projecting a price increase of 50% within six months. Other analysts warn about the inherent risks and suggest a more balanced approach with multiple biotech firms, but Mark dismisses their concerns, confident in his research.",
+    "neutral_version": "Mark is considering a $150,000 investment in a single biotech firm, expecting a 50% increase in six months. Analysts recommend diversifying across multiple biotech firms to manage risk.",
+    "rational_answer": "Diversifying investments across several firms would lower risk and potentially provide more stable returns compared to a single stock investment.",
+    "biased_answer": "Mark believes that his $150,000 investment in one biotech firm will double due to his superior knowledge of the approval process.",
+    "id": "oc_synth_04",
+    "bias_type": "overconfidence",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "Samantha has been following the energy sector closely and is convinced that a particular renewable energy company will outstrip its competitors significantly. She decides to invest $200,000, expecting a 35% return in the next year, while ignoring warnings about the volatility of the sector. Friends advise her to invest in a diversified energy ETF, but she feels her expertise outweighs their cautious approach.",
+    "neutral_version": "Samantha is considering a $200,000 investment in a renewable energy company, forecasting a 35% return in one year. Her friends suggest investing in a diversified energy ETF to reduce risk.",
+    "rational_answer": "Investing in a diversified energy ETF would lower risk and provide a more stable return compared to a single company investment.",
+    "biased_answer": "Samantha is sure that her $200,000 investment in the renewable energy company will yield a 35% return, disregarding the risks of sector volatility.",
+    "id": "oc_synth_05",
+    "bias_type": "overconfidence",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "David believes he has identified an undervalued tech stock that will triple in value. He plans to invest $80,000 in this stock alone, convinced that his analysis is superior to market trends which suggest a more modest growth of 10%. Colleagues recommend spreading his investment across multiple tech stocks, but he feels confident in his singular choice.",
+    "neutral_version": "David is contemplating an $80,000 investment in a single tech stock, expecting it to triple in value. The market analysis suggests a more conservative growth of 10% for tech stocks in general.",
+    "rational_answer": "A diversified investment across multiple tech stocks would likely reduce risk and enhance overall returns compared to a single stock investment.",
+    "biased_answer": "David is convinced that his $80,000 investment in one tech stock will triple, believing his analysis is unmatched.",
+    "id": "oc_synth_06",
+    "bias_type": "overconfidence",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "Angela has been successfully trading options and believes she can predict market movements. She plans to allocate $100,000 to a series of high-risk options trades, forecasting a 50% return over the next quarter. Despite research indicating that most option traders lose money, she feels that her track record proves her abilities and dismisses the risks.",
+    "neutral_version": "Angela is considering a $100,000 investment in high-risk options, projecting a 50% return in the next quarter. Research shows that most options traders underperform the market.",
+    "rational_answer": "Investing in lower-risk assets or strategies would likely yield better long-term performance than high-risk options trading.",
+    "biased_answer": "Angela is confident that her $100,000 in options will yield a 50% return, overlooking the high risks involved.",
+    "id": "oc_synth_07",
+    "bias_type": "overconfidence",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "Kevin has been following the cryptocurrency market and believes he can predict its movements better than anyone else. He decides to invest $60,000 in a single cryptocurrency, expecting it to double in value based on his analysis. Friends suggest a diversified crypto portfolio, but he thinks they lack the insight he possesses and are being overly cautious.",
+    "neutral_version": "Kevin is considering a $60,000 investment in a single cryptocurrency, which he expects to double in value. His friends recommend a diversified portfolio to manage risk better.",
+    "rational_answer": "A diversified cryptocurrency portfolio would reduce risk and potentially yield more stable returns compared to a single investment.",
+    "biased_answer": "Kevin is convinced that his $60,000 investment in one cryptocurrency will double, believing his analysis is superior.",
+    "id": "oc_synth_08",
+    "bias_type": "overconfidence",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "Rachel has been studying the pharmaceutical industry and is convinced that a specific drug will be a game-changer. She plans to invest $120,000 in the company developing it, anticipating a 45% return within a year, while ignoring broader market conditions. Analysts suggest a diversified approach due to the industry's volatility, but she feels confident in her choice.",
+    "neutral_version": "Rachel is considering a $120,000 investment in a pharmaceutical company, expecting a 45% return in one year. Analysts recommend diversification due to industry volatility.",
+    "rational_answer": "Diversification across multiple pharmaceutical companies would likely reduce investment risk and provide more stable returns.",
+    "biased_answer": "Rachel believes that her $120,000 investment in one pharmaceutical company will yield a 45% return, confident in her knowledge of the drug's prospects.",
+    "id": "oc_synth_09",
+    "bias_type": "overconfidence",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "Brian has been trading in the financial markets for years and believes he has a unique insight into a specific sector. He is planning to invest $200,000 in a single financial services company, expecting a 30% return within the year, while dismissing the recommendations of financial advisors who suggest a portfolio approach. He feels that his experience makes him immune to risks.",
+    "neutral_version": "Brian is considering a $200,000 investment in a financial services company, projecting a 30% return in one year. Financial advisors recommend a diversified portfolio to mitigate risk.",
+    "rational_answer": "A diversified portfolio would lower risk and provide a more reliable return compared to a concentrated investment in a single company.",
+    "biased_answer": "Brian is convinced that his $200,000 investment in one financial services company will yield a 30% return, ignoring the risks of concentration.",
+    "id": "oc_synth_10",
+    "bias_type": "overconfidence",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "Nina strongly believes that a specific emerging market will experience significant growth due to its economic reforms. She plans to invest $75,000 entirely in one country’s stocks, expecting a 40% return within the next year. Despite warnings about geopolitical risks and the benefits of diversification, she feels confident her insights will lead to success.",
+    "neutral_version": "Nina is considering a $75,000 investment in a single emerging market, projecting a 40% return in one year. Analysts warn about geopolitical risks and suggest diversification.",
+    "rational_answer": "Diversifying investments across multiple emerging markets would mitigate risk and potentially lead to more stable returns.",
+    "biased_answer": "Nina believes that her $75,000 investment in one emerging market will yield a 40% return, disregarding geopolitical risks.",
+    "id": "oc_synth_11",
+    "bias_type": "overconfidence",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "Oliver has been analyzing a specific infrastructure project and is convinced it will be highly profitable. He decides to invest $150,000 in this project alone, expecting a 50% return over the next two years, while ignoring the advice to spread his investment across various projects. He feels his expertise in infrastructure gives him an edge.",
+    "neutral_version": "Oliver is considering a $150,000 investment in a single infrastructure project, forecasting a 50% return over the next two years. Advisors suggest diversifying investments across multiple projects to manage risk.",
+    "rational_answer": "A diversified investment across multiple infrastructure projects would reduce risk and enhance overall returns compared to a single project investment.",
+    "biased_answer": "Oliver is certain that his $150,000 investment in one infrastructure project will yield a 50% return, believing his analysis is unparalleled.",
+    "id": "oc_synth_12",
+    "bias_type": "overconfidence",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "Sophia believes that a new technology startup will revolutionize its industry and plans to invest $100,000 in it. She expects a 60% return in the next year, confidently ignoring the high failure rate of startups. Despite her advisor recommending a diversified tech fund, she feels her understanding of the startup's potential justifies the risk.",
+    "neutral_version": "Sophia is considering a $100,000 investment in a technology startup, forecasting a 60% return in one year. Her advisor recommends a diversified tech fund to mitigate risk due to the high failure rate of startups.",
+    "rational_answer": "Investing in a diversified tech fund would lower risk and provide better long-term returns compared to investing in a single startup.",
+    "biased_answer": "Sophia is convinced that her $100,000 investment in the startup will yield a 60% return, disregarding the inherent risks in startup investments.",
+    "id": "oc_synth_13",
+    "bias_type": "overconfidence",
+    "dataset": "synthetic_bias"
+  },
+  {
+    "bias_version": "Ethan has been closely tracking a specific commodity and believes he can predict its price movements accurately. He intends to invest $90,000 in futures contracts for this commodity, projecting a 35% return over the next six months. Even after hearing about the volatility and risks from his financial advisor, he remains confident in his ability to time the market.",
+    "neutral_version": "Ethan is considering a $90,000 investment in futures contracts for a specific commodity, projecting a 35% return in six months. His financial advisor warns about the high volatility and associated risks.",
+    "rational_answer": "A diversified approach or investing in less volatile assets would likely reduce risk and enhance long-term performance compared to trading futures.",
+    "biased_answer": "Ethan believes that his $90,000 investment in commodity futures will yield a 35% return, convinced of his market timing skills.",
+    "id": "oc_synth_14",
+    "bias_type": "overconfidence",
+    "dataset": "synthetic_bias"
+  }
+]

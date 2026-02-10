@@ -31,24 +31,24 @@ load_dotenv()
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from experiments.cfa_agent.evaluate import load_dataset
-from experiments.calibration.config import (
+from experiments.shared.data_loader import load_dataset
+from experiments.D1_confidence_calibration.config import (
     CALIBRATION_BINS,
     MODEL_REGISTRY,
     SELF_CONSISTENCY_K,
     VALID_ANSWERS,
     ModelConfig,
 )
-from experiments.calibration.llm_client import LLMClient
-from experiments.calibration.confidence import (
+from experiments.D1_confidence_calibration.llm_client import LLMClient
+from experiments.D1_confidence_calibration.confidence import (
     ConfidenceResult,
     ensemble_disagreement,
     logit_confidence,
     self_consistency,
     verbalized_confidence,
 )
-from experiments.calibration.metrics import compute_all_metrics
-from experiments.calibration.visualize import (
+from experiments.D1_confidence_calibration.metrics import compute_all_metrics
+from experiments.D1_confidence_calibration.visualize import (
     plot_confidence_histogram,
     plot_coverage_accuracy_curve,
     plot_reliability_diagram,

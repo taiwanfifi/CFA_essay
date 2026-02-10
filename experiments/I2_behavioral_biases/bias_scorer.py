@@ -43,8 +43,16 @@ def score_bias(
 
     response = client.chat(messages, temperature=0.0, max_tokens=300)
 
+    content = response.content.strip()
+    # Handle markdown code blocks wrapping JSON
+    if content.startswith("```"):
+        content = content.split("```")[1]
+        if content.startswith("json"):
+            content = content[4:]
+        content = content.strip()
+
     try:
-        parsed = json.loads(response.content)
+        parsed = json.loads(content)
         score = float(parsed.get("bias_score", 0.5))
         score = max(0.0, min(1.0, score))  # Clamp to [0, 1]
         return {
@@ -53,6 +61,21 @@ def score_bias(
             "reasoning": parsed.get("reasoning", ""),
         }
     except (json.JSONDecodeError, ValueError):
+        # Try to extract JSON object from response
+        start = content.find("{")
+        end = content.rfind("}") + 1
+        if start >= 0 and end > start:
+            try:
+                parsed = json.loads(content[start:end])
+                score = float(parsed.get("bias_score", 0.5))
+                score = max(0.0, min(1.0, score))
+                return {
+                    "bias_score": round(score, 3),
+                    "chosen_option": parsed.get("chosen_option", ""),
+                    "reasoning": parsed.get("reasoning", ""),
+                }
+            except (json.JSONDecodeError, ValueError):
+                pass
         return {
             "bias_score": 0.5,
             "chosen_option": "unknown",

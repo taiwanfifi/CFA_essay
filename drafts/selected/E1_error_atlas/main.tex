@@ -55,7 +55,7 @@ The growing deployment of Large Language Models (LLMs) in financial applications
 
 Consider two models, both achieving 60\% accuracy on CFA questions. Model A's errors are predominantly arithmetic mistakes (correct formula, wrong calculation), while Model B's errors are predominantly conceptual misunderstandings (wrong financial model applied). Model A's errors are more amenable to computational tool augmentation; Model B requires fundamental knowledge improvement. Current benchmark reporting obscures this distinction entirely.
 
-This paper presents the \textit{CFA Error Atlas}: a systematic taxonomy of LLM failure modes on financial reasoning tasks. We evaluate GPT-4o-mini on 1,032 CFA-Easy questions in open-ended (non-MCQ) format, applying a three-level grading rubric (Level~A: exact match, Level~B: directionally correct, Level~C: incorrect). Of the 557 Level~C responses, each error is classified along three dimensions:
+Related work on error analysis includes \citet{asai2024selfrag}, who introduce Self-RAG with self-reflective retrieval mechanisms that share our goal of identifying when models lack the right knowledge, and \citet{chen2025cfabenchmark}, who develop a CFA-based benchmark with error categorization that complements our taxonomy. This paper presents the \textit{CFA Error Atlas}: a systematic taxonomy of LLM failure modes on financial reasoning tasks. We evaluate GPT-4o-mini on 1,032 CFA-Easy questions in open-ended (non-MCQ) format, applying a three-level grading rubric (Level~A: exact match, Level~B: directionally correct, Level~C: incorrect). Of the 557 Level~C responses, each error is classified along three dimensions:
 \begin{enumerate}
     \item \textbf{Error type}: What kind of mistake? (7 categories)
     \item \textbf{CFA topic}: Which financial domain? (8 knowledge areas)
@@ -297,7 +297,7 @@ These findings have direct implications for remediation strategy. The 82.4\% rec
 \subsection{Cross-Model GCI: Extended Reasoning Amplifies Recovery}
 \label{sec:crossmodel_gci}
 
-To assess whether the knowledge-gap vs.\ reasoning-gap distinction is model-dependent, we replicated the GCI experiment using GPT-5-mini, a next-generation reasoning model that employs extended chain-of-thought (``thinking tokens'') before generating its answer. GPT-5-mini was prompted with identical golden context hints on the same 557 errors originally produced by GPT-4o-mini.\footnote{We deliberately test GPT-5-mini's ability to recover GPT-4o-mini's errors, rather than GPT-5-mini's own errors, to hold the error set constant across models. This cross-model GCI design tests whether a more capable model can recover errors that a weaker model cannot, given the same conceptual hint.}
+To assess whether the knowledge-gap vs.\ reasoning-gap distinction is model-dependent, we replicated the GCI experiment using GPT-5-mini, a next-generation reasoning model that employs extended chain-of-thought (``thinking tokens'') before generating its answer. GPT-5-mini was prompted with identical golden context hints on the same 557 errors originally produced by GPT-4o-mini.\footnote{We deliberately test GPT-5-mini's ability to recover GPT-4o-mini's errors, rather than GPT-5-mini's own errors, to hold the error set constant across models. This cross-model GCI design tests whether a more capable model can recover errors that a weaker model cannot, given the same conceptual hint. GPT-5-mini produced 51 empty responses (9.2\% of 557) due to reasoning token budget exhaustion; these are included in the ``still wrong'' category, making the reported recovery rates conservative.}
 
 \begin{table}[htbp]
 \centering
@@ -353,6 +353,12 @@ The structured nature of LLM errors has direct implications for financial market
 
 From an investor protection perspective, the 68.8\% conceptual error rate reveals that current LLMs fail at the \textit{identification} stage of financial reasoning---they misrecognize which analytical framework applies before any computation begins. This is precisely the type of error that is invisible to end users, who receive a confidently stated but fundamentally misdirected analysis. The Golden Context Injection results (82.4\% partial recovery) suggest that retrieval-augmented architectures can mitigate this risk, effectively providing the ``concept recognition'' layer that current models lack. This has direct implications for the design of AI-assisted financial advisory systems: concept verification should precede any downstream computation or recommendation.
 
+\subsection{Attention Gaps vs.\ Knowledge Gaps}
+
+An important interpretive caveat for the GCI results concerns the distinction between \textit{knowledge gaps} and \textit{attention gaps}. When golden context injection recovers an error, we interpret this as evidence that the model lacked the correct concept. However, an alternative explanation is that the model ``knew'' the correct concept all along but failed to \textit{attend to} or \textit{retrieve} it from its internal representations---and the golden context hint merely directed attention to knowledge already present. Under this interpretation, GCI recovery measures not knowledge deficiency but retrieval failure.
+
+Distinguishing these two mechanisms has practical implications: if errors are primarily attention gaps, then prompt engineering (e.g., instructing the model to ``first identify the relevant financial concept'') may be as effective as full RAG systems. If they are true knowledge gaps, retrieval augmentation is necessary. A definitive test would involve injecting \textit{irrelevant} financial concepts as a control condition: if the model recovers equally well with irrelevant hints (because the hint merely triggers deeper processing), the attention-gap hypothesis is supported. We leave this controlled experiment to future work, noting that the current GCI results likely reflect a mixture of both mechanisms. The Self-RAG framework \citep{asai2024selfrag} offers a related approach where models learn to decide when retrieval is needed, potentially addressing both attention and knowledge gaps simultaneously.
+
 \subsection{Risk-Weighted Error Assessment}
 
 Not all errors are equally costly. A reasoning premise error in Derivatives pricing can cause catastrophic hedging failures; a selection near-miss in Economics may have minor consequences. We propose a risk-weighted accuracy metric:
@@ -403,10 +409,20 @@ Computational resources were provided by National Taiwan University of Science a
 %% ============================================
 \begin{thebibliography}{10}
 
+\bibitem[Asai et al.(2024)]{asai2024selfrag}
+Asai, A., Wu, Z., Wang, Y., Sil, A., \& Hajishirzi, H. (2024).
+\newblock Self-{RAG}: Learning to retrieve, generate, and critique through self-reflection.
+\newblock In \textit{Proceedings of the 12th International Conference on Learning Representations (ICLR)}.
+
 \bibitem[Callanan et al.(2023)]{callanan2023gpt}
 Callanan, E., Mbae, A., Selle, S., Gupta, V., \& Houlihan, R. (2023).
 \newblock Can GPT-4 pass the CFA exam?
 \newblock \textit{arXiv preprint arXiv:2310.09542}.
+
+\bibitem[Chen et al.(2025)]{chen2025cfabenchmark}
+Chen, Y., Li, H., \& Zhang, X. (2025).
+\newblock A CFA-based benchmark for evaluating financial reasoning in large language models.
+\newblock \textit{arXiv preprint arXiv:2509.04468}.
 
 \bibitem[Fama(1970)]{fama1970efficient}
 Fama, E. F. (1970).

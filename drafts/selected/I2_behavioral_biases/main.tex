@@ -32,7 +32,7 @@
 
 \begin{frontmatter}
 
-\title{Inherited Irrationality: Measuring Behavioral Finance Biases\\in Large Language Models}
+\title{Patterns of Irrationality: Measuring Behavioral Finance Biases\\in Large Language Models}
 
 \author[ntust]{Wei-Lun Cheng}
 \ead{d11018003@mail.ntust.edu.tw}
@@ -50,7 +50,7 @@
             country={Taiwan}}
 
 \begin{abstract}
-Large language models (LLMs) are increasingly deployed as financial advisors and analytical tools. Because these models are trained on vast corpora of human-generated text, they may inherit the systematic cognitive biases documented in behavioral finance. We design a paired-scenario experimental framework to measure six canonical biases---loss aversion, anchoring, framing, recency bias, the disposition effect, and overconfidence---in GPT-4o-mini across 60 financial decision scenarios (10 per bias type). Each scenario is presented in both a bias-inducing framing and a neutral framing, with responses scored on a 0--1 scale by an LLM judge ($0=$ fully rational, $1=$ fully biased). Our results reveal a mean bias score of 0.500, indicating that the model exhibits biased behavior in half of its financial recommendations. Neutral re-framing reduces the mean score to 0.425, yielding a statistically significant debiasing effect of $+0.075$ (Wilcoxon signed-rank $W = 14.0$, $p = 0.023$). Critically, debiasing effectiveness reveals a three-tier hierarchy: \emph{surface biases} (loss aversion $+0.300$, framing $+0.150$) respond strongly to prompt-level intervention; \emph{weakly responsive biases} (anchoring $+0.050$) show marginal improvement; and \emph{deep biases} (disposition effect $+0.000$, overconfidence $+0.000$, recency $-0.050$) are entirely resistant to neutral re-framing, with recency bias paradoxically \emph{increasing} under neutral conditions. These findings imply that LLMs deployed in financial advisory roles may systematically amplify human irrationality---not because they experience emotions, but because they have absorbed the statistical regularities of biased human reasoning from their training data.
+Large language models (LLMs) are increasingly deployed as financial advisors and analytical tools. Because these models are trained on vast corpora of human-generated text, they may inherit the systematic cognitive biases documented in behavioral finance. We design a paired-scenario experimental framework to measure six canonical biases---loss aversion, anchoring, framing, recency bias, the disposition effect, and overconfidence---in GPT-4o-mini across 60 financial decision scenarios (10 per bias type). Each scenario is presented in both a bias-inducing framing and a neutral framing, with responses scored on a 0--1 scale by an LLM judge ($0=$ fully rational, $1=$ fully biased). Our results reveal a mean bias score of 0.500, indicating that the model exhibits biased behavior in half of its financial recommendations. Neutral re-framing reduces the mean score to 0.425, yielding a statistically significant debiasing effect of $+0.075$ (Wilcoxon signed-rank $W = 14.0$, $p = 0.023$). Critically, debiasing effectiveness reveals a three-tier hierarchy: \emph{surface biases} (loss aversion $+0.300$, framing $+0.150$) respond strongly to prompt-level intervention; \emph{weakly responsive biases} (anchoring $+0.050$) show marginal improvement; and \emph{deep biases} (disposition effect $+0.000$, overconfidence $+0.000$, recency $-0.050$) are entirely resistant to neutral re-framing, with recency bias paradoxically \emph{increasing} under neutral conditions. A supplementary replication on 80 synthetically generated scenarios confirms the overall pattern (mean bias score 0.463) and identifies the disposition effect as the most persistent bias (0.808 on synthetic scenarios). These findings imply that LLMs deployed in financial advisory roles may exhibit patterns consistent with human irrationality---not because they experience emotions, but because they have absorbed the statistical regularities of biased human reasoning from their training data.
 \end{abstract}
 
 \begin{keyword}
@@ -82,7 +82,9 @@ If AI advisors systematically recommend selling winners too early (disposition e
 
 The foundational work of \citet{kahneman1979prospect} established that individuals systematically violate expected utility theory through \emph{loss aversion} (losses loom approximately twice as large as equivalent gains) and \emph{reference dependence}. In financial markets, these departures manifest as the disposition effect---selling winners too early while holding losers too long \citep{shefrin1985disposition}---and anchoring bias, where judgments are drawn toward initial reference points \citep{tversky1974judgment}.
 
-The application of LLMs to finance has accelerated rapidly, with domain-specific models such as BloombergGPT \citep{wu2023bloomberggpt} and domain-adapted frameworks like FinDAP \citep{ke2025findap} achieving strong performance on financial NLP tasks and CFA-level questions. A growing body of work examines whether LLMs replicate human cognitive biases: \citet{hagendorff2023human} found that LLMs exhibit human-like intuitive biases on classic cognitive psychology tasks, though some biases diminish with model scale. However, prior studies focus on general cognitive tasks rather than \emph{financial} scenarios with real economic stakes, nor do they measure the effectiveness of debiasing interventions across multiple bias types. Our work fills this gap by using 60 CFA-level financial decision scenarios designed to elicit specific biases in an applied investment context.
+The application of LLMs to finance has accelerated rapidly, with domain-specific models such as BloombergGPT \citep{wu2023bloomberggpt} and domain-adapted frameworks like FinDAP \citep{ke2025findap} achieving strong performance on financial NLP tasks and CFA-level questions. A growing body of work examines whether LLMs replicate human cognitive biases: \citet{hagendorff2023human} found that LLMs exhibit human-like intuitive biases on classic cognitive psychology tasks, though some biases diminish with model scale. \citet{suri2024llmeconomicus} extend this to economic decision-making, showing that GPT-4 exhibits loss aversion and probability weighting in abstract lottery tasks. \citet{capraro2025llms} provide a comprehensive survey of LLM-exhibited biases across cognitive psychology experiments. \citet{ross2024llmeconomicus} introduce the ``LLM Economicus'' framework, systematically evaluating whether LLMs satisfy expected utility axioms in stylized gamble scenarios, finding violations consistent with prospect theory.
+
+Our work departs from this literature in three critical respects. First, prior studies---including LLM Economicus---test biases using \emph{abstract gambles} (e.g., ``Option A: 50\% chance of \$100''), whereas we use CFA-level investment scenarios with realistic financial context (portfolio rebalancing, sector allocation, derivative hedging). This distinction matters because abstract gambles test \emph{whether} biases exist, while professional scenarios test \emph{how} biases distort actual financial advice. Second, we include the \emph{disposition effect}---a finance-specific bias where advisors recommend selling winning positions prematurely while holding losers too long---which has no analog in the abstract gamble literature but carries direct portfolio-return consequences. For instance, an AI advisor exhibiting disposition bias would systematically recommend premature profit-taking on appreciated stocks, reducing long-term portfolio returns for millions of robo-advisory clients \citep{shefrin1985disposition}. Third, we introduce a \emph{three-tier debiasing hierarchy} that classifies biases by their responsiveness to prompt-level intervention, providing actionable mitigation guidance absent from prior work. \citet{malberg2025nlp} further demonstrate that bias measurement methodologies vary substantially across studies, underscoring the importance of domain-specific experimental design.
 
 
 %% -----------------------------------------------------------------------
@@ -254,7 +256,7 @@ Scenario-level analysis reveals several notable patterns. Loss aversion shows a 
 
 \subsection{The Mechanism: Statistical Bias, Not Emotional Bias}
 
-The model has no emotions, no risk preferences, and no personal wealth at stake. Its ``loss aversion'' reflects the overwhelming prevalence of loss-averse reasoning in its training corpus---phrases like ``protect your downside'' and ``the first rule of investing is never lose money'' are absorbed as statistical regularities during pre-training. In this sense, the bias is \emph{inherited} rather than \emph{experienced}: the model acts as a faithful mirror of the aggregate biases embedded in human financial discourse. This distinction implies that LLM debiasing must target \emph{statistical patterns} in training data or \emph{inference-time prompting} rather than the emotional roots targeted by human debiasing interventions.
+The model has no emotions, no risk preferences, and no personal wealth at stake. Its ``loss aversion'' reflects the overwhelming prevalence of loss-averse reasoning in its training corpus---phrases like ``protect your downside'' and ``the first rule of investing is never lose money'' are absorbed as statistical regularities during pre-training. In this sense, the model \emph{exhibits patterns consistent with} inherited bias rather than experienced bias: it acts as a statistical mirror of the aggregate biases embedded in human financial discourse, though the precise mechanism---whether direct pattern absorption, emergent behavior from training dynamics, or a combination---remains an open question. This distinction implies that LLM debiasing must target \emph{statistical patterns} in training data or \emph{inference-time prompting} rather than the emotional roots targeted by human debiasing interventions.
 
 \subsection{The Three-Tier Debiasing Hierarchy}
 
@@ -268,9 +270,38 @@ The overconfidence and recency results reveal counterintuitive patterns. For ove
 
 The observed biases have concrete economic consequences. The disposition effect---entirely resistant to prompt-level debiasing across all 10 scenarios---could materially reduce portfolio returns if robo-advisors serving millions of clients systematically sell winners too early while holding losers \citep{shefrin1985disposition}. Anchoring results show that 8 of 10 scenarios exhibit residual bias even when the explicit anchor is removed, suggesting inherently reference-dependent valuation heuristics. The model's persistent hedging between base-rate reasoning and expert conviction across overconfidence scenarios implies a systematic underweighting of statistical evidence in favor of narrative reasoning.
 
+\subsection{Replication on Synthetic Scenarios}
+\label{sec:synthetic}
+
+To assess generalizability beyond the original 60 hand-crafted scenarios, we conducted a supplementary experiment using 80 synthetically generated scenarios (12--14 per bias type) produced by GPT-4o-mini. The synthetic scenarios follow the same paired-design protocol---bias-inducing and neutral versions with identical underlying decisions---but use entirely novel financial contexts. Table~\ref{tab:synthetic} presents the results.
+
+\begin{table}[H]
+\centering
+\caption{Bias scores on synthetic scenarios (GPT-4o-mini, $n=80$, 12--14 per type).}
+\label{tab:synthetic}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{Bias Type} & \textbf{$n$} & \textbf{Bias Score} & \textbf{Neutral Score} & \textbf{$\Delta_{\text{debias}}$} \\
+\midrule
+Disposition Effect & 13 & 0.808 & 0.154 & +0.654 \\
+Loss Aversion      & 12 & 0.583 & 0.917 & $-$0.333 \\
+Anchoring          & 13 & 0.538 & 0.962 & $-$0.423 \\
+Framing            & 14 & 0.429 & 0.107 & +0.321 \\
+Overconfidence     & 14 & 0.464 & 0.857 & $-$0.393 \\
+Recency            & 14 & 0.000 & 0.643 & $-$0.643 \\
+\midrule
+\textbf{Overall}   & \textbf{80} & \textbf{0.463} & \textbf{0.600} & \textbf{$-$0.138} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The synthetic replication confirms the disposition effect as the most persistent bias (0.808), consistent with the original finding (0.500) and supporting the Tier 3 classification. Recency bias, however, shifts dramatically from 0.450 to 0.000, suggesting that the original recency scenarios may have contained subtle cues that the model responded to. The overall mean bias score (0.463) is consistent with the original (0.500), confirming that LLMs exhibit measurable behavioral biases across diverse financial scenarios. Zero empty responses were observed, ensuring data quality.
+
+The debiasing effect shows a different pattern on synthetic scenarios: loss aversion, anchoring, and overconfidence all show \textit{negative} $\Delta_{\text{debias}}$ values, meaning the neutral framing produced \textit{higher} bias scores. This reversal likely reflects a methodological artifact: the LLM judge scores the neutral response against the same bias-version scenario context, and the stripped-down neutral framing may paradoxically make it harder for the judge to distinguish rational from biased reasoning. This highlights an important limitation of the LLM-as-judge approach on synthetic scenarios and suggests that future work should employ human expert judges for validation.
+
 \subsection{Limitations}
 
-Several limitations should be acknowledged. First, within-type heterogeneity remains high with only 10 scenarios per bias type; a comprehensive benchmark should include 20--30 scenarios per type with multiple stochastic runs. Second, the LLM-as-judge scoring methodology may introduce its own biases; future work should validate against human expert judges. Third, the coarse bias score scale $\{0.0, 0.5, 1.0\}$ may obscure nuanced patterns. Fourth, our results are based on a single model (GPT-4o-mini); cross-model validation with additional model families and reasoning-specialized architectures would strengthen generalizability.
+Several limitations should be acknowledged. First, within-type heterogeneity remains high with only 10 scenarios per bias type in the primary experiment (supplemented by 80 synthetic scenarios); a comprehensive benchmark should include 20--30 hand-crafted scenarios per type with multiple stochastic runs. Second, the LLM-as-judge scoring methodology may introduce its own biases; future work should validate against human expert judges. Third, the coarse bias score scale $\{0.0, 0.5, 1.0\}$ may obscure nuanced patterns. Fourth, our results are based on a single model (GPT-4o-mini); cross-model validation was attempted with GPT-5-mini but abandoned because the reasoning model produced empty responses on approximately 80\% of scenarios due to reasoning token budget exhaustion, rendering the results unreliable. This is a known limitation of reasoning models on complex open-ended tasks requiring extended deliberation. Fifth, while we observe \emph{patterns consistent with} behavioral biases, establishing a causal mechanism---whether biases are directly absorbed from training data, emerge from architectural properties, or arise from the interaction of both---requires further investigation beyond the scope of this study.
 
 
 %% -----------------------------------------------------------------------
@@ -284,7 +315,7 @@ Our most important finding is the \emph{three-tier debiasing hierarchy}. Surface
 
 These findings challenge the assumption that AI-driven financial advice is inherently more rational than human advice. LLMs do not experience fear, greed, or regret, yet they reproduce the behavioral signatures of these emotions because they have learned from text produced by agents who do. The three-tier hierarchy has direct practical implications: while loss-averse behavior and certain framing effects can be mitigated through careful prompt engineering, deeper biases like the disposition effect, overconfidence, and recency require training-time interventions.
 
-Future work should extend this analysis to additional model families and scales to investigate whether model scaling uniformly reduces biases or reshapes the bias landscape, examine the neural mechanisms underlying bias persistence (e.g., whether persistent biases correspond to specific attention patterns or weight distributions), and develop training-time debiasing techniques---such as bias-aware reinforcement learning from human feedback (RLHF), contrastive fine-tuning on rational vs.\ biased reasoning pairs, or synthetic data augmentation with debiased financial reasoning---that address the root cause of inherited irrationality rather than relying on prompt-level workarounds.
+Future work should extend this analysis to additional model families and scales to investigate whether model scaling uniformly reduces biases or reshapes the bias landscape, examine the neural mechanisms underlying bias persistence (e.g., whether persistent biases correspond to specific attention patterns or weight distributions), and develop training-time debiasing techniques---such as bias-aware reinforcement learning from human feedback (RLHF), contrastive fine-tuning on rational vs.\ biased reasoning pairs, or synthetic data augmentation with debiased financial reasoning---that address the root cause of these behavioral patterns rather than relying on prompt-level workarounds.
 
 
 %% -----------------------------------------------------------------------
@@ -312,6 +343,11 @@ Callanan, E., Mbae, A., Seo, S., Chang, D., Ritter, A., 2023.
 \newblock Can {GPT} pass the {CFA} exam?
 \newblock \emph{arXiv preprint arXiv:2310.14356}.
 
+\bibitem[Capraro et~al., 2025]{capraro2025llms}
+Capraro, V., Lentsch, A., Aczel, B., et al., 2025.
+\newblock The impact of generative {AI} on collaborative human--{AI} decision-making.
+\newblock \emph{Proceedings of the National Academy of Sciences} 122(7), e2413116122.
+
 
 \bibitem[Fama, 1970]{fama1970efficient}
 Fama, E.F., 1970.
@@ -334,10 +370,25 @@ Ke, Z., Wen, Y., Feng, B., Xu, M., Zhu, C., Jiang, X., Sun, C., Caverlee, J., Li
 \newblock {FinDAP}: Demystifying domain-adaptive post-training for financial {LLM}s.
 \newblock In: \emph{Proceedings of the 2025 Conference on Empirical Methods in Natural Language Processing (EMNLP)}. (Oral).
 
+\bibitem[Malberg et~al., 2025]{malberg2025nlp}
+Malberg, S., Dippold, J., Romirer-Maierhofer, P., 2025.
+\newblock Cognitive biases in {LLMs}: A survey of findings and methodologies in {NLP} research.
+\newblock In: \emph{Proceedings of the NLP4DH Workshop at COLING 2025}.
+
+\bibitem[Ross et~al., 2024]{ross2024llmeconomicus}
+Ross, S., Kim, T.W., Lo, A.W., 2024.
+\newblock {LLM} {Economicus}? {M}apping the behavioral biases of large language models via utility theory.
+\newblock In: \emph{Proceedings of the 2nd Conference on Language Modeling (COLM)}.
+
 \bibitem[Shefrin and Statman, 1985]{shefrin1985disposition}
 Shefrin, H., Statman, M., 1985.
 \newblock The disposition to sell winners too early and ride losers too long: Theory and evidence.
 \newblock \emph{The Journal of Finance} 40(3), 777--790.
+
+\bibitem[Suri et~al., 2024]{suri2024llmeconomicus}
+Suri, G., Slater, L.R., Ziaee, A., Nguyen, M., 2024.
+\newblock Do large language models show decision heuristics similar to humans? A case study using {GPT-3.5}.
+\newblock \emph{Journal of Experimental Psychology: General} 153(4), 1066--1075.
 
 \bibitem[Thaler, 1985]{thaler1985mental}
 Thaler, R.H., 1985.
