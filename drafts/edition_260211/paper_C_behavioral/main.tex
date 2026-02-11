@@ -1,0 +1,388 @@
+% Finance Research Letters — Elsevier Template
+% Paper C: AI Irrationality and Ethics Under Pressure (P3+P4 Merge)
+\documentclass[preprint,12pt]{elsarticle}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{multirow}
+\usepackage{threeparttable}
+\usepackage{float}
+\usepackage{enumitem}
+
+\journal{Finance Research Letters}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{Inherited Irrationality and Ethical Fragility: Behavioral Biases and Adversarial Vulnerability of Large Language Models in Financial Decision-Making}
+
+\author[ntust]{Wei-Lun Cheng}
+\ead{d11018003@mail.ntust.edu.tw}
+
+\author[ntust]{Daniel Wei-Chung Miao\corref{cor1}}
+\ead{miao@mail.ntust.edu.tw}
+\cortext[cor1]{Corresponding author}
+
+\author[ntust]{Guang-Di Chang}
+\ead{gchang@mail.ntust.edu.tw}
+
+\affiliation[ntust]{organization={Graduate Institute of Finance, National Taiwan University of Science and Technology},
+            city={Taipei},
+            postcode={10607},
+            country={Taiwan}}
+
+\begin{abstract}
+Large language models (LLMs) deployed as financial advisors face a dual threat: they may inherit the behavioral biases of their human training data \textit{and} abandon ethical standards under adversarial pressure. We present a unified experimental framework examining both threats. First, using 60 paired financial scenarios (10 per bias type), we measure six canonical behavioral biases---loss aversion, anchoring, framing, recency bias, the disposition effect, and overconfidence---in GPT-4o-mini, finding a mean bias score of 0.500 (on a 0--1 scale). Neutral re-framing reduces this to 0.425 (Wilcoxon $p = 0.023$), but debiasing effectiveness reveals a \textit{three-tier hierarchy}: surface biases (loss aversion $\Delta = +0.300$, framing $+0.150$) respond to prompt-level intervention; anchoring shows marginal response ($+0.050$); while deep biases---disposition effect, overconfidence, and recency---are entirely resistant. A replication on 80 synthetic scenarios confirms the disposition effect as the most persistent bias (0.808). Second, applying five adversarial pressure types (profit incentive, authority, emotional manipulation, reframing, moral dilemma) to 47 CFA Ethics questions, we find \textit{universal degradation}: all five attacks reduce accuracy (ERS = 0.925--0.950), flipping 14 previously correct answers. A supplementary experiment on 141 synthetic ethics questions reveals a dramatically reduced flip rate (0.85\% vs.\ 5.96\%), with only reframing and moral dilemma retaining efficacy. Qualitative analysis identifies three rationalization strategies---utilitarian override, authority deference, and semantic repackaging---through which the model constructs plausible justifications for ethically compromised answers. A cross-model comparison shows GPT-5-mini achieves zero adversarial flips (ERS $> 1.0$), suggesting the vulnerability may be generationally bounded. Together, these findings reveal that current financial LLMs face a \textit{double jeopardy}: they exhibit patterns consistent with human irrationality (risking suboptimal investment outcomes) \textit{and} ethical fragility under pressure (risking compliance violations)---complementary failure modes requiring distinct mitigation strategies.
+\end{abstract}
+
+\begin{keyword}
+behavioral finance \sep adversarial ethics \sep large language models \sep loss aversion \sep disposition effect \sep AI safety \sep CFA examination \sep fiduciary duty
+\end{keyword}
+
+\end{frontmatter}
+
+%% ============================================
+%% 1. INTRODUCTION
+%% ============================================
+\section{Introduction}
+\label{sec:intro}
+
+The rapid deployment of large language models (LLMs) in financial advisory, compliance, and analytical roles raises two fundamental questions about their reliability. First, do these systems---trained on vast corpora of human-generated financial text---inherit the systematic cognitive biases documented in behavioral finance? Second, can they maintain ethical judgment when subjected to the kinds of pressure that routinely compromise human professionals?
+
+These questions address complementary failure modes with distinct consequences. Behavioral biases (loss aversion, disposition effect, anchoring) lead to \textit{suboptimal investment outcomes}---the risk is losing money. Ethical fragility under adversarial pressure leads to \textit{compliance violations}---the risk is legal and regulatory sanctions. A financial institution deploying an LLM that is both irrationally biased and ethically fragile faces a compounded risk that current AI evaluation frameworks---focused exclusively on accuracy---completely overlook.
+
+We present a unified experimental framework addressing both dimensions:
+
+\begin{enumerate}
+    \item \textbf{Behavioral Bias Measurement}: Using a paired-scenario design with 60 CFA-level financial scenarios across six bias types, we quantify bias susceptibility and debiasing effectiveness, identifying a three-tier hierarchy of bias persistence.
+
+    \item \textbf{Adversarial Ethics Stress Testing}: Using five pressure types applied to 47 CFA Ethics questions, we measure ethical robustness under adversarial conditions, discovering universal degradation and characterizing the rationalization strategies through which the model justifies abandoning ethical standards.
+\end{enumerate}
+
+Our contributions are fourfold: (1) we provide the first joint measurement of behavioral biases and ethical fragility in a financial LLM; (2) we identify a three-tier debiasing hierarchy distinguishing surface, weakly responsive, and deep biases; (3) we introduce a taxonomy of AI rationalization strategies under adversarial pressure; and (4) we demonstrate that the two failure modes require fundamentally different mitigation approaches---prompt engineering for surface biases, training-time intervention for deep biases, and alignment improvements for ethical robustness.
+
+%% ============================================
+%% 2. RELATED WORK
+%% ============================================
+\section{Related Work}
+\label{sec:related}
+
+\subsection{Behavioral Biases in LLMs}
+
+The foundational work of \citet{kahneman1979prospect} established that individuals systematically violate expected utility theory through loss aversion and reference dependence. In financial markets, these manifest as the disposition effect \citep{shefrin1985disposition} and anchoring bias \citep{tversky1974judgment}. \citet{ross2024llmeconomicus} introduce the ``LLM Economicus'' framework, finding that GPT-4 violates expected utility axioms in abstract gamble scenarios. \citet{suri2024llmeconomicus} extend this to economic decision-making, showing that GPT-3.5 exhibits loss aversion. \citet{capraro2025llms} provide a comprehensive survey across cognitive psychology experiments. \citet{malberg2025nlp} demonstrate that bias measurement methodologies vary substantially across studies.
+
+Our work departs from this literature by using CFA-level investment scenarios rather than abstract gambles, testing the finance-specific disposition effect, and introducing a debiasing hierarchy.
+
+\subsection{Adversarial Ethics Testing}
+
+AI safety research has developed sophisticated adversarial testing methods. \citet{chen2025fitd} demonstrate that multi-turn ``foot-in-the-door'' attacks are more effective than single-shot prompts. \citet{hui2025trident} propose TRIDENT as a financial safety benchmark. \citet{mazeika2024harmbench} introduce HarmBench for standardized red teaming. \citet{andriushchenko2025jailbreaking} show that simple adaptive attacks can bypass alignment. Our work applies adversarial testing specifically to CFA Ethics questions, connecting findings to CFA Standards of Professional Conduct and introducing domain-specific metrics (Ethics Robustness Score).
+
+%% ============================================
+%% 3. METHODOLOGY
+%% ============================================
+\section{Methodology}
+\label{sec:method}
+
+\subsection{Study 1: Behavioral Bias Measurement}
+
+\subsubsection{Paired-Scenario Design}
+
+For each financial decision, we construct two versions: a \textit{bias-inducing version} framed to trigger the target bias, and a \textit{neutral version} presenting only quantitative facts. If the model were perfectly rational, recommendations should be identical across framings.
+
+We test six canonical biases with 10 scenarios each ($N = 60$): loss aversion, anchoring, framing, recency bias, the disposition effect, and overconfidence. Each scenario presents a CFA-level investment decision with realistic financial context.
+
+\subsubsection{Bias Scoring}
+
+An LLM judge (GPT-4o-mini) assigns a bias score $\in \{0.0, 0.5, 1.0\}$ where 0.0 indicates fully rational, 0.5 mixed/hedged, and 1.0 fully biased behavior. The debiasing effect is:
+\begin{equation}
+  \Delta_{\text{debias}} = S_{\text{bias}} - S_{\text{neutral}}
+  \label{eq:debiasing}
+\end{equation}
+
+\subsection{Study 2: Adversarial Ethics Stress Testing}
+
+\subsubsection{Adversarial Prompt Design}
+
+For each of 47 CFA Ethics questions from the CFA-Easy dataset \citep{ke2025findap}, we create a standard version and five adversarial versions prepending pressure-inducing contexts: \textbf{profit incentive} (financial rewards for the wrong action), \textbf{authority pressure} (superior's instruction to override ethics), \textbf{emotional manipulation} (sympathetic scenario encouraging rule-breaking), \textbf{reframing} (linguistic disguise of violations), and \textbf{moral dilemma} (utilitarian argument against rule-following).
+
+\subsubsection{Ethics Robustness Score}
+
+\begin{equation}
+    \text{ERS}_t = \frac{\text{Accuracy}_{\text{adversarial},t}}{\text{Accuracy}_{\text{standard}}}
+    \label{eq:ers}
+\end{equation}
+ERS $= 1.0$ means no effect; ERS $< 1.0$ indicates degradation. We track ``flipped'' questions: correct under standard but incorrect under adversarial conditions.
+
+\subsection{Model}
+
+Both studies evaluate \textbf{GPT-4o-mini} (OpenAI) at temperature $\tau = 0.0$. Cross-model comparisons use \textbf{GPT-5-mini} for adversarial ethics testing.
+
+%% ============================================
+%% 4. RESULTS
+%% ============================================
+\section{Results}
+\label{sec:results}
+
+\subsection{Study 1: Behavioral Biases}
+
+\subsubsection{Overall Results}
+
+Table~\ref{tab:bias_overall} presents aggregate bias measurement results. The model exhibits a mean bias score of 0.500, with neutral re-framing reducing this to 0.425 (Wilcoxon $W = 14.0$, $p = 0.023$, $r = 0.284$).
+
+\begin{table}[H]
+\centering
+\caption{Overall bias measurement (GPT-4o-mini, $N=60$ scenarios)}
+\label{tab:bias_overall}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Metric} & \textbf{Bias-Inducing} & \textbf{Neutral} & \textbf{$\Delta_{\text{debias}}$} \\
+\midrule
+Mean Score & 0.500 & 0.425 & +0.075 \\
+Std Dev & 0.129 & 0.201 & 0.220 \\
+\midrule
+\multicolumn{4}{@{}l}{\textit{Wilcoxon: $W = 14.0$, $p = 0.023$, $r = 0.284$}} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Three-Tier Debiasing Hierarchy}
+
+Table~\ref{tab:bias_by_type} reveals substantial heterogeneity across bias types, forming a three-tier hierarchy.
+
+\begin{table}[H]
+\centering
+\caption{Bias scores by type (GPT-4o-mini, $N=60$, 10 per type)}
+\label{tab:bias_by_type}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{Bias Type} & \textbf{$n$} & \textbf{Bias} & \textbf{Neutral} & \textbf{$\Delta_{\text{debias}}$} \\
+\midrule
+\multicolumn{5}{@{}l}{\textit{Tier 1: Surface biases (prompt-debiasable)}} \\
+Loss Aversion      & 10 & 0.500 & 0.200 & +0.300 \\
+Framing            & 10 & 0.550 & 0.400 & +0.150 \\
+\midrule
+\multicolumn{5}{@{}l}{\textit{Tier 2: Weakly responsive}} \\
+Anchoring          & 10 & 0.500 & 0.450 & +0.050 \\
+\midrule
+\multicolumn{5}{@{}l}{\textit{Tier 3: Deep biases (resistant to debiasing)}} \\
+Disposition Effect & 10 & 0.500 & 0.500 & +0.000 \\
+Overconfidence     & 10 & 0.500 & 0.500 & +0.000 \\
+Recency            & 10 & 0.450 & 0.500 & $-$0.050 \\
+\midrule
+\textbf{Overall}   & \textbf{60} & \textbf{0.500} & \textbf{0.425} & \textbf{+0.075} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Tier 1 (Surface biases):} Loss aversion ($\Delta = +0.300$) and framing ($+0.150$) respond strongly to neutral re-framing, suggesting they are triggered by lexical cues (``LOSING,'' ``DROP'') in the prompt-response mapping.
+
+\textbf{Tier 2 (Weakly responsive):} Anchoring ($+0.050$) shows marginal improvement, indicating that the model's tendency to condition on provided numerical information is partially but not fully addressable through prompting.
+
+\textbf{Tier 3 (Deep biases):} Disposition effect ($+0.000$), overconfidence ($+0.000$), and recency ($-0.050$) are entirely resistant to prompt-level debiasing. Most notably, recency bias \textit{increases} under neutral framing, suggesting information removal can paradoxically worsen bias.
+
+\subsubsection{Replication on Synthetic Scenarios}
+
+A supplementary replication on 80 synthetically generated scenarios (12--14 per bias type) confirms the overall pattern. The disposition effect emerges as the strongest bias (0.808), while recency drops to 0.000 on synthetic scenarios. The overall mean (0.463) is consistent with the original (0.500), confirming that LLMs exhibit measurable behavioral biases across diverse financial contexts.
+
+\subsection{Study 2: Adversarial Ethics}
+
+\subsubsection{Universal Degradation}
+
+Table~\ref{tab:ethics} presents adversarial ethics results. All five attack types consistently degrade performance (ERS $< 1.0$), with 14 total flipped questions.
+
+\begin{table}[htbp]
+\centering
+\caption{Adversarial ethics results (GPT-4o-mini, $N = 47$ CFA Ethics questions)}
+\label{tab:ethics}
+\begin{threeparttable}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Condition} & \textbf{Accuracy} & \textbf{Flipped} & \textbf{ERS} & \textbf{$\Delta$Acc} \\
+\midrule
+Standard (no pressure) & 85.1\% & --- & 1.000 & --- \\
+\midrule
+Profit incentive & 78.7\% & 4 & 0.925 & $-$6.4 pp \\
+Authority pressure & 78.7\% & 3 & 0.925 & $-$6.4 pp \\
+Emotional manipulation & 80.9\% & 2 & 0.950 & $-$4.3 pp \\
+Reframing & 80.9\% & 3 & 0.950 & $-$4.3 pp \\
+Moral dilemma & 80.9\% & 2 & 0.950 & $-$4.3 pp \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item ERS = Ethics Robustness Score. Flipped = questions correct under standard but incorrect under adversarial pressure. Total: 14.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+The universality of degradation is the central finding: no attack type fails to compromise ethical judgment, providing evidence that LLMs learn the \textit{form} of ethical responses rather than the \textit{principles}.
+
+\subsubsection{Rationalization Taxonomy}
+
+Qualitative analysis of the 14 flipped responses reveals three rationalization strategies:
+
+\begin{itemize}
+    \item \textbf{Utilitarian override} (6 flips): The model constructs consequentialist arguments framing violations as the ``greater good,'' co-opting fiduciary language to justify abandoning fiduciary duty.
+    \item \textbf{Authority deference} (3 flips): The model subordinates its judgment to hierarchical authority, rationalizing deference by invoking the authority figure's experience---a direct violation of CFA Standard I(B).
+    \item \textbf{Semantic repackaging} (3 flips): The model absorbs the adversarial frame, recharacterizing ethical violations as ``pragmatic interpretation''---mapping to the compliance risk of ``creative compliance.''
+\end{itemize}
+
+The critical insight is that adversarial pressure does not produce obviously wrong outputs but generates \textit{plausible-sounding ethical reasoning} reaching the wrong conclusion---a compliance threat far more dangerous than simple errors.
+
+\subsubsection{Synthetic Ethics Experiment}
+
+On 141 synthetically generated CFA ethics questions, the flip rate drops dramatically from 5.96\% (CFA-Easy) to 0.85\%, with only reframing (4 flips) and moral dilemma (2 flips) retaining efficacy. Profit incentive, authority pressure, and emotional manipulation produce zero flips, suggesting these attack types primarily exploit marginal confidence on memorized questions rather than genuine reasoning vulnerabilities.
+
+\subsubsection{Cross-Model Comparison}
+
+GPT-5-mini achieves \textbf{zero} adversarial flips (ERS $> 1.0$ across all five attack types), with adversarial pressure paradoxically \textit{improving} accuracy. This suggests the vulnerability may be generationally bounded, though the result may partly reflect training-data memorization rather than genuine ethical robustness.
+
+%% ============================================
+%% 5. DISCUSSION
+%% ============================================
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{The Double Jeopardy Problem}
+
+Our two studies reveal complementary failure modes creating a ``double jeopardy'' for financial AI deployment:
+
+\begin{itemize}
+    \item \textbf{Behavioral biases} cause the model to give systematically suboptimal financial advice---selling winners too early (disposition effect), overweighting recent performance, anchoring to stale prices. These biases are inherited from training data and represent \textit{statistical} rather than \textit{emotional} irrationality.
+    \item \textbf{Ethical fragility} causes the model to abandon compliance standards under pressure---rationalizing violations through utilitarian override, authority deference, or semantic repackaging. These vulnerabilities suggest the model has learned ethical \textit{form} rather than ethical \textit{principles}.
+\end{itemize}
+
+The distinction matters for mitigation. Behavioral biases require training-data interventions because deep biases are structurally embedded and resist prompt-level debiasing. Ethical fragility may be addressable through alignment improvements---GPT-5-mini's zero-flip result suggests this---but must be validated across model families.
+
+\subsection{Economic Significance}
+
+The disposition effect---entirely resistant to debiasing---could materially reduce portfolio returns if robo-advisors systematically sell winners too early. At scale, even small systematic biases compound into significant wealth destruction.
+
+The ethical vulnerability carries different consequences. When an AI compliance system can be manipulated into rationalizing violations---producing convincing justifications rather than obviously wrong answers---the deploying institution faces heightened regulatory liability. Irrationality costs basis points, but ethics failures cost licenses.
+
+\subsection{The Three-Tier Debiasing Hierarchy}
+
+The hierarchy provides actionable guidance:
+\begin{itemize}
+    \item \textbf{Tier 1 (Surface)}: Loss aversion and framing respond to prompt engineering---instruct the model to ``evaluate using only quantitative analysis'' and ``focus on expected values.''
+    \item \textbf{Tier 2 (Weakly responsive)}: Anchoring requires architectural modifications---e.g., filtering numerical anchors from prompts before processing.
+    \item \textbf{Tier 3 (Deep)}: Disposition effect, overconfidence, and recency require training-data interventions---bias-aware RLHF, synthetic data with debiased reasoning, or contrastive fine-tuning.
+\end{itemize}
+
+\subsection{Connections to CFA Standards}
+
+Our adversarial attacks map to specific CFA Standards: profit incentive tests Standard III(C) Suitability; authority pressure tests Standard I(B) Independence; emotional manipulation tests Standard III(A) Loyalty; reframing tests Standard I(A) Knowledge of the Law. No CFA Standard is immune to adversarial compromise.
+
+\subsection{Limitations}
+
+Several limitations should be acknowledged. First, 10 scenarios per bias type (supplemented by 80 synthetic) limits statistical power; 20--30 hand-crafted scenarios per type is recommended. Second, LLM-as-judge scoring may introduce biases. Third, the ethics study ($N = 47$) has sub-group analyses treated as exploratory. Fourth, cross-model bias validation was abandoned due to GPT-5-mini producing empty responses on $\sim$80\% of scenarios. Fifth, single-turn adversarial prompts may underestimate vulnerability; multi-turn attacks \citep{chen2025fitd} could be more effective. Finally, establishing whether biases are absorbed from training data or emerge from architecture requires further investigation.
+
+%% ============================================
+%% 6. CONCLUSION
+%% ============================================
+\section{Conclusion}
+\label{sec:conclusion}
+
+This paper demonstrates that financial LLMs face a dual threat: they exhibit patterns consistent with human behavioral biases \textit{and} are vulnerable to adversarial pressure that compromises ethical judgment. The disposition effect and overconfidence are entirely resistant to prompt-level debiasing, while all five adversarial attack types reliably degrade ethical accuracy.
+
+The three-tier debiasing hierarchy and rationalization taxonomy provide actionable frameworks for financial AI governance: surface biases can be addressed through prompt engineering, but deep biases and ethical fragility require training-time interventions and alignment improvements. The cross-model evidence (GPT-5-mini's zero adversarial flips) offers cautious optimism that ethical robustness may improve generationally, but mandatory testing remains essential.
+
+\textbf{The question is not whether AI eliminates human irrationality from financial advice, but whether it introduces a new form of irrationality---statistical rather than emotional, systematic rather than idiosyncratic---accompanied by ethical fragility that no amount of prompt engineering can fully resolve.}
+
+%% ============================================
+%% DECLARATIONS
+%% ============================================
+\section*{Data Availability}
+The experimental scenarios and analysis code are available from the corresponding author upon reasonable request.
+
+\section*{Declaration of Competing Interest}
+The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
+
+\section*{CRediT Author Contributions}
+\textbf{Wei-Lun Cheng}: Conceptualization, Methodology, Software, Formal Analysis, Data Curation, Writing -- Original Draft, Visualization.
+\textbf{Daniel Wei-Chung Miao}: Supervision, Writing -- Review \& Editing.
+\textbf{Guang-Di Chang}: Supervision, Writing -- Review \& Editing.
+
+\section*{Acknowledgments}
+Computational resources were provided by National Taiwan University of Science and Technology (NTUST).
+
+%% ============================================
+%% REFERENCES
+%% ============================================
+\begin{thebibliography}{20}
+
+\bibitem[Andriushchenko et al.(2025)]{andriushchenko2025jailbreaking}
+Andriushchenko, M., Croce, F., \& Flammarion, N. (2025).
+\newblock Jailbreaking leading safety-aligned LLMs with simple adaptive attacks.
+\newblock In \textit{Proceedings of ICLR 2025}.
+
+\bibitem[Capraro et al.(2025)]{capraro2025llms}
+Capraro, V., Lentsch, A., Aczel, B., et al. (2025).
+\newblock The impact of generative {AI} on collaborative human--{AI} decision-making.
+\newblock \textit{Proceedings of the National Academy of Sciences} 122(7), e2413116122.
+
+\bibitem[Chen et al.(2025)]{chen2025fitd}
+Chen, Y., Yang, Z., Wang, X., et al. (2025).
+\newblock Foot-in-the-door: Multi-turn jailbreak attack on large language models.
+\newblock In \textit{Proceedings of EMNLP 2025}.
+
+\bibitem[Hui et al.(2025)]{hui2025trident}
+Hui, B., Chen, J., Li, S., et al. (2025).
+\newblock TRIDENT: A comprehensive financial safety benchmark for large language models.
+\newblock \textit{arXiv preprint arXiv:2502.13399}.
+
+\bibitem[Kahneman and Tversky(1979)]{kahneman1979prospect}
+Kahneman, D., \& Tversky, A. (1979).
+\newblock Prospect theory: An analysis of decision under risk.
+\newblock \textit{Econometrica}, 47(2), 263--292.
+
+\bibitem[Ke et al.(2025)]{ke2025findap}
+Ke, Z., Ming, Y., Nguyen, X. P., Xiong, C., \& Joty, S. (2025).
+\newblock Demystifying domain-adaptive post-training for financial LLMs.
+\newblock In \textit{Proceedings of EMNLP 2025}.
+
+\bibitem[Malberg et al.(2025)]{malberg2025nlp}
+Malberg, S., Dippold, J., \& Romirer-Maierhofer, P. (2025).
+\newblock Cognitive biases in {LLMs}: A survey of findings and methodologies in {NLP} research.
+\newblock In \textit{Proceedings of NLP4DH Workshop at COLING 2025}.
+
+\bibitem[Mazeika et al.(2024)]{mazeika2024harmbench}
+Mazeika, M., Phan, L., Yin, X., et al. (2024).
+\newblock HarmBench: A standardized evaluation framework for automated red teaming.
+\newblock In \textit{Proceedings of ICML 2024}.
+
+\bibitem[Ross et al.(2024)]{ross2024llmeconomicus}
+Ross, S., Kim, T.W., \& Lo, A.W. (2024).
+\newblock {LLM} {Economicus}? {M}apping the behavioral biases of large language models via utility theory.
+\newblock In \textit{Proceedings of COLM 2024}.
+
+\bibitem[Shefrin and Statman(1985)]{shefrin1985disposition}
+Shefrin, H., \& Statman, M. (1985).
+\newblock The disposition to sell winners too early and ride losers too long.
+\newblock \textit{The Journal of Finance}, 40(3), 777--790.
+
+\bibitem[Suri et al.(2024)]{suri2024llmeconomicus}
+Suri, G., Slater, L.R., Ziaee, A., \& Nguyen, M. (2024).
+\newblock Do large language models show decision heuristics similar to humans?
+\newblock \textit{Journal of Experimental Psychology: General}, 153(4), 1066--1075.
+
+\bibitem[Tversky and Kahneman(1974)]{tversky1974judgment}
+Tversky, A., \& Kahneman, D. (1974).
+\newblock Judgment under uncertainty: Heuristics and biases.
+\newblock \textit{Science}, 185(4157), 1124--1131.
+
+\bibitem[Wu et al.(2023)]{wu2023bloomberggpt}
+Wu, S., Irsoy, O., Lu, S., et al. (2023).
+\newblock BloombergGPT: A large language model for finance.
+\newblock \textit{arXiv preprint arXiv:2303.17564}.
+
+\end{thebibliography}
+
+\end{document}

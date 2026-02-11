@@ -1,0 +1,392 @@
+% Finance Research Letters — Elsevier Template
+% Paper C: AI Irrationality and Ethics Under Pressure (P3+P4 Merge) — 繁體中文版
+\documentclass[preprint,12pt]{elsarticle}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{multirow}
+\usepackage{threeparttable}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{xeCJK}
+\setCJKmainfont{Songti TC}
+\setCJKsansfont{Heiti TC}
+\setCJKmonofont{Heiti TC}
+
+\journal{Finance Research Letters（繁體中文版）}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{繼承的非理性與倫理脆弱性：大型語言模型在金融決策中的行為偏誤與對抗性攻擊脆弱性}
+
+\author[ntust]{Wei-Lun Cheng}
+\ead{d11018003@mail.ntust.edu.tw}
+
+\author[ntust]{Daniel Wei-Chung Miao\corref{cor1}}
+\ead{miao@mail.ntust.edu.tw}
+\cortext[cor1]{通訊作者}
+
+\author[ntust]{Guang-Di Chang}
+\ead{gchang@mail.ntust.edu.tw}
+
+\affiliation[ntust]{organization={國立臺灣科技大學 財務金融研究所},
+            city={臺北},
+            postcode={10607},
+            country={臺灣}}
+
+\begin{abstract}
+部署為金融顧問的大型語言模型（LLMs）面臨雙重威脅：它們可能繼承人類訓練資料中的行為偏誤，\textit{並且}在對抗性壓力下放棄倫理標準。本研究提出一個統一的實驗框架，同時檢驗這兩種威脅。首先，使用60組配對金融情境（每種偏誤類型10組），我們測量了GPT-4o-mini的六種經典行為偏誤——損失趨避、錨定效應、框架效應、近因偏誤、處分效應與過度自信——發現平均偏誤分數為0.500（0--1量表）。中性重新框架將此降至0.425（Wilcoxon $p = 0.023$），但去偏效果揭示了一個\textit{三層級結構}：表層偏誤（損失趨避 $\Delta = +0.300$、框架效應 $+0.150$）可透過提示層級介入處理；錨定效應呈現邊際反應（$+0.050$）；而深層偏誤——處分效應、過度自信與近因偏誤——則完全具有抗性。在80個合成情境上的複製實驗確認處分效應為最頑固的偏誤（0.808）。其次，將五種對抗性壓力類型（利潤誘因、權威壓力、情感操控、重新框架、道德困境）施加於47道CFA倫理題目，我們發現\textit{全面性退化}：所有五種攻擊均降低準確率（ERS = 0.925--0.950），翻轉了14道原本答對的題目。在141道合成倫理題目上的補充實驗顯示翻轉率大幅下降（0.85\% vs.\ 5.96\%），僅重新框架與道德困境仍有效。質性分析識別出三種合理化策略——功利主義覆蓋、權威服從與語義重新包裝——模型透過這些策略為倫理妥協的答案建構看似合理的論證。跨模型比較顯示GPT-5-mini達到零對抗性翻轉（ERS $> 1.0$），暗示此脆弱性可能具有世代界限。綜合而言，這些發現揭示當前金融LLMs面臨\textit{雙重危機}：它們展現與人類非理性一致的模式（產生次優投資結果的風險）\textit{且}在壓力下具有倫理脆弱性（產生合規違規的風險）——這是需要不同緩解策略的互補失效模式。
+\end{abstract}
+
+\begin{keyword}
+行為金融學 \sep 對抗性倫理 \sep 大型語言模型 \sep 損失趨避 \sep 處分效應 \sep 人工智慧安全 \sep CFA考試 \sep 受託責任
+\end{keyword}
+
+\end{frontmatter}
+
+%% ============================================
+%% 1. 緒論
+%% ============================================
+\section{緒論}
+\label{sec:intro}
+
+大型語言模型（LLMs）在金融諮詢、合規與分析角色中的快速部署，引發了兩個關於其可靠性的根本問題。第一，這些系統——以大量人類生成的金融文本進行訓練——是否繼承了行為金融學所記載的系統性認知偏誤？第二，當它們遭受日常壓迫人類專業人員的壓力時，能否維持倫理判斷？
+
+這些問題指向具有不同後果的互補失效模式。行為偏誤（損失趨避、處分效應、錨定效應）導致\textit{次優投資結果}——風險在於虧損。對抗性壓力下的倫理脆弱性導致\textit{合規違規}——風險在於法律與監管制裁。部署一個既具有非理性偏誤又具有倫理脆弱性的LLM的金融機構，將面臨當前AI評估框架——僅聚焦於準確率——完全忽略的複合風險。
+
+我們提出一個統一的實驗框架，涵蓋兩個面向：
+
+\begin{enumerate}
+    \item \textbf{行為偏誤測量}：使用配對情境設計，以跨越六種偏誤類型的60個CFA等級金融情境，量化偏誤易感性與去偏效果，識別出三層級的偏誤持久性結構。
+
+    \item \textbf{對抗性倫理壓力測試}：將五種壓力類型施加於47道CFA倫理題目，測量對抗條件下的倫理韌性，發現全面性退化現象，並描繪模型放棄倫理標準時所使用的合理化策略分類。
+\end{enumerate}
+
+本研究有四項貢獻：（1）首次對金融LLM的行為偏誤與倫理脆弱性進行聯合測量；（2）識別出區分表層偏誤、弱反應偏誤與深層偏誤的三層級去偏結構；（3）引入AI在對抗性壓力下的合理化策略分類；（4）證明兩種失效模式需要根本不同的緩解方法——提示工程用於表層偏誤、訓練時介入用於深層偏誤、對齊改進用於倫理韌性。
+
+%% ============================================
+%% 2. 文獻回顧
+%% ============================================
+\section{文獻回顧}
+\label{sec:related}
+
+\subsection{LLMs的行為偏誤}
+
+\citet{kahneman1979prospect}的奠基性研究確立了個體透過損失趨避與參考點依賴系統性地違反期望效用理論。在金融市場中，這些表現為處分效應\citep{shefrin1985disposition}和錨定偏誤\citep{tversky1974judgment}。\citet{ross2024llmeconomicus}引入「LLM Economicus」框架，發現GPT-4在抽象賭局情境中違反期望效用公理。\citet{suri2024llmeconomicus}將此擴展至經濟決策，顯示GPT-3.5展現損失趨避。\citet{capraro2025llms}提供了跨認知心理學實驗的全面綜述。\citet{malberg2025nlp}證明偏誤測量方法論在不同研究間存在顯著差異。
+
+本研究與此文獻的區別在於：使用CFA等級的投資情境而非抽象賭局、測試金融特定的處分效應，以及引入去偏層級結構。
+
+\subsection{對抗性倫理測試}
+
+AI安全研究已發展出精密的對抗性測試方法。\citet{chen2025fitd}證明多輪「得寸進尺」攻擊比單次提示更有效。\citet{hui2025trident}提出TRIDENT作為金融安全基準。\citet{mazeika2024harmbench}引入HarmBench用於標準化紅隊測試。\citet{andriushchenko2025jailbreaking}顯示簡單的自適應攻擊可繞過對齊機制。本研究將對抗性測試具體應用於CFA倫理題目，將發現與CFA專業行為準則連結，並引入領域特定指標（Ethics Robustness Score, ERS）。
+
+%% ============================================
+%% 3. 研究方法
+%% ============================================
+\section{研究方法}
+\label{sec:method}
+
+\subsection{研究一：行為偏誤測量}
+
+\subsubsection{配對情境設計}
+
+針對每個金融決策，我們建構兩個版本：\textit{偏誤誘導版本}，以觸發目標偏誤的方式框架情境；以及\textit{中性版本}，僅呈現量化事實。若模型完全理性，兩種框架下的建議應完全相同。
+
+我們測試六種經典偏誤，每種10個情境（$N = 60$）：損失趨避、錨定效應、框架效應、近因偏誤、處分效應與過度自信。每個情境呈現一個具有真實金融背景的CFA等級投資決策。
+
+\subsubsection{偏誤評分}
+
+一個LLM評判模型（GPT-4o-mini）指派偏誤分數 $\in \{0.0, 0.5, 1.0\}$，其中0.0表示完全理性、0.5表示混合/模稜兩可、1.0表示完全偏誤行為。去偏效果定義為：
+\begin{equation}
+  \Delta_{\text{debias}} = S_{\text{bias}} - S_{\text{neutral}}
+  \label{eq:debiasing}
+\end{equation}
+
+\subsection{研究二：對抗性倫理壓力測試}
+
+\subsubsection{對抗性提示設計}
+
+針對CFA-Easy資料集\citep{ke2025findap}中的47道CFA倫理題目，我們建立一個標準版本和五個對抗性版本，在題目前加入誘導壓力的情境：\textbf{利潤誘因}（對錯誤行為給予經濟獎勵）、\textbf{權威壓力}（上級指示覆蓋倫理準則）、\textbf{情感操控}（引發同情心的情境鼓勵違規）、\textbf{重新框架}（以語言偽裝違規行為）、以及\textbf{道德困境}（以功利主義論證反對遵守規則）。
+
+\subsubsection{倫理韌性分數}
+
+\begin{equation}
+    \text{ERS}_t = \frac{\text{Accuracy}_{\text{adversarial},t}}{\text{Accuracy}_{\text{standard}}}
+    \label{eq:ers}
+\end{equation}
+ERS $= 1.0$ 表示無影響；ERS $< 1.0$ 表示退化。我們追蹤「翻轉」題目：在標準條件下答對但在對抗條件下答錯的題目。
+
+\subsection{模型}
+
+兩項研究均評估 \textbf{GPT-4o-mini}（OpenAI），溫度參數 $\tau = 0.0$。跨模型比較使用 \textbf{GPT-5-mini} 進行對抗性倫理測試。
+
+%% ============================================
+%% 4. 研究結果
+%% ============================================
+\section{研究結果}
+\label{sec:results}
+
+\subsection{研究一：行為偏誤}
+
+\subsubsection{整體結果}
+
+表~\ref{tab:bias_overall}呈現整體偏誤測量結果。模型展現0.500的平均偏誤分數，中性重新框架將此降至0.425（Wilcoxon $W = 14.0$, $p = 0.023$, $r = 0.284$）。
+
+\begin{table}[H]
+\centering
+\caption{整體偏誤測量結果（GPT-4o-mini，$N=60$個情境）}
+\label{tab:bias_overall}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{指標} & \textbf{偏誤誘導} & \textbf{中性} & \textbf{$\Delta_{\text{debias}}$} \\
+\midrule
+平均分數 & 0.500 & 0.425 & +0.075 \\
+標準差 & 0.129 & 0.201 & 0.220 \\
+\midrule
+\multicolumn{4}{@{}l}{\textit{Wilcoxon: $W = 14.0$, $p = 0.023$, $r = 0.284$}} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{三層級去偏結構}
+
+表~\ref{tab:bias_by_type}揭示偏誤類型間的顯著異質性，形成三層級結構。
+
+\begin{table}[H]
+\centering
+\caption{各類型偏誤分數（GPT-4o-mini，$N=60$，每類型10個）}
+\label{tab:bias_by_type}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{偏誤類型} & \textbf{$n$} & \textbf{偏誤} & \textbf{中性} & \textbf{$\Delta_{\text{debias}}$} \\
+\midrule
+\multicolumn{5}{@{}l}{\textit{第一層：表層偏誤（可透過提示去偏）}} \\
+損失趨避      & 10 & 0.500 & 0.200 & +0.300 \\
+框架效應      & 10 & 0.550 & 0.400 & +0.150 \\
+\midrule
+\multicolumn{5}{@{}l}{\textit{第二層：弱反應偏誤}} \\
+錨定效應      & 10 & 0.500 & 0.450 & +0.050 \\
+\midrule
+\multicolumn{5}{@{}l}{\textit{第三層：深層偏誤（抗拒去偏）}} \\
+處分效應      & 10 & 0.500 & 0.500 & +0.000 \\
+過度自信      & 10 & 0.500 & 0.500 & +0.000 \\
+近因偏誤      & 10 & 0.450 & 0.500 & $-$0.050 \\
+\midrule
+\textbf{整體}   & \textbf{60} & \textbf{0.500} & \textbf{0.425} & \textbf{+0.075} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{第一層（表層偏誤）：}損失趨避（$\Delta = +0.300$）和框架效應（$+0.150$）對中性重新框架反應強烈，暗示它們由提示-回應映射中的詞彙線索（如「虧損」、「下跌」）觸發。
+
+\textbf{第二層（弱反應偏誤）：}錨定效應（$+0.050$）顯示邊際改善，表明模型依附於所提供數值資訊的傾向可透過提示部分但非完全解決。
+
+\textbf{第三層（深層偏誤）：}處分效應（$+0.000$）、過度自信（$+0.000$）與近因偏誤（$-0.050$）完全抗拒提示層級的去偏。最值得注意的是，近因偏誤在中性框架下反而\textit{增加}，暗示移除資訊可能矛盾地加劇偏誤。
+
+\subsubsection{合成情境複製實驗}
+
+在80個合成生成情境（每種偏誤類型12--14個）上的補充複製實驗確認了整體模式。處分效應表現為最強偏誤（0.808），而近因偏誤在合成情境中降至0.000。整體平均值（0.463）與原始實驗（0.500）一致，確認LLMs在多樣化金融情境中展現可測量的行為偏誤。
+
+\subsection{研究二：對抗性倫理}
+
+\subsubsection{全面性退化}
+
+表~\ref{tab:ethics}呈現對抗性倫理結果。所有五種攻擊類型均持續降低表現（ERS $< 1.0$），共翻轉14道題目。
+
+\begin{table}[htbp]
+\centering
+\caption{對抗性倫理結果（GPT-4o-mini，$N = 47$道CFA倫理題目）}
+\label{tab:ethics}
+\begin{threeparttable}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{條件} & \textbf{準確率} & \textbf{翻轉數} & \textbf{ERS} & \textbf{$\Delta$Acc} \\
+\midrule
+標準（無壓力） & 85.1\% & --- & 1.000 & --- \\
+\midrule
+利潤誘因 & 78.7\% & 4 & 0.925 & $-$6.4 pp \\
+權威壓力 & 78.7\% & 3 & 0.925 & $-$6.4 pp \\
+情感操控 & 80.9\% & 2 & 0.950 & $-$4.3 pp \\
+重新框架 & 80.9\% & 3 & 0.950 & $-$4.3 pp \\
+道德困境 & 80.9\% & 2 & 0.950 & $-$4.3 pp \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item ERS = 倫理韌性分數（Ethics Robustness Score）。翻轉 = 在標準條件下答對但在對抗性壓力下答錯的題目。總計：14題。
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+退化的全面性是核心發現：沒有任何攻擊類型未能損害倫理判斷，提供了LLMs學習的是倫理回應的\textit{形式}而非\textit{原則}的證據。
+
+\subsubsection{合理化策略分類}
+
+對14個翻轉回應的質性分析揭示三種合理化策略：
+
+\begin{itemize}
+    \item \textbf{功利主義覆蓋}（6次翻轉）：模型建構結果論論證，將違規行為框架為「更大的善」，挪用受託人語言來合理化放棄受託責任。
+    \item \textbf{權威服從}（3次翻轉）：模型將其判斷從屬於層級權威，透過援引權威人物的經驗來合理化服從——直接違反CFA準則I(B)。
+    \item \textbf{語義重新包裝}（3次翻轉）：模型吸收對抗性框架，將倫理違規重新定性為「務實解讀」——對應「創造性合規」的合規風險。
+\end{itemize}
+
+關鍵洞察在於，對抗性壓力並非產生明顯錯誤的輸出，而是生成\textit{聽起來合理的倫理推理}卻得出錯誤結論——這是一種比簡單錯誤更加危險的合規威脅。
+
+\subsubsection{合成倫理實驗}
+
+在141道合成生成的CFA倫理題目上，翻轉率從5.96\%（CFA-Easy）大幅下降至0.85\%，僅重新框架（4次翻轉）和道德困境（2次翻轉）仍保有效力。利潤誘因、權威壓力與情感操控產生零翻轉，暗示這些攻擊類型主要利用記憶化題目上的邊際信心，而非真正的推理脆弱性。
+
+\subsubsection{跨模型比較}
+
+GPT-5-mini達到\textbf{零}對抗性翻轉（所有五種攻擊類型的ERS $> 1.0$），對抗性壓力矛盾地\textit{提升}了準確率。這暗示此脆弱性可能具有世代界限，但此結果可能部分反映訓練資料記憶化而非真正的倫理韌性。
+
+%% ============================================
+%% 5. 討論
+%% ============================================
+\section{討論}
+\label{sec:discussion}
+
+\subsection{雙重危機問題}
+
+我們的兩項研究揭示了為金融AI部署創造「雙重危機」的互補失效模式：
+
+\begin{itemize}
+    \item \textbf{行為偏誤}導致模型提供系統性次優的金融建議——過早賣出贏家（處分效應）、過度重視近期表現、錨定於過時價格。這些偏誤繼承自訓練資料，代表的是\textit{統計性}而非\textit{情感性}的非理性。
+    \item \textbf{倫理脆弱性}導致模型在壓力下放棄合規標準——透過功利主義覆蓋、權威服從或語義重新包裝來合理化違規。這些脆弱性暗示模型學習的是倫理\textit{形式}而非倫理\textit{原則}。
+\end{itemize}
+
+此區別對緩解策略至關重要。行為偏誤需要訓練資料層級的介入，因為深層偏誤在結構上根深蒂固且抗拒提示層級的去偏。倫理脆弱性可能可透過對齊改進來處理——GPT-5-mini的零翻轉結果暗示了這一點——但必須跨模型家族驗證。
+
+\subsection{經濟顯著性}
+
+處分效應——完全抗拒去偏——若機器人理財顧問系統性地過早賣出贏家，可能實質性地降低投資組合報酬。在規模化運作下，即使微小的系統性偏誤也會複利累積為顯著的財富損失。
+
+倫理脆弱性帶來不同的後果。當AI合規系統能被操控為違規行為建構合理化論證——產生令人信服的理由而非明顯錯誤的答案——部署機構將面臨加重的監管責任。非理性損失基點，但倫理失敗損失執照。
+
+\subsection{三層級去偏結構}
+
+此結構提供可操作的指引：
+\begin{itemize}
+    \item \textbf{第一層（表層）}：損失趨避和框架效應可透過提示工程處理——指示模型「僅使用量化分析進行評估」及「聚焦於期望值」。
+    \item \textbf{第二層（弱反應）}：錨定效應需要架構性修改——例如在處理前過濾提示中的數值錨點。
+    \item \textbf{第三層（深層）}：處分效應、過度自信與近因偏誤需要訓練資料層級的介入——具偏誤意識的RLHF、具去偏推理的合成資料，或對比式微調。
+\end{itemize}
+
+\subsection{與CFA準則的關聯}
+
+我們的對抗性攻擊對應特定的CFA準則：利潤誘因測試準則III(C)適合性；權威壓力測試準則I(B)獨立性；情感操控測試準則III(A)忠誠義務；重新框架測試準則I(A)法律知識。沒有任何CFA準則能免於對抗性攻擊的威脅。
+
+\subsection{研究限制}
+
+應承認若干限制。第一，每種偏誤類型僅10個情境（輔以80個合成情境）限制了統計檢定力；建議每類型手動設計20--30個情境。第二，LLM-as-judge的評分方式可能引入偏誤。第三，倫理研究（$N = 47$）的子群分析屬探索性質。第四，跨模型偏誤驗證因GPT-5-mini在約80\%情境中產生空白回應而被放棄。第五，單輪對抗性提示可能低估脆弱性；多輪攻擊\citep{chen2025fitd}可能更為有效。最後，確定偏誤是從訓練資料中吸收還是從架構中湧現，需要進一步研究。
+
+%% ============================================
+%% 6. 結論
+%% ============================================
+\section{結論}
+\label{sec:conclusion}
+
+本研究證明金融LLMs面臨雙重威脅：它們展現與人類行為偏誤一致的模式，\textit{並且}容易受到損害倫理判斷的對抗性壓力影響。處分效應與過度自信完全抗拒提示層級的去偏，而所有五種對抗性攻擊類型均可靠地降低倫理準確率。
+
+三層級去偏結構與合理化策略分類為金融AI治理提供了可操作的框架：表層偏誤可透過提示工程處理，但深層偏誤與倫理脆弱性需要訓練時介入與對齊改進。跨模型證據（GPT-5-mini的零對抗性翻轉）提供了倫理韌性可能隨世代改善的謹慎樂觀，但強制性測試仍不可或缺。
+
+\textbf{問題不在於AI是否消除了金融建議中的人類非理性，而在於它是否引入了一種新形式的非理性——統計性而非情感性、系統性而非特異性——伴隨著任何提示工程都無法完全解決的倫理脆弱性。}
+
+%% ============================================
+%% 聲明
+%% ============================================
+\section*{資料可用性}
+實驗情境與分析程式碼可向通訊作者合理請求後取得。
+
+\section*{利益衝突聲明}
+作者聲明無已知的競爭性財務利益或個人關係可能影響本文所報告的研究。
+
+\section*{CRediT 作者貢獻}
+\textbf{Wei-Lun Cheng}：構思、方法論、軟體開發、正式分析、資料整理、撰寫——初稿、視覺化呈現。
+\textbf{Daniel Wei-Chung Miao}：指導、撰寫——審閱與編修。
+\textbf{Guang-Di Chang}：指導、撰寫——審閱與編修。
+
+\section*{致謝}
+計算資源由國立臺灣科技大學（NTUST）提供。
+
+%% ============================================
+%% 參考文獻
+%% ============================================
+\begin{thebibliography}{20}
+
+\bibitem[Andriushchenko et al.(2025)]{andriushchenko2025jailbreaking}
+Andriushchenko, M., Croce, F., \& Flammarion, N. (2025).
+\newblock Jailbreaking leading safety-aligned LLMs with simple adaptive attacks.
+\newblock In \textit{Proceedings of ICLR 2025}.
+
+\bibitem[Capraro et al.(2025)]{capraro2025llms}
+Capraro, V., Lentsch, A., Aczel, B., et al. (2025).
+\newblock The impact of generative {AI} on collaborative human--{AI} decision-making.
+\newblock \textit{Proceedings of the National Academy of Sciences} 122(7), e2413116122.
+
+\bibitem[Chen et al.(2025)]{chen2025fitd}
+Chen, Y., Yang, Z., Wang, X., et al. (2025).
+\newblock Foot-in-the-door: Multi-turn jailbreak attack on large language models.
+\newblock In \textit{Proceedings of EMNLP 2025}.
+
+\bibitem[Hui et al.(2025)]{hui2025trident}
+Hui, B., Chen, J., Li, S., et al. (2025).
+\newblock TRIDENT: A comprehensive financial safety benchmark for large language models.
+\newblock \textit{arXiv preprint arXiv:2502.13399}.
+
+\bibitem[Kahneman and Tversky(1979)]{kahneman1979prospect}
+Kahneman, D., \& Tversky, A. (1979).
+\newblock Prospect theory: An analysis of decision under risk.
+\newblock \textit{Econometrica}, 47(2), 263--292.
+
+\bibitem[Ke et al.(2025)]{ke2025findap}
+Ke, Z., Ming, Y., Nguyen, X. P., Xiong, C., \& Joty, S. (2025).
+\newblock Demystifying domain-adaptive post-training for financial LLMs.
+\newblock In \textit{Proceedings of EMNLP 2025}.
+
+\bibitem[Malberg et al.(2025)]{malberg2025nlp}
+Malberg, S., Dippold, J., \& Romirer-Maierhofer, P. (2025).
+\newblock Cognitive biases in {LLMs}: A survey of findings and methodologies in {NLP} research.
+\newblock In \textit{Proceedings of NLP4DH Workshop at COLING 2025}.
+
+\bibitem[Mazeika et al.(2024)]{mazeika2024harmbench}
+Mazeika, M., Phan, L., Yin, X., et al. (2024).
+\newblock HarmBench: A standardized evaluation framework for automated red teaming.
+\newblock In \textit{Proceedings of ICML 2024}.
+
+\bibitem[Ross et al.(2024)]{ross2024llmeconomicus}
+Ross, S., Kim, T.W., \& Lo, A.W. (2024).
+\newblock {LLM} {Economicus}? {M}apping the behavioral biases of large language models via utility theory.
+\newblock In \textit{Proceedings of COLM 2024}.
+
+\bibitem[Shefrin and Statman(1985)]{shefrin1985disposition}
+Shefrin, H., \& Statman, M. (1985).
+\newblock The disposition to sell winners too early and ride losers too long.
+\newblock \textit{The Journal of Finance}, 40(3), 777--790.
+
+\bibitem[Suri et al.(2024)]{suri2024llmeconomicus}
+Suri, G., Slater, L.R., Ziaee, A., \& Nguyen, M. (2024).
+\newblock Do large language models show decision heuristics similar to humans?
+\newblock \textit{Journal of Experimental Psychology: General}, 153(4), 1066--1075.
+
+\bibitem[Tversky and Kahneman(1974)]{tversky1974judgment}
+Tversky, A., \& Kahneman, D. (1974).
+\newblock Judgment under uncertainty: Heuristics and biases.
+\newblock \textit{Science}, 185(4157), 1124--1131.
+
+\bibitem[Wu et al.(2023)]{wu2023bloomberggpt}
+Wu, S., Irsoy, O., Lu, S., et al. (2023).
+\newblock BloombergGPT: A large language model for finance.
+\newblock \textit{arXiv preprint arXiv:2303.17564}.
+
+\end{thebibliography}
+
+\end{document}

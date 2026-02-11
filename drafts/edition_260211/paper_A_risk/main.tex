@@ -1,0 +1,647 @@
+% International Review of Financial Analysis (IRFA) — Elsevier Template
+% Paper A: The Illusion of Financial Competence (P2+P5+P6 Merge)
+\documentclass[preprint,12pt]{elsarticle}
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{multirow}
+\usepackage{threeparttable}
+\usepackage{float}
+
+\journal{International Review of Financial Analysis}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{The Illusion of Financial Competence: Stress Testing, Error Taxonomy, and Calibration Analysis of Large Language Models on CFA Examinations}
+
+\author[ntust]{Wei-Lun Cheng}
+\ead{d11018003@mail.ntust.edu.tw}
+
+\author[ntust]{Daniel Wei-Chung Miao\corref{cor1}}
+\ead{miao@mail.ntust.edu.tw}
+\cortext[cor1]{Corresponding author}
+
+\author[ntust]{Guang-Di Chang}
+\ead{gchang@mail.ntust.edu.tw}
+
+\affiliation[ntust]{organization={Graduate Institute of Finance, National Taiwan University of Science and Technology},
+            city={Taipei},
+            postcode={10607},
+            country={Taiwan}}
+
+\begin{abstract}
+Large Language Models (LLMs) achieve impressive headline accuracy on financial examination benchmarks, fueling optimism about AI-assisted financial decision-making. We present a comprehensive three-dimensional assessment revealing that this accuracy is largely illusory. First, \textit{counterfactual stress testing} on the full CFA-Easy corpus ($N = 1{,}032$) exposes an 18.6 percentage point memorization gap---accuracy drops from 82.4\% to 63.8\% when numerical parameters are perturbed while preserving financial logic---demonstrating that a substantial share of correct answers reflects pattern matching rather than genuine reasoning. A cross-model replication with GPT-5-mini reveals a \textit{memorization paradox}: despite achieving 91.8\% standard accuracy (+9.4~pp), the memorization gap nearly doubles to 36.4~pp, while noise sensitivity roughly halves. Second, a \textit{CFA Error Atlas} taxonomizing 557 errors from open-ended evaluation reveals that conceptual errors dominate overwhelmingly (68.8\%), while pure calculation errors account for only 1.4\%---the model fails at concept identification, not arithmetic. A Golden Context Injection experiment shows that 82.4\% of errors respond to concept hints, establishing a ceiling for retrieval-augmented remediation. Third, \textit{confidence calibration analysis} across 257 model--method observations reveals pervasive overconfidence: expressed confidence exceeds actual accuracy by 22--32 percentage points, 30.0\% of all responses are high-confidence errors, and Confidence-at-Risk analysis shows no confidence threshold can reduce error rates to acceptable levels. A robustness check on CFA-Easy ($N = 1{,}032$) reveals a ``fixed confidence register''---the model maintains $\sim$85\% confidence regardless of whether accuracy is 53\% or 82\%, indicating the absence of genuine metacognitive awareness. We introduce Robust Accuracy and Confidence-at-Risk (CaR) as regulatory-relevant metrics and argue that financial AI governance must move beyond headline accuracy to encompass robustness, error structure, and calibration quality. The question is not whether AI can pass the CFA exam, but whether its performance reflects genuine financial competence that transfers to novel problems.
+\end{abstract}
+
+\begin{keyword}
+Large Language Models \sep Financial Reasoning \sep Stress Testing \sep Robustness \sep Calibration \sep Error Analysis \sep CFA Examination \sep AI Risk Management
+\end{keyword}
+
+\end{frontmatter}
+
+%% ============================================
+%% 1. INTRODUCTION
+%% ============================================
+\section{Introduction}
+\label{sec:intro}
+
+The financial industry is rapidly adopting Large Language Models (LLMs) for tasks including equity research, risk analysis, regulatory compliance, and client advisory \citep{wu2023bloomberggpt, ke2025findap}. Benchmark evaluations show that state-of-the-art models can pass the CFA examination with scores approaching or exceeding human pass rates \citep{callanan2023gpt}, and reasoning models now pass all three CFA levels with scores exceeding the 90th percentile of human candidates \citep{patel2025reasoning}. These impressive results have accelerated deployment timelines, with firms increasingly relying on LLM-generated analysis for consequential financial decisions.
+
+However, headline accuracy---the single number universally reported by financial AI benchmarks---is a dangerously incomplete measure of AI competence. It tells us nothing about \textit{why} models succeed, \textit{how} they fail, or \textit{whether they know when they are wrong}. This paper presents a three-dimensional assessment framework that probes each of these questions:
+
+\begin{enumerate}
+    \item \textbf{Robustness (``Can it reason, or has it memorized?'')} We stress test LLM financial reasoning through counterfactual perturbation and noise injection, quantifying the gap between standard and stress-tested performance---the ``memorization premium'' embedded in benchmark scores.
+
+    \item \textbf{Error Structure (``When it fails, how does it fail?'')} We construct a taxonomy of 557 errors from open-ended CFA evaluation, revealing that the dominant failure mode is not ``can't compute'' but ``doesn't understand the concept''---a finding with direct implications for remediation strategy.
+
+    \item \textbf{Calibration (``Does it know when it's wrong?'')} We evaluate confidence calibration across multiple models and methods, finding that LLMs exhibit pervasive overconfidence that makes their error signal largely invisible to users who rely on expressed confidence.
+\end{enumerate}
+
+The three dimensions are complementary. Stress testing reveals \textit{how much} of standard accuracy is genuine; error analysis reveals \textit{what types} of failures underlie the remaining errors; and calibration analysis reveals \textit{whether the model's confidence signal can be trusted} to identify those failures. Together, they paint a picture of an AI system that appears highly competent on standard benchmarks but whose competence is substantially inflated by memorization, dominated by conceptual rather than computational errors, and accompanied by confidence signals that systematically overstate reliability.
+
+Our contributions are fivefold: (1) we design a two-dimensional stress testing framework combining counterfactual perturbation with noise injection, revealing a memorization paradox across model generations; (2) we construct the first systematic error taxonomy for financial LLMs, demonstrating that 90.1\% of errors are reasoning-based; (3) we introduce Golden Context Injection to distinguish knowledge gaps from reasoning gaps; (4) we quantify overconfident errors and introduce Confidence-at-Risk (CaR) as a risk management metric; and (5) we provide policy recommendations linking our metrics to financial regulatory frameworks.
+
+%% ============================================
+%% 2. RELATED WORK
+%% ============================================
+\section{Related Work}
+\label{sec:related}
+
+\subsection{LLMs in Financial Applications}
+
+The intersection of LLMs and finance has attracted significant research attention. BloombergGPT \citep{wu2023bloomberggpt} demonstrated competitive performance on financial NLP tasks. \citet{ke2025findap} introduced FinDAP, achieving state-of-the-art results on CFA benchmarks through domain-adaptive post-training. \citet{callanan2023gpt} evaluated GPT-4 on CFA Level I, finding pass-rate performance. However, these evaluations assess accuracy on standard questions without examining whether performance reflects genuine understanding, how failures are structured, or whether confidence signals are reliable.
+
+\subsection{Data Contamination and Benchmark Validity}
+
+The threat of data contamination in LLM evaluations is well-documented \citep{shi2023detecting}. \citet{apple2024gsmsymbolic} demonstrated that LLMs show significant accuracy degradation when mathematical reasoning problems are symbolically perturbed, suggesting that high benchmark scores partly reflect memorization. \citet{li2024gsmplus} extend this with GSM-Plus, systematically generating variants across eight perturbation dimensions. \citet{lopezlira2025memorization} specifically address the memorization problem in financial LLM evaluation, demonstrating pervasive benchmark contamination. Our stress testing extends this paradigm to the financial domain with population-level coverage.
+
+\subsection{LLM Calibration and Confidence}
+
+Calibration refers to the alignment between a model's expressed confidence and its actual accuracy \citep{guo2017calibration}. \citet{kadavath2022language} demonstrate that large language models ``mostly know what they know,'' but this degrades on out-of-distribution tasks. \citet{band2025qacalibration} develop QA-Calibration methods for question-answering systems. \citet{chhikara2025confidence} identify a persistent ``confidence gap'' across domains. \citet{liu2025kalshibench} propose KalshiBench using prediction market data for calibration evaluation. Our work extends this literature to financial professional examinations where miscalibrated confidence carries direct monetary and fiduciary implications.
+
+\subsection{Error Analysis and Remediation}
+
+\citet{asai2024selfrag} introduce Self-RAG with self-reflective retrieval mechanisms that share our goal of identifying when models lack the right knowledge. \citet{chen2025cfabenchmark} develop a CFA-based benchmark with error categorization. Our Error Atlas provides the first systematic three-dimensional taxonomy of financial LLM errors at scale ($N = 557$), enabling targeted remediation.
+
+%% ============================================
+%% 3. METHODOLOGY
+%% ============================================
+\section{Methodology}
+\label{sec:method}
+
+\subsection{Dimension 1: Stress Testing}
+
+\subsubsection{Counterfactual Perturbation}
+
+We employ numerical perturbation inspired by \citet{apple2024gsmsymbolic}: modifying one numerical parameter per question (e.g., interest rate, face value, maturity) while preserving the solution procedure. The correct answer changes, but the required formula and reasoning steps remain identical. Using GPT-4o-mini as a perturbation generator, each original question produces a variant with a clearly identified changed parameter, the correct perturbed answer, and verification that logical structure is preserved.
+
+\subsubsection{Noise Injection}
+
+We define four noise types modeling progressively more challenging information environments:
+\begin{itemize}
+    \item \textbf{N1 --- Irrelevant Data}: Extraneous numerical data unrelated to the solution.
+    \item \textbf{N2 --- Misleading Distractors}: Plausible but irrelevant financial statements.
+    \item \textbf{N3 --- Verbose Context}: Wordy but substantively vacuous padding.
+    \item \textbf{N4 --- Contradictory Hints}: References to common incorrect answers.
+\end{itemize}
+
+\subsubsection{Stress Testing Metrics}
+
+\textbf{Memorization Gap:}
+\begin{equation}
+    \text{Memorization Gap}_{\ell} = \text{Acc}_{\text{original}} - \text{Acc}_{\text{Level}~\ell}
+    \label{eq:memgap}
+\end{equation}
+
+\textbf{Noise Sensitivity Index:}
+\begin{equation}
+    \text{NSI}_{t} = \frac{\text{Acc}_{\text{clean}} - \text{Acc}_{\text{noisy},t}}{\text{Acc}_{\text{clean}}}
+    \label{eq:nsi}
+\end{equation}
+
+\textbf{Robust Accuracy} requires correctness on both the original and \textit{all} valid perturbation variants:
+\begin{equation}
+    \text{Robust Acc} = \frac{1}{n}\sum_{i=1}^{n} \mathbf{1}\left[\text{correct}_i^{\text{orig}} \;\land\; \bigwedge_{\ell} \text{correct}_i^{\text{Level}~\ell}\right]
+    \label{eq:robust}
+\end{equation}
+
+\subsection{Dimension 2: Error Taxonomy}
+
+\subsubsection{Three-Level Grading}
+
+Each of 1,032 CFA questions is presented in open-ended format (options removed). Responses are graded on three levels:
+\begin{itemize}
+    \item \textbf{Level A (Exact)}: Answer matches within $\pm 2\%$ numerical tolerance or exact semantic match.
+    \item \textbf{Level B (Directional)}: Correct direction/approach but different assumptions.
+    \item \textbf{Level C (Incorrect)}: Wrong answer.
+\end{itemize}
+
+\subsubsection{Three-Dimensional Classification}
+
+All Level C errors are classified along three dimensions: (1) Error type (7 categories: conceptual, incomplete reasoning, assumption, reading, arithmetic, formula, unknown); (2) CFA topic (8 knowledge areas); (3) Cognitive stage (5 stages: identify, recall, calculate, verify, unknown).
+
+\subsubsection{Golden Context Injection (GCI)}
+
+For each Level C error, we re-prompt the model with the correct financial concept as an explicit hint, then evaluate whether the model recovers. This distinguishes \textit{knowledge gaps} (fixable via RAG) from \textit{reasoning gaps} (requiring fine-tuning).
+
+\subsection{Dimension 3: Calibration Analysis}
+
+\subsubsection{Confidence Estimation Methods}
+
+We employ two approaches: \textbf{verbalized confidence}, prompting models to express confidence as a percentage; and \textbf{self-consistency} \citep{wang2023selfconsistency}, sampling $k = 10$ responses at $\tau = 0.7$ and defining confidence as the agreement ratio.
+
+\subsubsection{Calibration Metrics}
+
+\textbf{Expected Calibration Error (ECE):}
+\begin{equation}
+    \text{ECE} = \sum_{m=1}^{M} \frac{|B_m|}{n} \left| \text{acc}(B_m) - \text{conf}(B_m) \right|
+    \label{eq:ece}
+\end{equation}
+
+\textbf{Confidence-at-Risk (CaR):}
+\begin{equation}
+    \text{CaR}(\alpha) = \inf\{c^* : P(\text{incorrect} \mid \text{confidence} \geq c^*) \leq \alpha\}
+    \label{eq:car}
+\end{equation}
+CaR answers: ``What is the minimum confidence level at which the error rate falls below $\alpha$?'' If undefined, the model's confidence signal is fundamentally unreliable for risk-budgeting purposes.
+
+\textbf{Overconfident Errors:}
+\begin{equation}
+    \text{Overconfident Error} = \mathbf{1}\left[\text{confidence} \geq 0.80 \;\land\; \text{incorrect}\right]
+    \label{eq:overconf}
+\end{equation}
+
+%% ============================================
+%% 4. DATA AND EXPERIMENTAL DESIGN
+%% ============================================
+\section{Data and Experimental Design}
+\label{sec:experiments}
+
+\subsection{Datasets}
+
+We use two datasets from FinEval \citep{ke2025findap}: \textbf{CFA-Easy} (1,032 multiple-choice questions covering the full CFA curriculum) for stress testing and error analysis, and \textbf{CFA-Challenge} (90 CFA Level III questions) for initial calibration analysis, with a robustness check extending calibration to the full CFA-Easy corpus.
+
+\subsection{Models}
+
+The primary evaluation model is \textbf{GPT-4o-mini} (OpenAI), a widely deployed commercial model. Cross-model comparisons use \textbf{GPT-5-mini}, a next-generation reasoning model employing extended chain-of-thought. Calibration also evaluates \textbf{Qwen3-32B} (Alibaba), an open-weight 32B model. All evaluations use temperature $\tau = 0.0$ for deterministic outputs except self-consistency sampling ($\tau = 0.7$).
+
+\subsection{Total Experimental Scale}
+
+Table~\ref{tab:scale} summarizes the experimental scale across all three dimensions.
+
+\begin{table}[htbp]
+\centering
+\caption{Experimental Scale Summary}
+\label{tab:scale}
+\begin{threeparttable}
+\begin{tabular}{llcc}
+\toprule
+\textbf{Dimension} & \textbf{Component} & \textbf{Questions} & \textbf{Inferences} \\
+\midrule
+\multirow{2}{*}{Stress Testing} & Counterfactual perturbation & 1,032 & 1,734\textsuperscript{a} \\
+ & Noise injection ($\times 4$ types) & 1,032 & 5,160 \\
+Error Taxonomy & Open-ended + GCI & 1,032 & 1,589\textsuperscript{b} \\
+\multirow{2}{*}{Calibration} & CFA-Challenge & 90 & 257\textsuperscript{c} \\
+ & CFA-Easy (robustness) & 1,032 & 1,032 \\
+\midrule
+\textbf{Total} & & & \textbf{$>$9,700} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item[\textsuperscript{a}] Original + valid perturbations (702 for GPT-4o-mini).
+\item[\textsuperscript{b}] 1,032 open-ended + 557 GCI re-prompts.
+\item[\textsuperscript{c}] 2 models $\times$ 2 methods, with varying $n$ per configuration.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+%% ============================================
+%% 5. RESULTS
+%% ============================================
+\section{Results}
+\label{sec:results}
+
+\subsection{Dimension 1: Stress Testing}
+
+\subsubsection{Counterfactual Perturbation}
+
+Table~\ref{tab:perturbation} presents the core findings. At the population level ($N = 1{,}032$), the memorization gap of +18.6~pp confirms that a substantial portion of standard accuracy is attributable to numerical pattern matching rather than genuine financial reasoning.
+
+\begin{table}[htbp]
+\centering
+\caption{Counterfactual Perturbation Results (GPT-4o-mini, $N = 1{,}032$)}
+\label{tab:perturbation}
+\begin{threeparttable}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Condition} & \textbf{N Valid} & \textbf{Accuracy} & \textbf{Mem. Gap} & \textbf{$\Delta$} & \textbf{Direction} \\
+\midrule
+Original & 1,032 & 82.4\% & --- & --- & --- \\
+Level 1 (numerical) & 702 & 63.8\% & +18.6 pp & $\downarrow$ & Memorization \\
+\midrule
+Robust Accuracy & 1,032 & 63.5\% & --- & --- & --- \\
+Memorization Suspect & --- & +18.9\% & --- & --- & --- \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item Robust Accuracy requires correct answers on original \textit{and} all valid perturbations. Memorization Suspect = fraction correct on original but incorrect on at least one perturbation.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\subsubsection{Noise Sensitivity}
+
+Table~\ref{tab:noise} reveals a nuanced profile. N1 (irrelevant data) produces the highest sensitivity (NSI = 0.032), while N4 (contradictory hints) paradoxically \textit{improves} performance (NSI = $-$0.072), boosting accuracy from 81.6\% to 87.5\%. We hypothesize that contradictory hints operate through elimination and metacognitive trigger channels.
+
+\begin{table}[htbp]
+\centering
+\caption{Noise Sensitivity Results (GPT-4o-mini, $N = 1{,}032$)}
+\label{tab:noise}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Noise Type} & \textbf{Noisy Acc.} & \textbf{Flipped} & \textbf{NSI} & \textbf{Interpretation} \\
+\midrule
+Clean (baseline) & 81.6\% & --- & --- & --- \\
+N1 (irrelevant data) & 79.0\% & 58/1,032 & 0.032 & Low \\
+N2 (misleading) & 80.3\% & 49/1,032 & 0.015 & Minimal \\
+N3 (verbose context) & 82.0\% & 32/1,032 & $-$0.005 & None \\
+N4 (contradictory hint) & 87.5\% & 21/1,032 & $-$0.072 & Negative (helps) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The overall pattern confirms that the model's primary vulnerability lies in memorization-dependent reasoning rather than noise susceptibility: the worst-case noise degradation (2.6~pp) is far less than the 18.6~pp memorization gap.
+
+\subsubsection{Cross-Model Stress Testing: The Memorization Paradox}
+
+Table~\ref{tab:perturbation_cross} reveals a striking memorization paradox.
+
+\begin{table}[htbp]
+\centering
+\caption{Cross-Model Counterfactual Perturbation ($N = 1{,}032$)}
+\label{tab:perturbation_cross}
+\begin{threeparttable}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Metric} & \textbf{GPT-4o-mini} & \textbf{GPT-5-mini} \\
+\midrule
+Standard accuracy & 82.4\% & 91.8\% \\
+Level 1 accuracy ($n$ valid) & 63.8\% ($n = 702$) & 55.3\% ($n = 638$) \\
+\textbf{Memorization gap} & \textbf{18.6 pp} & \textbf{36.4 pp} \\
+Robust accuracy & 63.5\% & 67.2\% \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item GPT-5-mini achieves higher standard accuracy but lower perturbed accuracy, resulting in a nearly doubled memorization gap.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+GPT-5-mini achieves substantially higher standard accuracy (+9.4~pp) but actually performs \textit{worse} on perturbed questions (55.3\% vs.\ 63.8\%), producing a memorization gap nearly double that of GPT-4o-mini. The robust accuracy improves only modestly (67.2\% vs.\ 63.5\%), meaning most of GPT-5-mini's apparent improvement evaporates under perturbation stress. In contrast, noise sensitivity roughly halves (max NSI 0.017 vs.\ 0.032), confirming genuine improvement in information filtering. This memorization--noise asymmetry suggests that counterfactual perturbation and noise injection probe fundamentally different cognitive dimensions.
+
+\subsection{Dimension 2: Error Taxonomy}
+
+\subsubsection{Error Type Distribution}
+
+Table~\ref{tab:errortype} presents the error distribution across 557 Level C errors from open-ended evaluation.
+
+\begin{table}[htbp]
+\centering
+\caption{Error Type Distribution ($N = 557$)}
+\label{tab:errortype}
+\begin{tabular}{lrrl}
+\toprule
+\textbf{Error Type} & \textbf{Count} & \textbf{\%} & \textbf{Category} \\
+\midrule
+Conceptual error & 383 & 68.8\% & Reasoning \\
+Incomplete reasoning & 60 & 10.8\% & Reasoning \\
+Assumption error & 59 & 10.6\% & Reasoning \\
+Unknown & 35 & 6.3\% & --- \\
+Reading error & 12 & 2.2\% & Extraction \\
+Arithmetic error & 7 & 1.3\% & Calculation \\
+Formula error & 1 & 0.2\% & Calculation \\
+\midrule
+\multicolumn{4}{l}{\textbf{Aggregated:} Reasoning 90.1\%, Extraction 2.2\%, Calculation 1.4\%, Unknown 6.3\%} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Reasoning errors dominate overwhelmingly (90.1\%), with conceptual errors alone (68.8\%) exceeding all other categories combined. The primary failure mode is not ``can't compute'' but ``doesn't understand the concept''---calculator tools and formula retrieval won't help when the fundamental financial concept is misunderstood.
+
+\subsubsection{Topic-Level Error Profiles}
+
+Error profiles are strikingly topic-dependent. Ethics exhibits 87.1\% reasoning errors (no calculation errors), while Derivatives shows the highest calculation error rate (37.5\%). This implies that different financial domains require fundamentally different remediation strategies.
+
+\subsubsection{Golden Context Injection}
+
+Table~\ref{tab:gci} reveals that 82.4\% of errors respond to golden context injection, indicating that the majority of failures are knowledge gaps amenable to retrieval augmentation.
+
+\begin{table}[htbp]
+\centering
+\caption{Golden Context Injection Results ($N = 557$ errors)}
+\label{tab:gci}
+\begin{tabular}{lrr}
+\toprule
+\textbf{Recovery Level} & \textbf{Count} & \textbf{\%} \\
+\midrule
+Full recovery (Level A) & 142 & 25.5\% \\
+Partial recovery (Level B) & 317 & 56.9\% \\
+Still wrong (Level C) & 98 & 17.6\% \\
+\midrule
+\textbf{Any recovery (A+B)} & \textbf{459} & \textbf{82.4\%} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+However, only 25.5\% achieve full recovery; most improvements are partial (56.9\%), indicating that even with the correct concept, the model often struggles with precise execution. The 17.6\% residual rate represents the true reasoning gap requiring training-time interventions.
+
+A cross-model GCI replication with GPT-5-mini nearly doubles the full recovery rate (50.4\% vs.\ 25.5\%) while reducing the true reasoning gap to 11.7\%, demonstrating that extended chain-of-thought reasoning substantially improves concept \textit{execution} once the correct concept is provided.
+
+An important caveat concerns the distinction between knowledge gaps and attention gaps. When GCI recovers an error, the model may have ``known'' the concept but failed to retrieve it---the hint merely directed attention. A definitive test would inject irrelevant concepts as a control condition. We leave this to future work, noting that the current results likely reflect a mixture of both mechanisms.
+
+\subsection{Dimension 3: Calibration}
+
+\subsubsection{Overall Calibration}
+
+Table~\ref{tab:calibration} presents calibration metrics across all model--method combinations on CFA-Challenge questions.
+
+\begin{table}[htbp]
+\centering
+\caption{Calibration Metrics by Model and Method (CFA-Challenge, $N = 257$)}
+\label{tab:calibration}
+\begin{threeparttable}
+\small
+\begin{tabular}{@{}llccccccc@{}}
+\toprule
+\textbf{Model} & \textbf{Method} & \textbf{N} & \textbf{Acc} & \textbf{Conf} & \textbf{ECE} & \textbf{Brier} & \textbf{AUC} & \textbf{OC Gap} \\
+\midrule
+GPT-4o-mini & Self-cons. & 90 & .522 & .829 & .307 & .334 & .639 & +.307 \\
+GPT-4o-mini & Verbalized & 95 & .526 & .841 & .315 & .340 & .586 & +.315 \\
+Qwen3-32B & Verbalized & 72 & .611 & .836 & .247 & .226 & .787 & +.225 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\footnotesize
+\item ECE = Expected Calibration Error; AUC = Area Under ROC; OC Gap = Avg Confidence $-$ Accuracy.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+All configurations exhibit substantial overconfidence, with the overconfidence gap ranging from +22.5\% to +31.5\%. Models express an average confidence of 84\% while achieving only 52--61\% accuracy. A one-sample $t$-test on the per-observation overconfidence gap yields $t = 9.70$ ($p < 0.0001$).
+
+\subsubsection{Overconfident Error Analysis}
+
+Across all 257 observations, 77 are overconfident errors (30.0\%), significantly exceeding a 20\% baseline ($z = 3.99$, $p < 0.0001$). Among incorrect answers, 66.4\% are delivered with confidence $\geq 80\%$, meaning most errors are high-confidence errors---the error signal is largely invisible to users relying on expressed confidence.
+
+\subsubsection{Topic-Level Miscalibration}
+
+Ethics \& Standards exhibits the highest overconfident error rate (43.5\%) and lowest accuracy (47.8\%), while Derivatives shows a lower rate (22.2\%). This Dunning-Kruger pattern---where models are most overconfident precisely where least competent---has direct implications for AI governance, suggesting calibration failures are inversely correlated with task difficulty.
+
+\subsubsection{Confidence-at-Risk}
+
+For GPT-4o-mini, CaR(5\%) is \textit{undefined}---no confidence threshold achieves a 5\% error rate. Even at maximum self-consistency confidence (1.0), the error rate remains 41.7\%. For Qwen3-32B, the error rate at confidence $\geq 95\%$ is 19.6\%, still far exceeding acceptable risk tolerance. Current LLM confidence signals are fundamentally inadequate for financial risk management.
+
+\subsubsection{Robustness Check: CFA-Easy ($N = 1{,}032$)}
+
+To assess generalizability, we replicated the verbalized confidence protocol on the full CFA-Easy dataset.
+
+\begin{table}[htbp]
+\centering
+\caption{Calibration: CFA-Challenge vs.\ CFA-Easy (GPT-4o-mini)}
+\label{tab:easy_calibration}
+\begin{threeparttable}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{Metric} & \textbf{CFA-Challenge ($N=95$)} & \textbf{CFA-Easy ($N=1{,}032$)} \\
+\midrule
+Accuracy & 52.6\% & 81.7\% \\
+Avg Confidence & 84.1\% & 86.0\% \\
+ECE & 0.315 & 0.073 \\
+AUROC & 0.586 & 0.671 \\
+OC Gap & +31.5 pp & +4.3 pp \\
+OC Error Rate & 40.0\% & 15.1\% \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item OC Gap = Avg Confidence $-$ Accuracy. OC Error Rate = proportion of high-confidence ($\geq$ 80\%) incorrect responses.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+Three findings emerge. First, calibration improves dramatically on easier questions (ECE: 0.315 $\to$ 0.073). Second, improvement is driven almost entirely by rising accuracy (+29.1~pp) rather than adjusted confidence (+1.9~pp)---the model maintains $\sim$85\% confidence regardless of actual performance, evidence of a ``fixed confidence register'' rather than genuine metacognitive awareness. Third, AUROC remains mediocre (0.671), indicating the model cannot reliably distinguish correct from incorrect answers.
+
+\subsection{Integrating the Three Dimensions}
+
+Table~\ref{tab:integrated} presents the integrated three-dimensional assessment.
+
+\begin{table}[htbp]
+\centering
+\caption{Integrated Three-Dimensional Assessment (GPT-4o-mini)}
+\label{tab:integrated}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Metric} & \textbf{Value} & \textbf{Implication} \\
+\midrule
+Standard accuracy & 82.4\% & Headline (misleading) \\
+Robust accuracy & 63.5\% & After memorization correction \\
+Memorization premium & 18.9 pp & ``Phantom competence'' \\
+\midrule
+Reasoning errors & 90.1\% & Conceptual, not computational \\
+GCI recovery rate & 82.4\% & Knowledge gaps, fixable via RAG \\
+True reasoning gap & 17.6\% & Requires fine-tuning \\
+\midrule
+Overconfidence gap & +31.5 pp & On hard questions \\
+OC error rate & 30.0\% & Invisible errors \\
+CaR(5\%) & Undefined & Cannot trust confidence \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The three dimensions converge on a single conclusion: the model's 82.4\% headline accuracy overstates genuine competence by a wide margin. Roughly one in five correct answers reflects memorization rather than reasoning; when the model fails, it fails at concept identification rather than computation; and its confidence signal cannot reliably distinguish correct from incorrect answers.
+
+%% ============================================
+%% 6. DISCUSSION
+%% ============================================
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{Economic Significance}
+
+The memorization premium has concrete economic implications. Standard accuracy (82.4\%) suggests four correct financial calculations out of five; robust accuracy (63.5\%) reveals only three out of five. The 18.9~pp gap represents ``phantom competence''---questions where the AI appears competent but would fail on real-world variants.
+
+The overconfidence problem amplifies this risk. The 30\% overconfident error rate means that a portfolio manager relying on AI confidence signals would make decisions as if the model were correct five out of six times, when it is wrong nearly every other time. An overconfident duration estimate ($D_{\text{error}}$) on a \$10M position with a 100-basis-point rate shock creates unexpected losses proportional to the error magnitude.
+
+More broadly, the information value of AI advice is proportional to signal precision $\tau = 1/\sigma^2$. Our observed ECE values of 0.25--0.32 yield signal precision 40 times lower than what users implicitly assume when acting on ``85\% confident'' recommendations.
+
+\subsection{The Memorization Paradox}
+
+The cross-model evidence introduces a finding with important governance implications: GPT-5-mini's memorization gap (36.4~pp) nearly doubles GPT-4o-mini's (18.6~pp), despite being the more capable model. This suggests that \textbf{standard accuracy improvements may be substantially attributable to enhanced memorization rather than enhanced reasoning}. As AI models improve, the gap between standard and robust accuracy may \textit{widen}, not narrow. Financial regulators tracking standard accuracy as a proxy for competence may observe steady improvement while underlying robustness stagnates.
+
+\subsection{Implications for Market Efficiency}
+
+Under the Efficient Market Hypothesis \citep{fama1970efficient}, market prices reflect information processed by rational agents. When AI advisory systems become marginal price-setters, the systematic error patterns documented here threaten market efficiency: conceptual misapplication in Ethics (87.1\% reasoning errors) could generate systematic compliance violations, while Derivatives pricing failures (37.5\% calculation errors) could produce correlated hedging errors across AI-assisted portfolios. Unlike random noise, structured errors create directional bias.
+
+\subsection{CFA Ethics and Fiduciary Duty}
+
+Our findings implicate three CFA Standards of Professional Conduct:
+\begin{itemize}
+    \item \textbf{Standard I(C) --- Misrepresentation}: An AI expressing 89\% confidence on answers wrong 30\% of the time systematically misrepresents reliability.
+    \item \textbf{Standard V(A) --- Diligence}: When 66.4\% of errors are high-confidence, relying on AI confidence as a verification proxy fails the ``reasonable basis'' standard.
+    \item \textbf{Standard III(C) --- Suitability}: Topic-dependent miscalibration means AI is most unreliable in exactly the domains requiring the most professional judgment.
+\end{itemize}
+
+\subsection{Regulatory Implications}
+
+Drawing from quantitative finance, our memorization gap is analogous to ``delta'' (sensitivity to input perturbation), NSI functions as ``vega'' (sensitivity to information noise), and CaR maps directly to Value-at-Risk. We propose tiered deployment standards:
+
+\begin{itemize}
+    \item \textbf{Tier 1 (Advisory)}: ECE $< 0.15$, Memorization Gap $< 10\%$, OC error rate $< 15\%$
+    \item \textbf{Tier 2 (Research)}: ECE $< 0.25$, Memorization Gap $< 20\%$
+    \item \textbf{Tier 3 (Internal)}: ECE $< 0.35$ with mandatory disclaimers
+\end{itemize}
+
+Under these thresholds, none of the models tested on CFA-Challenge would qualify for Tier 1 or 2 deployment.
+
+\subsection{Limitations}
+
+Several limitations should be acknowledged. First, perturbation generation relies on GPT-4o-mini, introducing potential errors; the valid perturbation rate of 68.0\% reflects this challenge. Second, the error taxonomy uses GPT-4o-mini as classifier, which may introduce systematic biases. Third, the calibration analysis on CFA-Challenge ($N = 90$) has limited statistical power, though the CFA-Easy robustness check ($N = 1{,}032$) strengthens generalizability. Fourth, topic-level analyses have limited per-topic sample sizes and should be treated as exploratory. Fifth, verbalized confidence may be susceptible to prompt sensitivity. Sixth, cross-model comparisons are limited to two models from one provider (OpenAI); extension to other model families would strengthen generalizability. Finally, the GCI experiment cannot fully distinguish knowledge gaps from attention gaps without a control condition using irrelevant concept hints.
+
+%% ============================================
+%% 7. CONCLUSION
+%% ============================================
+\section{Conclusion}
+\label{sec:conclusion}
+
+This paper demonstrates that standard benchmark accuracy significantly overstates the financial reasoning competence of Large Language Models, and that this overstatement \textit{increases} with model capability. Our three-dimensional assessment reveals:
+
+\begin{enumerate}
+    \item \textbf{Robustness}: An 18.6~pp memorization gap for GPT-4o-mini, nearly doubling to 36.4~pp for GPT-5-mini---a memorization paradox where more capable models are more memorization-dependent.
+    \item \textbf{Error Structure}: 90.1\% of errors are reasoning-based, dominated by conceptual errors (68.8\%), with calculation errors at only 1.4\%. Golden Context Injection recovers 82.4\% of errors, establishing a ceiling for RAG remediation.
+    \item \textbf{Calibration}: Pervasive overconfidence with 30\% high-confidence errors, an undefined CaR at the 5\% threshold, and a ``fixed confidence register'' that maintains $\sim$85\% confidence regardless of actual performance.
+\end{enumerate}
+
+The three dimensions converge: headline accuracy is inflated by memorization, failures are conceptual rather than computational, and the model cannot reliably signal when it is wrong. Financial AI governance must move beyond headline accuracy to encompass robustness, error structure, and calibration quality.
+
+\textbf{The question is not whether AI can pass the CFA exam, but whether its passing reflects competence that transfers to novel problems, whether its failures can be efficiently remediated, and whether its confidence can be trusted. Our evidence answers all three questions in the negative---and shows these problems worsen, not improve, as models become more capable.}
+
+%% ============================================
+%% DECLARATIONS
+%% ============================================
+\section*{Data Availability}
+
+The CFA-Easy and CFA-Challenge datasets are available via HuggingFace under the FinEval benchmark \citep{ke2025findap}. Experiment code and raw results are available from the corresponding author upon reasonable request.
+
+\section*{Declaration of Competing Interest}
+The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
+
+\section*{CRediT Author Contributions}
+\textbf{Wei-Lun Cheng}: Conceptualization, Methodology, Software, Formal Analysis, Data Curation, Writing -- Original Draft, Visualization.
+\textbf{Daniel Wei-Chung Miao}: Supervision, Writing -- Review \& Editing.
+\textbf{Guang-Di Chang}: Supervision, Writing -- Review \& Editing.
+
+\section*{Acknowledgments}
+Computational resources were provided by National Taiwan University of Science and Technology (NTUST).
+
+%% ============================================
+%% REFERENCES
+%% ============================================
+\begin{thebibliography}{30}
+
+\bibitem[Asai et al.(2024)]{asai2024selfrag}
+Asai, A., Wu, Z., Wang, Y., Sil, A., \& Hajishirzi, H. (2024).
+\newblock Self-{RAG}: Learning to retrieve, generate, and critique through self-reflection.
+\newblock In \textit{Proceedings of ICLR 2024}.
+
+\bibitem[Band et al.(2025)]{band2025qacalibration}
+Band, N., Rudner, T. G. J., Filos, A., et al. (2025).
+\newblock Calibration of natural language understanding models with vague concepts.
+\newblock In \textit{Proceedings of ICLR 2025}.
+
+\bibitem[Callanan et al.(2023)]{callanan2023gpt}
+Callanan, E., Mbae, A., Selle, S., Gupta, V., \& Houlihan, R. (2023).
+\newblock Can GPT-4 pass the CFA exam?
+\newblock \textit{arXiv preprint arXiv:2310.09542}.
+
+\bibitem[Chen et al.(2025)]{chen2025cfabenchmark}
+Chen, Y., Li, H., \& Zhang, X. (2025).
+\newblock A CFA-based benchmark for evaluating financial reasoning in large language models.
+\newblock \textit{arXiv preprint arXiv:2509.04468}.
+
+\bibitem[Chhikara et al.(2025)]{chhikara2025confidence}
+Chhikara, P., Gaur, N., \& Kumaraguru, P. (2025).
+\newblock Mind the confidence gap: Evaluating probabilistic forecasting of large language models.
+\newblock \textit{Transactions on Machine Learning Research}.
+
+\bibitem[Fama(1970)]{fama1970efficient}
+Fama, E. F. (1970).
+\newblock Efficient capital markets: A review of theory and empirical work.
+\newblock \textit{The Journal of Finance}, 25(2), 383--417.
+
+\bibitem[Guo et al.(2017)]{guo2017calibration}
+Guo, C., Pleiss, G., Sun, Y., \& Weinberger, K. Q. (2017).
+\newblock On calibration of modern neural networks.
+\newblock In \textit{Proceedings of ICML 2017} (pp.~1321--1330).
+
+\bibitem[Kadavath et al.(2022)]{kadavath2022language}
+Kadavath, S., Conerly, T., Askell, A., et al. (2022).
+\newblock Language models (mostly) know what they know.
+\newblock \textit{arXiv preprint arXiv:2207.05221}.
+
+\bibitem[Ke et al.(2025)]{ke2025findap}
+Ke, Z., Ming, Y., Nguyen, X. P., Xiong, C., \& Joty, S. (2025).
+\newblock Demystifying domain-adaptive post-training for financial LLMs.
+\newblock In \textit{Proceedings of EMNLP 2025}.
+
+\bibitem[Li et al.(2024)]{li2024gsmplus}
+Li, Q., Zhu, Z., Wang, Z., et al. (2024).
+\newblock GSM-Plus: A comprehensive benchmark for evaluating the robustness of {LLMs} as mathematical problem solvers.
+\newblock In \textit{Proceedings of ACL 2024}.
+
+\bibitem[Liu et al.(2025)]{liu2025kalshibench}
+Liu, M., Chen, Y., \& Wang, J. (2025).
+\newblock KalshiBench: Evaluating LLM probabilistic calibration using prediction markets.
+\newblock \textit{arXiv preprint}.
+
+\bibitem[Lopez-Lira et al.(2025)]{lopezlira2025memorization}
+Lopez-Lira, A., Kirtac, K., \& Tang, Y. (2025).
+\newblock The memorization problem: When can we trust financial {LLM} benchmarks?
+\newblock \textit{arXiv preprint}.
+
+\bibitem[Mirzadeh et al.(2024)]{apple2024gsmsymbolic}
+Mirzadeh, I., Alizadeh, K., Shahrokhi, H., et al. (2024).
+\newblock GSM-Symbolic: Understanding the limitations of mathematical reasoning in large language models.
+\newblock \textit{arXiv preprint arXiv:2410.05229}.
+
+\bibitem[Patel et al.(2025)]{patel2025reasoning}
+Patel, R., Singh, A., \& Torres, M. (2025).
+\newblock Reasoning models ace the {CFA} exams: Implications for professional certification.
+\newblock \textit{arXiv preprint}.
+
+\bibitem[Shi et al.(2023)]{shi2023detecting}
+Shi, W., Ajith, A., Xia, M., et al. (2023).
+\newblock Detecting pretraining data from large language models.
+\newblock In \textit{Proceedings of ICLR 2024}.
+
+\bibitem[Wang et al.(2023)]{wang2023selfconsistency}
+Wang, X., Wei, J., Schuurmans, D., et al. (2023).
+\newblock Self-consistency improves chain of thought reasoning in language models.
+\newblock In \textit{Proceedings of ICLR 2023}.
+
+\bibitem[Wu et al.(2023)]{wu2023bloomberggpt}
+Wu, S., Irsoy, O., Lu, S., et al. (2023).
+\newblock BloombergGPT: A large language model for finance.
+\newblock \textit{arXiv preprint arXiv:2303.17564}.
+
+\end{thebibliography}
+
+\end{document}

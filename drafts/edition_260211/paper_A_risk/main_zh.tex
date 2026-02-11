@@ -1,0 +1,651 @@
+% International Review of Financial Analysis (IRFA) — Elsevier Template
+% Paper A: 金融能力的假象（P2+P5+P6 合併論文）
+\documentclass[preprint,12pt]{elsarticle}
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{multirow}
+\usepackage{threeparttable}
+\usepackage{float}
+\usepackage{xeCJK}
+\setCJKmainfont{Songti TC}
+\setCJKsansfont{Heiti TC}
+\setCJKmonofont{Heiti TC}
+
+\journal{International Review of Financial Analysis（繁體中文版）}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{金融能力的假象：大型語言模型於 CFA 考試之壓力測試、錯誤分類體系與校準分析}
+
+\author[ntust]{Wei-Lun Cheng}
+\ead{d11018003@mail.ntust.edu.tw}
+
+\author[ntust]{Daniel Wei-Chung Miao\corref{cor1}}
+\ead{miao@mail.ntust.edu.tw}
+\cortext[cor1]{通訊作者}
+
+\author[ntust]{Guang-Di Chang}
+\ead{gchang@mail.ntust.edu.tw}
+
+\affiliation[ntust]{organization={國立臺灣科技大學 財務金融研究所},
+            city={臺北},
+            postcode={10607},
+            country={臺灣}}
+
+\begin{abstract}
+大型語言模型（LLMs）在金融考試基準測試中展現出令人印象深刻的標題準確率，助長了外界對 AI 輔助金融決策的樂觀期待。本文提出一套全面的三維度評估框架，揭示該準確率在很大程度上是一種假象。第一，\textit{反事實壓力測試}涵蓋完整 CFA-Easy 語料庫（$N = 1{,}032$），揭露 18.6 個百分點的記憶落差——當數值參數被擾動但金融邏輯保持不變時，準確率從 82.4\% 降至 63.8\%——證明相當比例的正確答案反映的是模式匹配而非真正的推理。以 GPT-5-mini 進行的跨模型複製實驗揭示了一項\textit{記憶悖論}：儘管標準準確率達到 91.8\%（+9.4~pp），記憶落差卻幾乎翻倍至 36.4~pp，而雜訊敏感度則約減半。第二，\textit{CFA 錯誤圖譜}對開放式評測中 557 筆錯誤進行分類，揭示概念性錯誤以壓倒性比例居首（68.8\%），而純計算錯誤僅佔 1.4\%——模型的失敗在於概念辨識而非算術運算。黃金情境注入實驗顯示 82.4\% 的錯誤可透過概念提示獲得改善，確立了檢索增強補救的上限。第三，\textit{信心校準分析}涵蓋 257 筆模型—方法觀測值，揭示普遍的過度自信現象：表達信心超出實際準確率 22--32 個百分點，所有回答中 30.0\% 為高信心錯誤，而風險信心（CaR）分析顯示沒有任何信心閾值能將錯誤率降至可接受水準。CFA-Easy（$N = 1{,}032$）的穩健性驗證揭示了「固定信心暫存器」現象——無論準確率是 53\% 還是 82\%，模型均維持約 85\% 的信心水準，表明其缺乏真正的後設認知能力。本文引入穩健準確率與風險信心（CaR）作為具有監管參考價值的指標，並主張金融 AI 治理必須超越標題準確率，涵蓋穩健性、錯誤結構與校準品質。問題不在於 AI 能否通過 CFA 考試，而在於其表現是否反映了可轉移至新問題的真正金融能力。
+\end{abstract}
+
+\begin{keyword}
+大型語言模型 \sep 金融推理 \sep 壓力測試 \sep 穩健性 \sep 校準 \sep 錯誤分析 \sep CFA 考試 \sep AI 風險管理
+\end{keyword}
+
+\end{frontmatter}
+
+%% ============================================
+%% 1. 緒論
+%% ============================================
+\section{緒論}
+\label{sec:intro}
+
+金融業正快速將大型語言模型（LLMs）應用於股票研究、風險分析、法規遵循及客戶諮詢等任務 \citep{wu2023bloomberggpt, ke2025findap}。基準評測顯示，最先進的模型在 CFA 考試中的得分已接近甚至超過人類及格率 \citep{callanan2023gpt}，而推理模型現已通過所有三級 CFA 考試，成績超過人類考生第 90 百分位數 \citep{patel2025reasoning}。這些令人印象深刻的成果加速了部署時程，企業日益依賴 LLM 產出的分析結果來進行重要金融決策。
+
+然而，標題準確率——金融 AI 基準測試中普遍報告的單一數字——是衡量 AI 能力的一個危險且不完整的指標。它無法告訴我們模型\textit{為何}成功、\textit{如何}失敗，或\textit{是否知道自己何時犯錯}。本文提出一套三維度評估框架，分別探討上述每一個問題：
+
+\begin{enumerate}
+    \item \textbf{穩健性（「它是在推理，還是在記憶？」）}我們透過反事實擾動與雜訊注入對 LLM 金融推理進行壓力測試，量化標準表現與壓力測試表現之間的差距——嵌入基準分數中的「記憶溢價」。
+
+    \item \textbf{錯誤結構（「失敗時，它如何失敗？」）}我們建構一套包含 557 筆開放式 CFA 評測錯誤的分類體系，揭示其主要失敗模式並非「無法計算」而是「不理解概念」——這一發現對補救策略具有直接啟示。
+
+    \item \textbf{校準（「它是否知道自己何時犯錯？」）}我們跨多個模型與方法評估信心校準，發現 LLMs 表現出普遍的過度自信，使其錯誤訊號對依賴表達信心的使用者而言幾乎不可見。
+\end{enumerate}
+
+三個維度互為補充。壓力測試揭示標準準確率中有\textit{多少}是真實的；錯誤分析揭示剩餘錯誤屬於\textit{何種類型}；而校準分析揭示\textit{模型的信心訊號是否可信}以辨識那些錯誤。三者共同描繪出一幅圖景：一個在標準基準上看似高度勝任的 AI 系統，其能力實際上因記憶而大幅膨脹、以概念性而非計算性錯誤為主、且伴隨著系統性高估可靠性的信心訊號。
+
+本文有五項貢獻：（1）設計結合反事實擾動與雜訊注入的雙維度壓力測試框架，揭示跨世代模型的記憶悖論；（2）建構金融 LLMs 的首套系統性錯誤分類體系，證明 90.1\% 的錯誤屬於推理類型；（3）引入黃金情境注入以區分知識缺口與推理缺口；（4）量化過度自信錯誤並引入風險信心（CaR）作為風險管理指標；（5）提出將本文指標與金融監管框架接軌的政策建議。
+
+%% ============================================
+%% 2. 文獻回顧
+%% ============================================
+\section{文獻回顧}
+\label{sec:related}
+
+\subsection{金融領域中的大型語言模型}
+
+LLMs 與金融的交會已引發大量研究關注。BloombergGPT \citep{wu2023bloomberggpt} 展示了在金融自然語言處理任務上的競爭力表現。\citet{ke2025findap} 提出 FinDAP，透過領域自適應後訓練在 CFA 基準測試上達到最先進成果。\citet{callanan2023gpt} 以 GPT-4 評測 CFA Level I，發現其表現達及格水準。然而，這些評測僅評估標準問題上的準確率，未能檢視其表現是否反映真正的理解、失敗如何結構化，或信心訊號是否可靠。
+
+\subsection{資料污染與基準有效性}
+
+LLM 評測中的資料污染威脅已被充分記載 \citep{shi2023detecting}。\citet{apple2024gsmsymbolic} 證明當數學推理問題進行符號擾動時，LLMs 的準確率顯著下降，顯示高基準分數部分反映了記憶效應。\citet{li2024gsmplus} 以 GSM-Plus 進一步擴展，系統性地跨八個擾動維度生成變體。\citet{lopezlira2025memorization} 專門針對金融 LLM 評測中的記憶問題，證明基準污染普遍存在。本文的壓力測試將此範式延伸至金融領域，實現母體層級的覆蓋。
+
+\subsection{LLM 校準與信心}
+
+校準係指模型表達信心與其實際準確率之間的一致程度 \citep{guo2017calibration}。\citet{kadavath2022language} 證明大型語言模型「大致知道自己知道什麼」，但在分佈外任務上此能力會退化。\citet{band2025qacalibration} 發展了適用於問答系統的 QA-Calibration 方法。\citet{chhikara2025confidence} 辨識出跨領域持續存在的「信心落差」。\citet{liu2025kalshibench} 利用預測市場資料提出 KalshiBench 用於校準評估。本文將此文獻延伸至金融專業考試，在此領域中校準不良的信心帶有直接的金錢與受託責任影響。
+
+\subsection{錯誤分析與補救}
+
+\citet{asai2024selfrag} 引入 Self-RAG 的自我反思檢索機制，與本文辨識模型何時缺乏正確知識的目標相近。\citet{chen2025cfabenchmark} 發展了基於 CFA 的基準測試並包含錯誤分類。本文的錯誤圖譜提供了金融 LLMs 首套系統性的三維度錯誤分類體系（$N = 557$），支持針對性補救。
+
+%% ============================================
+%% 3. 研究方法
+%% ============================================
+\section{研究方法}
+\label{sec:method}
+
+\subsection{維度一：壓力測試}
+
+\subsubsection{反事實擾動}
+
+本文採用受 \citet{apple2024gsmsymbolic} 啟發的數值擾動方法：修改每道題目中的一個數值參數（如利率、面額、到期日），同時保留解題程序不變。正確答案隨之改變，但所需的公式與推理步驟維持一致。使用 GPT-4o-mini 作為擾動生成器，每道原始題目產生一個變體，包含明確標識的變更參數、正確的擾動答案，以及邏輯結構保持完整的驗證。
+
+\subsubsection{雜訊注入}
+
+我們定義四種雜訊類型，模擬逐漸困難的資訊環境：
+\begin{itemize}
+    \item \textbf{N1 --- 無關資料}：與解題無關的額外數值資料。
+    \item \textbf{N2 --- 誤導性干擾}：看似合理但與解題無關的金融陳述。
+    \item \textbf{N3 --- 冗長脈絡}：冗贅但實質空洞的填充文字。
+    \item \textbf{N4 --- 矛盾暗示}：引用常見錯誤答案的暗示。
+\end{itemize}
+
+\subsubsection{壓力測試指標}
+
+\textbf{記憶落差：}
+\begin{equation}
+    \text{Memorization Gap}_{\ell} = \text{Acc}_{\text{original}} - \text{Acc}_{\text{Level}~\ell}
+    \label{eq:memgap}
+\end{equation}
+
+\textbf{雜訊敏感指數：}
+\begin{equation}
+    \text{NSI}_{t} = \frac{\text{Acc}_{\text{clean}} - \text{Acc}_{\text{noisy},t}}{\text{Acc}_{\text{clean}}}
+    \label{eq:nsi}
+\end{equation}
+
+\textbf{穩健準確率}要求在原始題目及\textit{所有}有效擾動變體上均回答正確：
+\begin{equation}
+    \text{Robust Acc} = \frac{1}{n}\sum_{i=1}^{n} \mathbf{1}\left[\text{correct}_i^{\text{orig}} \;\land\; \bigwedge_{\ell} \text{correct}_i^{\text{Level}~\ell}\right]
+    \label{eq:robust}
+\end{equation}
+
+\subsection{維度二：錯誤分類體系}
+
+\subsubsection{三級評分}
+
+1,032 道 CFA 題目以開放式格式呈現（移除選項）。回答以三個層級評分：
+\begin{itemize}
+    \item \textbf{Level A（精確）}：答案在 $\pm 2\%$ 數值容差內吻合，或語義完全匹配。
+    \item \textbf{Level B（方向正確）}：方向／方法正確但假設不同。
+    \item \textbf{Level C（不正確）}：答案錯誤。
+\end{itemize}
+
+\subsubsection{三維度分類}
+
+所有 Level C 錯誤沿三個維度分類：（1）錯誤類型（7 個類別：概念性、不完整推理、假設、閱讀、算術、公式、未知）；（2）CFA 主題（8 個知識領域）；（3）認知階段（5 個階段：辨識、回憶、計算、驗證、未知）。
+
+\subsubsection{黃金情境注入（GCI）}
+
+對每筆 Level C 錯誤，我們以正確金融概念作為明確提示重新提問模型，然後評估模型是否能修正答案。此方法區分\textit{知識缺口}（可透過 RAG 修復）與\textit{推理缺口}（需要微調）。
+
+\subsection{維度三：校準分析}
+
+\subsubsection{信心估計方法}
+
+我們採用兩種方法：\textbf{口述信心法}，提示模型以百分比表達信心；以及\textbf{自我一致性} \citep{wang2023selfconsistency}，以 $k = 10$ 次抽樣（$\tau = 0.7$）定義信心為一致率。
+
+\subsubsection{校準指標}
+
+\textbf{期望校準誤差（ECE）：}
+\begin{equation}
+    \text{ECE} = \sum_{m=1}^{M} \frac{|B_m|}{n} \left| \text{acc}(B_m) - \text{conf}(B_m) \right|
+    \label{eq:ece}
+\end{equation}
+
+\textbf{風險信心（CaR）：}
+\begin{equation}
+    \text{CaR}(\alpha) = \inf\{c^* : P(\text{incorrect} \mid \text{confidence} \geq c^*) \leq \alpha\}
+    \label{eq:car}
+\end{equation}
+CaR 回答的問題是：「在何種最低信心水準下，錯誤率可降至 $\alpha$ 以下？」若 CaR 無定義，則模型的信心訊號從根本上不適用於風險預算用途。
+
+\textbf{過度自信錯誤：}
+\begin{equation}
+    \text{Overconfident Error} = \mathbf{1}\left[\text{confidence} \geq 0.80 \;\land\; \text{incorrect}\right]
+    \label{eq:overconf}
+\end{equation}
+
+%% ============================================
+%% 4. 資料與實驗設計
+%% ============================================
+\section{資料與實驗設計}
+\label{sec:experiments}
+
+\subsection{資料集}
+
+本文使用 FinEval \citep{ke2025findap} 中的兩個資料集：\textbf{CFA-Easy}（1,032 道涵蓋完整 CFA 課程的多選題）用於壓力測試與錯誤分析，以及\textbf{CFA-Challenge}（90 道 CFA Level III 題目）用於初始校準分析，並以穩健性驗證將校準擴展至完整 CFA-Easy 語料庫。
+
+\subsection{模型}
+
+主要評估模型為 \textbf{GPT-4o-mini}（OpenAI），一個廣泛部署的商業模型。跨模型比較使用 \textbf{GPT-5-mini}，一個採用延伸思維鏈的次世代推理模型。校準分析另外評估 \textbf{Qwen3-32B}（阿里巴巴），一個 32B 參數的開源權重模型。除自我一致性抽樣（$\tau = 0.7$）外，所有評測均使用溫度 $\tau = 0.0$ 以獲得確定性輸出。
+
+\subsection{整體實驗規模}
+
+表~\ref{tab:scale} 彙整三個維度的實驗規模。
+
+\begin{table}[htbp]
+\centering
+\caption{實驗規模摘要}
+\label{tab:scale}
+\begin{threeparttable}
+\begin{tabular}{llcc}
+\toprule
+\textbf{維度} & \textbf{組成} & \textbf{題數} & \textbf{推論次數} \\
+\midrule
+\multirow{2}{*}{壓力測試} & 反事實擾動 & 1,032 & 1,734\textsuperscript{a} \\
+ & 雜訊注入（$\times 4$ 種類型） & 1,032 & 5,160 \\
+錯誤分類體系 & 開放式 + GCI & 1,032 & 1,589\textsuperscript{b} \\
+\multirow{2}{*}{校準} & CFA-Challenge & 90 & 257\textsuperscript{c} \\
+ & CFA-Easy（穩健性驗證） & 1,032 & 1,032 \\
+\midrule
+\textbf{合計} & & & \textbf{$>$9,700} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item[\textsuperscript{a}] 原始題目 + 有效擾動（GPT-4o-mini 為 702 題）。
+\item[\textsuperscript{b}] 1,032 道開放式 + 557 次 GCI 重新提問。
+\item[\textsuperscript{c}] 2 個模型 $\times$ 2 種方法，各組態樣本數不同。
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+%% ============================================
+%% 5. 結果
+%% ============================================
+\section{結果}
+\label{sec:results}
+
+\subsection{維度一：壓力測試}
+
+\subsubsection{反事實擾動}
+
+表~\ref{tab:perturbation} 呈現核心發現。在母體層級（$N = 1{,}032$），18.6~pp 的記憶落差證實標準準確率中有相當比例可歸因於數值模式匹配而非真正的金融推理。
+
+\begin{table}[htbp]
+\centering
+\caption{反事實擾動結果（GPT-4o-mini，$N = 1{,}032$）}
+\label{tab:perturbation}
+\begin{threeparttable}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{條件} & \textbf{有效 N} & \textbf{準確率} & \textbf{記憶落差} & \textbf{$\Delta$} & \textbf{方向} \\
+\midrule
+原始題目 & 1,032 & 82.4\% & --- & --- & --- \\
+Level 1（數值擾動） & 702 & 63.8\% & +18.6 pp & $\downarrow$ & 記憶效應 \\
+\midrule
+穩健準確率 & 1,032 & 63.5\% & --- & --- & --- \\
+疑似記憶 & --- & +18.9\% & --- & --- & --- \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item 穩健準確率要求在原始題目\textit{及}所有有效擾動上均回答正確。疑似記憶 = 原始正確但至少一個擾動答錯的比例。
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\subsubsection{雜訊敏感度}
+
+表~\ref{tab:noise} 揭示了細微的表現輪廓。N1（無關資料）產生最高敏感度（NSI = 0.032），而 N4（矛盾暗示）反而\textit{提升}了表現（NSI = $-$0.072），將準確率從 81.6\% 提升至 87.5\%。我們假設矛盾暗示透過排除法與後設認知觸發兩個管道發揮作用。
+
+\begin{table}[htbp]
+\centering
+\caption{雜訊敏感度結果（GPT-4o-mini，$N = 1{,}032$）}
+\label{tab:noise}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{雜訊類型} & \textbf{含雜訊準確率} & \textbf{翻轉數} & \textbf{NSI} & \textbf{解讀} \\
+\midrule
+乾淨（基線） & 81.6\% & --- & --- & --- \\
+N1（無關資料） & 79.0\% & 58/1,032 & 0.032 & 低 \\
+N2（誤導性） & 80.3\% & 49/1,032 & 0.015 & 極低 \\
+N3（冗長脈絡） & 82.0\% & 32/1,032 & $-$0.005 & 無影響 \\
+N4（矛盾暗示） & 87.5\% & 21/1,032 & $-$0.072 & 負值（有助益） \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+整體模式確認模型的主要弱點在於依賴記憶的推理，而非雜訊敏感度：最壞情況下的雜訊退化（2.6~pp）遠小於 18.6~pp 的記憶落差。
+
+\subsubsection{跨模型壓力測試：記憶悖論}
+
+表~\ref{tab:perturbation_cross} 揭示了一項引人注目的記憶悖論。
+
+\begin{table}[htbp]
+\centering
+\caption{跨模型反事實擾動（$N = 1{,}032$）}
+\label{tab:perturbation_cross}
+\begin{threeparttable}
+\begin{tabular}{lcc}
+\toprule
+\textbf{指標} & \textbf{GPT-4o-mini} & \textbf{GPT-5-mini} \\
+\midrule
+標準準確率 & 82.4\% & 91.8\% \\
+Level 1 準確率（有效 $n$） & 63.8\%（$n = 702$） & 55.3\%（$n = 638$） \\
+\textbf{記憶落差} & \textbf{18.6 pp} & \textbf{36.4 pp} \\
+穩健準確率 & 63.5\% & 67.2\% \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item GPT-5-mini 達到更高的標準準確率，但擾動後準確率反而更低，導致記憶落差幾乎翻倍。
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+GPT-5-mini 達到顯著更高的標準準確率（+9.4~pp），但在擾動題目上的表現實際上\textit{更差}（55.3\% 對比 63.8\%），產生幾乎兩倍於 GPT-4o-mini 的記憶落差。穩健準確率僅微幅提升（67.2\% 對比 63.5\%），意味著 GPT-5-mini 的大部分表面改善在擾動壓力下蒸發殆盡。相比之下，雜訊敏感度約減半（最大 NSI 0.017 對比 0.032），確認資訊過濾能力有真正的改善。這種記憶—雜訊的不對稱性表明，反事實擾動與雜訊注入探測的是根本不同的認知維度。
+
+\subsection{維度二：錯誤分類體系}
+
+\subsubsection{錯誤類型分佈}
+
+表~\ref{tab:errortype} 呈現開放式評測 557 筆 Level C 錯誤的分佈。
+
+\begin{table}[htbp]
+\centering
+\caption{錯誤類型分佈（$N = 557$）}
+\label{tab:errortype}
+\begin{tabular}{lrrl}
+\toprule
+\textbf{錯誤類型} & \textbf{數量} & \textbf{\%} & \textbf{類別} \\
+\midrule
+概念性錯誤 & 383 & 68.8\% & 推理 \\
+不完整推理 & 60 & 10.8\% & 推理 \\
+假設錯誤 & 59 & 10.6\% & 推理 \\
+未知 & 35 & 6.3\% & --- \\
+閱讀錯誤 & 12 & 2.2\% & 提取 \\
+算術錯誤 & 7 & 1.3\% & 計算 \\
+公式錯誤 & 1 & 0.2\% & 計算 \\
+\midrule
+\multicolumn{4}{l}{\textbf{彙總：}推理 90.1\%，提取 2.2\%，計算 1.4\%，未知 6.3\%} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+推理錯誤以壓倒性比例居首（90.1\%），僅概念性錯誤（68.8\%）就超過所有其他類別的總和。主要失敗模式並非「無法計算」而是「不理解概念」——當基本金融概念被誤解時，計算器工具與公式檢索皆無濟於事。
+
+\subsubsection{主題層級錯誤輪廓}
+
+錯誤輪廓在不同主題間呈現顯著差異。倫理學表現出 87.1\% 的推理錯誤（無計算錯誤），而衍生性商品則具有最高的計算錯誤率（37.5\%）。這意味著不同金融領域需要根本不同的補救策略。
+
+\subsubsection{黃金情境注入}
+
+表~\ref{tab:gci} 揭示 82.4\% 的錯誤可透過黃金情境注入獲得改善，表明大多數失敗為知識缺口，適合以檢索增強進行補救。
+
+\begin{table}[htbp]
+\centering
+\caption{黃金情境注入結果（$N = 557$ 筆錯誤）}
+\label{tab:gci}
+\begin{tabular}{lrr}
+\toprule
+\textbf{恢復層級} & \textbf{數量} & \textbf{\%} \\
+\midrule
+完全恢復（Level A） & 142 & 25.5\% \\
+部分恢復（Level B） & 317 & 56.9\% \\
+仍然錯誤（Level C） & 98 & 17.6\% \\
+\midrule
+\textbf{任何恢復（A+B）} & \textbf{459} & \textbf{82.4\%} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+然而，僅 25.5\% 達到完全恢復；大多數改善為部分性的（56.9\%），顯示即使提供正確概念，模型仍常在精確執行上遇到困難。17.6\% 的殘餘率代表需要訓練時期介入的真正推理缺口。
+
+以 GPT-5-mini 進行的跨模型 GCI 複製實驗使完全恢復率幾乎翻倍（50.4\% 對比 25.5\%），同時將真正推理缺口降至 11.7\%，證明延伸思維鏈推理在提供正確概念後能顯著改善概念\textit{執行}能力。
+
+此處有一項重要注意事項，涉及知識缺口與注意力缺口的區分。當 GCI 恢復了一筆錯誤時，模型可能本來就「知道」該概念但未能檢索——提示僅是引導了注意力。一個確定性的測試應注入無關概念作為對照條件。我們將此留待未來研究，並指出目前的結果可能反映了兩種機制的混合。
+
+\subsection{維度三：校準}
+
+\subsubsection{整體校準}
+
+表~\ref{tab:calibration} 呈現 CFA-Challenge 題目上所有模型—方法組合的校準指標。
+
+\begin{table}[htbp]
+\centering
+\caption{各模型與方法之校準指標（CFA-Challenge，$N = 257$）}
+\label{tab:calibration}
+\begin{threeparttable}
+\small
+\begin{tabular}{@{}llccccccc@{}}
+\toprule
+\textbf{模型} & \textbf{方法} & \textbf{N} & \textbf{準確率} & \textbf{信心} & \textbf{ECE} & \textbf{Brier} & \textbf{AUC} & \textbf{OC 落差} \\
+\midrule
+GPT-4o-mini & 自我一致性 & 90 & .522 & .829 & .307 & .334 & .639 & +.307 \\
+GPT-4o-mini & 口述信心 & 95 & .526 & .841 & .315 & .340 & .586 & +.315 \\
+Qwen3-32B & 口述信心 & 72 & .611 & .836 & .247 & .226 & .787 & +.225 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\footnotesize
+\item ECE = 期望校準誤差；AUC = ROC 曲線下面積；OC 落差 = 平均信心 $-$ 準確率。
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+所有組態均呈現顯著的過度自信，過度自信落差範圍從 +22.5\% 至 +31.5\%。模型表達平均約 84\% 的信心，但實際僅達到 52--61\% 的準確率。單樣本 $t$ 檢定對逐觀測過度自信落差的結果為 $t = 9.70$（$p < 0.0001$）。
+
+\subsubsection{過度自信錯誤分析}
+
+在所有 257 筆觀測中，77 筆為過度自信錯誤（30.0\%），顯著超過 20\% 的基線（$z = 3.99$，$p < 0.0001$）。在不正確的回答中，66.4\% 伴隨信心 $\geq 80\%$，意味著大多數錯誤為高信心錯誤——對依賴表達信心的使用者而言，錯誤訊號幾乎不可見。
+
+\subsubsection{主題層級校準偏差}
+
+倫理與標準展現最高的過度自信錯誤率（43.5\%）與最低準確率（47.8\%），而衍生性商品的過度自信錯誤率較低（22.2\%）。這種達克效應（Dunning-Kruger effect）模式——模型在最不擅長的領域恰恰最為過度自信——對 AI 治理有直接啟示，顯示校準失敗與任務難度呈反比。
+
+\subsubsection{風險信心}
+
+對 GPT-4o-mini 而言，CaR(5\%) \textit{無定義}——沒有任何信心閾值能達到 5\% 的錯誤率。即使在最高自我一致性信心（1.0）下，錯誤率仍為 41.7\%。對 Qwen3-32B 而言，信心 $\geq 95\%$ 時的錯誤率為 19.6\%，仍遠超可接受的風險容忍度。現有 LLM 信心訊號從根本上不適用於金融風險管理。
+
+\subsubsection{穩健性驗證：CFA-Easy（$N = 1{,}032$）}
+
+為評估可推廣性，我們在完整 CFA-Easy 資料集上複製了口述信心協議。
+
+\begin{table}[htbp]
+\centering
+\caption{校準比較：CFA-Challenge 與 CFA-Easy（GPT-4o-mini）}
+\label{tab:easy_calibration}
+\begin{threeparttable}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{指標} & \textbf{CFA-Challenge（$N=95$）} & \textbf{CFA-Easy（$N=1{,}032$）} \\
+\midrule
+準確率 & 52.6\% & 81.7\% \\
+平均信心 & 84.1\% & 86.0\% \\
+ECE & 0.315 & 0.073 \\
+AUROC & 0.586 & 0.671 \\
+OC 落差 & +31.5 pp & +4.3 pp \\
+OC 錯誤率 & 40.0\% & 15.1\% \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item OC 落差 = 平均信心 $-$ 準確率。OC 錯誤率 = 高信心（$\geq$ 80\%）不正確回答的比例。
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+三項發現浮現。第一，在較簡單的問題上校準顯著改善（ECE：0.315 $\to$ 0.073）。第二，改善幾乎完全由準確率上升（+29.1~pp）所驅動，而非信心調整（+1.9~pp）——無論實際表現如何，模型均維持約 85\% 的信心，這是「固定信心暫存器」的證據，而非真正的後設認知能力。第三，AUROC 仍然平庸（0.671），表明模型無法可靠地區分正確與不正確的回答。
+
+\subsection{三維度整合}
+
+表~\ref{tab:integrated} 呈現整合後的三維度評估。
+
+\begin{table}[htbp]
+\centering
+\caption{三維度整合評估（GPT-4o-mini）}
+\label{tab:integrated}
+\begin{tabular}{lcc}
+\toprule
+\textbf{指標} & \textbf{數值} & \textbf{涵義} \\
+\midrule
+標準準確率 & 82.4\% & 標題（具誤導性） \\
+穩健準確率 & 63.5\% & 記憶修正後 \\
+記憶溢價 & 18.9 pp & 「幻影能力」 \\
+\midrule
+推理錯誤 & 90.1\% & 概念性而非計算性 \\
+GCI 恢復率 & 82.4\% & 知識缺口，可透過 RAG 修復 \\
+真正推理缺口 & 17.6\% & 需要微調 \\
+\midrule
+過度自信落差 & +31.5 pp & 困難題目 \\
+OC 錯誤率 & 30.0\% & 不可見的錯誤 \\
+CaR(5\%) & 無定義 & 信心不可信 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+三個維度匯聚至同一結論：模型 82.4\% 的標題準確率大幅高估了真正的能力。大約每五個正確答案中就有一個反映的是記憶而非推理；當模型失敗時，失敗在於概念辨識而非計算；且其信心訊號無法可靠地區分正確與不正確的回答。
+
+%% ============================================
+%% 6. 討論
+%% ============================================
+\section{討論}
+\label{sec:discussion}
+
+\subsection{經濟意涵}
+
+記憶溢價具有具體的經濟意涵。標準準確率（82.4\%）暗示五次金融計算中有四次正確；穩健準確率（63.5\%）揭示僅有五次中三次正確。18.9~pp 的落差代表「幻影能力」——AI 看似勝任但在現實變體上會失敗的題目。
+
+過度自信問題放大了這一風險。30\% 的過度自信錯誤率意味著，依賴 AI 信心訊號的投資組合經理會以為模型六次中有五次正確，但實際上幾乎每隔一次就會出錯。一個過度自信的存續期間估計（$D_{\text{error}}$）在 1,000 萬美元部位上，若利率衝擊 100 個基點，將產生與誤差幅度成正比的意外損失。
+
+更廣泛地說，AI 建議的資訊價值與訊號精確度 $\tau = 1/\sigma^2$ 成正比。我們觀測到的 ECE 值 0.25--0.32，使訊號精確度比使用者在依據「85\% 信心」建議行事時隱含假設的低 40 倍。
+
+\subsection{記憶悖論}
+
+跨模型證據引入了一項對治理具有重要意涵的發現：GPT-5-mini 的記憶落差（36.4~pp）幾乎是 GPT-4o-mini（18.6~pp）的兩倍，儘管前者是更強大的模型。這表明\textbf{標準準確率的提升可能在相當程度上歸因於增強的記憶能力，而非增強的推理能力}。隨著 AI 模型的改進，標準與穩健準確率之間的差距可能\textit{擴大}而非縮小。追蹤標準準確率作為能力代理指標的金融監管機構，可能觀察到穩定的改善，而底層的穩健性實則停滯不前。
+
+\subsection{對市場效率的影響}
+
+根據效率市場假說 \citep{fama1970efficient}，市場價格反映理性代理人處理過的資訊。當 AI 諮詢系統成為邊際價格設定者時，本文記錄的系統性錯誤模式將威脅市場效率：倫理學中的概念誤用（87.1\% 推理錯誤）可能產生系統性的合規違規，而衍生性商品定價失敗（37.5\% 計算錯誤）可能在 AI 輔助的投資組合間產生相關的避險錯誤。與隨機雜訊不同，結構化錯誤會造成方向性偏差。
+
+\subsection{CFA 倫理與受託責任}
+
+本文的發現涉及三項 CFA 專業行為準則：
+\begin{itemize}
+    \item \textbf{準則 I(C) --- 虛偽陳述}：一個在 30\% 的時間答錯卻表達 89\% 信心的 AI，系統性地虛偽陳述其可靠性。
+    \item \textbf{準則 V(A) --- 勤勉盡責}：當 66.4\% 的錯誤為高信心錯誤時，依賴 AI 信心作為驗證替代無法達到「合理基礎」的標準。
+    \item \textbf{準則 III(C) --- 適合性}：與主題相關的校準偏差意味著 AI 恰恰在最需要專業判斷的領域最不可靠。
+\end{itemize}
+
+\subsection{監管意涵}
+
+借鑒計量金融學，本文的記憶落差類似於「delta」（對輸入擾動的敏感度），NSI 功能類似於「vega」（對資訊雜訊的敏感度），而 CaR 直接對應風險值（VaR）。我們提出分級部署標準：
+
+\begin{itemize}
+    \item \textbf{第一級（顧問性）}：ECE $< 0.15$，記憶落差 $< 10\%$，OC 錯誤率 $< 15\%$
+    \item \textbf{第二級（研究性）}：ECE $< 0.25$，記憶落差 $< 20\%$
+    \item \textbf{第三級（內部使用）}：ECE $< 0.35$，並附強制性免責聲明
+\end{itemize}
+
+依據這些閾值，在 CFA-Challenge 上測試的所有模型均不符合第一級或第二級的部署資格。
+
+\subsection{研究限制}
+
+若干限制應予說明。第一，擾動生成依賴 GPT-4o-mini，可能引入潛在錯誤；68.0\% 的有效擾動率反映了這一挑戰。第二，錯誤分類體系使用 GPT-4o-mini 作為分類器，可能引入系統性偏差。第三，CFA-Challenge 上的校準分析（$N = 90$）統計檢定力有限，儘管 CFA-Easy 的穩健性驗證（$N = 1{,}032$）增強了可推廣性。第四，主題層級分析的每主題樣本量有限，應視為探索性分析。第五，口述信心可能對提示敏感。第六，跨模型比較僅限於同一供應商（OpenAI）的兩個模型；擴展至其他模型家族將增強可推廣性。最後，GCI 實驗在缺乏以無關概念提示作為對照條件的情況下，無法完全區分知識缺口與注意力缺口。
+
+%% ============================================
+%% 7. 結論
+%% ============================================
+\section{結論}
+\label{sec:conclusion}
+
+本文證明標準基準準確率顯著高估了大型語言模型的金融推理能力，且此高估程度隨模型能力的提升而\textit{加劇}。本文的三維度評估揭示：
+
+\begin{enumerate}
+    \item \textbf{穩健性}：GPT-4o-mini 的記憶落差為 18.6~pp，GPT-5-mini 幾乎翻倍至 36.4~pp——一個更強大模型反而更依賴記憶的記憶悖論。
+    \item \textbf{錯誤結構}：90.1\% 的錯誤屬於推理類型，以概念性錯誤為主（68.8\%），計算錯誤僅佔 1.4\%。黃金情境注入恢復了 82.4\% 的錯誤，確立了 RAG 補救的上限。
+    \item \textbf{校準}：普遍的過度自信，30\% 的高信心錯誤，5\% 閾值下 CaR 無定義，以及無論實際表現如何均維持約 85\% 信心的「固定信心暫存器」。
+\end{enumerate}
+
+三個維度匯聚一致：標題準確率因記憶而膨脹，失敗屬於概念性而非計算性，且模型無法可靠地發出其犯錯時的訊號。金融 AI 治理必須超越標題準確率，涵蓋穩健性、錯誤結構與校準品質。
+
+\textbf{問題不在於 AI 能否通過 CFA 考試，而在於其通過是否反映了可轉移至新問題的能力、其失敗是否能被有效補救、以及其信心是否值得信賴。本文的證據對上述三個問題均給出否定答案——且顯示這些問題隨著模型能力的提升而惡化，而非改善。}
+
+%% ============================================
+%% 聲明
+%% ============================================
+\section*{資料可用性}
+
+CFA-Easy 與 CFA-Challenge 資料集可透過 HuggingFace 上的 FinEval 基準測試取得 \citep{ke2025findap}。實驗程式碼與原始結果可向通訊作者合理請求後取得。
+
+\section*{利益衝突聲明}
+作者聲明無已知的競爭性財務利益或個人關係可能影響本文所報告之研究。
+
+\section*{CRediT 作者貢獻}
+\textbf{Wei-Lun Cheng}：概念化、研究方法、軟體、正式分析、資料整理、撰寫——初稿、視覺化。
+\textbf{Daniel Wei-Chung Miao}：指導、撰寫——審閱與修訂。
+\textbf{Guang-Di Chang}：指導、撰寫——審閱與修訂。
+
+\section*{致謝}
+計算資源由國立臺灣科技大學（NTUST）提供。
+
+%% ============================================
+%% 參考文獻
+%% ============================================
+\begin{thebibliography}{30}
+
+\bibitem[Asai et al.(2024)]{asai2024selfrag}
+Asai, A., Wu, Z., Wang, Y., Sil, A., \& Hajishirzi, H. (2024).
+\newblock Self-{RAG}: Learning to retrieve, generate, and critique through self-reflection.
+\newblock In \textit{Proceedings of ICLR 2024}.
+
+\bibitem[Band et al.(2025)]{band2025qacalibration}
+Band, N., Rudner, T. G. J., Filos, A., et al. (2025).
+\newblock Calibration of natural language understanding models with vague concepts.
+\newblock In \textit{Proceedings of ICLR 2025}.
+
+\bibitem[Callanan et al.(2023)]{callanan2023gpt}
+Callanan, E., Mbae, A., Selle, S., Gupta, V., \& Houlihan, R. (2023).
+\newblock Can GPT-4 pass the CFA exam?
+\newblock \textit{arXiv preprint arXiv:2310.09542}.
+
+\bibitem[Chen et al.(2025)]{chen2025cfabenchmark}
+Chen, Y., Li, H., \& Zhang, X. (2025).
+\newblock A CFA-based benchmark for evaluating financial reasoning in large language models.
+\newblock \textit{arXiv preprint arXiv:2509.04468}.
+
+\bibitem[Chhikara et al.(2025)]{chhikara2025confidence}
+Chhikara, P., Gaur, N., \& Kumaraguru, P. (2025).
+\newblock Mind the confidence gap: Evaluating probabilistic forecasting of large language models.
+\newblock \textit{Transactions on Machine Learning Research}.
+
+\bibitem[Fama(1970)]{fama1970efficient}
+Fama, E. F. (1970).
+\newblock Efficient capital markets: A review of theory and empirical work.
+\newblock \textit{The Journal of Finance}, 25(2), 383--417.
+
+\bibitem[Guo et al.(2017)]{guo2017calibration}
+Guo, C., Pleiss, G., Sun, Y., \& Weinberger, K. Q. (2017).
+\newblock On calibration of modern neural networks.
+\newblock In \textit{Proceedings of ICML 2017} (pp.~1321--1330).
+
+\bibitem[Kadavath et al.(2022)]{kadavath2022language}
+Kadavath, S., Conerly, T., Askell, A., et al. (2022).
+\newblock Language models (mostly) know what they know.
+\newblock \textit{arXiv preprint arXiv:2207.05221}.
+
+\bibitem[Ke et al.(2025)]{ke2025findap}
+Ke, Z., Ming, Y., Nguyen, X. P., Xiong, C., \& Joty, S. (2025).
+\newblock Demystifying domain-adaptive post-training for financial LLMs.
+\newblock In \textit{Proceedings of EMNLP 2025}.
+
+\bibitem[Li et al.(2024)]{li2024gsmplus}
+Li, Q., Zhu, Z., Wang, Z., et al. (2024).
+\newblock GSM-Plus: A comprehensive benchmark for evaluating the robustness of {LLMs} as mathematical problem solvers.
+\newblock In \textit{Proceedings of ACL 2024}.
+
+\bibitem[Liu et al.(2025)]{liu2025kalshibench}
+Liu, M., Chen, Y., \& Wang, J. (2025).
+\newblock KalshiBench: Evaluating LLM probabilistic calibration using prediction markets.
+\newblock \textit{arXiv preprint}.
+
+\bibitem[Lopez-Lira et al.(2025)]{lopezlira2025memorization}
+Lopez-Lira, A., Kirtac, K., \& Tang, Y. (2025).
+\newblock The memorization problem: When can we trust financial {LLM} benchmarks?
+\newblock \textit{arXiv preprint}.
+
+\bibitem[Mirzadeh et al.(2024)]{apple2024gsmsymbolic}
+Mirzadeh, I., Alizadeh, K., Shahrokhi, H., et al. (2024).
+\newblock GSM-Symbolic: Understanding the limitations of mathematical reasoning in large language models.
+\newblock \textit{arXiv preprint arXiv:2410.05229}.
+
+\bibitem[Patel et al.(2025)]{patel2025reasoning}
+Patel, R., Singh, A., \& Torres, M. (2025).
+\newblock Reasoning models ace the {CFA} exams: Implications for professional certification.
+\newblock \textit{arXiv preprint}.
+
+\bibitem[Shi et al.(2023)]{shi2023detecting}
+Shi, W., Ajith, A., Xia, M., et al. (2023).
+\newblock Detecting pretraining data from large language models.
+\newblock In \textit{Proceedings of ICLR 2024}.
+
+\bibitem[Wang et al.(2023)]{wang2023selfconsistency}
+Wang, X., Wei, J., Schuurmans, D., et al. (2023).
+\newblock Self-consistency improves chain of thought reasoning in language models.
+\newblock In \textit{Proceedings of ICLR 2023}.
+
+\bibitem[Wu et al.(2023)]{wu2023bloomberggpt}
+Wu, S., Irsoy, O., Lu, S., et al. (2023).
+\newblock BloombergGPT: A large language model for finance.
+\newblock \textit{arXiv preprint arXiv:2303.17564}.
+
+\end{thebibliography}
+
+\end{document}

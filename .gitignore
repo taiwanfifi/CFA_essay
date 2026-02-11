@@ -58,6 +58,8 @@ Professor.md
 ralph.md
 drafts/selected/review_discuss.md
 drafts/selected/presentations/
+REF_*.md
+**/REF_*.md
 
 # === Titled PDF copies (duplicates of main.pdf) ===
 drafts/selected/**/*.pdf
