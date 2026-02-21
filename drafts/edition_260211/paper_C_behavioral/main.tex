@@ -39,7 +39,7 @@
             country={Taiwan}}
 
 \begin{abstract}
-Large language models (LLMs) deployed as financial advisors face a dual threat: they may inherit the behavioral biases of their human training data \textit{and} abandon ethical standards under adversarial pressure. We present a unified experimental framework examining both threats. First, using 60 paired financial scenarios (10 per bias type), we measure six canonical behavioral biases---loss aversion, anchoring, framing, recency bias, the disposition effect, and overconfidence---in GPT-4o-mini, finding a mean bias score of 0.500 (on a 0--1 scale). Neutral re-framing reduces this to 0.425 (Wilcoxon $p = 0.023$), but debiasing effectiveness reveals a \textit{three-tier hierarchy}: surface biases (loss aversion $\Delta = +0.300$, framing $+0.150$) respond to prompt-level intervention; anchoring shows marginal response ($+0.050$); while deep biases---disposition effect, overconfidence, and recency---are entirely resistant. A replication on 80 synthetic scenarios confirms the disposition effect as the most persistent bias (0.808). Second, applying five adversarial pressure types (profit incentive, authority, emotional manipulation, reframing, moral dilemma) to 47 CFA Ethics questions, we find \textit{universal degradation}: all five attacks reduce accuracy (ERS = 0.925--0.950), flipping 14 previously correct answers. A supplementary experiment on 141 synthetic ethics questions reveals a dramatically reduced flip rate (0.85\% vs.\ 5.96\%), with only reframing and moral dilemma retaining efficacy. Qualitative analysis identifies three rationalization strategies---utilitarian override, authority deference, and semantic repackaging---through which the model constructs plausible justifications for ethically compromised answers. A cross-model comparison shows GPT-5-mini achieves zero adversarial flips (ERS $> 1.0$), suggesting the vulnerability may be generationally bounded. Together, these findings reveal that current financial LLMs face a \textit{double jeopardy}: they exhibit patterns consistent with human irrationality (risking suboptimal investment outcomes) \textit{and} ethical fragility under pressure (risking compliance violations)---complementary failure modes requiring distinct mitigation strategies.
+Large language models (LLMs) deployed as financial advisors face a dual threat: they may inherit the behavioral biases of their human training data \textit{and} abandon ethical standards under adversarial pressure. We present a unified experimental framework examining both threats. First, we measure six canonical behavioral biases---loss aversion, anchoring, framing, recency bias, the disposition effect, and overconfidence---in GPT-4o-mini across 140 paired financial scenarios (pilot $N = 60$ + replication $N = 80$). A pilot study yields a mean bias score of 0.500 (on a 0--1 scale); neutral re-framing reduces this to 0.425 (Wilcoxon $p = 0.027$), but debiasing effectiveness reveals a \textit{three-tier hierarchy}: surface biases (loss aversion $\Delta = +0.300$, framing $+0.150$) respond to prompt-level intervention; anchoring shows marginal response ($+0.050$); while deep biases---disposition effect, overconfidence, and recency---are entirely resistant. A scaled replication on 80 synthetic scenarios ($N = 12$--14 per type) confirms and sharpens the hierarchy: the disposition effect emerges as the strongest bias overall (0.808), validating its resistance to debiasing across independently generated scenarios. Second, applying five adversarial pressure types (profit incentive, authority, emotional manipulation, reframing, moral dilemma) to 47 CFA Ethics questions, we find \textit{universal degradation}: all five attacks reduce accuracy (ERS = 0.925--0.950), flipping 14 previously correct answers. An extended experiment on 141 synthetic ethics questions reveals a dramatically reduced flip rate (0.85\% vs.\ 5.96\%), with only reframing and moral dilemma retaining efficacy. Qualitative analysis identifies three rationalization strategies---utilitarian override, authority deference, and semantic repackaging---through which the model constructs plausible justifications for ethically compromised answers. A cross-model comparison shows GPT-5-mini achieves zero adversarial flips (ERS $> 1.0$), suggesting the vulnerability may be generationally bounded. Together, these findings reveal that current financial LLMs face a \textit{double jeopardy}: they exhibit patterns consistent with human irrationality (risking suboptimal investment outcomes) \textit{and} ethical fragility under pressure (risking compliance violations)---complementary failure modes requiring distinct mitigation strategies.
 \end{abstract}
 
 \begin{keyword}
@@ -61,7 +61,7 @@ These questions address complementary failure modes with distinct consequences. 
 We present a unified experimental framework addressing both dimensions:
 
 \begin{enumerate}
-    \item \textbf{Behavioral Bias Measurement}: Using a paired-scenario design with 60 CFA-level financial scenarios across six bias types, we quantify bias susceptibility and debiasing effectiveness, identifying a three-tier hierarchy of bias persistence.
+    \item \textbf{Behavioral Bias Measurement}: Using a paired-scenario design across 140 CFA-level financial scenarios (pilot $N = 60$ + replication $N = 80$) covering six bias types, we quantify bias susceptibility and debiasing effectiveness, identifying a three-tier hierarchy of bias persistence validated across independently generated scenarios.
 
     \item \textbf{Adversarial Ethics Stress Testing}: Using five pressure types applied to 47 CFA Ethics questions, we measure ethical robustness under adversarial conditions, discovering universal degradation and characterizing the rationalization strategies through which the model justifies abandoning ethical standards.
 \end{enumerate}
@@ -132,13 +132,13 @@ Both studies evaluate \textbf{GPT-4o-mini} (OpenAI) at temperature $\tau = 0.0$.
 
 \subsection{Study 1: Behavioral Biases}
 
-\subsubsection{Overall Results}
+\subsubsection{Pilot Results ($N = 60$)}
 
-Table~\ref{tab:bias_overall} presents aggregate bias measurement results. The model exhibits a mean bias score of 0.500, with neutral re-framing reducing this to 0.425 (Wilcoxon $W = 14.0$, $p = 0.023$, $r = 0.284$).
+Table~\ref{tab:bias_overall} presents aggregate bias measurement results from the pilot study. The model exhibits a mean bias score of 0.500, with neutral re-framing reducing this to 0.425 (Wilcoxon $W = 14.0$, $p = 0.027$, $r = 0.286$, exact test).
 
 \begin{table}[H]
 \centering
-\caption{Overall bias measurement (GPT-4o-mini, $N=60$ scenarios)}
+\caption{Pilot bias measurement (GPT-4o-mini, $N=60$ scenarios, 10 per type)}
 \label{tab:bias_overall}
 \begin{tabular}{@{}lccc@{}}
 \toprule
@@ -147,7 +147,7 @@ Table~\ref{tab:bias_overall} presents aggregate bias measurement results. The mo
 Mean Score & 0.500 & 0.425 & +0.075 \\
 Std Dev & 0.129 & 0.201 & 0.220 \\
 \midrule
-\multicolumn{4}{@{}l}{\textit{Wilcoxon: $W = 14.0$, $p = 0.023$, $r = 0.284$}} \\
+\multicolumn{4}{@{}l}{\textit{Wilcoxon: $W = 14.0$, $p = 0.027$, $r = 0.286$ (exact test)}} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -158,7 +158,7 @@ Table~\ref{tab:bias_by_type} reveals substantial heterogeneity across bias types
 
 \begin{table}[H]
 \centering
-\caption{Bias scores by type (GPT-4o-mini, $N=60$, 10 per type)}
+\caption{Pilot bias scores by type (GPT-4o-mini, $N=60$, 10 per type)}
 \label{tab:bias_by_type}
 \begin{tabular}{@{}lcccc@{}}
 \toprule
@@ -187,9 +187,9 @@ Recency            & 10 & 0.450 & 0.500 & $-$0.050 \\
 
 \textbf{Tier 3 (Deep biases):} Disposition effect ($+0.000$), overconfidence ($+0.000$), and recency ($-0.050$) are entirely resistant to prompt-level debiasing. Most notably, recency bias \textit{increases} under neutral framing, suggesting information removal can paradoxically worsen bias.
 
-\subsubsection{Replication on Synthetic Scenarios}
+\subsubsection{Scaled Replication ($N = 80$ Synthetic Scenarios)}
 
-A supplementary replication on 80 synthetically generated scenarios (12--14 per bias type) confirms the overall pattern. The disposition effect emerges as the strongest bias (0.808), while recency drops to 0.000 on synthetic scenarios. The overall mean (0.463) is consistent with the original (0.500), confirming that LLMs exhibit measurable behavioral biases across diverse financial contexts.
+To address the statistical limitations of 10 scenarios per type, we conducted a scaled replication using 80 independently generated synthetic scenarios (12--14 per bias type). The results confirm and sharpen the pilot findings. The disposition effect emerges as the strongest bias overall (0.808), substantially exceeding the pilot estimate (0.500) and confirming its classification as a deep, debiasing-resistant bias. Recency bias drops to 0.000 on synthetic scenarios, while the overall mean (0.463) is consistent with the pilot (0.500). The convergence across independently generated scenarios---particularly for the three-tier hierarchy---strengthens the generalizability of the findings beyond the specific scenarios tested in the pilot.
 
 \subsection{Study 2: Adversarial Ethics}
 
@@ -238,7 +238,7 @@ The critical insight is that adversarial pressure does not produce obviously wro
 
 \subsubsection{Synthetic Ethics Experiment}
 
-On 141 synthetically generated CFA ethics questions, the flip rate drops dramatically from 5.96\% (CFA-Easy) to 0.85\%, with only reframing (4 flips) and moral dilemma (2 flips) retaining efficacy. Profit incentive, authority pressure, and emotional manipulation produce zero flips, suggesting these attack types primarily exploit marginal confidence on memorized questions rather than genuine reasoning vulnerabilities.
+On an extended set of 141 synthetically generated CFA ethics questions, the flip rate drops dramatically from 5.96\% (CFA-Easy) to 0.85\%, with only reframing (4 flips) and moral dilemma (2 flips) retaining efficacy. Profit incentive, authority pressure, and emotional manipulation produce zero flips, suggesting these attack types primarily exploit marginal confidence on memorized questions rather than genuine reasoning vulnerabilities.
 
 \subsubsection{Cross-Model Comparison}
 
@@ -282,7 +282,7 @@ Our adversarial attacks map to specific CFA Standards: profit incentive tests St
 
 \subsection{Limitations}
 
-Several limitations should be acknowledged. First, 10 scenarios per bias type (supplemented by 80 synthetic) limits statistical power; 20--30 hand-crafted scenarios per type is recommended. Second, LLM-as-judge scoring may introduce biases. Third, the ethics study ($N = 47$) has sub-group analyses treated as exploratory. Fourth, cross-model bias validation was abandoned due to GPT-5-mini producing empty responses on $\sim$80\% of scenarios. Fifth, single-turn adversarial prompts may underestimate vulnerability; multi-turn attacks \citep{chen2025fitd} could be more effective. Finally, establishing whether biases are absorbed from training data or emerge from architecture requires further investigation.
+Several limitations should be acknowledged. First, the pilot study uses 10 scenarios per bias type; although the scaled replication ($N = 80$) confirms the three-tier hierarchy, 20--30 hand-crafted scenarios per type would further strengthen per-type conclusions. Second, LLM-as-judge scoring may introduce biases. Third, the ethics study ($N = 47$) has sub-group analyses treated as exploratory. Fourth, cross-model bias validation was abandoned due to GPT-5-mini producing empty responses on $\sim$80\% of scenarios. Fifth, single-turn adversarial prompts may underestimate vulnerability; multi-turn attacks \citep{chen2025fitd} could be more effective. Finally, establishing whether biases are absorbed from training data or emerge from architecture requires further investigation.
 
 %% ============================================
 %% 6. CONCLUSION
