@@ -36,20 +36,16 @@
 
 \title{When Machines Pass the Test: Professional Certification Signaling Erosion Under AI Disruption}
 
-\author[ntust]{Wei-Lun Cheng}
-\ead{d11018003@mail.ntust.edu.tw}
-
-\author[ntust]{Daniel Wei-Chung Miao\corref{cor1}}
-\ead{miao@mail.ntust.edu.tw}
-\cortext[cor1]{Corresponding author}
-
-\author[ntust]{Guang-Di Chang}
-\ead{gchang@mail.ntust.edu.tw}
-
-\affiliation[ntust]{organization={Graduate Institute of Finance, National Taiwan University of Science and Technology},
-            city={Taipei},
-            postcode={10607},
-            country={Taiwan}}
+%% Double-blind: author information removed for review
+%% \author[ntust]{Wei-Lun Cheng}
+%% \ead{d11018003@mail.ntust.edu.tw}
+%% \author[ntust]{Daniel Wei-Chung Miao\corref{cor1}}
+%% \ead{miao@mail.ntust.edu.tw}
+%% \cortext[cor1]{Corresponding author}
+%% \author[ntust]{Guang-Di Chang}
+%% \ead{gchang@mail.ntust.edu.tw}
+%% \affiliation[ntust]{organization={Graduate Institute of Finance, National Taiwan University of Science and Technology},
+%%             city={Taipei}, postcode={10607}, country={Taiwan}}
 
 \begin{abstract}
 Professional certifications such as the Chartered Financial Analyst (CFA) designation have long served as credible signals in financial labor markets, enabling employers to screen for scarce cognitive abilities. We develop a Modified Spence Signaling Model that incorporates an AI replication cost parameter to analyze how large language models (LLMs) erode certification signaling value. Our central theoretical result---the Partial Signaling Collapse Theorem---demonstrates that signaling erosion is \emph{selective}, not total: certification loses its screening power over formalizable abilities (formula recall, rule application, algorithmic computation) where AI replication costs approach zero, but retains signaling value for tacit abilities (ethical judgment, stakeholder reasoning, fiduciary decision-making) that resist low-cost AI replication. Integrating the \citet{autor2003skill} task-based framework with \citet{becker1964human} human capital theory, we map the CFA curriculum onto a six-dimensional ability taxonomy and derive a tipping-point condition: when the fraction of AI-replicable abilities exceeds a critical threshold $\alpha^*$, the separating equilibrium collapses into pooling. We provide empirical support through a controlled option bias experiment ($N = 1{,}032$ CFA-style questions) across two model generations: GPT-4o-mini achieves 82.6\% accuracy with options vs.\ 80.6\% without ($+1.9$~pp, $p = 0.251$, not significant), while GPT-5-mini achieves 92.8\% with vs.\ 83.2\% without ($+9.6$~pp, $p < 0.001$, highly significant). The cross-model reversal reveals that format invariance is \emph{generation-dependent}: more capable reasoning models benefit disproportionately from MCQ scaffolding, yet their without-options accuracy still exceeds the previous generation's with-options accuracy. This implies that assessment format reform may slow but cannot reverse signaling erosion. Our analysis yields concrete policy implications: certification bodies must rebalance assessment \emph{content}---not merely format---toward AI-resistant competencies to preserve institutional credibility in the age of artificial intelligence.
@@ -349,7 +345,7 @@ Figure~\ref{fig:ability_taxonomy} provides a visual comparison of the six abilit
 \label{fig:ability_taxonomy}
 \end{figure}
 
-The AI replicability values reflect the emerging empirical literature: \citet{callanan2023gpt} document GPT-4 achieving approximately 70\% on CFA Level I (predominantly $s_1$/$s_2$ items), while domain-adapted models further close this gap \citep{ke2025findap}. The sharp decline from $s_1$--$s_2$ to $s_5$--$s_6$ mirrors the routine/non-routine boundary of \citet{autor2003skill}. Critically, the CFA program's curriculum weighting creates a structural vulnerability. Table~\ref{tab:weight_distribution} presents the estimated curriculum weight distribution.
+The AI replicability values ($\rho_k$) are calibrated estimates informed by the empirical literature rather than directly estimated parameters. For $s_1$--$s_2$: \citet{callanan2023gpt} document GPT-4 achieving $\sim$70\% on CFA Level I (predominantly declarative/algorithmic items), and \citet{patel2025reasoning} show reasoning models reaching 97.6\%, supporting $\rho \geq 0.90$. For $s_3$--$s_4$: multi-step analytical tasks show substantial degradation under perturbation (our companion paper documents an 18.6~pp memorization gap), placing replicability in the 0.45--0.70 range. For $s_5$--$s_6$: ethical and stakeholder reasoning items show adversarial vulnerability but fundamentally resist low-cost replication, supporting $\rho \leq 0.30$. The sharp decline from $s_1$--$s_2$ to $s_5$--$s_6$ mirrors the routine/non-routine boundary of \citet{autor2003skill}. Critically, the CFA program's curriculum weighting creates a structural vulnerability. Table~\ref{tab:weight_distribution} presents the estimated curriculum weight distribution.
 
 \begin{table}[htbp]
 \centering
@@ -540,18 +536,20 @@ More broadly, our framework demonstrates that AI reshapes not just production bu
 
 
 \section*{Data Availability}
-The CFA-Easy benchmark ($N = 1{,}032$) used in the option bias experiment is available through the FinDAP framework \citep{ke2025findap}. Experiment code and full results (JSON) are available from the corresponding author upon request.
+The CFA-Easy benchmark ($N = 1{,}032$) used in the option bias experiment is available through the FinDAP framework \citep{ke2025findap}. Experiment code and full results (JSON) are available from the authors upon request.
 
 \section*{Declaration of Competing Interest}
 The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
 
-\section*{CRediT Author Contributions}
-\textbf{Wei-Lun Cheng}: Conceptualization, Methodology, Formal Analysis, Software, Investigation, Writing -- Original Draft.
-\textbf{Daniel Wei-Chung Miao}: Supervision, Writing -- Review \& Editing.
-\textbf{Guang-Di Chang}: Supervision, Writing -- Review \& Editing.
+%% Double-blind: author contributions removed for review
+%% \section*{CRediT Author Contributions}
+%% \textbf{Wei-Lun Cheng}: Conceptualization, Methodology, Formal Analysis, Software, Investigation, Writing -- Original Draft.
+%% \textbf{Daniel Wei-Chung Miao}: Supervision, Writing -- Review \& Editing.
+%% \textbf{Guang-Di Chang}: Supervision, Writing -- Review \& Editing.
 
-\section*{Acknowledgments}
-Computational resources were provided by National Taiwan University of Science and Technology (NTUST).
+%% Double-blind: acknowledgments removed for review
+%% \section*{Acknowledgments}
+%% Computational resources were provided by National Taiwan University of Science and Technology (NTUST).
 
 
 %% ============================================================

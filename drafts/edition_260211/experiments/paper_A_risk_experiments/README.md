@@ -38,12 +38,14 @@ python -m experiments.D1_confidence_calibration.run_experiment --dataset easy --
 
 | Result | Path |
 |--------|------|
-| I1 GPT-4o-mini (N=1,032) | `experiments/I1_counterfactual/results/run_20260206_174011/` |
-| I1 GPT-5-mini (N=1,032) | `experiments/I1_counterfactual/results/run_20260207_174124/` |
-| I3 Full noise (N=1,032) | `experiments/I3_noise_red_herrings/results/run_20260207_060254/` |
-| E1 Error analysis | `experiments/E1_error_analysis/results/run_20260206_180049/` |
+| I1 GPT-4o-mini (N=1,032) | `experiments/I1_counterfactual/results/run_20260206_170129/` |
+| I1 GPT-5-mini (N=1,032) | `experiments/I1_counterfactual/results/run_20260207_174116/` |
+| I3 GPT-4o-mini (N=1,032) | `experiments/I3_noise_red_herrings/results/run_20260206_203913/` |
+| I3 GPT-5-mini (N=1,032) | `experiments/I3_noise_red_herrings/results/run_20260207_174115/` |
+| E1 Error analysis | `experiments/E1_error_analysis/results/error_analysis_all_methods_20260203_230751.json` |
+| E1 GCI GPT-4o-mini | `experiments/E1_error_analysis/results/golden_context_gpt-4o-mini_20260207_032341.json` |
 | E1 GCI GPT-5-mini | `experiments/E1_error_analysis/results/golden_context_gpt-5-mini_20260207_220440.json` |
-| D1 CFA-Challenge | `experiments/D1_confidence_calibration/results/run_20260206_193455/` |
+| D1 CFA-Challenge | `experiments/D1_confidence_calibration/results/run_20260202_034237/` |
 | D1 CFA-Easy (N=1,032) | `experiments/D1_confidence_calibration/results/run_20260210_152709/` |
 
 ## Metrics

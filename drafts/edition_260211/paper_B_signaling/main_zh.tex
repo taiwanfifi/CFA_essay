@@ -353,7 +353,7 @@ $s_6$ & 利害關係人推理 & III & 非例行互動 & $\sim$0.15 & 高 \\
 \label{fig:ability_taxonomy}
 \end{figure}
 
-AI 可複製性數值反映新興實證文獻：\citet{callanan2023gpt} 記錄 GPT-4 在 CFA Level I（主要為 $s_1$/$s_2$ 題項）上達到約 70\% 正確率，而領域適配模型進一步縮小此差距 \citep{ke2025findap}。從 $s_1$--$s_2$ 到 $s_5$--$s_6$ 的急遽下降反映了 \citet{autor2003skill} 的例行/非例行邊界。關鍵在於，CFA 考試的課程權重配置造成結構性脆弱。表~\ref{tab:weight_distribution} 呈現估計的課程權重分布。
+AI 可複製性數值（$\rho_k$）為基於實證文獻校準的估計值，而非直接估計的參數。對 $s_1$--$s_2$：\citet{callanan2023gpt} 記錄 GPT-4 在 CFA Level I（主要為陳述性/演算法題項）上達到約 70\% 正確率，而 \citet{patel2025reasoning} 顯示推理模型達到 97.6\%，支持 $\rho \geq 0.90$。對 $s_3$--$s_4$：多步驟分析任務在擾動下顯示大幅退化（我們的姊妹論文記錄了 18.6 百分點的記憶化缺口），將可複製性置於 0.45--0.70 區間。對 $s_5$--$s_6$：倫理與利害關係人推理題項顯示對抗性脆弱性，但從根本上抗拒低成本複製，支持 $\rho \leq 0.30$。從 $s_1$--$s_2$ 到 $s_5$--$s_6$ 的急遽下降反映了 \citet{autor2003skill} 的例行/非例行邊界。關鍵在於，CFA 考試的課程權重配置造成結構性脆弱。表~\ref{tab:weight_distribution} 呈現估計的課程權重分布。
 
 \begin{table}[htbp]
 \centering
